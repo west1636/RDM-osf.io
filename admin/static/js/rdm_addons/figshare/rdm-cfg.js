@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var bootbox = require('bootbox');
 var language = require('js/osfLanguage').Addons.figshare;
-require('js/osfToggleHeight')
+require('js/osfToggleHeight');
 
  $(document).ready(function() {
         $('#figshare-header').osfToggleHeight({height: 150});

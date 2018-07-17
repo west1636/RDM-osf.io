@@ -110,19 +110,19 @@ var OAuthAddonSettingsViewModel = oop.defclass({
     askDisconnect: function(account) {
         var self = this;
         var deletionKey = Math.random().toString(36).slice(-8);
-        var id = self.name + "DeleteKey";
+        var id = self.name + 'DeleteKey';
         bootbox.confirm({
             title: 'Disconnect Account?',
             message: '<p class="overflow">' +
                 'Are you sure you want to disconnect the ' + $osf.htmlEscape(self.properName) + ' account <strong>' +
                 $osf.htmlEscape(account.name) + '</strong>?<br>' +
                 'This will revoke access to ' + $osf.htmlEscape(self.properName) + ' for all projects using this account.<br><br>' +
-                "Type the following to continue: <strong>" + $osf.htmlEscape(deletionKey) + "</strong><br><br>" +
-                "<input id='" + $osf.htmlEscape(id) + "' type='text' class='bootbox-input bootbox-input-text form-control'>" +
+                'Type the following to continue: <strong>' + $osf.htmlEscape(deletionKey) + '</strong><br><br>' +
+                '<input id="' + $osf.htmlEscape(id) + '" type="text" class="bootbox-input bootbox-input-text form-control">' +
                 '</p>',
             callback: function(confirm) {
                 if (confirm) {
-                    if ($('#'+id).val() == deletionKey) {
+                    if ($('#'+id).val() === deletionKey) {
                         self.disconnectAccount(account);
                         self.setMessage('');
                     } else {

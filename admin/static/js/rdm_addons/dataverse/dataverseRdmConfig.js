@@ -94,17 +94,17 @@ function ViewModel(url, institutionId) {
     self.sendAuth = function() {
         // Selection should not be empty
         if( !self.selectedHost() ){
-            self.changeMessage("Please select a Dataverse repository.", 'text-danger');
+            self.changeMessage('Please select a Dataverse repository.', 'text-danger');
             return;
         }
 
         if ( !self.useCustomHost() && !self.apiToken() ){
-            self.changeMessage("Please enter an API token.", 'text-danger');
+            self.changeMessage('Please enter an API token.', 'text-danger');
             return;
         }
 
         if ( self.useCustomHost() && ( !self.customHost() || !self.apiToken() ) )  {
-            self.changeMessage("Please enter a Dataverse host and an API token.", 'text-danger');
+            self.changeMessage('Please enter a Dataverse host and an API token.', 'text-danger');
             return;
         }
 

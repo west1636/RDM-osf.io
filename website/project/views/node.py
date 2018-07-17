@@ -322,21 +322,17 @@ def node_addons(auth, node, **kwargs):
 def serialize_addons(node, auth):
 
     addon_settings = []
-    addons_available = [addon for addon in settings.ADDONS_AVAILABLE
-                        if addon not in settings.SYSTEM_ADDED_ADDONS['node']
-                        and addon.short_name not in ('wiki', 'forward', 'twofactor')]
+    addons_available = [addon for addon in settings.ADDONS_AVAILABLE if addon not in settings.SYSTEM_ADDED_ADDONS['node'] and addon.short_name not in ('wiki', 'forward', 'twofactor')]
 
 ### forced Admin Settings
     from admin.rdm_addons.utils import update_with_rdm_addon_settings
-    from admin.rdm.utils import get_institution_id
+#    from admin.rdm.utils import get_institution_id
 
     owners_addons_available = sorted([
         owners_addon
-        for owners_addon in settings.ADDONS_AVAILABLE
-        if 'node' in owners_addon.owners
-        and owners_addon.short_name not in settings.SYSTEM_ADDED_ADDONS['node'] and owners_addon.short_name not in ['wiki', 'forward','twofactor']
+        for owners_addon in settings.ADDONS_AVAILABLE if 'node' in owners_addon.owners and owners_addon.short_name not in settings.SYSTEM_ADDED_ADDONS['node'] and owners_addon.short_name not in ['wiki', 'forward', 'twofactor']
     ], key=lambda owners_addon: owners_addon.full_name.lower())
-    rdm_addon_settings = [{ 'addon_short_name': owners_addon.short_name } for owners_addon in owners_addons_available]
+    rdm_addon_settings = [{'addon_short_name': owners_addon.short_name} for owners_addon in owners_addons_available]
     update_with_rdm_addon_settings(rdm_addon_settings, auth.user)
     addons_allowed = [
         addon['addon_short_name']
