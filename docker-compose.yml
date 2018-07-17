@@ -443,7 +443,13 @@ services:
 
   admin:
     image: quay.io/centerforopenscience/osf:develop
-    command: invoke adminserver -h 0.0.0.0
+    command:
+      - /bin/bash
+      - -c
+      - apt-get update && apt-get install -y curl jq cron &&
+        /etc/init.d/cron start &&
+        cat ./admin/rdm_statistics/cron.sh | crontab - &&
+        invoke adminserver -h 0.0.0.0
     restart: unless-stopped
     environment:
       DJANGO_SETTINGS_MODULE: admin.base.settings
