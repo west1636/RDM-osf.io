@@ -27,8 +27,9 @@ SECRET_KEY = osf_settings.SECRET_KEY
 DATABASE_ROUTERS = ['admin.base.db.router.NoMigrationRouter']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = osf_settings.DEBUG_MODE
-DEBUG_PROPAGATE_EXCEPTIONS = True
+#DEBUG = osf_settings.DEBUG_MODE
+#DEBUG = False
+#DEBUG_PROPAGATE_EXCEPTIONS = True
 
 
 # session:
@@ -98,6 +99,23 @@ INSTALLED_APPS = (
     'addons.osfstorage',
     'addons.wiki',
     'addons.twofactor',
+     # Additional addons
+     'addons.bitbucket',
+     'addons.box',
+     'addons.dataverse',
+     'addons.dropbox',
+     'addons.figshare',
+     'addons.forward',
+     'addons.github',
+#     'addons.gitlab',
+     'addons.googledrive',
+     'addons.mendeley',
+     'addons.owncloud',
+     'addons.s3',
+     'addons.zotero',
+#     'addons.swift',
+#     'addons.azureblobstorage',
+#     'addons.weko',
 
     # Internal apps
     'admin.common_auth',
@@ -120,6 +138,22 @@ MIGRATION_MODULES = {
     'addons_osfstorage': None,
     'addons_wiki': None,
     'addons_twofactor': None,
+    'addons_bitbucket': None,
+    'addons_box': None,
+    'addons_dataverse': None,
+    'addons_dropbox': None,
+    'addons_figshare': None,
+    'addons_forward': None,
+    'addons_github': None,
+    'addons_googledrive': None,
+    'addons_mendeley': None,
+    'addons_owncloud': None,
+    'addons_s3': None,
+    'addons_zotero': None,
+    'addons.swift': None,
+    'addons.gitlab': None,
+#    'addons.azureblobstorage': None,
+#    'addons.weko': None,
 }
 
 USE_TZ = True
@@ -239,16 +273,16 @@ DESK_KEY_SECRET = ''
 
 TINYMCE_APIKEY = ''
 
-if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', 'nplusone.ext.django',)
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', 'nplusone.ext.django.NPlusOneMiddleware',)
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': lambda(_): True,
-        'DISABLE_PANELS': {
-            'debug_toolbar.panels.templates.TemplatesPanel',
-            'debug_toolbar.panels.redirects.RedirectsPanel'
-        }
-    }
+#if DEBUG:
+#    INSTALLED_APPS += ('debug_toolbar', 'nplusone.ext.django',)
+#    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', 'nplusone.ext.django.NPlusOneMiddleware',)
+#    DEBUG_TOOLBAR_CONFIG = {
+#        'SHOW_TOOLBAR_CALLBACK': lambda(_): True,
+#        'DISABLE_PANELS': {
+#            'debug_toolbar.panels.templates.TemplatesPanel',
+#            'debug_toolbar.panels.redirects.RedirectsPanel'
+#        }
+#    }
 
 # If set to True, automated tests with extra queries will fail.
 NPLUSONE_RAISE = False

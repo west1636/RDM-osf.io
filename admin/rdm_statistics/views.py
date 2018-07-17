@@ -48,8 +48,10 @@ from website.util import waterbutler_api_url_for
 #from addons.base import utils as addon_utils
 #from framework.exceptions import HTTPError
 # for graph image and pdf
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+import matplotlib as mpl           # noqa
+mpl.use('Agg')                     # noqa
+import matplotlib.pyplot as plt    # noqa
+import matplotlib.ticker as ticker # noqa
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import seaborn as sns
 #from reportlab.pdfgen import canvas
@@ -59,8 +61,6 @@ from admin.base import settings
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 from admin.rdm_addons import utils
 
-#import matplotlib as mpl
-#mpl.use('Agg')
 
 # DEBUG = True
 # constant
@@ -572,6 +572,7 @@ class GatherView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         # simple authentication
+        print '---- GatherView.get'
         access_token = self.kwargs.get('access_token')
         if not simple_auth(access_token):
             response_hash = {'state': 'fail', 'error': 'access forbidden'}
@@ -589,6 +590,7 @@ class GatherView(TemplateView):
             self.adapter = requests.adapters.HTTPAdapter(max_retries=WB_MAX_RETRY)
             # user crawling
             for user in self.get_users():
+                print user
                 if user.affiliated_institutions.first():
                     institution = user.affiliated_institutions.first()
                 else:
@@ -756,7 +758,6 @@ def send_stat_mail(request, **kwargs):
         }
         response_hash[institution.name] = send_email(to_list=to_list, cc_list=cc_list, data=mail_data, user=user)
     response_json = json.dumps(response_hash)
-    # response_json = json.dumps(mail_data)
     response = HttpResponse(response_json, content_type='application/json')
     return response
 
@@ -794,7 +795,7 @@ def send_email(to_list, cc_list, data, user, backend='smtp'):
         if 'attach_data' in data:
             message.attach(data['attach_file'], data['attach_data'], 'application/pdf')
         # message.send()
-        connection.send_messages([message])
+#        connection.send_messages([message])
         connection.close()
     except Exception as e:
         ret['is_success'] = False
@@ -942,19 +943,7 @@ class IndexView(TemplateView):
         # user_addons = utils.get_addons_by_config_type('accounts', self.request.user)
         accounts_addons = [addon for addon in website_settings.ADDONS_AVAILABLE
                            if 'accounts' in addon.configs]
-        print([addon.short_name for addon in accounts_addons])
         # addon_settings = utils.get_addons_by_config_type('accounts', self.request.user)
-        for accounts_addon in accounts_addons:
-            print(accounts_addon)
-            print(dir(accounts_addon))
-            print(accounts_addon.short_name)
-            # settings = accounts_addon.user_settings()
-            # print(type(settings))
-            # print(dir(settings))
-            # pprint(settings)
-        # user_addons = addon_utils.get_addons_by_config_type('accounts', user)
-        # for account_addon in accounts_addons:
-        #     print(vars(account_addon.node_settings))
         js = []
         #filename = 'files.js'
         # config_entry='files'
@@ -973,16 +962,6 @@ class IndexView(TemplateView):
         print(dir(bookmark_collection))
         # nodes = AbstractNode.objects.all().filter(creator_id=user, category='project')
         nodes = AbstractNode.objects.all().select_related().filter(creator_id=user, category='project')
-        for node in nodes:
-            print(node)
-            print(node.creator)
-            print(node.get_addons())
-            # print(dir(node))
-            # print(node.guids.all())
-            # print(dir(node.guids))
-            # print(vars(node))
-            # pprint(node)
-        # print(nodes)
         data = {
             'test': 'test',
             # 'my_projects': my_projects

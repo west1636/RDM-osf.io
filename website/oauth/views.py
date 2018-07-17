@@ -40,7 +40,7 @@ def oauth_connect(service_name, auth):
 
 
 @must_be_logged_in
-def oauth_callback(service_name, auth):
+def osf_oauth_callback(service_name, auth):
     user = auth.user
     provider = get_service(service_name)
 
@@ -55,3 +55,29 @@ def oauth_callback(service_name, auth):
     oauth_complete.send(provider, account=provider.account, user=user)
 
     return {}
+
+def oauth_callback(service_name):
+    # OSFAdmin
+    osfadmin_callback_url = osfadmin_oauth_calback(service_name)
+    # if OAuth autherization failed on the OSFAdmin side,
+    # consider it that the request was for OSF.
+    if osfadmin_callback_url:
+        return redirect(osfadmin_callback_url)
+    # OSF
+    return osf_oauth_callback(service_name)
+
+def osfadmin_oauth_calback(service_name):
+    from furl import furl
+    import requests
+    import flask
+    from website.settings import ADMIN_INTERNAL_DOCKER_URL, ADMIN_URL
+    f = furl(ADMIN_INTERNAL_DOCKER_URL)
+    f.path = '/addons/oauth/callback/{}/'.format(service_name)
+    f.args = flask.request.args.to_dict(flat=False)
+
+    r = requests.get(f.url, headers=dict(flask.request.headers))
+    if not r.ok:
+        return None
+    f = furl(ADMIN_URL)
+    f.path = '/addons/oauth/complete/{}/'.format(service_name)
+    return f.url
