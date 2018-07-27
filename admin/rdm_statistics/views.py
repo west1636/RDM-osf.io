@@ -331,6 +331,7 @@ def create_image_string(provider, statistics_data):
     ax.tick_params(labelsize=9)
     # ax.get_yaxis().set_major_locator(ticker.MaxNLocator(integer=True))
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    plt.legend(loc='upper right',bbox_to_anchor=(1.1255555,1), ncol=1, borderaxespad=1, shadow=True)
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(integer=True))
     canvas = FigureCanvasAgg(fig)
     png_output = BytesIO()
@@ -552,6 +553,7 @@ class ImageView(RdmPermissionMixin, UserPassesTestMixin, View):
         ax.set_title(statistics_data.title + ' in ' + provider)
         ax.tick_params(labelsize=9)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+        plt.legend(loc='upper right',bbox_to_anchor=(1.1255555,1), ncol=1, borderaxespad=1, shadow=True)
         # ax.yaxis.set_minor_locator(ticker.MaxNLocator(integer=True))
         response = HttpResponse(content_type='image/png')
         canvas = FigureCanvasAgg(fig)
@@ -603,7 +605,8 @@ class GatherView(TemplateView):
                         for provider in providers:
                             self.count_list = []
                             path = '/'
-                            self.count_project_files(node_id=guid._id, provider=provider, path=path, cookies=cookie)
+                            if provider != 'wiki':
+                                self.count_project_files(node_id=guid._id, provider=provider, path=path, cookies=cookie)
                             if len(self.count_list) > 0:
                                 # print(node.id)
                                 self.regist_database(node=node, guid=guid, owner=user, institution=institution,
@@ -686,7 +689,7 @@ class GatherView(TemplateView):
     def count_project_files(self, node_id, provider, path, cookies):
         """recursive count"""
         # print ('path : ' + path)
-        url_api = self.get_wb_url(node_id=node_id, provider=provider, path=path, cookie=cookies)
+        url_api = self.get_wb_url(node_id=node_id, provider=provider, path=re.sub(r'^//','/',path), cookie=cookies)
         # print(url_api)
         self.session.mount('http://', self.adapter)
         headers = {'content-type': 'application/json'}
@@ -705,7 +708,10 @@ class GatherView(TemplateView):
         # parse response json
         if 'data' in response_json.keys():
             for obj in response_json['data']:
-                root, ext = os.path.splitext(obj['id'])
+                if provider != 'osfstorage':
+                    root, ext = os.path.splitext(obj['id'])
+                else:
+                    root, ext = os.path.splitext(obj['attributes']['materialized'])
                 if not ext:
                     ext = 'none'
                 if obj['attributes']['kind'] == 'file':
