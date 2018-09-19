@@ -42,6 +42,7 @@ RUN set -ex \
         libxslt1-dev \
         zlib1g-dev \
         curl \
+        tk \
         # cryptography
         build-essential \
         libssl-dev \
