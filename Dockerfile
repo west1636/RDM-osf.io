@@ -219,4 +219,9 @@ RUN for module in \
     ; done \
     && rm ./website/settings/local.py ./api/base/settings/local.py
 
+RUN invoke requirements --quick
+RUN invoke assets --dev
+
+RUN invoke admin.assets --dev
+
 CMD ["gosu", "nobody", "invoke", "--list"]
