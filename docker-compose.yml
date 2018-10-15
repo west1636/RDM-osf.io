@@ -239,6 +239,7 @@ services:
 
   ember_osf_web:
     image: quay.io/centerforopenscience/osf-web:develop-local
+    #image: ember-osf-web:local
     command:
       - /bin/bash
       - -c
@@ -258,6 +259,7 @@ services:
       - 41953:41953
     volumes:
       - ember_osf_web_dist_vol:/code/dist
+      - ember-osf-web-config:/code/config
     stdin_open: true
 
   #############
