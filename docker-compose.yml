@@ -239,7 +239,6 @@ services:
 
   ember_osf_web:
     image: quay.io/centerforopenscience/osf-web:develop-local
-    #image: ember-osf-web:local
     command:
       - /bin/bash
       - -c
