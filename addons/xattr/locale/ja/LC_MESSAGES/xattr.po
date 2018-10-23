@@ -1,0 +1,382 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"PO-Revision-Date: 2018-08-30 13:40\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+
+#: addons/xattr/translations/contributor_attribute.py:2
+msgid "Drag and drop contributors to change listing order."
+msgstr "ドラッグアンドドロップでコントリビュータの順番を変えることができます。"
+
+#: addons/xattr/translations/contributor_attribute.py:3
+msgid "No contributors found"
+msgstr "コントリビュータを見つかりませんでした。"
+
+#: addons/xattr/translations/contributor_attribute.py:4
+msgid "Admins on Parent Projects"
+msgstr "親プロジェクトの管理者"
+
+#: addons/xattr/translations/contributor_attribute.py:5
+msgid "No administrators from parent project found."
+msgstr "親プロジェクトの管理者は見つかりませんでした。"
+
+#: addons/xattr/translations/contributor_attribute.py:6
+msgid "Permission"
+msgstr "権限"
+
+#: addons/xattr/translations/contributor_attribute.py:7
+msgid "Visible"
+msgstr "表示有無"
+
+#: addons/xattr/translations/contributor_attribute.py:8
+msgid "Contributor Type"
+msgstr "コントリビュータタイプ"
+
+#: addons/xattr/translations/contributor_attribute.py:9
+msgid "Contributor Remarks"
+msgstr "コントリビュータ備考"
+
+#: addons/xattr/translations/contributor_attribute.py:10
+msgid "Contributor Assign Situation"
+msgstr "コントリビュータアサイン状況"
+
+#: addons/xattr/translations/contributor_attribute.py:11
+msgid "Contributor Representation Setting"
+msgstr "コントリビュータログ表示設定"
+
+#: addons/xattr/translations/contributor_attribute.py:12
+msgid "Contributor Name"
+msgstr "コントリビュータ名称"
+
+#: addons/xattr/translations/contributor_attribute.py:13
+msgid "Contributor Alternative"
+msgstr "コントリビュータ別名"
+
+#: addons/xattr/translations/contributor_attribute.py:14
+msgid "Organization Type"
+msgstr "所属機関分類"
+
+#: addons/xattr/translations/contributor_attribute.py:15
+msgid "Idp"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:16
+msgid "Idp ID"
+msgstr "Idp 識別ID"
+
+#: addons/xattr/translations/contributor_attribute.py:17
+msgid "Affiliation Name"
+msgstr "Idp 発行組織名称"
+
+#: addons/xattr/translations/contributor_attribute.py:18
+msgid "Idp Organization Habitation"
+msgstr "Idp 発行組織住所"
+
+#: addons/xattr/translations/contributor_attribute.py:19
+msgid "Idp Organization Phone Number"
+msgstr "Idp 発行組織問い合わせ電話番号"
+
+#: addons/xattr/translations/contributor_attribute.py:20
+msgid "Idp Organization Mail Address"
+msgstr "Idp 発行組織問い合わせメールアドレス"
+
+#: addons/xattr/translations/contributor_attribute.py:21
+msgid "Idp Organization Icon"
+msgstr "Idp 発行組織アイコン画像"
+
+#: addons/xattr/translations/contributor_attribute.py:22
+msgid "Idp Organization Banner"
+msgstr "Idp 発行組織バナー画像"
+
+#: addons/xattr/translations/contributor_attribute.py:23
+#: addons/xattr/translations/funding_attribute.py:16
+msgid "Organization"
+msgstr "組織"
+
+#: addons/xattr/translations/contributor_attribute.py:24
+msgid "Research Organization ID"
+msgstr "科研機関ID"
+
+#: addons/xattr/translations/contributor_attribute.py:25
+msgid "Organization Recognition ID"
+msgstr "機関組織識別ID"
+
+#: addons/xattr/translations/contributor_attribute.py:26
+msgid "Organization Abbreviation"
+msgstr "科研機関名略称"
+
+#: addons/xattr/translations/contributor_attribute.py:27
+msgid "Organization Stratum Relations"
+msgstr "機関組織階層関係"
+
+#: addons/xattr/translations/contributor_attribute.py:28
+msgid "Organization Department Name"
+msgstr "機関組織部門名称"
+
+#: addons/xattr/translations/contributor_attribute.py:29
+msgid "Organization Department English Name"
+msgstr "機関組織部門英名"
+
+#: addons/xattr/translations/contributor_attribute.py:30
+msgid "Organization Country"
+msgstr "機関組織所在国"
+
+#: addons/xattr/translations/contributor_attribute.py:31
+msgid "Organization Zip Code"
+msgstr "機関組織所在地郵便番号 "
+
+#: addons/xattr/translations/contributor_attribute.py:32
+msgid "Organization Habitation"
+msgstr "機関組織所在地住所"
+
+#: addons/xattr/translations/contributor_attribute.py:33
+msgid "Organization Web Url"
+msgstr "機関組織WebサイトURL"
+
+#: addons/xattr/translations/contributor_attribute.py:34
+msgid "Storage Department"
+msgstr "ストレージ管理部"
+
+#: addons/xattr/translations/contributor_attribute.py:35
+msgid "Storage Department Organization Recognition ID"
+msgstr "ストレージ管理部門機関識別ID"
+
+#: addons/xattr/translations/contributor_attribute.py:36
+msgid "Storage Department Name"
+msgstr "ストレージ管理部門名称"
+
+#: addons/xattr/translations/contributor_attribute.py:37
+msgid "Storage Department En Name"
+msgstr "ストレージ管理部門英名"
+
+#: addons/xattr/translations/contributor_attribute.py:38
+msgid "Storage Department Phone Number"
+msgstr "ストレージ管理部門連絡先電話番号"
+
+#: addons/xattr/translations/contributor_attribute.py:39
+msgid "Storage Department Mail Address"
+msgstr "ストレージ管理部門連絡先メールアドレス"
+
+#: addons/xattr/translations/contributor_attribute.py:40
+msgid "Version"
+msgstr "バージョン"
+
+#: addons/xattr/translations/funding_attribute.py:2
+msgid "Funder Reference"
+msgstr "配分機関名称"
+
+#: addons/xattr/translations/funding_attribute.py:3
+msgid "Funder Identifier"
+msgstr "配分機関種別ID"
+
+#: addons/xattr/translations/funding_attribute.py:4
+msgid "Award Title"
+msgstr "課題名"
+
+#: addons/xattr/translations/funding_attribute.py:5
+msgid "Representative Researcher"
+msgstr "代表研究者"
+
+#: addons/xattr/translations/funding_attribute.py:6
+msgid "Period"
+msgstr "期間"
+
+#: addons/xattr/translations/funding_attribute.py:7
+msgid "Research Item"
+msgstr "研究種目"
+
+#: addons/xattr/translations/funding_attribute.py:8
+#: addons/xattr/translations/project_attribute.py:6
+msgid "Research Field"
+msgstr "領域"
+
+#: addons/xattr/translations/funding_attribute.py:9
+msgid "Research Organization"
+msgstr "研究機関"
+
+#: addons/xattr/translations/funding_attribute.py:10
+msgid "Status"
+msgstr "ステータス"
+
+#: addons/xattr/translations/funding_attribute.py:11
+msgid "Budget Category"
+msgstr "配分機関課題種別"
+
+#: addons/xattr/translations/funding_attribute.py:12
+msgid "Funding Programme"
+msgstr "配分機関の制度事業"
+
+#: addons/xattr/translations/funding_attribute.py:13
+msgid "Available Funds"
+msgstr "利用可能資金"
+
+#: addons/xattr/translations/funding_attribute.py:14
+msgid "Name"
+msgstr "氏名"
+
+#: addons/xattr/translations/funding_attribute.py:15
+msgid "Alternate Name"
+msgstr "フリガナ"
+
+#: addons/xattr/translations/funding_attribute.py:16
+msgid "Organization"
+msgstr "所属機関"
+
+#: addons/xattr/translations/funding_attribute.py:17
+msgid "Department"
+msgstr "部署"
+
+#: addons/xattr/translations/funding_attribute.py:18
+msgid "Address"
+msgstr "住所"
+
+#: addons/xattr/translations/funding_attribute.py:19
+msgid "Telephone"
+msgstr "電話番号"
+
+#: addons/xattr/translations/funding_attribute.py:20
+msgid "Email"
+msgstr "メールアドレス"
+
+#: addons/xattr/translations/funding_attribute.py:21
+msgid "Funder Subject Outline"
+msgstr "資金配分課題概要"
+
+#: addons/xattr/translations/funding_attribute.py:22
+msgid "Funder Subject Result Outline"
+msgstr "資金配分課題成果概要"
+
+#: addons/xattr/translations/funding_attribute.py:23
+msgid "Funder Subject Reach Degree"
+msgstr "資金配分課題達成度"
+
+#: addons/xattr/translations/funding_attribute.py:24
+msgid "Funder Propulsion Scheme"
+msgstr "資金配分課題推進方策"
+
+#: addons/xattr/translations/funding_attribute.py:25
+msgid "Funder Evaluation Mark"
+msgstr "資金配分課題評価記号"
+
+#: addons/xattr/translations/funding_attribute.py:26
+msgid "Funder Evaluation Outline"
+msgstr "資金配分課題評価概要"
+
+#: addons/xattr/translations/funding_attribute.py:27
+msgid "Payment Year"
+msgstr "配分金年度"
+
+#: addons/xattr/translations/funding_attribute.py:28
+msgid "Direct Costs"
+msgstr "配分金直接費（千円）"
+
+#: addons/xattr/translations/funding_attribute.py:29
+msgid "Indirect Costs"
+msgstr "配分金間接費（千円）"
+
+#: addons/xattr/translations/funding_attribute.py:30
+msgid "Total Costs"
+msgstr "資金合計（千円）"
+
+#: addons/xattr/translations/project_attribute.py:2
+msgid "Project Extended Information Edit"
+msgstr "プロジェクト拡張情報編集"
+
+#: addons/xattr/translations/project_attribute.py:3
+msgid "Title"
+msgstr "研究課題名称"
+
+#: addons/xattr/translations/project_attribute.py:4
+msgid "Affiliation"
+msgstr "研究課題名称"
+
+#: addons/xattr/translations/project_attribute.py:5
+msgid "Project Identification"
+msgstr "プロジェクト識別"
+
+#: addons/xattr/translations/project_attribute.py:7
+msgid "Description"
+msgstr "研究課題概要"
+
+#: addons/xattr/translations/project_attribute.py:8
+msgid "Project Status"
+msgstr "プロジェクト ステータス"
+
+#: addons/xattr/translations/project_attribute.py:9
+msgid "Range Type"
+msgstr "分野分類"
+
+#: addons/xattr/translations/project_attribute.py:10
+msgid "Range"
+msgstr "分野"
+
+#: addons/xattr/translations/xattr.py:40
+msgid "Attributes"
+msgstr "拡張属性"
+
+#: addons/xattr/translations/xattr.py:41
+msgid "Base"
+msgstr "基本"
+
+#: addons/xattr/translations/xattr.py:42
+msgid "Fundings"
+msgstr "研究資金"
+
+#: addons/xattr/translations/xattr.py:43
+msgid "Contributors"
+msgstr "コントリビュータ"
+
+#: addons/xattr/translations/xattr.py:44
+msgid "Save"
+msgstr "保存"
+
+#: addons/xattr/translations/xattr.py:45
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: addons/xattr/translations/xattr.py:46
+msgid "Remove"
+msgstr "削除"
+
+#: addons/xattr/translations/xattr.py:47
+msgid "Add"
+msgstr "追加"
+
+#: addons/xattr/translations/xattr.py:48
+msgid "Edit"
+msgstr "編集"
+
+#: addons/xattr/translations/xattr.py:49
+msgid "Start Date"
+msgstr "開始日"
+
+#: addons/xattr/translations/xattr.py:50
+msgid "End Date"
+msgstr "終了日"
+
+#: addons/xattr/translations/xattr.py:51
+msgid "Start"
+msgstr "開始"
+
+#: addons/xattr/translations/xattr.py:52
+msgid "Complete"
+msgstr "終了"
+
+#: addons/xattr/translations/xattr.py:53
+msgid "Close"
+msgstr "閉じる"
+
+#: addons/xattr/translations/xattr.py:54
+msgid "Save Changes"
+msgstr "変更を保存する"
+

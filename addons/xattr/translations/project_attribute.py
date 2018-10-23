@@ -1,0 +1,10 @@
+def _project_attribute_translations(t, _):
+    t['Project Extended Information Edit'] = _('Project Extended Information Edit')
+    t['Title'] = _('Title')
+    t['Affiliation'] = _('Affiliation')
+    t['Project Identification'] = _('Project Identification')
+    t['Research Field'] = _('Research Field')
+    t['Description'] = _('Description')
+    t['Project Status'] = _('Project Status')
+    t['Range Type'] = _('Range Type')
+    t['Range'] = _('Range')

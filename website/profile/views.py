@@ -4,6 +4,9 @@ import httplib
 import httplib as http  # TODO: Inconsistent usage of aliased import
 from dateutil.parser import parse as parse_date
 
+import requests
+import json
+
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from flask import request
@@ -32,6 +35,7 @@ from website.util.time import throttle_period_expired
 from website.util import api_v2_url, web_url_for, paths
 from website.util.sanitize import escape_html
 from addons.base import utils as addon_utils
+from .translations.user_attribute import translate
 
 logger = logging.getLogger(__name__)
 
@@ -84,19 +88,117 @@ def resend_confirmation(auth):
 
     return _profile_view(user, is_profile=True)
 
-@must_be_logged_in
-def extend_profile_view(auth, **kwargs):
-    user = auth.user
-    user_addons = addon_utils.get_addons_by_config_type('user', user)
 
-    return {
-        'user_id': user._id,
-        'addons': user_addons,
-        'addons_js': collect_user_config_js([addon for addon in settings.ADDONS_AVAILABLE if 'user' in addon.configs]),
-        'addons_css': [],
-        'requested_deactivation': user.requested_deactivation,
-        'external_identity': user.external_identity
+# RDM
+@must_be_logged_in
+def user_attribute_post(auth):
+    uid = auth.user.id
+    data = request.get_json()
+
+    user_attribute = {
+        'content': data['userAttribute'],
+        'user_id': uid
     }
+
+    r1 = api_user_attribute_put(uid, user_attribute)
+
+    response = {
+        'status': 'OK'
+    }
+    
+    if r1.status_code != 200:
+        response = {
+            'Status': 'Failed'
+        }
+    return response
+
+
+# RDM
+@must_be_logged_in
+def user_attribute(auth):
+    uid = auth.user.id
+    ret = {}
+    ret['t'] = translate(['en', 'ja'])
+
+    cont = {
+        'en': {
+            'fullName': '',
+            'fullNameKana': '',
+            'givenName': '',
+            'givenNameKana': '',
+            'middleName': '',
+            'middleNameKana': '',
+            'familyName': '',
+            'familyNameKana': '',
+            'suffix': '',
+            'suffixKana': '',
+            'alias': '',
+            'aliasKana': '',
+            'eRadId': '',
+            'researchMapId': '',
+            'organizationType': [],
+            'idp': [],
+            'idpName': '',
+            'idpHabitation': '',
+            'idpPhoneNumber': '',
+            'idpAddress': '',
+            'idpIcon': '',
+            'idpBanner': '',
+            'organizationId': [],
+            'organizationRelation': '',
+            'organizationName': '',
+            'organizationCountry': '',
+            'organizationCode': '',
+            'organizationHabitation': '',
+            'organizationUrl': '',
+            'positionId': [],
+            'startDate': '',
+            'endDate': '',
+        },
+        'ja': {
+            'fullName': '',
+            'fullNameKana': '',
+            'givenName': '',
+            'givenNameKana': '',
+            'middleName': '',
+            'middleNameKana': '',
+            'familyName': '',
+            'familyNameKana': '',
+            'suffix': '',
+            'suffixKana': '',
+            'alias': '',
+            'aliasKana': '',
+            'eRadId': '',
+            'researchMapId': '',
+            'organizationType': [],
+            'idp': [],
+#            'idpName': '',
+#            'idpHabitation': '',
+#            'idpPhoneNumber': '',
+#            'idpAddress': '',
+#            'idpIcon': '',
+#            'idpBanner': '',
+            'organizationId': [],
+#            'organizationRelation': '',
+#            'organizationName': '',
+#            'organizationCountry': '',
+#            'organizationCode': '',
+#            'organizationHabitation': '',
+#            'organizationUrl': '',
+            'positionId': [],
+            'startDate': '',
+            'endDate': '',
+        }
+    }
+
+    try:
+        cont.update(json.loads(api_user_attribute_get(uid).text)['data'])
+    except Exception:
+        pass
+    ret['cont'] = cont
+
+    return ret
+
 
 @must_be_logged_in_without_checking_email
 def update_user(auth):
@@ -123,7 +225,7 @@ def update_user(auth):
 
         available_emails = [
             each.strip().lower() for each in
-            list(user.emails.values_list('address', flat=True)) + user.unconfirmed_emails
+            list(user.emails.values_list('address', flat=True)) + user.unconfired_emails
         ]
         # removals
         removed_emails = [
@@ -240,6 +342,57 @@ def _profile_view(profile, is_profile=False, include_node_counts=False):
         }
         return ret
     raise HTTPError(http.NOT_FOUND)
+
+# RDM
+def api_user_attribute_get(uid):
+    url = '%sv2/attributes/user?uid=%s' % (
+        settings.XATTR_API_SERVER_URL,
+        uid
+    )
+    return requests.get(url)
+
+# RDM
+def api_user_attribute_put(uid, data):
+    url = '%sv2/attributes/user?uid=%s' % (
+        settings.XATTR_API_SERVER_URL,
+        uid
+    )
+    return requests.put(url, json=data)
+
+# RDM
+def api_commonmaster_list_get(pid):
+    url = '%sapi/commonmasters/t=%s&f=%s&l=%s' % (
+        settings.COMMONMASTER_API_SERVER_URL,
+        table_type,
+        field_name,
+        language
+    )
+    resp = requests.get(url)
+    return json.loads(resp.text)
+
+# RDM
+def api_commonmaster_detail_get(pid):
+    url = '%sapi/commonmasters/t=%s&f=%s&l=%s&v=%s' % (
+        settings.COMMONMASTER_API_SERVER_URL,
+        table_type,
+        field_name,
+        language,
+        value
+    )
+    resp = requests.get(url)
+    return json.loads(resp.text)
+
+# RDM
+def api_commonmaster_layerlist_get(pid):
+    url = '%sapi/commonmasters/t=%s&f=%s&l=%si&where=%s' % (
+        settings.COMMONMASTER_API_SERVER_URL,
+        table_type,
+        field_name,
+        language,
+        where
+    )
+    resp = requests.get(url)
+    return json.loads(resp.text)
 
 @must_be_logged_in_without_checking_email
 def profile_view_json(auth):

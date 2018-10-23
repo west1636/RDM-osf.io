@@ -63,7 +63,7 @@ CSRF_COOKIE_SECURE = osf_settings.SECURE_MODE
 CSRF_COOKIE_HTTPONLY = osf_settings.SECURE_MODE
 
 ALLOWED_HOSTS = [
-    '.osf.io'
+    '.osf.io',
 ]
 
 
@@ -110,7 +110,8 @@ INSTALLED_APPS = (
     'addons.swift',
     'addons.azureblobstorage',
     'addons.weko',
-    'addons.jupyterhub'
+    'addons.jupyterhub',
+    'addons.xattr'
 )
 
 # local development using https
@@ -264,7 +265,7 @@ BYPASS_THROTTLE_TOKEN = 'test-token'
 OSF_SHELL_USER_IMPORTS = None
 
 # Settings for use in the admin
-OSF_URL = 'https://osf.io'
+OSF_URL = 'http://ec2-13-114-64-85.ap-northeast-1.compute.amazonaws.com:5000/'
 
 SELECT_FOR_UPDATE_ENABLED = True
 

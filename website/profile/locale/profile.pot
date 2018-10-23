@@ -1,0 +1,151 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-08-31 11:55+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+
+#: website/profile/translations/user_attribute.py:35
+msgid "User Extended Information Edit"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:36
+msgid "Full Name (e.g. 山田　太郎)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:37
+msgid "Given Name (e.g. 太郎)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:38
+msgid "Middle Name"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:39
+msgid "Family Name(e.g. 山田)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:40
+msgid "Suffix"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:41
+msgid "Alias"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:42
+msgid "Full Name(kana) (e.g. Yamada Taro)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:43
+msgid "Given Name(kana) (e.g. Taro)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:44
+msgid "Middle Name(kana)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:45
+msgid "Family Name(kana) (e.g. Yamada)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:46
+msgid "Suffix(kana)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:47
+msgid "Alias(kana)"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:48
+msgid "E-Rad ID"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:49
+msgid "ResearchMap ID"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:50
+msgid "Organization Type"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:51
+msgid "Idp"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:52
+msgid "Idp Organization Name"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:53
+msgid "Idp Organization Habitation"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:54
+msgid "Idp Organization Phone Number"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:55
+msgid "Idp Organization Address"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:56
+msgid "Idp Organization Icon"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:57
+msgid "Idp Organization Banner"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:58
+msgid "Organization"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:59
+msgid "Organization Stratum Relations"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:60
+msgid "Organization Department Name"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:61
+msgid "Organization Country"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:62
+msgid "Organization Code"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:63
+msgid "Organization Habitation"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:64
+msgid "Organization Web URL"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:65
+msgid "Degree"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:66
+msgid "Start Date"
+msgstr ""
+
+#: website/profile/translations/user_attribute.py:67
+msgid "End Date"
+msgstr ""
+

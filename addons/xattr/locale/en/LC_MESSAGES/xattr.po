@@ -1,0 +1,378 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"PO-Revision-Date: 2018-08-30 13:40\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+
+#: addons/xattr/translations/contributor_attribute.py:2
+msgid "Drag and drop contributors to change listing order."
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:3
+msgid "No contributors found"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:4
+msgid "Admins on Parent Projects"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:5
+msgid "No administrators from parent project found."
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:6
+msgid "Permission"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:7
+msgid "Visible"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:8
+msgid "Contributor Type"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:9
+msgid "Contributor Remarks"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:10
+msgid "Contributor Assign Situation"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:11
+msgid "Contributor Representation Setting"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:12
+msgid "Contributor Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:13
+msgid "Contributor Alternative"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:14
+msgid "Organization Type"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:15
+msgid "Idp"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:16
+msgid "Idp ID"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:17
+msgid "Affiliation Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:18
+msgid "Idp Organization Habitation"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:19
+msgid "Idp Organization Phone Number"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:20
+msgid "Idp Organization Mail Address"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:21
+msgid "Idp Organization Icon"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:22
+msgid "Idp Organization Banner"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:23
+#: addons/xattr/translations/funding_attribute.py:16
+msgid "Organization"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:24
+msgid "Research Organization ID"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:25
+msgid "Organization Recognition ID"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:26
+msgid "Organization Abbreviation"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:27
+msgid "Organization Stratum Relations"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:28
+msgid "Organization Department Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:29
+msgid "Organization Department English Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:30
+msgid "Organization Country"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:31
+msgid "Organization Zip Code"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:32
+msgid "Organization Habitation"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:33
+msgid "Organization Web Url"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:34
+msgid "Storage Department"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:35
+msgid "Storage Department Organization Recognition ID"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:36
+msgid "Storage Department Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:37
+msgid "Storage Department En Name"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:38
+msgid "Storage Department Phone Number"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:39
+msgid "Storage Department Mail Address"
+msgstr ""
+
+#: addons/xattr/translations/contributor_attribute.py:40
+msgid "Version"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:2
+msgid "Funder Reference"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:3
+msgid "Funder Identifier"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:4
+msgid "Award Title"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:5
+msgid "Representative Researcher"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:6
+msgid "Period"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:7
+msgid "Research Item"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:8
+#: addons/xattr/translations/project_attribute.py:6
+msgid "Research Field"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:9
+msgid "Research Organization"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:10
+msgid "Status"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:11
+msgid "Budget Category"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:12
+msgid "Funding Programme"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:13
+msgid "Available Funds"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:14
+msgid "Name"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:15
+msgid "Alternate Name"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:17
+msgid "Department"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:18
+msgid "Address"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:19
+msgid "Telephone"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:20
+msgid "Email"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:21
+msgid "Funder Subject Outline"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:22
+msgid "Funder Subject Result Outline"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:23
+msgid "Funder Subject Reach Degree"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:24
+msgid "Funder Propulsion Scheme"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:25
+msgid "Funder Evaluation Mark"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:26
+msgid "Funder Evaluation Outline"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:27
+msgid "Payment Year"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:28
+msgid "Direct Costs"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:29
+msgid "Indirect Costs"
+msgstr ""
+
+#: addons/xattr/translations/funding_attribute.py:30
+msgid "Total Costs"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:2
+msgid "Project Extended Information Edit"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:3
+msgid "Title"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:4
+msgid "Affiliation"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:5
+msgid "Project Identification"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:7
+msgid "Description"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:8
+msgid "Project Status"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:9
+msgid "Range Type"
+msgstr ""
+
+#: addons/xattr/translations/project_attribute.py:10
+msgid "Range"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:40
+msgid "Attributes"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:41
+msgid "Base"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:42
+msgid "Fundings"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:43
+msgid "Contributors"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:44
+msgid "Save"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:45
+msgid "Cancel"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:46
+msgid "Remove"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:47
+msgid "Add"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:48
+msgid "Edit"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:49
+msgid "Start Date"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:50
+msgid "End Date"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:51
+msgid "Start"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:52
+msgid "Complete"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:53
+msgid "Close"
+msgstr ""
+
+#: addons/xattr/translations/xattr.py:54
+msgid "Save Changes"
+msgstr ""
+

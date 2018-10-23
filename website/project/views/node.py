@@ -52,6 +52,7 @@ from addons.wiki.utils import serialize_wiki_widget
 from addons.dataverse.utils import serialize_dataverse_widget
 from addons.forward.utils import serialize_forward_widget
 from addons.jupyterhub.utils import serialize_jupyterhub_widget
+from addons.xattr.utils import serialize_xattr_widget
 
 r_strip_html = lambda collection: rapply(collection, strip_html)
 logger = logging.getLogger(__name__)
@@ -460,7 +461,8 @@ def view_project(auth, node, **kwargs):
         'zotero': None,
         'forward': None,
         'dataverse': None,
-        'jupyterhub': None
+        'jupyterhub': None,
+        'xattr': None
     }
 
     if 'wiki' in ret['addons']:
@@ -484,6 +486,9 @@ def view_project(auth, node, **kwargs):
 
     if 'jupyterhub' in ret['addons']:
         addons_widget_data['jupyterhub'] = serialize_jupyterhub_widget(node)
+
+    if 'xattr' in ret['addons']:
+        addons_widget_data['xattr'] = serialize_xattr_widget(node)
 
     ret.update({'addons_widget_data': addons_widget_data})
     return ret

@@ -19,5 +19,8 @@
 
       <li class="${'active' if current_page == 'personal_tokens' else ''}">
         <a href="${ '#' if current_page == 'personal_tokens' else web_url_for('personal_access_token_list')}">Personal access tokens</a></li>
+
+      <li class="${'active' if current_page == 'user_attribute' else ''}">
+        <a href="${ '#' if current_page == 'user_attribute' else web_url_for('user_attribute')}">Attribute</a></li>
   </ul>
 </div>

@@ -49,6 +49,7 @@ var entry = {
     'profile-settings-applications-detail-page': staticPath('js/pages/profile-settings-applications-detail-page.js'),
     'profile-settings-personal-tokens-list-page': staticPath('js/pages/profile-settings-personal-tokens-list-page.js'),
     'profile-settings-personal-tokens-detail-page': staticPath('js/pages/profile-settings-personal-tokens-detail-page.js'),
+    'userAttribute': staticPath('js/pages/userAttribute.js'),
     'sharing-page': staticPath('js/pages/sharing-page.js'),
     'conference-page': staticPath('js/pages/conference-page.js'),
     'meetings-page': staticPath('js/pages/meetings-page.js'),

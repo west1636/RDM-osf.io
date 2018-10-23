@@ -862,6 +862,13 @@ def make_url_map(app):
             'get',
             profile_views.personal_access_token_detail,
             OsfWebRenderer('profile/personal_tokens_detail.mako', trust=False)
+        ),
+        # RDM user attribute used
+        Rule(
+            '/settings/attributes/',
+            'get',
+            profile_views.user_attribute,
+            OsfWebRenderer('profile/user_attribute.mako', trust=False)
         )
     ])
 
@@ -967,6 +974,26 @@ def make_url_map(app):
             ],
             'put',
             profile_views.unserialize_schools,
+            json_renderer
+        ),
+
+        # RDM user attribute used
+        Rule(
+            [
+                '/settings/attributes/',
+            ],
+            'get',
+            profile_views.user_attribute,
+            json_renderer
+        ),
+
+        # RDM user attribute used
+        Rule(
+            [
+                '/settings/attributes/',
+            ],
+            'post',
+            profile_views.user_attribute_post,
             json_renderer
         ),
 

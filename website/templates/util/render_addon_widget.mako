@@ -114,6 +114,38 @@
                     </div>
                 % endif
 
+                % if addon_name == 'xattr':
+                        <div id="xattrScope" class="scripted">
+                            <input type="hidden" id="xattr-project" value="${addon_data['project']}" />
+                            <input type="hidden" id="xattr-fundings" value="${addon_data['fundings']}" />
+                            <input type="hidden" id="xattr-contributors" value="${addon_data['contributors']}" />
+                            <span data-bind="if: loaded">
+                                <span data-bind="if: connected">
+                                    <div id="projectExpanded" class="m-b-md">
+                                        <div class="citation-list">
+                                            <div class="f-w-xl">Title</div>
+                                            <span data-bind="text: title"></span>
+                                            <div class="f-w-xl m-t-md">Affiliation</div>
+                                            <span data-bind="text: affiliation"></span>
+                                            <div class="f-w-xl m-t-md">Project Type</div>
+                                            <span data-bind="text: projectType"></span>
+                                            <div class="f-w-xl m-t-md">Project Status</div>
+                                            <span data-bind="text: projectStatus"></span>
+                                        </div>
+                                    </div>
+                                   <div id="more_link">
+                                        % if addon_data['more']:
+                                        <a href="${node['url']}${addon_data['short_name']}/">Read More</a>
+                                        % endif
+                                    </div>
+                                </span>
+                            </span>
+                            <div class="help-block">
+                                <p data-bind="html: message, attr: {class: messageClass}"></p>
+                            </div>
+                        </div>
+                % endif
+
                 % if addon_name == 'zotero' or addon_name == 'mendeley':
                     <script type="text/javascript">
                         window.contextVars = $.extend(true, {}, window.contextVars, {

@@ -22,7 +22,8 @@
         "weko",
         "jupyterhub",
         "s3compat",
-        "nextcloud"
+        "nextcloud",
+        "xattr"
     ],
     "addons_default": [
         "osfstorage"
@@ -46,7 +47,8 @@
         "azureblobstorage": "partial",
         "weko": "partial",
         "s3compat": "partial",
-        "nextcloud": "partial"
+        "nextcloud": "partial",
+        "xattr": "full"
     },
     "addons_commentable": [
         "osfstorage",
@@ -96,7 +98,8 @@
         "weko": "WEKO is an application server to share, archive data.",
         "jupyterhub": "Jupyter is a web-based interactive computational environment. Files on an OSF project can be imported to/exported from Jupyter",
         "s3compat": "S3 Compatible Storage is a file storage add-on. Connect your S3 Compatible Storage account to an OSF project to interact with files hosted on S3 Compatible Storage via the OSF.",
-        "nextcloud": "Nextcloud is an open source, self-hosted file sync and share app platform. Connect your Nextcloud account to an OSF project to interact with files hosted on Nextcloud via the OSF."
+        "nextcloud": "Nextcloud is an open source, self-hosted file sync and share app platform. Connect your Nextcloud account to an OSF project to interact with files hosted on Nextcloud via the OSF.",
+        "xattr": "The xattr is a project or user extended information."
     },
     "addons_url": {
         "box": "http://www.box.com",
