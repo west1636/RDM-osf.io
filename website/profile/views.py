@@ -105,7 +105,7 @@ def user_attribute_post(auth):
     response = {
         'status': 'OK'
     }
-    
+
     if r1.status_code != 200:
         response = {
             'Status': 'Failed'
@@ -172,19 +172,19 @@ def user_attribute(auth):
             'researchMapId': '',
             'organizationType': [],
             'idp': [],
-#            'idpName': '',
-#            'idpHabitation': '',
-#            'idpPhoneNumber': '',
-#            'idpAddress': '',
-#            'idpIcon': '',
-#            'idpBanner': '',
+            #            'idpName': '',
+            #            'idpHabitation': '',
+            #            'idpPhoneNumber': '',
+            #            'idpAddress': '',
+            #            'idpIcon': '',
+            #            'idpBanner': '',
             'organizationId': [],
-#            'organizationRelation': '',
-#            'organizationName': '',
-#            'organizationCountry': '',
-#            'organizationCode': '',
-#            'organizationHabitation': '',
-#            'organizationUrl': '',
+            #            'organizationRelation': '',
+            #            'organizationName': '',
+            #            'organizationCountry': '',
+            #            'organizationCode': '',
+            #            'organizationHabitation': '',
+            #            'organizationUrl': '',
             'positionId': [],
             'startDate': '',
             'endDate': '',
@@ -360,35 +360,35 @@ def api_user_attribute_put(uid, data):
     return requests.put(url, json=data)
 
 # RDM
-def api_commonmaster_list_get(pid):
+def api_commonmaster_list_get(table_type, field_name, lang):
     url = '%sapi/commonmasters/t=%s&f=%s&l=%s' % (
         settings.COMMONMASTER_API_SERVER_URL,
         table_type,
         field_name,
-        language
+        lang
     )
     resp = requests.get(url)
     return json.loads(resp.text)
 
 # RDM
-def api_commonmaster_detail_get(pid):
+def api_commonmaster_detail_get(table_type, field_name, lang, value):
     url = '%sapi/commonmasters/t=%s&f=%s&l=%s&v=%s' % (
         settings.COMMONMASTER_API_SERVER_URL,
         table_type,
         field_name,
-        language,
+        lang,
         value
     )
     resp = requests.get(url)
     return json.loads(resp.text)
 
 # RDM
-def api_commonmaster_layerlist_get(pid):
+def api_commonmaster_layerlist_get(table_type, field_name, lang, where):
     url = '%sapi/commonmasters/t=%s&f=%s&l=%si&where=%s' % (
         settings.COMMONMASTER_API_SERVER_URL,
         table_type,
         field_name,
-        language,
+        lang,
         where
     )
     resp = requests.get(url)
