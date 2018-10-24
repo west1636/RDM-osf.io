@@ -27,6 +27,6 @@ def serialize_xattr_widget(node):
         }
         xattr_widget_data.update(node_addon.config.to_json())
         return xattr_widget_data
-    exept:
+    except:
         xattr_widget_data = {}
         return xattr_widget_data
