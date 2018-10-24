@@ -225,7 +225,7 @@ def update_user(auth):
 
         available_emails = [
             each.strip().lower() for each in
-            list(user.emails.values_list('address', flat=True)) + user.unconfired_emails
+            list(user.emails.values_list('address', flat=True)) + user.unconfirmed_emails
         ]
         # removals
         removed_emails = [
