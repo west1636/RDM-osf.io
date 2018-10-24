@@ -8,7 +8,7 @@ class XattrAddonAppConfig(BaseAddonAppConfig):
     short_name = 'xattr'
     full_name = 'Attributes'
     owners = ['node']
-    added_default = ['node']
+    added_default = []
     added_mandatory = []
     views = ['widget', 'page']
     configs = []

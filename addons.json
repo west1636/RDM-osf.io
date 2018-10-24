@@ -47,8 +47,7 @@
         "azureblobstorage": "partial",
         "weko": "partial",
         "s3compat": "partial",
-        "nextcloud": "partial",
-        "xattr": "full"
+        "nextcloud": "partial"
     },
     "addons_commentable": [
         "osfstorage",
