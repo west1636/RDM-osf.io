@@ -31,21 +31,19 @@ for (i in langs) {
     inputs.each(function () {
 	var fieldName = $(this).attr('name');
 	// Normal fields
-	if (fieldName != 'rangeType' && fieldName != 'range') {
+	if (fieldName !== 'rangeType' && fieldName !== 'range') {
 	    data[lang][fieldName] = $(this).val();
 	} else { // Array fields
 	    data[lang][fieldName].push($(this).val());
 	}
     });
 }
-console.log(data)
 return data;
 }
 
 
 $('#save-data').click(function () {
     var url = '/api/v1' + window.location.pathname;
-    console.log(submitData()) 
     var data = {
         'userAttribute': submitData()
     };
