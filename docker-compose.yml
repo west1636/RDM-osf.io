@@ -242,7 +242,8 @@ services:
     command:
       - /bin/bash
       - -c
-      - yarn --frozen-lockfile &&
+      - sed -ie "s/localhost/<HOSTNAME>/g" ./config/environment.js &&
+        yarn --frozen-lockfile &&
         yarn start --host 0.0.0.0 --port 4200 --live-reload-port 41953
     restart: unless-stopped
     depends_on:
