@@ -259,7 +259,6 @@ services:
       - 41953:41953
     volumes:
       - ember_osf_web_dist_vol:/code/dist
-      - ./ember-osf-web-config:/code/config
     stdin_open: true
 
   #############
