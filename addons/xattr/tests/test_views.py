@@ -16,6 +16,8 @@ class TestViews(OsfTestCase):
         self.user_settings = self.user.get_addon('xattr')
         self.auth = Auth(user=self.user)
         self.project = ProjectFactory(creator=self.user)
+        set_url = self.project.api_url_for('node_choose_addons')
+        self.app.post_json(set_url, {'xattr' : True}, auth=self.user.auth)
 
     @mock.patch('addons.xattr.views.api_contributor_get')
     @mock.patch('addons.xattr.views.api_funding_get')
@@ -26,7 +28,6 @@ class TestViews(OsfTestCase):
         mock_proj.return_value = MockResponse({'data': None}, 200)
         mock_fund.return_value = MockResponse({'data': None}, 200)
         mock_cont.return_value = MockResponse({'data': {}}, 200)
-
         url = self.project.web_url_for('get_attributes')
         response = self.app.get(url, auth=self.user.auth)
 
