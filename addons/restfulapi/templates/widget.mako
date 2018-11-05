@@ -15,11 +15,12 @@
             <input data-bind="checked: interval" type="checkbox" id="interval" name="option" value="interval" />
             <label for="interval" style="font-weight: 500;">Interval (-w)</label>
             <select data-bind="value: intervalValue, enable: interval" name="intervalValue" id="intervalValue" style="margin-left: 6px;">
-                <option value="5">5</option>
-                <option value="3">3</option>
-                <option value="1">1</option>
+                <option value="3.0">3.0</option>
+                <option value="1.0">1.0</option>
+                <option value="0.5">0.5</option>
+                <option value="0.1">0.1</option>
             </select>
-            <label data-bind="style: { color: interval() ? '' : '#888' }" style="font-weight: 500;">sec.</label>
+            <label data-bind="style: { color: interval() ? '' : '#888' }" style="font-weight: 500;">second(s)</label>
         </div>
     </div>
     <label style="margin-top: 5px;">Files</label>
