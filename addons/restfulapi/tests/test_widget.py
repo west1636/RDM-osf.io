@@ -16,6 +16,8 @@ class TestRestfulapiWidget(OsfTestCase):
         self.user = AuthUserFactory()
         self.auth = Auth(user=self.user)
         self.project = ProjectFactory(creator=self.user)
+        set_url = self.project.api_url_for('node_choose_addons')
+        self.app.post_json(set_url, {'restfulapi' : True}, auth=self.user.auth)
 
 
     @mock.patch('addons.restfulapi.views.get_files')
