@@ -36,8 +36,7 @@
         "owncloud": "partial",
         "s3": "partial",
         "wiki": "full",
-        "bitbucket": "partial",
-        "ftp": "full"
+        "bitbucket": "partial"
     },
     "addons_commentable": [
         "osfstorage",
@@ -51,7 +50,8 @@
         "owncloud",
         "s3",
         "bitbucket",
-        "onedrive"
+        "onedrive",
+        "ftp"
     ],
     "addons_based_on_ids": [
         "osfstorage",

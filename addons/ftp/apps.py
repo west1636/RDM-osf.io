@@ -8,8 +8,6 @@ class FtpAddonAppConfig(BaseAddonAppConfig):
     full_name = 'FTP'
     short_name = 'ftp'
     owners = ['node']
-    added_default = ['node']
-    added_mandatory = []
     views = ['widget']
     configs = []
     categories = ['other']
