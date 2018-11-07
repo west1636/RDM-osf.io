@@ -22,7 +22,7 @@ class TestSparqlApi(OsfTestCase):
         assert 'こくりつじょうほうがくけんきゅうじょ' in res.content
 
 
-    def test_non_query_html_format(self):
+    def test_query_non_html_format(self):
         query = 'select distinct * where { <http://ja.dbpedia.org/resource/東京都> ?p ?o .  }'
         res = utils.send_sparql(query, file_format='xml')
         assert res.status_code == 200

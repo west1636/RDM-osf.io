@@ -8,8 +8,6 @@ class SparqlAddonAppConfig(BaseAddonAppConfig):
     full_name = 'SPARQL'
     short_name = 'sparql'
     owners = ['node']
-    added_default = ['node']
-    added_mandatory = []
     views = ['widget']
     configs = []
     categories = ['other']
