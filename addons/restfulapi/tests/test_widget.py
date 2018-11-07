@@ -20,6 +20,8 @@ class TestRestfulapiWidget(OsfTestCase):
 
     @mock.patch('addons.restfulapi.views.get_files')
     def test_valid_input(self, get_files_mock):
+        get_files_mock.return_value.poll.return_value = 0
+
         url = self.project.api_url_for('restfulapi_download')
         response = self.app.post_json(url, {
             'url': VALID_URL,
@@ -37,6 +39,8 @@ class TestRestfulapiWidget(OsfTestCase):
 
     @mock.patch('addons.restfulapi.views.get_files')
     def test_url_with_unnecessary_part(self, get_files_mock):
+        get_files_mock.return_value.poll.return_value = 0
+
         url = self.project.api_url_for('restfulapi_download')
         response = self.app.post_json(url, {
             'url': VALID_URL + ' --spider --force-html -i',
