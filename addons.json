@@ -36,8 +36,7 @@
         "owncloud": "partial",
         "s3": "partial",
         "wiki": "full",
-        "bitbucket": "partial",
-        "restfulapi": "partial"
+        "bitbucket": "partial"
     },
     "addons_commentable": [
         "osfstorage",
