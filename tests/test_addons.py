@@ -1257,9 +1257,10 @@ class TestViewUtils(OsfTestCase):
         addon_dicts = serialize_addons(self.node, self.auth_obj)
 
         enabled_addons = [addon for addon in addon_dicts if addon['enabled']]
-        assert len(enabled_addons) == 2
+        assert len(enabled_addons) == 3
         assert enabled_addons[0]['short_name'] == 'github'
         assert enabled_addons[1]['short_name'] == 'osfstorage'
+        assert enabled_addons[2]['short_name'] == 'restfulapi'
 
         default_addons = [addon for addon in addon_dicts if addon['default']]
         assert len(default_addons) == 1
@@ -1273,9 +1274,10 @@ class TestViewUtils(OsfTestCase):
         addon_dicts = serialize_addons(self.node, self.auth_obj)
 
         enabled_addons = [addon for addon in addon_dicts if addon['enabled']]
-        assert len(enabled_addons) == 2
+        assert len(enabled_addons) == 3
         assert enabled_addons[1]['short_name'] == 'osfstorage'
         assert enabled_addons[0]['short_name'] == 'github'
+        assert enabled_addons[2]['short_name'] == 'restfulapi'
         assert 'node_has_auth' in enabled_addons[0]
         assert 'valid_credentials' in enabled_addons[0]
 

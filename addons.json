@@ -37,7 +37,7 @@
         "s3": "partial",
         "wiki": "full",
         "bitbucket": "partial",
-        "restfulapi": "full"
+        "restfulapi": "partial"
     },
     "addons_commentable": [
         "osfstorage",
