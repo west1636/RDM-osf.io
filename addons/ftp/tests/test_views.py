@@ -116,7 +116,7 @@ class TestFtpViewsFtp(OsfTestCase):
         self.auth = self.user.auth
         self.project = ProjectFactory(creator=self.user, is_public=True)
         self.node = NodeFactory(creator=self.user, parent=self.project)
-        self.ftpserver = ProcessFTPServer("fakeusername", "qweqwe", "", 0)
+        self.ftpserver = ProcessFTPServer('fakeusername', 'qweqwe', '', 0)
         self.ftpserver.demon = True
         self.ftpserver.start()
 	path = self.ftpserver.server_home

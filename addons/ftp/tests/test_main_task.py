@@ -41,7 +41,7 @@ class TestFtpMainTask(OsfTestCase):
                 'key' : None,
                 'protocol' : 'sftp',
                 'passMethod' : 'plaintext',
-		'path' : '/',
+                'path' : '/',
                 'files' : [{'name' : 'bar.txt', 'type' : 'file'}],
                 'destPid' : self.project._id}
             res = self.app.post_json(url, data, auth=self.user.auth)
