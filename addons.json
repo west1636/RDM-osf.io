@@ -51,7 +51,8 @@
         "owncloud",
         "s3",
         "bitbucket",
-        "onedrive"
+        "onedrive",
+        "restfulapi"
     ],
     "addons_based_on_ids": [
         "osfstorage",
