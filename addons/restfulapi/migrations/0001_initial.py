@@ -13,7 +13,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('osf', '0134_abstractnode_custom_citation'),
     ]
 
     operations = [
