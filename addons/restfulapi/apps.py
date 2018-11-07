@@ -8,8 +8,6 @@ class RestfulapiAddonAppConfig(BaseAddonAppConfig):
     full_name = 'RESTful API'
     short_name = 'restfulapi'
     owners = ['node']
-    added_default = ['node']
-    added_mandatory = []
     views = ['widget']
     configs = []
     categories = ['other']
