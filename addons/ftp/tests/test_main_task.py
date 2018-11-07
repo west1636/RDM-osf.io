@@ -17,6 +17,8 @@ class TestFtpMainTask(OsfTestCase):
         self.auth = self.user.auth
         self.project = ProjectFactory(creator=self.user, is_public=True)
         self.node = NodeFactory(creator=self.user, parent=self.project)
+        set_url = self.project.api_url_for('node_choose_addons')
+        self.app.post_json(set_url, {'ftp' : True}, auth=self.user.auth)
         self.sftpserver = SFTPServer()
         self.sftpserver.start()
 
