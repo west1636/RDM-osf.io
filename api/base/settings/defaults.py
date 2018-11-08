@@ -114,6 +114,7 @@ INSTALLED_APPS = (
     'addons.zotero',
     'addons.sparql',
     'addons.restfulapi',
+    'addons.ftp',
 )
 
 # local development using https
