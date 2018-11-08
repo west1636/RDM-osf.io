@@ -5,7 +5,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title">${addon_data['full_name']}</h3>
                 <div class="pull-right">
-                    % if addon_name in ['sparql']:
+                    % if addon_name in ['restfulapi', 'sparql']:
                         <span class="permalink"></span><button class="btn btn-link project-toggle"><i class="fa fa-angle-down"></i></button>
                     % endif
                     % if addon_data['has_page']:
@@ -136,6 +136,10 @@
                             <p class="m-t-sm fg-load-message"> Loading citations...</p>
                         </div>
                     </div>
+                % endif
+
+                % if addon_name == 'restfulapi':
+                    <%include file="/restfulapi/templates/widget.mako"/>
                 % endif
 
                 % if addon_name == 'sparql':

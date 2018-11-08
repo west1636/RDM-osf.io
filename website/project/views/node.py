@@ -54,6 +54,7 @@ from addons.wiki.models import WikiVersion
 from addons.dataverse.utils import serialize_dataverse_widget
 from addons.forward.utils import serialize_forward_widget
 from addons.sparql.utils import serialize_sparql_widget
+from addons.restfulapi.utils import serialize_restfulapi_widget
 
 r_strip_html = lambda collection: rapply(collection, strip_html)
 logger = logging.getLogger(__name__)
@@ -451,7 +452,8 @@ def view_project(auth, node, **kwargs):
         'zotero': None,
         'forward': None,
         'dataverse': None,
-        'sparql': None
+        'sparql': None,
+        'restfulapi': None
     }
 
     if 'wiki' in ret['addons']:
@@ -475,6 +477,9 @@ def view_project(auth, node, **kwargs):
 
     if 'sparql' in ret['addons']:
         addons_widget_data['sparql'] = serialize_sparql_widget(node)
+
+    if 'restfulapi' in ret['addons']:
+        addons_widget_data['restfulapi'] = serialize_restfulapi_widget(node)
 
     ret.update({'addons_widget_data': addons_widget_data})
     return ret

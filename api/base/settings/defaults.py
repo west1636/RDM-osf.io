@@ -113,6 +113,7 @@ INSTALLED_APPS = (
     'addons.wiki',
     'addons.zotero',
     'addons.sparql',
+    'addons.restfulapi',
 )
 
 # local development using https
