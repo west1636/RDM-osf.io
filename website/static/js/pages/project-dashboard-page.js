@@ -15,6 +15,7 @@ var $osf = require('js/osfHelpers');
 var LogFeed = require('js/components/logFeed');
 var pointers = require('js/pointers');
 var Comment = require('js/comment'); //jshint ignore:line
+var Widget = require('js/widget');
 var NodeControl = require('js/nodeControl');
 var CitationList = require('js/citationList');
 var CitationWidget = require('js/citationWidget');
@@ -66,6 +67,10 @@ if ($comments.length) {
     };
     Comment.init('#commentsLink', '.comment-pane', options);
 }
+
+// Initialize widget pane
+Widget.init('.widget-pane');
+
 var institutionLogos = {
     controller: function(args){
         var self = this;

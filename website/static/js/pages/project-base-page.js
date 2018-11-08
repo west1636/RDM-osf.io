@@ -52,3 +52,27 @@ $(window).resize(function() {
         '-moz-transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)'
     });
 });
+
+
+$(window).scroll(function() {
+    var scrollTop = $(this).scrollTop();
+    scrollTop = (scrollTop <= OFFSET ? scrollTop : OFFSET);
+    if ($('.widget-handle-icon').is(':hidden')) {
+        $('.widget-pane').css({
+            'transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)',
+            '-webkit-transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)',
+            '-moz-transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)'
+        });
+    }
+});
+
+$(window).resize(function() {
+    var scrollTop = $(this).scrollTop();
+    scrollTop = $('.widget-handle-icon').is(':hidden') ? scrollTop : 0;
+    scrollTop = (scrollTop <= OFFSET ? scrollTop : OFFSET);
+    $('.widget-pane').css({
+        'transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)',
+        '-webkit-transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)',
+        '-moz-transform': 'translate3d(0, ' + (-scrollTop) + 'px, 0)'
+    });
+});
