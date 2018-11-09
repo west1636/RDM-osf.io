@@ -291,7 +291,15 @@
 
 <%include file="project/modal_add_pointer.mako"/>
 
-<%include file="include/widget_pane_template.mako"/>
+<% 
+    displayInDrawer = {
+        'sparql': True,
+        'restfulapi': True,
+        'ftp': False,
+    }
+%>
+
+<%include file="include/widget_pane_template.mako", args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
 
 % if (user['can_comment'] or node['has_comments']) and not node['anonymous']:
     <%include file="include/comment_pane_template.mako"/>
@@ -431,9 +439,16 @@
             <!-- Show widgets in left column if present -->
             % for addon in addons_enabled:
                 % if addons[addon]['has_widget']:
-                    %if addon != 'wiki': ## We already show the wiki widget at the top
+                    ## We already show the wiki widget at the top
+                    ## sparql, restfulapi, and ftp are handled separately thanks to the drawer
+                    % if addon not in ['wiki', 'sparql', 'restfulapi', 'ftp',]:
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
-                    %endif
+                    % endif
+                    % if addon in ['sparql', 'restfulapi', 'ftp',]:
+                        % if not displayInDrawer[addon]:
+                            ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+                        % endif
+                    % endif
                 % endif
             % endfor
         % else:

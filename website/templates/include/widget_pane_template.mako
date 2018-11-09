@@ -1,3 +1,4 @@
+<%page args="displayInDrawer, render_addon_widget, addons_widget_data"/>
 <div class="scripted widget-pane">
 
   <div class="widget-handle-div widget-handle pull-right pointer visible-lg visible-md"
@@ -12,7 +13,13 @@
       <button type="button" class="close text-smaller" data-bind="click: togglePane">
         <i class="fa fa-times"></i>
       </button>
+      % for addon in ['sparql', 'restfulapi', 'ftp',]:
+        % if displayInDrawer[addon]:
+          ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+        % endif
+      % endfor
     </div>
   </div>
 
 </div>
+
