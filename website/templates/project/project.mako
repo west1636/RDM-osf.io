@@ -294,12 +294,16 @@
 <% 
     displayInDrawer = {
         'sparql': True,
+        #'sparql': False,
         'restfulapi': True,
-        'ftp': False,
+        #'restfulapi': False,
+        'ftp': True,
+        #'ftp': False,
     }
 %>
 
 <%include file="include/widget_pane_template.mako", args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
+
 
 % if (user['can_comment'] or node['has_comments']) and not node['anonymous']:
     <%include file="include/comment_pane_template.mako"/>

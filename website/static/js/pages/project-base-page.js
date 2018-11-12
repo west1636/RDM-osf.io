@@ -53,7 +53,6 @@ $(window).resize(function() {
     });
 });
 
-
 $(window).scroll(function() {
     var scrollTop = $(this).scrollTop();
     scrollTop = (scrollTop <= OFFSET ? scrollTop : OFFSET);

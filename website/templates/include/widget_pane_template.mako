@@ -13,11 +13,13 @@
       <button type="button" class="close text-smaller" data-bind="click: togglePane">
         <i class="fa fa-times"></i>
       </button>
+      <div data-bind="stopBinding: true">
       % for addon in ['sparql', 'restfulapi', 'ftp',]:
         % if displayInDrawer[addon]:
           ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
         % endif
       % endfor
+      </div>
     </div>
   </div>
 

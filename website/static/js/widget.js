@@ -3,6 +3,12 @@ var ko = require('knockout');
 var osfHelpers = require('js/osfHelpers');
 var WidgetPane = require('js/widgetpane');
 
+ko.bindingHandlers.stopBinding = {
+  init: function() {
+      return { controlsDescendantBindings: true };
+  }        
+};
+
 var WidgetPaneModel = function(options) {
 
   var self = this;
