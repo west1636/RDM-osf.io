@@ -382,6 +382,36 @@
                 "text": "Bitbucket content will be registered, but version history will not be copied to the registration."
             }
         },
+        "SPARQL": {
+            "Permissions": {
+                "status": "none",
+                "text": "Permissions not affected."
+            },
+            "View / download file versions": {
+                "status": "none",
+                "text": "Storage features not provided."
+            },
+            "Add / update files": {
+                "status": "none",
+                "text": "Storage features not provided."
+            },
+            "Delete files": {
+                "status": "none",
+                "text": "Storage features not provided."
+            },
+            "Logs": {
+                "status": "none",
+                "text": "Storage features not provided."
+            },
+            "Forking": {
+                "status": "partial",
+                "text": "Forking a project or component copies information but does not affect authentication."
+            },
+            "Registering": {
+                "status": "none",
+                "text": "Information will not be registered."
+            }
+        },
         "RESTful API": {
             "Permissions": {
                 "status": "none",

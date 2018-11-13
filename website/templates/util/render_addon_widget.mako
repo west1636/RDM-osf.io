@@ -5,7 +5,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title">${addon_data['full_name']}</h3>
                 <div class="pull-right">
-                    % if addon_name in ['restfulapi', 'ftp']:
+                    % if addon_name in ['restfulapi', 'sparql', 'ftp']:
                         <span class="permalink"></span><button class="btn btn-link project-toggle"><i class="fa fa-angle-down"></i></button>
                     % endif
                     % if addon_data['has_page']:
@@ -144,6 +144,10 @@
 
                 % if addon_name == 'ftp':
                     <%include file="/ftp/templates/widget.mako"/>
+                % endif
+
+                % if addon_name == 'sparql':
+                    <%include file="/sparql/templates/widget.mako"/>
                 % endif
 
                 </div>

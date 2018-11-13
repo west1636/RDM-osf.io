@@ -53,6 +53,7 @@ from addons.wiki.utils import serialize_wiki_widget
 from addons.wiki.models import WikiVersion
 from addons.dataverse.utils import serialize_dataverse_widget
 from addons.forward.utils import serialize_forward_widget
+from addons.sparql.utils import serialize_sparql_widget
 from addons.restfulapi.utils import serialize_restfulapi_widget
 from addons.ftp.utils import serialize_ftp_widget
 
@@ -452,6 +453,7 @@ def view_project(auth, node, **kwargs):
         'zotero': None,
         'forward': None,
         'dataverse': None,
+        'sparql': None,
         'restfulapi': None,
         'ftp': None
     }
@@ -474,6 +476,9 @@ def view_project(auth, node, **kwargs):
         node_addon = node.get_addon('mendeley')
         mendeley_widget_data = MendeleyCitationsProvider().widget(node_addon)
         addons_widget_data['mendeley'] = mendeley_widget_data
+
+    if 'sparql' in ret['addons']:
+        addons_widget_data['sparql'] = serialize_sparql_widget(node)
 
     if 'restfulapi' in ret['addons']:
         addons_widget_data['restfulapi'] = serialize_restfulapi_widget(node)
