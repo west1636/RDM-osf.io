@@ -58,7 +58,7 @@ function ViewModel(url) {
     self.connect = function () {
         self.host(self.host().trim());
         if (!self.host()) {
-            $osf.growl('FTP', 'Host is a required field.', 'danger');
+            $osf.growl('FTP', 'Host was required.', 'danger');
             return false;
         }
 
@@ -67,7 +67,7 @@ function ViewModel(url) {
             // Success
             self.connecting(false);
             self.browserPath('/');
-            $osf.growl('FTP', 'Successfully connected to FTP server.', 'success');
+            $osf.growl('FTP', 'Successfully connected to remote host.', 'success');
         }, function () {
             // Fail
             self.connecting(false);
@@ -90,7 +90,7 @@ function ViewModel(url) {
                 }
             },
             error: function () {
-                $osf.growl('FTP', 'There was an error while processing your request.', 'danger');
+                $osf.growl('FTP', 'An error occurred while processing your request.', 'danger');
             }
         });
     };
@@ -156,7 +156,7 @@ function ViewModel(url) {
     self.download = function () {
         self.host(self.host().trim());
         if (!self.host()) {
-            $osf.growl('FTP', 'Host is a required field.', 'danger');
+            $osf.growl('FTP', 'Host was required.', 'danger');
             return false;
         }
 
@@ -171,13 +171,13 @@ function ViewModel(url) {
         }, []);
 
         if (selectedFiles.length == 0) {
-            $osf.growl('FTP', 'Please choose the file(s) to be copied.', 'danger');
+            $osf.growl('FTP', 'Remote file was not selected.', 'danger');
             return false;
         }
 
         var selectedDestination = filebrowser.grid.multiselected()[0];
         if (!selectedDestination) {
-            $osf.growl('FTP', 'Please choose a directory to save the file(s).', 'danger');
+            $osf.growl('FTP', 'Destination was not selected.', 'danger');
             return false;
         }
 
@@ -215,7 +215,7 @@ function ViewModel(url) {
                 }
             },
             error: function () {
-                $osf.growl('FTP', 'There was an error while processing your request.', 'danger');
+                $osf.growl('FTP', 'An error occurred while processing your request.', 'danger');
             }
         });
     };
@@ -228,7 +228,7 @@ function ViewModel(url) {
                 $osf.growl('FTP', response.message, response.status == 'OK' ? 'success' : 'danger');
             },
             error: function () {
-                $osf.growl('FTP', 'There was an error while processing your request.', 'danger');
+                $osf.growl('FTP', 'An error occurred while processing your request.', 'danger');
             }
         });
     };
@@ -272,7 +272,7 @@ function ViewModel(url) {
                 }
             },
             error: function () {
-                $osf.growl('FTP', 'There was an error while processing your request.', 'danger');
+                $osf.growl('FTP', 'An error occurred while processing your request.', 'danger');
                 if (fail) {
                     fail();
                 }

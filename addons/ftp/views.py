@@ -155,7 +155,7 @@ def ftp_download(auth, **kwargs):
 
     return {
         'status': 'OK',
-        'message': 'Selected files are being downloaded to storage.'
+        'message': 'Downloading file(s).'
     }
 
 @must_be_valid_project
@@ -220,7 +220,7 @@ def ftp_disconnect(auth, node, **kwargs):
 
     return {
         'status': 'OK',
-        'message': 'Disconnected from FTP server.'
+        'message': 'Disconnected from the remote host.'
     }
 
 def validate_data(data):
@@ -228,50 +228,50 @@ def validate_data(data):
     if 'protocol' not in data or not data['protocol']:
         return {
             'valid': False,
-            'message': 'Protocol is a required field.'
+            'message': 'Protocol was not selected.'
         }
 
     if 'host' not in data or not data['host']:
         return {
             'valid': False,
-            'message': 'Host is a required field.'
+            'message': 'Host was required.'
         }
 
     if 'passMethod' not in data or not data['passMethod']:
         return {
             'valid': False,
-            'message': 'Pass method is a required field.'
+            'message': 'Authentication method was not selected.'
         }
 
     if 'path' not in data or not data['path']:
         return {
             'valid': False,
-            'message': 'Path is a required field.'
+            'message': 'An error occurred while processing your request.'
         }
 
     if 'files' not in data or not data['files']:
         return {
             'valid': False,
-            'message': 'One or more files must be selected.'
+            'message': 'Remote file was not selected.'
         }
 
     if 'destPid' not in data or not data['destPid']:
         return {
             'valid': False,
-            'message': 'One or more files must be selected.'
+            'message': 'Remote file was not selected.'
         }
 
     # Check for valid values
     if data['protocol'] not in ['ftp', 'ftps', 'sftp']:
         return {
             'valid': False,
-            'message': 'Invalid protocol.'
+            'message': 'Unknown protocol was selected.'
         }
 
     if data['passMethod'] not in ['plaintext', 'key']:
         return {
             'valid': False,
-            'message': 'Invalid pass method.'
+            'message': 'Unknown authentication method was selected.'
         }
 
     return {
