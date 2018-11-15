@@ -137,7 +137,7 @@ def prevalidate_data(data):
     if not data['pid']:
         return {
             'valid': False,
-            'message': 'Destination was not selected).'
+            'message': 'Destination was not selected.'
         }
     return {
         'valid': True,
