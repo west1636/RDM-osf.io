@@ -28,7 +28,7 @@ function ViewModel(url) {
                 $osf.growl('RESTfulAPI', response.message, response.status == 'OK' ? 'success' : 'danger');
             },
             error: function () {
-                $osf.growl('RESTfulAPI', 'There was an error while processing your request.', 'danger');
+                $osf.growl('RESTfulAPI', 'An error occurred while processing your request.', 'danger');
             }
         });
     };
@@ -43,13 +43,13 @@ function ViewModel(url) {
 
     self.submit = function () {
         if (!self.url()) {
-            $osf.growl('RESTfulAPI', 'Please type the URL.', 'danger');
+            $osf.growl('RESTfulAPI', 'URL was required.', 'danger');
             return false;
         }
 
         var selectedItem = filebrowser.grid.multiselected()[0];
         if (!selectedItem) {
-            $osf.growl('RESTfulAPI', 'Please choose a directory to save the file(s).', 'danger');
+            $osf.growl('RESTfulAPI', 'Destination was not selected.', 'danger');
             return false;
         }
 
@@ -66,7 +66,7 @@ function ViewModel(url) {
             dataType: 'json',
             success: function (response) {
                 if (response.status == 'OK') {
-                    $osf.growl('RESTfulAPI', 'File is being uploaded to storage!', 'success');
+                    $osf.growl('RESTfulAPI', 'Downloading file(s)!', 'success');
                     itemsToRefresh.push(filebrowser.grid.multiselected()[0]);
                     setTimeout(function () {
                         refreshItems(itemsToRefresh);
@@ -76,7 +76,7 @@ function ViewModel(url) {
                 }
             },
             error: function () {
-                $osf.growl('RESTfulAPI', 'There was an error while processing your request.', 'danger');
+                $osf.growl('RESTfulAPI', 'An error occurred while processing your request.', 'danger');
             }
         });
     };

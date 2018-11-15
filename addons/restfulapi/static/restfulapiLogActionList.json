@@ -1,6 +1,6 @@
 {
-    "restfulapi_submit": "${user} submitted a download from a RESTfulAPI.",
-    "restfulapi_cancel": "${user} cancelled a download from a RESTfulAPI.",
-    "restfulapi_upload_fail": "Request to download from a RESTful API server by ${user} failed to save some files to storage.",
-    "restfulapi_upload_success": "Request to download from a RESTful API server by ${user} finished successfully."
+    "restfulapi_submit": "${user} submitted a download from a RESTfulAPI for ${project}.",
+    "restfulapi_cancel": "${user} cancelled a download from a RESTfulAPI for ${project}.",
+    "restfulapi_upload_fail": "${user} requested a download from a RESTful API but an error occurred while processing a request for ${project}.",
+    "restfulapi_upload_success": "${user} successfully downloaded file(s) from a RESTful API for ${project}."
 }

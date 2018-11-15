@@ -73,7 +73,7 @@ class TestRestfulapiWidget(OsfTestCase):
         assert not get_files_mock.delay.called
         assert response.status_code == 200
         assert response.json['status'] == 'Failed'
-        assert response.json['message'] == 'Please specify an URL.'
+        assert response.json['message'] == 'URL was required.'
 
 
     @mock.patch('addons.restfulapi.views.get_files')
@@ -91,7 +91,7 @@ class TestRestfulapiWidget(OsfTestCase):
         assert not get_files_mock.delay.called
         assert response.status_code == 200
         assert response.json['status'] == 'Failed'
-        assert response.json['message'] == 'Please specify the destination to save the file(s).'
+        assert response.json['message'] == 'Destination was not selected).'
 
 
     @mock.patch('addons.restfulapi.views.get_files')
@@ -109,7 +109,7 @@ class TestRestfulapiWidget(OsfTestCase):
         assert not get_files_mock.delay.called
         assert response.status_code == 200
         assert response.json['status'] == 'Failed'
-        assert response.json['message'] == 'URL returned an invalid response.'
+        assert response.json['message'] == 'A client error occurred while processing your request.'
 
 
     @mock.patch('addons.restfulapi.views.get_files')
@@ -127,7 +127,7 @@ class TestRestfulapiWidget(OsfTestCase):
         assert not get_files_mock.delay.called
         assert response.status_code == 200
         assert response.json['status'] == 'Failed'
-        assert response.json['message'] == 'An error ocurred while accessing the URL.'
+        assert response.json['message'] == 'An error occurred while processing your request.'
 
 
 class TestMainTask(OsfTestCase):

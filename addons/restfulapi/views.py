@@ -132,12 +132,12 @@ def prevalidate_data(data):
     if not data['url']:
         return {
             'valid': False,
-            'message': 'Please specify an URL.'
+            'message': 'URL was required.'
         }
     if not data['pid']:
         return {
             'valid': False,
-            'message': 'Please specify the destination to save the file(s).'
+            'message': 'Destination was not selected).'
         }
     return {
         'valid': True,
@@ -153,14 +153,14 @@ def postvalidate_data(data):
     except Exception:
         return {
             'valid': False,
-            'message': 'An error ocurred while accessing the URL.'
+            'message': 'An error occurred while processing your request.'
         }
     # Sometimes there are false negatives (status code 500)
     # Likely such requests are not implemented on servers
     if response.status_code >= 400 and response.status_code != 500:
         return {
             'valid': False,
-            'message': 'URL returned an invalid response.'
+            'message': 'A client error occurred while processing your request.'
         }
     return {
         'valid': True,
