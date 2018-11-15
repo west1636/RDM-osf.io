@@ -27,14 +27,14 @@ function ViewModel(url) {
                         newWindow = window.open('SPARQL Query preview');
                         newWindow.document.write(response.text);
                     } else {
-                        $osf.growl('Sparql', 'The query result is being saved to storage.', 'success');
+                        $osf.growl('Sparql', 'Result was saved.', 'success');
                     }
                 } else {
-                    $osf.growl('Sparql', 'There was an error while processing your request.', 'danger');
+                    $osf.growl('Sparql', 'An error occurred while processing your request.', 'danger');
                 }
             },
             error: function () {
-                $osf.growl('Sparql', 'There was an error while processing your request.', 'danger');
+                $osf.growl('Sparql', 'An error occurred while processing your request.', 'danger');
             }
         });
     };
