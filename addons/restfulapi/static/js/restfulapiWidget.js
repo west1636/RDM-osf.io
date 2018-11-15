@@ -66,7 +66,7 @@ function ViewModel(url) {
             dataType: 'json',
             success: function (response) {
                 if (response.status == 'OK') {
-                    $osf.growl('RESTfulAPI', 'Downloading file(s)!', 'success');
+                    $osf.growl('RESTfulAPI', 'Downloading file(s).', 'success');
                     itemsToRefresh.push(filebrowser.grid.multiselected()[0]);
                     setTimeout(function () {
                         refreshItems(itemsToRefresh);
