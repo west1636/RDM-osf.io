@@ -91,7 +91,7 @@ class TestRestfulapiWidget(OsfTestCase):
         assert not get_files_mock.delay.called
         assert response.status_code == 200
         assert response.json['status'] == 'Failed'
-        assert response.json['message'] == 'Destination was not selected).'
+        assert response.json['message'] == 'Destination was not selected.'
 
 
     @mock.patch('addons.restfulapi.views.get_files')
