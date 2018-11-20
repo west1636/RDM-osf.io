@@ -20,7 +20,7 @@ from api.base import settings as api_settings
 import requests
 from datetime import datetime
 import time
-from website.util.timestamp.add_timestamp import AddTimestamp
+from website.util.timestamp import AddTimestamp
 import os
 import shutil
 from website.util import waterbutler_api_url_for

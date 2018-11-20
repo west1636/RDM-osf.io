@@ -9,9 +9,10 @@ from nose import tools as nt
 from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid
 from osf_tests.factories import ProjectFactory, AuthUserFactory
 from tests.base import ApiTestCase, OsfTestCase
-from website.util.timestamp.add_timestamp import AddTimestamp
-from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
-from website.util.timestamp import userkey
+from website.util.timestamp import (
+    AddTimestamp, TimeStampTokenVerifyCheck,
+    userkey_generation, userkey_generation_check
+)
 
 
 class TestAddTimestamp(ApiTestCase):
@@ -23,7 +24,7 @@ class TestAddTimestamp(ApiTestCase):
         self.user = self.project.creator
         self.node_settings = self.project.get_addon('osfstorage')
         self.auth_obj = Auth(user=self.project.creator)
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
 
         # Refresh records from database; necessary for comparing dates
         self.project.reload()
@@ -87,7 +88,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         self.node = self.project
         self.user = self.project.creator
         self.auth_obj = Auth(user=self.project.creator)
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
 
         # Refresh records from database; necessary for comparing dates
         self.project.reload()
@@ -389,7 +390,7 @@ class TestRdmUserKey(OsfTestCase):
         super(TestRdmUserKey, self).tearDown()
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
 
-        key_exists_check = userkey.generation_check(self.user._id)
+        key_exists_check = userkey_generation_check(self.user._id)
         if key_exists_check:
             rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
             pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
@@ -403,15 +404,15 @@ class TestRdmUserKey(OsfTestCase):
         self.user.delete()
 
     def test_userkey_generation_check_return_true(self):
-        userkey.generation(self.user._id)
-        nt.assert_true(userkey.generation_check(self.user._id))
+        userkey_generation(self.user._id)
+        nt.assert_true(userkey_generation_check(self.user._id))
 
     def test_userkey_generation_check_return_false(self):
-        nt.assert_false(userkey.generation_check(self.user._id))
+        nt.assert_false(userkey_generation_check(self.user._id))
 
     def test_userkey_generation(self):
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
 
         rdmuserkey_pvt_key = RdmUserKey.objects.filter(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
         nt.assert_equal(rdmuserkey_pvt_key.count(), 1)

@@ -28,7 +28,7 @@ from osf.models import BaseFileNode, Guid, Institution, PreprintService, Abstrac
 from website.settings import EXTERNAL_EMBER_APPS, PROXY_EMBER_APPS, EXTERNAL_EMBER_SERVER_TIMEOUT, INSTITUTION_DISPLAY_NODE_THRESHOLD, DOMAIN
 from website.project.model import has_anonymous_link
 from website.util import permissions
-from website.util.timestamp import userkey
+from website.util.timestamp import userkey_generation_check, userkey_generation
 
 logger = logging.getLogger(__name__)
 preprints_dir = os.path.abspath(os.path.join(os.getcwd(), EXTERNAL_EMBER_APPS['preprints']['path']))
@@ -162,10 +162,10 @@ def index():
         ]
 
         # generation key check
-        key_exists_check = userkey.generation_check(user_id)
+        key_exists_check = userkey_generation_check(user_id)
 
         if not key_exists_check:
-            userkey.generation(user_id)
+            userkey_generation(user_id)
 
         return {
             'home': True,

@@ -15,7 +15,7 @@ from osf_tests.factories import (
 
 from admin.rdm_timestampadd import views
 from admin_tests.utilities import setup_user_view
-from website.util.timestamp import userkey
+from website.util.timestamp import userkey_generation
 from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
 from api.base import settings as api_settings
 import os
@@ -61,7 +61,7 @@ class TestInstitutionNodeList(AdminTestCase):
         ## create project(affiliated institution)
         self.project_institution = InstitutionFactory()
         self.project_user = UserFactory()
-        userkey.generation(self.project_user._id)
+        userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
@@ -107,7 +107,7 @@ class TestTimeStampAddList(AdminTestCase):
         ## create project(affiliated institution)
         self.project_institution = InstitutionFactory()
         self.project_user = UserFactory()
-        userkey.generation(self.project_user._id)
+        userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
         # project1 timestamp_pattern_division=1
@@ -164,7 +164,7 @@ class TestTimestampVerifyData(AdminTestCase):
         ## create project(affiliated institution)
         self.project_institution = InstitutionFactory()
         self.project_user = UserFactory()
-        userkey.generation(self.project_user._id)
+        userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
         # project1 timestamp_pattern_division=1
@@ -226,7 +226,7 @@ class TestAddTimestampData(AdminTestCase):
         ## create project(affiliated institution)
         self.project_institution = InstitutionFactory()
         self.project_user = UserFactory()
-        userkey.generation(self.project_user._id)
+        userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
         # project1 timestamp_pattern_division=1

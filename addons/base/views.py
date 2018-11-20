@@ -813,7 +813,7 @@ def upload_file_add_timestamptoken(payload, node):
 
     from osf.models import Guid
     import requests
-    from website.util.timestamp.add_timestamp import AddTimestamp
+    from website.util.timestamp import AddTimestamp
     import shutil
 
     verify_result = 0
@@ -864,7 +864,7 @@ def upload_file_add_timestamptoken(payload, node):
 def adding_timestamp(auth, node, file_node, version):
     from osf.models import Guid
     import requests
-    from website.util.timestamp.add_timestamp import AddTimestamp
+    from website.util.timestamp import AddTimestamp
     import shutil
 
     #verify_result = 0
@@ -903,7 +903,7 @@ def adding_timestamp(auth, node, file_node, version):
 #    return result
 
 def timestamptoken_verify(auth, node, file_node, version, guid):
-    from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
+    from website.util.timestamp import TimeStampTokenVerifyCheck
     import requests
     from osf.models import Guid
     import shutil

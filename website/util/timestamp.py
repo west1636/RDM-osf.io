@@ -1,22 +1,223 @@
 # -*- coding: utf-8 -*-
-# timestamp token check
+
 import datetime
-from django.utils import timezone
-import os.path
-import os
-import subprocess
-
-from osf.models import AbstractNode, BaseFileNode, RdmFileTimestamptokenVerifyResult, Guid, RdmUserKey, OSFUser
-from api.base import settings as api_settings
-
 import logging
+import os
+import requests
+import subprocess
+from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from osf.models import (
+    AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
+    OSFUser
+)
+from urllib3.util.retry import Retry
+
 
 logger = logging.getLogger(__name__)
 
+# userkey generation check
+def userkey_generation_check(guid):
+    from osf.models import RdmUserKey
+
+    logger.info(' userkey_generation_check ')
+    # no user_key_info
+    if not RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid).object_id).exists():
+        return False
+
+    return True
+
+# userkey generation
+def userkey_generation(guid):
+    logger.info('userkey_generation guid:' + guid)
+    from api.base import settings as api_settings
+    #from osf.models import RdmUserKey
+    import os.path
+    import subprocess
+    from datetime import datetime
+    import hashlib
+
+    try:
+        generation_date = datetime.now()
+        generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
+        generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
+        generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
+            guid, generation_date_hash, api_settings.KEY_NAME_PRIVATE, api_settings.KEY_EXTENSION)
+        generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
+            guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
+        # private key generation
+        pvt_key_generation_cmd = [
+            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_GENRSA,
+            api_settings.OPENSSL_OPTION_OUT,
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
+            api_settings.KEY_BIT_VALUE
+        ]
+
+        pub_key_generation_cmd = [
+            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_RSA,
+            api_settings.OPENSSL_OPTION_IN,
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
+            api_settings.OPENSSL_OPTION_PUBOUT, api_settings.OPENSSL_OPTION_OUT,
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
+        ]
+
+        prc = subprocess.Popen(pvt_key_generation_cmd, shell=False,
+                               stdin=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE)
+
+        stdout_data, stderr_data = prc.communicate()
+
+        prc = subprocess.Popen(pub_key_generation_cmd, shell=False,
+                               stdin=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE)
+
+        stdout_data, stderr_data = prc.communicate()
+
+        pvt_userkey_info = create_rdmuserkey_info(
+            Guid.objects.get(_id=guid).object_id, generation_pvt_key_name,
+            api_settings.PRIVATE_KEY_VALUE, generation_date)
+
+        pub_userkey_info = create_rdmuserkey_info(
+            Guid.objects.get(_id=guid).object_id, generation_pub_key_name,
+            api_settings.PUBLIC_KEY_VALUE, generation_date)
+
+        pvt_userkey_info.save()
+        pub_userkey_info.save()
+
+    except Exception as error:
+        logger.exception(error)
+
+def create_rdmuserkey_info(user_id, key_name, key_kind, date):
+    from osf.models import RdmUserKey
+
+    userkey_info = RdmUserKey()
+    userkey_info.guid = user_id
+    userkey_info.key_name = key_name
+    userkey_info.key_kind = key_kind
+    userkey_info.created_time = date
+
+    return userkey_info
+
+
+class AddTimestamp:
+    #①鍵情報テーブルから操作ユーザに紐づく鍵情報を取得する
+    def get_userkey(self, user_id):
+        userKey = RdmUserKey.objects.get(guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
+        return userKey.key_name
+
+    #②ファイル情報 + 鍵情報をハッシュ化したタイムスタンプリクエスト（tsq）を生成する
+    def get_timestamp_request(self, file_name):
+        cmd = [api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS, api_settings.OPENSSL_OPTION_QUERY, api_settings.OPENSSL_OPTION_DATA,
+               file_name, api_settings.OPENSSL_OPTION_CERT, api_settings.OPENSSL_OPTION_SHA512]
+        process = subprocess.Popen(cmd, shell=False,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+
+        stdout_data, stderr_data = process.communicate()
+        return stdout_data
+
+    #③tsqをTSAに送信してタイムスタンプトークン（tsr）を受け取る
+    def get_timestamp_response(self, file_name, ts_request_file, key_file):
+        res_content = None
+        try:
+            retries = Retry(total=api_settings.REQUEST_TIME_OUT,
+                            backoff_factor=1, status_forcelist=api_settings.ERROR_HTTP_STATUS)
+            session = requests.Session()
+            session.mount('http://', requests.adapters.HTTPAdapter(max_retries=retries))
+            session.mount('https://', requests.adapters.HTTPAdapter(max_retries=retries))
+
+            res = requests.post(api_settings.TIME_STAMP_AUTHORITY_URL,
+                                headers=api_settings.REQUEST_HEADER, data=ts_request_file, stream=True)
+            res_content = res.content
+            res.close()
+        except Exception as ex:
+            logger.exception(ex)
+            import traceback
+            traceback.print_exc()
+            res_content = None
+
+        return res_content
+
+    #④データの取得
+    def get_data(self, file_id, project_id, provider, path):
+        try:
+            res = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_id)
+
+        except ObjectDoesNotExist:
+            #logger.exception(ex)
+            res = None
+
+        return res
+
+    #⑤ファイルタイムスタンプトークン情報テーブルに登録。
+    def timestamptoken_register(self, file_id, project_id, provider, path,
+                                key_file, tsa_response, user_id, verify_data):
+
+        try:
+            # データが登録されていない場合
+            if not verify_data:
+                verify_data = RdmFileTimestamptokenVerifyResult()
+                verify_data.key_file_name = key_file
+                verify_data.file_id = file_id
+                verify_data.project_id = project_id
+                verify_data.provider = provider
+                verify_data.path = path
+                verify_data.timestamp_token = tsa_response
+                verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
+                verify_data.create_user = user_id
+                verify_data.create_date = datetime.datetime.now()
+
+            # データがすでに登録されている場合
+            else:
+                verify_data.key_file_name = key_file
+                verify_data.timestamp_token = tsa_response
+                verify_data.update_user = user_id
+                verify_data.update_date = datetime.datetime.now()
+
+            verify_data.save()
+
+        except Exception as ex:
+            logger.exception(ex)
+#            res = None
+
+        return
+
+    #⑥メイン処理
+    def add_timestamp(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
+
+        #        logger.info('add_timestamp start guid:{guid} project_id:{project_id} provider:{provider} path:{path} file_name:{file_name} file_id:{file_id}'.format(guid=guid,project_id=project_id,provider=provider,path=path,file_name=file_name, file_id=file_id))
+
+        # guid から user_idを取得する
+        #user_id = Guid.find_one(Q('_id', 'eq', guid)).object_id
+        user_id = Guid.objects.get(_id=guid).object_id
+
+        # ユーザ鍵情報を取得する。
+        key_file_name = self.get_userkey(user_id)
+
+        # タイムスタンプリクエスト生成
+        tsa_request = self.get_timestamp_request(file_name)
+
+        # タイムスタンプトークン取得
+        tsa_response = self.get_timestamp_response(file_name, tsa_request, key_file_name)
+
+        # 検証データ存在チェック
+        verify_data = self.get_data(file_id, project_id, provider, path)
+
+        # 検証結果テーブルに登録する。
+        self.timestamptoken_register(file_id, project_id, provider, path,
+                                     key_file_name, tsa_response, user_id, verify_data)
+
+        # （共通処理）タイムスタンプ検証処理の呼び出し
+        return TimeStampTokenVerifyCheck().timestamp_check(guid, file_id,
+                                                           project_id, provider, path, file_name, tmp_dir)
+
 
 class TimeStampTokenVerifyCheck:
-
     # abstractNodeデータ取得
     def get_abstractNode(self, node_id):
         # プロジェクト名取得

@@ -195,12 +195,12 @@ class TestAddonLogs(OsfTestCase):
     def test_add_log_timestamptoken(self, mock_perform):
         from osf.models import RdmFileTimestamptokenVerifyResult, NodeLog
         from api_tests.utils import create_test_file
-        from website.util.timestamp import userkey
+        from website.util.timestamp import userkey_generation
         result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
         nodelog_count1 = NodeLog.objects.all().count()
         path = 'pizza'
         url = self.node.api_url_for('create_waterbutler_log')
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
         file_node = create_test_file(node=self.node, user=self.user, filename=path)
         file_node._path = '/' + path
         file_node.save()

@@ -94,7 +94,7 @@ from osf_tests.factories import (
 from osf.models import RdmUserKey, RdmTimestampGrantPattern, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
 from api.base import settings as api_settings
 
-from website.util.timestamp import userkey
+from website.util.timestamp import userkey_generation
 import os
 
 @mock_app.route('/errorexc')
@@ -4931,8 +4931,7 @@ class TestTimestampPatternUserView(OsfTestCase):
 
 def create_rdmfiletimestamptokenverifyresult(self, filename='test_file_timestamp_check', provider='osfstorage', inspection_result_status_1=True):
     import pytz
-    from website.util.timestamp.add_timestamp import AddTimestamp
-    from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
+    from website.util.timestamp import AddTimestamp, TimeStampTokenVerifyCheck
     import shutil
     ## create file_node(BaseFileNode record)
     file_node = create_test_file(node=self.node, user=self.user, filename=filename)
@@ -4969,7 +4968,7 @@ class TestTimestampView(OsfTestCase):
         self.project.add_contributor(self.other_user, permissions=permissions.DEFAULT_CONTRIBUTOR_PERMISSIONS, save=True)
         self.node = self.project
         self.auth_obj = Auth(user=self.project.creator)
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
         # Refresh records from database; necessary for comparing dates
         self.project.reload()
         self.user.reload()
@@ -5074,7 +5073,7 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         self.node = self.project
         self.node_settings = self.project.get_addon('osfstorage')
         self.auth_obj = Auth(user=self.user)
-        userkey.generation(self.user._id)
+        userkey_generation(self.user._id)
 
         # Refresh records from database; necessary for comparing dates
         self.project.reload()
@@ -5096,7 +5095,7 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         rdmuserkey_pub_key.delete()
 
     def test_adding_timestamp(self):
-        from website.util.timestamp.add_timestamp import AddTimestamp
+        from website.util.timestamp import AddTimestamp
         from website.project.utils import serialize_node
         import numpy
         import shutil
