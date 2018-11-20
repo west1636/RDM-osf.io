@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from admin.base import settings
 from osf.models import Institution, Node, OSFUser, AbstractNode, BaseFileNode, RdmFileTimestamptokenVerifyResult, Guid
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-from website import settings as api_settings
+from api.base import settings as api_settings
 
 
 import requests

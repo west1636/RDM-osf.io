@@ -7,7 +7,7 @@ from urllib3.util.retry import Retry
 import subprocess
 #import os
 #from StringIO import StringIO
-from website import settings as api_settings
+from api.base import settings as api_settings
 from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
 from django.core.exceptions import ObjectDoesNotExist
 import logging

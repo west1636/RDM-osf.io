@@ -3,7 +3,7 @@ import pytz
 import os
 from website.util.timestamp.add_timestamp import AddTimestamp
 from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
-from website import settings as api_settings
+from api.base import settings as api_settings
 from osf.models import RdmFileTimestamptokenVerifyResult, Guid
 import shutil
 
