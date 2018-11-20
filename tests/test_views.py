@@ -94,10 +94,7 @@ from osf_tests.factories import (
 from osf.models import RdmUserKey, RdmTimestampGrantPattern, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
 from api.base import settings as api_settings
 
-from website.views import (
-    userkey_generation,
-    userkey_generation_check,
-)
+from website.util.timestamp import userkey
 import os
 
 @mock_app.route('/errorexc')
@@ -4865,46 +4862,6 @@ class TestConfirmationViewBlockBingPreview(OsfTestCase):
         )
         assert_equal(res.status_code, 403)
 
-class TestRdmUserKey(OsfTestCase):
-
-    def setUp(self):
-        super(TestRdmUserKey, self).setUp()
-        self.user = AuthUserFactory()
-
-    def tearDown(self):
-        super(TestRdmUserKey, self).tearDown()
-        osfuser_id = Guid.objects.get(_id=self.user._id).object_id
-
-        key_exists_check = userkey_generation_check(self.user._id)
-        if key_exists_check:
-            rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
-            pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
-            os.remove(pvt_key_path)
-            rdmuserkey_pvt_key.delete()
-
-            rdmuserkey_pub_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
-            pub_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pub_key.key_name)
-            os.remove(pub_key_path)
-            rdmuserkey_pub_key.delete()
-        self.user.delete()
-
-    def test_userkey_generation_check_return_true(self):
-        userkey_generation(self.user._id)
-        assert_true(userkey_generation_check(self.user._id))
-
-    def test_userkey_generation_check_return_false(self):
-        assert_false(userkey_generation_check(self.user._id))
-
-    def test_userkey_generation(self):
-        osfuser_id = Guid.objects.get(_id=self.user._id).object_id
-        userkey_generation(self.user._id)
-
-        rdmuserkey_pvt_key = RdmUserKey.objects.filter(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
-        assert_equal(rdmuserkey_pvt_key.count(), 1)
-
-        rdmuserkey_pub_key = RdmUserKey.objects.filter(guid=osfuser_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
-        assert_equal(rdmuserkey_pub_key.count(), 1)
-
 
 class TestTimestampPatternUserView(OsfTestCase):
 
@@ -5012,7 +4969,7 @@ class TestTimestampView(OsfTestCase):
         self.project.add_contributor(self.other_user, permissions=permissions.DEFAULT_CONTRIBUTOR_PERMISSIONS, save=True)
         self.node = self.project
         self.auth_obj = Auth(user=self.project.creator)
-        userkey_generation(self.user._id)
+        userkey.generation(self.user._id)
         # Refresh records from database; necessary for comparing dates
         self.project.reload()
         self.user.reload()
@@ -5117,7 +5074,7 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         self.node = self.project
         self.node_settings = self.project.get_addon('osfstorage')
         self.auth_obj = Auth(user=self.user)
-        userkey_generation(self.user._id)
+        userkey.generation(self.user._id)
 
         # Refresh records from database; necessary for comparing dates
         self.project.reload()

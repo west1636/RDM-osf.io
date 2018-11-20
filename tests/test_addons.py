@@ -195,12 +195,12 @@ class TestAddonLogs(OsfTestCase):
     def test_add_log_timestamptoken(self, mock_perform):
         from osf.models import RdmFileTimestamptokenVerifyResult, NodeLog
         from api_tests.utils import create_test_file
-        from website.views import userkey_generation
+        from website.util.timestamp import userkey
         result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
         nodelog_count1 = NodeLog.objects.all().count()
         path = 'pizza'
         url = self.node.api_url_for('create_waterbutler_log')
-        userkey_generation(self.user._id)
+        userkey.generation(self.user._id)
         file_node = create_test_file(node=self.node, user=self.user, filename=path)
         file_node._path = '/' + path
         file_node.save()
@@ -216,7 +216,7 @@ class TestAddonLogs(OsfTestCase):
         payload = self.build_payload(metadata=metadata)
         logging.info('---test_add_log_timestamptoken.payload: {}'.format(payload))
         nlogs = self.node.logs.count()
-        
+
         self.app.put_json(url, payload, headers={'Content-Type': 'application/json'})
         self.node.reload()
         assert_equal(self.node.logs.count(), nlogs + 1)

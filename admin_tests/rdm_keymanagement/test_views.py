@@ -10,7 +10,7 @@ from osf_tests.factories import UserFactory, AuthUserFactory, InstitutionFactory
 
 from admin.rdm_keymanagement import views
 from admin_tests.utilities import setup_user_view
-from website.views import userkey_generation
+from website.util.timestamp import userkey
 from osf.models import RdmUserKey, Guid
 from api.base import settings as api_settings
 import os
@@ -59,7 +59,7 @@ class TestRemoveUserKeyList(AdminTestCase):
         self.delete_user2 = UserFactory()
         self.delete_users = [self.delete_user1, self.delete_user2]
         for user in self.delete_users:
-            userkey_generation(user._id)
+            userkey.generation(user._id)
             user.affiliated_institutions.add(self.institution)
             user.is_delete = True
             user.date_disabled = timezone.now()
@@ -102,7 +102,7 @@ class TestRemoveUserKey(AdminTestCase):
         self.request = RequestFactory().get('/fake_path')
 
         self.delete_user = UserFactory()
-        userkey_generation(self.delete_user._id)
+        userkey.generation(self.delete_user._id)
         self.delete_user.affiliated_institutions.add(self.institution)
         self.delete_user.is_delete = True
         self.delete_user.date_disabled = timezone.now()
