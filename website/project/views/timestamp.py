@@ -16,9 +16,9 @@ from website import settings
 from website import util
 from osf.models import OSFUser, Guid, RdmFileTimestamptokenVerifyResult, BaseFileNode
 from datetime import datetime
-from api.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
-from api.timestamp.add_timestamp import AddTimestamp
-from api.base import settings as api_settings
+from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
+from website.util.timestamp.add_timestamp import AddTimestamp
+from website import settings as api_settings
 
 
 logger = logging.getLogger(__name__)

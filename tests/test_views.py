@@ -4974,8 +4974,8 @@ class TestTimestampPatternUserView(OsfTestCase):
 
 def create_rdmfiletimestamptokenverifyresult(self, filename='test_file_timestamp_check', provider='osfstorage', inspection_result_status_1=True):
     import pytz
-    from api.timestamp.add_timestamp import AddTimestamp
-    from api.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
+    from website.util.timestamp.add_timestamp import AddTimestamp
+    from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
     import shutil
     ## create file_node(BaseFileNode record)
     file_node = create_test_file(node=self.node, user=self.user, filename=filename)
@@ -5139,7 +5139,7 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         rdmuserkey_pub_key.delete()
 
     def test_adding_timestamp(self):
-        from api.timestamp.add_timestamp import AddTimestamp
+        from website.util.timestamp.add_timestamp import AddTimestamp
         from website.project.utils import serialize_node
         import numpy
         import shutil
@@ -5147,7 +5147,7 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         ret = serialize_node(self.node, self.auth_obj, primary=True)
         user_info = OSFUser.objects.get(id=Guid.objects.get(_id=ret['user']['id']).object_id)
         filename='tests.test_views.test_timestamptoken_verify'
-        file_node = create_test_file(node=self.node, user=self.user, filename=filename) 
+        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
         tmp_dir = 'tmp_{}'.format(ret['user']['id'])
         os.mkdir(tmp_dir)
         tmp_file = os.path.join(tmp_dir, file_node.name)

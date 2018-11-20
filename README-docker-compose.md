@@ -430,8 +430,3 @@ web:
 ```bash
   $ cp root_cert_verifycate.pem /mnt/nfs/keys
 ```
-5. copy api/timestamp/local-dist.py to api/timestamp/local.py
-```bash
-  $ api/timestamp/local-dist.py api/timestamp/local.py
-```
-

@@ -1,9 +1,9 @@
 import datetime
 import pytz
 import os
-from api.timestamp.add_timestamp import AddTimestamp
-from api.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
-from api.base import settings as api_settings
+from website.util.timestamp.add_timestamp import AddTimestamp
+from website.util.timestamp.timestamptoken_verify import TimeStampTokenVerifyCheck
+from website import settings as api_settings
 from osf.models import RdmFileTimestamptokenVerifyResult, Guid
 import shutil
 

@@ -1,7 +1,7 @@
 import datetime
 import pytz
 import os
-from api.timestamp.add_timestamp import AddTimestamp
+from website.util.timestamp.add_timestamp import AddTimestamp
 from osf.models import RdmFileTimestamptokenVerifyResult, Guid
 import shutil
 
