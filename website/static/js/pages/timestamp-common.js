@@ -138,7 +138,35 @@ var add = function (params) {
     }
 };
 
+function initList() {
+    console.log('initializing list');
+    let list = new List('timestamp-form', {
+        valueNames: ['operator_user', 'operator_date'],
+    });
+    
+    let userFilterSelect = document.getElementById('userFilterSelect');
+   
+    let alreadyAdded = [""];
+ 
+    for (let userName of list.items.map(i=>i.values().operator_user)) {
+        if (!alreadyAdded.includes(userName)) {
+		let option = document.createElement('option');
+		option.value = userName;
+		option.textContent = userName;
+		userFilterSelect.add(option);
+                alreadyAdded.push(userName);
+        }
+    }
+    
+    document.getElementById('applyFiltersButton').addEventListener('click', ()=>{
+        let userName = userFilterSelect.value;
+        let userNameFilter = i => !userName || (!i.values().operator_user || (i.values().operator_user == userName));
+        list.filter(userNameFilter);
+    });
+}
+
 module.exports = {
     verify: verify,
-    add: add
+    add: add,
+    initList: initList,
 };

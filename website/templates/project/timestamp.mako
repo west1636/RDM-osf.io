@@ -31,7 +31,20 @@
     <div class="col-md-9 col-xs-12">
         <form id="timestamp-form" class="form">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
-                <span>
+		 <div class="form-inline">
+		  <div class="form-group">
+        	    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+		    <div class="input-group">
+		      <div class="input-group-addon">User</div>
+		      <select id="userFilterSelect" class="form-control">
+			<option value=""></option>
+		      </select>
+		    </div>
+		  </div>
+                  &nbsp;
+		  <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
+		</div>              
+               <span>
                     <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
                     <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
                 </span>
@@ -53,7 +66,7 @@
                         <p class="m-t-sm fg-load-message"> Loading timestamp error list ...  </p>
                     </div>
                 </font>
-                <tbody id="timestamp_error_list">
+                <tbody class="list" id="timestamp_error_list">
                 </tbody>
             </table>
         </form>
@@ -77,4 +90,5 @@
     </script>
 
     <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
+    <script src=${"/static/public/js/list.min.js" | webpack_asset}></script>
 </%def>
