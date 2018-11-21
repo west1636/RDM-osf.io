@@ -145,15 +145,11 @@ class TestTimeStampAddList(AdminTestCase):
         res = self.view.get_context_data()
         nt.assert_is_instance(res, dict)
 
-        ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
         nt.assert_not_in('osfstorage_test_file1.status_1', str(res))
         nt.assert_in('osfstorage_test_file2.status_3', str(res))
         nt.assert_in('osfstorage_test_file3.status_3', str(res))
         nt.assert_in('s3_test_file1.status_3', str(res))
         nt.assert_is_instance(res['view'], views.TimeStampAddList)
-
-
-#class TestVerifyTimeStampAddList(AdminTestCase):
 
 
 class TestTimestampVerifyData(AdminTestCase):
@@ -188,7 +184,7 @@ class TestTimestampVerifyData(AdminTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
-    @mock.patch('website.project.views.timestamp.do_get_timestamp_error_data',
+    @mock.patch('website.util.timestamp.check_file_timestamp',
         return_value={
             'verify_result': 3,
             'verify_result_title': 'TST missing(Unverify)',

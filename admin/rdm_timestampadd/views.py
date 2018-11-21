@@ -158,36 +158,19 @@ class TimestampVerifyData(RdmPermissionMixin, View):
         request_data = {}
         for key in json_data.keys():
             request_data.update({key: json_data[key]})
+        data = {}
+        for key in request_data.keys():
+            data.update({key: request_data[key][0]})
 
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
-        #guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        #web_url = self.web_api_url(guid._id)
 
         # Node Admin
         admin_osfuser_list = list(absNodeData.get_admin_contributors(absNodeData.contributors))
         source_user = self.request.user
         self.request.user = admin_osfuser_list[0]
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-        """
-        web_api_response = requests.post(web_url + 'timestamp/timestamp_error_data/',
-                                         headers=headers, cookies=cookies,
-                                         data=json.dumps(request_data))
-
-        """
-        from website.project.views.timestamp import do_get_timestamp_error_data
-        data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
-        response = do_get_timestamp_error_data(self.request, absNodeData, headers, cookies, data)
+        response = timestamp.check_file_timestamp(self.request.user.id, absNodeData, data)
         # Admin User
         self.request.user = source_user
-        #response_json = web_api_response.json()
-        #web_api_response.close()
-        #response = response_json
         return HttpResponse(json.dumps(response), content_type='application/json')
 
     def web_api_url(self, node_id):

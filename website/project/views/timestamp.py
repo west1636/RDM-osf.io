@@ -133,62 +133,7 @@ def get_timestamp_error_data(auth, node, **kwargs):
     else:
         data = request.args.to_dict()
 
-    cookies = {settings.COOKIE_NAME: auth.user.get_or_create_cookie()}
-    headers = {'content-type': 'application/json'}
-    return do_get_timestamp_error_data(auth, node, headers, cookies, data)
-
-def do_get_timestamp_error_data(auth, node, headers, cookies, data):
-    url = None
-    tmp_dir = None
-    result = None
-    try:
-        file_node = BaseFileNode.objects.get(_id=data['file_id'])
-        if data['provider'] == 'osfstorage':
-            url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    version=data['version'],
-                    direct=None, _internal=False
-                )
-            )
-
-        else:
-            url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    direct=None, _internal=False
-                )
-            )
-
-        res = requests.get(url, headers=headers, cookies=cookies)
-        current_datetime = datetime.now(pytz.timezone('Asia/Tokyo'))
-        current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
-        tmp_dir = 'tmp_{}_{}_{}'.format(auth.user._id, file_node._id, current_datetime_str)
-
-        if not os.path.exists(tmp_dir):
-            os.mkdir(tmp_dir)
-        download_file_path = os.path.join(tmp_dir, data['file_name'])
-        with open(download_file_path, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
-
-        verify_check = TimeStampTokenVerifyCheck()
-        result = verify_check.timestamp_check(
-            auth.user._id, data['file_id'],
-            node._id, data['provider'], data['file_path'], download_file_path, tmp_dir
-        )
-
-        shutil.rmtree(tmp_dir)
-        return result
-
-    except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-        logger.exception(err)
-
-#    return result
-
+    return timestamp.check_file_timestamp(auth.user.id, node, data)
 
 @must_be_contributor_or_public
 def add_timestamp_token(auth, node, **kwargs):

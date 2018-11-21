@@ -15,7 +15,9 @@ from website import settings
 import datetime
 import logging
 import os
+import pytz
 import requests
+import shutil
 import subprocess
 import time
 
@@ -178,6 +180,62 @@ def get_full_list(uid, pid, node):
             provider_list.append(provider_files)
 
     return provider_list
+
+def check_file_timestamp(uid, node, data):
+    user = OSFUser.objects.get(id=uid)
+    cookie = user.get_or_create_cookie()
+    headers = {'content-type': 'application/json'}
+    cookies = {settings.COOKIE_NAME: cookie}
+    url = None
+    tmp_dir = None
+    result = None
+
+    try:
+        file_node = BaseFileNode.objects.get(_id=data['file_id'])
+        if data['provider'] == 'osfstorage':
+            url = file_node.generate_waterbutler_url(
+                **dict(
+                    action='download',
+                    version=data['version'],
+                    direct=None, _internal=False
+                )
+            )
+
+        else:
+            url = file_node.generate_waterbutler_url(
+                **dict(
+                    action='download',
+                    direct=None, _internal=False
+                )
+            )
+
+        res = requests.get(url, headers=headers, cookies=cookies)
+        current_datetime = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
+        current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
+        tmp_dir = 'tmp_{}_{}_{}'.format(user._id, file_node._id, current_datetime_str)
+
+        if not os.path.exists(tmp_dir):
+            os.mkdir(tmp_dir)
+        download_file_path = os.path.join(tmp_dir, data['file_name'])
+        with open(download_file_path, 'wb') as fout:
+            fout.write(res.content)
+            res.close()
+
+        verify_check = TimeStampTokenVerifyCheck()
+        result = verify_check.timestamp_check(
+            user._id, data['file_id'],
+            node._id, data['provider'], data['file_path'], download_file_path, tmp_dir
+        )
+
+        shutil.rmtree(tmp_dir)
+        return result
+
+    except Exception as err:
+        if tmp_dir:
+            if os.path.exists(tmp_dir):
+                shutil.rmtree(tmp_dir)
+        logger.exception(err)
+        raise
 
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
