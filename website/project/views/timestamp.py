@@ -10,13 +10,12 @@ from website import settings
 from website import util
 from osf.models import OSFUser, Guid, BaseFileNode
 from datetime import datetime
-from website.util.timestamp import AddTimestamp, TimeStampTokenVerifyCheck
+from website.util.timestamp import AddTimestamp
 from website.util import timestamp
 import requests
 import time
 import os
 import shutil
-import pytz
 import logging
 
 
