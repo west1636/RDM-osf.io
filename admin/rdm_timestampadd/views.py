@@ -10,13 +10,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import ListView, View, TemplateView
-from osf.models import Institution, Node, AbstractNode, RdmFileTimestamptokenVerifyResult, Guid
-from website.util import waterbutler_api_url_for, timestamp
-from website.util.timestamp import AddTimestamp
+from osf.models import Institution, Node, AbstractNode, Guid
+from website.util import timestamp
 import json
-import os
 import requests
-import shutil
 import time
 
 

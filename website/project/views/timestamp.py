@@ -7,12 +7,8 @@ from website.util import rubeus
 from website.project.decorators import must_be_contributor_or_public
 from website.project.views.node import _view_project
 from website import settings
-from osf.models import Guid, BaseFileNode
-from website.util.timestamp import AddTimestamp
+from osf.models import Guid
 from website.util import timestamp
-import requests
-import os
-import shutil
 import logging
 
 
