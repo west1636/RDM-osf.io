@@ -1,33 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-
-import json
-
-from django.shortcuts import redirect
-from django.http import HttpResponse
-from django.views.generic import ListView, View, TemplateView
+from admin.base import settings
+from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
+from datetime import datetime
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-
-from admin.base import settings
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.views.generic import ListView, View, TemplateView
 from osf.models import Institution, Node, AbstractNode, RdmFileTimestamptokenVerifyResult, Guid
-from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-
-
-import requests
-from datetime import datetime
-import time
+from website.util import waterbutler_api_url_for, timestamp
 from website.util.timestamp import AddTimestamp
-from website.util import timestamp
+import json
 import os
+import requests
 import shutil
-from website.util import waterbutler_api_url_for
+import time
 
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
-
     paginate_by = 25
     template_name = 'rdm_timestampadd/list.html'
     ordering = 'name'
