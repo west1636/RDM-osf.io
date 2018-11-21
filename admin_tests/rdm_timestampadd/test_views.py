@@ -1,9 +1,6 @@
 from nose import tools as nt
 
 from django.test import RequestFactory
-#from django.core.urlresolvers import reverse, reverse_lazy
-#from django.utils import timezone
-#from django.urls import reverse
 
 from tests.base import AdminTestCase
 from osf_tests.factories import (
@@ -19,7 +16,6 @@ from website.util.timestamp import userkey_generation
 from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
 from api.base import settings as api_settings
 import os
-#import json
 import mock
 from tests.test_views import create_rdmfiletimestamptokenverifyresult
 
@@ -257,7 +253,10 @@ class TestAddTimestampData(AdminTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
-    def test_post(self, **kwargs):
+    @mock.patch('requests.get')
+    def test_post(self, mock_get, **kwargs):
+        mock_get.return_value.content = ''
+
         res_timestampaddlist = self.view.get_context_data()
         nt.assert_is_instance(res_timestampaddlist, dict)
 
