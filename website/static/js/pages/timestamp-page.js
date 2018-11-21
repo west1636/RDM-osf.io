@@ -24,14 +24,17 @@ $(document).ready(function () {
                 '<input type="hidden" id="version" value="' + fileList[j].version + '" />' +
                 '<input type="hidden" id="file_name" value="' + fileList[j].file_name + '" />' +
                 '</td>' +
-                '<td>' + fileList[j].operator_user + '</td>' +
-                '<td>' + fileList[j].operator_date + '</td>' +
+                '<td class="operator_user">' + fileList[j].operator_user + '</td>' +
+                '<td class="operator_date">' + fileList[j].operator_date + '</td>' +
                 '<td>' + fileList[j].verify_result_title + '</td>' +
                 '</tr>';
             $(errorTr).appendTo($('#timestamp_error_list'));
             index++;
         }
     }
+
+    timestampCommon.initList();
+
 });
 
 $(function () {
