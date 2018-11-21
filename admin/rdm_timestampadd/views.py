@@ -12,15 +12,15 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 
 from admin.base import settings
-from osf.models import Institution, Node, OSFUser, AbstractNode, BaseFileNode, RdmFileTimestamptokenVerifyResult, Guid
+from osf.models import Institution, Node, AbstractNode, RdmFileTimestamptokenVerifyResult, Guid
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-from api.base import settings as api_settings
 
 
 import requests
 from datetime import datetime
 import time
 from website.util.timestamp import AddTimestamp
+from website.util import timestamp
 import os
 import shutil
 from website.util import waterbutler_api_url_for
@@ -101,70 +101,9 @@ class TimeStampAddList(RdmPermissionMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(TimeStampAddList, self).get_context_data(**kwargs)
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        data_list = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=absNodeData._id).order_by('provider', 'path')
         guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
-        provider_error_list = []
-        provider = None
-        error_list = []
-        for data in data_list:
-            if data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS:
-                continue
 
-            if not provider:
-                provider = data.provider
-            elif provider != data.provider:
-                provider_error_list.append({'provider': provider, 'error_list': error_list})
-                provider = data.provider
-                error_list = []
-
-            if data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_NG:
-                verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
-            elif data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_NO_DATA:
-                verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG  # 'TST missing(Retrieving Failed)'
-            elif data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND:
-                verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG  # 'TST missing(Unverify)'
-            elif data.inspection_result_status == api_settings.FILE_NOT_EXISTS:
-                verify_result_title = api_settings.FILE_NOT_EXISTS_MSG  # 'FILE missing'
-            else:
-                verify_result_title = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG  # 'FILE missing(Unverify)'
-
-            if not data.update_user:
-                operator_user = OSFUser.objects.get(id=data.create_user).fullname
-                operator_date = data.create_date.strftime('%Y/%m/%d %H:%M:%S')
-            else:
-                operator_user = OSFUser.objects.get(id=data.update_user).fullname
-                operator_date = data.update_date.strftime('%Y/%m/%d %H:%M:%S')
-
-            if provider == 'osfstorage':
-                base_file_data = BaseFileNode.objects.get(_id=data.file_id)
-                error_info = {'file_name': base_file_data.name,
-                              'file_path': data.path,
-                              'file_kind': 'file',
-                              'project_id': data.project_id,
-                              'file_id': data.file_id,
-                              'version': base_file_data.current_version_number,
-                              'operator_user': operator_user,
-                              'operator_date': operator_date,
-                              'verify_result_title': verify_result_title}
-            else:
-
-                file_name = os.path.basename(data.path)
-
-                error_info = {'file_name': file_name,
-                              'file_path': data.path,
-                              'file_kind': 'file',
-                              'project_id': data.project_id,
-                              'file_id': data.file_id,
-                              'version': '',
-                              'operator_user': operator_user,
-                              'operator_date': operator_date,
-                              'verify_result_title': verify_result_title}
-            error_list.append(error_info)
-
-        if error_list:
-            provider_error_list.append({'provider': provider, 'error_list': error_list})
-
-        ctx['init_project_timestamp_error_list'] = provider_error_list
+        ctx['init_project_timestamp_error_list'] = timestamp.get_error_list(absNodeData._id)
         ctx['project_title'] = absNodeData.title
         ctx['guid'] = self.kwargs['guid']
         ctx['institution_id'] = self.kwargs['institution_id']

@@ -18,6 +18,80 @@ from urllib3.util.retry import Retry
 
 logger = logging.getLogger(__name__)
 
+VERIFY_RESULT = {
+    api_settings.TIME_STAMP_TOKEN_CHECK_NG:
+        api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG,  # 'NG'
+    api_settings.TIME_STAMP_TOKEN_NO_DATA:
+        api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG,  # 'TST missing(Retrieving Failed)'
+    api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND:
+        api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG,  # 'TST missing(Unverify)'
+    api_settings.FILE_NOT_EXISTS:
+        api_settings.FILE_NOT_EXISTS_MSG  # 'FILE missing'
+}
+
+def get_error_list(pid):
+    data_list = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=pid).order_by('provider', 'path')
+    provider_error_list = []
+    provider = None
+    error_list = []
+
+    for data in data_list:
+        if data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS:
+            continue
+
+        if not provider:
+            provider = data.provider
+        elif provider != data.provider:
+            provider_error_list.append({'provider': provider, 'error_list': error_list})
+            provider = data.provider
+            error_list = []
+
+        if data.inspection_result_status in VERIFY_RESULT:
+            verify_result_title = VERIFY_RESULT[data.inspection_result_status]
+        else:  # 'FILE missing(Unverify)'
+            verify_result_title = \
+                api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
+
+        if not data.update_user:
+            operator_user = OSFUser.objects.get(id=data.create_user).fullname
+            operator_date = data.create_date.strftime('%Y/%m/%d %H:%M:%S')
+        else:
+            operator_user = OSFUser.objects.get(id=data.update_user).fullname
+            operator_date = data.update_date.strftime('%Y/%m/%d %H:%M:%S')
+
+        if provider == 'osfstorage':
+            base_file_data = BaseFileNode.objects.get(_id=data.file_id)
+            error_info = {
+                'file_name': base_file_data.name,
+                'file_path': data.path,
+                'file_kind': 'file',
+                'project_id': data.project_id,
+                'file_id': data.file_id,
+                'version': base_file_data.current_version_number,
+                'operator_user': operator_user,
+                'operator_date': operator_date,
+                'verify_result_title': verify_result_title
+            }
+        else:
+            file_name = os.path.basename(data.path)
+            error_info = {
+                'file_name': file_name,
+                'file_path': data.path,
+                'file_kind': 'file',
+                'project_id': data.project_id,
+                'file_id': data.file_id,
+                'version': '',
+                'operator_user': operator_user,
+                'operator_date': operator_date,
+                'verify_result_title': verify_result_title
+            }
+        error_list.append(error_info)
+
+    if error_list:
+        provider_error_list.append({'provider': provider, 'error_list': error_list})
+
+    return provider_error_list
+
 # userkey generation check
 def userkey_generation_check(guid):
     from osf.models import RdmUserKey
