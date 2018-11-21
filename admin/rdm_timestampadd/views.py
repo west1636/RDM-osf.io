@@ -98,6 +98,7 @@ class InstitutionNodeList(RdmPermissionMixin, UserPassesTestMixin, ListView):
 class TimeStampAddList(RdmPermissionMixin, TemplateView):
     template_name = 'rdm_timestampadd/timestampadd.html'
     ordering = 'provider'
+
     def get_context_data(self, **kwargs):
         ctx = super(TimeStampAddList, self).get_context_data(**kwargs)
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
@@ -121,25 +122,18 @@ class VerifyTimeStampAddList(RdmPermissionMixin, View):
         for key in json_data.keys():
             ctx.update({key: json_data[key]})
 
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
         guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        web_url = self.web_url_path(guid._id)
 
         # Node Admin
         admin_osfuser_list = list(absNodeData.get_admin_contributors(absNodeData.contributors))
         source_user = self.request.user
         self.request.user = admin_osfuser_list[0]
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-
-        web_response = requests.get(web_url, headers=headers, cookies=cookies)
+        uid = self.request.user.id
 
         # Admin User
         self.request.user = source_user
-        ctx['provider_list'] = web_response.json()['provider_list']
+        ctx['provider_list'] = timestamp.get_full_list(uid, guid._id, absNodeData)
         ctx['guid'] = self.kwargs['guid']
         ctx['project_title'] = absNodeData.title
         ctx['institution_id'] = self.kwargs['institution_id']

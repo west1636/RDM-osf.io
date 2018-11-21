@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import logging
-import os
-import requests
-import subprocess
+from __future__ import absolute_import
 from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,6 +10,14 @@ from osf.models import (
     OSFUser
 )
 from urllib3.util.retry import Retry
+from website import util
+from website import settings
+import datetime
+import logging
+import os
+import requests
+import subprocess
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +34,9 @@ VERIFY_RESULT = {
 }
 
 def get_error_list(pid):
+    '''
+    Retrieve from the database the list of all timestamps that has an error.
+    '''
     data_list = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=pid).order_by('provider', 'path')
     provider_error_list = []
     provider = None
@@ -92,6 +99,143 @@ def get_error_list(pid):
 
     return provider_error_list
 
+def get_full_list(uid, pid, node):
+    '''
+    Get a full list of timestamps from all files uploaded to a storage.
+    '''
+    user_info = OSFUser.objects.get(id=uid)
+    cookie = user_info.get_or_create_cookie()
+
+    api_url = util.api_v2_url('nodes/{}/files'.format(pid))
+    headers = {'content-type': 'application/json'}
+    cookies = {settings.COOKIE_NAME: cookie}
+
+    file_res = requests.get(api_url, headers=headers, cookies=cookies)
+    provider_json_res = file_res.json()
+    file_res.close()
+    provider_list = []
+
+    for provider_data in provider_json_res['data']:
+        waterbutler_meta_url = util.waterbutler_api_url_for(
+            pid,
+            provider_data['attributes']['provider'],
+            '/',
+            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+        )
+        waterbutler_json_res = None
+        waterbutler_res = requests.get(waterbutler_meta_url, headers=headers, cookies=cookies)
+        waterbutler_json_res = waterbutler_res.json()
+        waterbutler_res.close()
+
+        file_list = []
+        child_file_list = []
+        for file_data in waterbutler_json_res['data']:
+            if file_data['attributes']['kind'] == 'folder':
+                child_file_list.extend(
+                    waterbutler_folder_file_info(
+                        pid,
+                        provider_data['attributes']['provider'],
+                        file_data['attributes']['path'],
+                        node, cookies, headers
+                    )
+                )
+            else:
+                file_info = None
+                basefile_node = BaseFileNode.resolve_class(
+                    provider_data['attributes']['provider'],
+                    BaseFileNode.FILE
+                ).get_or_create(
+                    node,
+                    file_data['attributes']['path']
+                )
+                basefile_node.save()
+                if provider_data['attributes']['provider'] == 'osfstorage':
+                    file_info = {
+                        'file_name': file_data['attributes']['name'],
+                        'file_path': file_data['attributes']['materialized'],
+                        'file_kind': file_data['attributes']['kind'],
+                        'file_id': basefile_node._id,
+                        'version': file_data['attributes']['extra']['version']
+                    }
+                else:
+                    file_info = {
+                        'file_name': file_data['attributes']['name'],
+                        'file_path': file_data['attributes']['materialized'],
+                        'file_kind': file_data['attributes']['kind'],
+                        'file_id': basefile_node._id,
+                        'version': ''
+                    }
+                if file_info:
+                    file_list.append(file_info)
+
+        file_list.extend(child_file_list)
+
+        if file_list:
+            provider_files = {
+                'provider': provider_data['attributes']['provider'],
+                'provider_file_list': file_list
+            }
+            provider_list.append(provider_files)
+
+    return provider_list
+
+def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
+    # get waterbutler folder file
+    if provider == 'osfstorage':
+        waterbutler_meta_url = util.waterbutler_api_url_for(
+            pid, provider,
+            '/' + path,
+            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+        )
+    else:
+        waterbutler_meta_url = util.waterbutler_api_url_for(
+            pid, provider,
+            path,
+            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+        )
+
+    waterbutler_res = requests.get(waterbutler_meta_url, headers=headers, cookies=cookies)
+    waterbutler_json_res = waterbutler_res.json()
+    waterbutler_res.close()
+    file_list = []
+    child_file_list = []
+    for file_data in waterbutler_json_res['data']:
+        if file_data['attributes']['kind'] == 'folder':
+            child_file_list.extend(waterbutler_folder_file_info(
+                pid, provider, file_data['attributes']['path'],
+                node, cookies, headers))
+        else:
+            basefile_node = BaseFileNode.resolve_class(
+                provider,
+                BaseFileNode.FILE
+            ).get_or_create(
+                node,
+                file_data['attributes']['path']
+            )
+            basefile_node.save()
+            if provider == 'osfstorage':
+                file_info = {
+                    'file_name': file_data['attributes']['name'],
+                    'file_path': file_data['attributes']['materialized'],
+                    'file_kind': file_data['attributes']['kind'],
+                    'file_id': basefile_node._id,
+                    'version': file_data['attributes']['extra']['version']
+                }
+            else:
+                file_info = {
+                    'file_name': file_data['attributes']['name'],
+                    'file_path': file_data['attributes']['materialized'],
+                    'file_kind': file_data['attributes']['kind'],
+                    'file_id': basefile_node._id,
+                    'version': ''
+                }
+
+            file_list.append(file_info)
+
+    file_list.extend(child_file_list)
+
+    return file_list
+
 # userkey generation check
 def userkey_generation_check(guid):
     from osf.models import RdmUserKey
@@ -107,7 +251,6 @@ def userkey_generation_check(guid):
 def userkey_generation(guid):
     logger.info('userkey_generation guid:' + guid)
     from api.base import settings as api_settings
-    #from osf.models import RdmUserKey
     import os.path
     import subprocess
     from datetime import datetime
@@ -378,13 +521,6 @@ class TimeStampTokenVerifyCheck:
             if provider == 'osfstorage':
                 # ファイル取得
                 baseFileNode = self.get_baseFileNode(file_id)
-#                if baseFileNode and not verifyResult:
-#                    # ファイルが存在せず、検証結果がない場合
-#                    ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-#                    verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG #'TST missing(Unverify)'
-#                    verifyResult = self.create_rdm_filetimestamptokenverify(file_id, project_id, provider,
-#                                                                            path, ret, userid)
-#                elif baseFileNode.is_deleted and not verifyResult:
                 if baseFileNode.is_deleted and not verifyResult:
                     # ファイルが削除されていて検証結果がない場合
                     ret = api_settings.FILE_NOT_EXISTS
