@@ -1,33 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-
-import json
-
-from django.shortcuts import redirect
-from django.http import HttpResponse
-from django.views.generic import ListView, View, TemplateView
+from admin.base import settings
+from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
+from datetime import datetime
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-
-from admin.base import settings
-from osf.models import Institution, Node, AbstractNode, RdmFileTimestamptokenVerifyResult, Guid
-from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-
-
-import requests
-from datetime import datetime
-import time
-from website.util.timestamp import AddTimestamp
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.views.generic import ListView, View, TemplateView
+from osf.models import Institution, Node, AbstractNode, Guid
 from website.util import timestamp
-import os
-import shutil
-from website.util import waterbutler_api_url_for
+import json
+import requests
+import time
 
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
-
     paginate_by = 25
     template_name = 'rdm_timestampadd/list.html'
     ordering = 'name'
@@ -219,62 +209,23 @@ class AddTimestampData(RdmPermissionMixin, View):
         return self.has_auth(institution_id)
 
     def post(self, request, *args, **kwargs):
-        json_data = dict(self.request.POST.iterlists())
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        request_data = {}
-        for key in json_data.keys():
-            request_data.update({key: json_data[key]})
+
+        request_data = dict(self.request.POST.iterlists())
+        data = {}
+        for key in request_data.keys():
+            data.update({key: request_data[key][0]})
 
         # Change user Node-Admin
         admin_osfuser_list = list(absNodeData.get_admin_contributors(absNodeData.contributors))
-        source_user = self.request.user
         self.request.user = admin_osfuser_list[0]
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
-        guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
 
-        url = None
-        tmp_dir = None
-        data = RdmFileTimestamptokenVerifyResult.objects.get(file_id=request_data['file_id'][0])
-        try:
-            if request_data['provider'][0] == 'osfstorage':
-                url = waterbutler_api_url_for(data.project_id,
-                                              data.provider,
-                                              '/' + request_data['file_id'][0],
-                                              version=request_data['version'][0], action='download', direct=None)
-            else:
-                url = waterbutler_api_url_for(data.project_id,
-                                              data.provider,
-                                              '/' + request_data['file_id'][0],
-                                              action='download', direct=None)
-            res = requests.get(url, headers=headers, cookies=cookies)
-            tmp_dir = 'tmp_{}'.format(self.request.user._id)
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-            os.mkdir(tmp_dir)
-            download_file_path = os.path.join(tmp_dir, request_data['file_name'][0])
-            with open(download_file_path, 'wb') as fout:
-                fout.write(res.content)
-                res.close()
+        result = timestamp.add_token(self.request.user.id, absNodeData, data)
 
-            addTimestamp = AddTimestamp()
-            # Admin User
-            self.request.user = source_user
-            result = addTimestamp.add_timestamp(self.request.user._id, request_data['file_id'][0],
-                                                guid._id, request_data['provider'][0], request_data['file_path'][0],
-                                                download_file_path, tmp_dir)
-            shutil.rmtree(tmp_dir)
-        except Exception as err:
-            if tmp_dir:
-                if os.path.exists(tmp_dir):
-                    shutil.rmtree(tmp_dir)
-        if 'result' in locals():
-            request_data.update({'result': result})
-        return HttpResponse(json.dumps(request_data), content_type='application/json')
-
-    def web_api_url(self, node_id):
-        return settings.osf_settings.DOMAIN + 'api/v1/project/' + node_id + '/'
+        return HttpResponse(
+            json.dumps({'result': result}),
+            content_type='application/json'
+        )
 
 
 def waterbutler_meta_parameter(self):

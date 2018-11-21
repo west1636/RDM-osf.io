@@ -237,6 +237,62 @@ def check_file_timestamp(uid, node, data):
         logger.exception(err)
         raise
 
+def add_token(uid, node, data):
+    user = OSFUser.objects.get(id=uid)
+    cookie = user.get_or_create_cookie()
+    headers = {'content-type': 'application/json'}
+    cookies = {settings.COOKIE_NAME: cookie}
+    url = None
+    tmp_dir = None
+
+    try:
+        file_node = BaseFileNode.objects.get(_id=data['file_id'])
+        if data['provider'] == 'osfstorage':
+            url = file_node.generate_waterbutler_url(
+                **dict(
+                    action='download',
+                    version=data['version'],
+                    direct=None, _internal=False
+                )
+            )
+        else:
+            url = file_node.generate_waterbutler_url(
+                **dict(
+                    action='download',
+                    direct=None, _internal=False
+                )
+            )
+
+        # Request To Download File
+        res = requests.get(url, headers=headers, cookies=cookies)
+        tmp_dir = 'tmp_{}'.format(user._id)
+        count = 1
+        while os.path.exists(tmp_dir):
+            count += 1
+            tmp_dir = 'tmp_{}_{}'.format(user._id, count)
+        os.mkdir(tmp_dir)
+        download_file_path = os.path.join(tmp_dir, data['file_name'])
+        with open(download_file_path, 'wb') as fout:
+            fout.write(res.content)
+            res.close()
+
+        addTimestamp = AddTimestamp()
+        result = addTimestamp.add_timestamp(
+            user._id, data['file_id'],
+            node._id, data['provider'], data['file_path'],
+            download_file_path, tmp_dir
+        )
+
+        shutil.rmtree(tmp_dir)
+        return result
+
+    except Exception as err:
+        if tmp_dir:
+            if os.path.exists(tmp_dir):
+                shutil.rmtree(tmp_dir)
+        logger.exception(err)
+        raise
+
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
     if provider == 'osfstorage':
