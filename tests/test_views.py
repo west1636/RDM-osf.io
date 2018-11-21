@@ -5007,8 +5007,11 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file2.status_3' in res
         assert 'osfstorage_test_file3.status_3' in res
         assert 's3_test_file1.status_3' in res
-    @mock.patch('requests.get', '')
-    def test_add_timestamp_token(self):
+
+    @mock.patch('requests.get')
+    def test_add_timestamp_token(self, mock_get):
+        mock_get.return_value.content = ''
+
         url_timestamp = self.project.url + 'timestamp/'
         res = self.app.get(url_timestamp, auth=self.user.auth)
         assert_equal(res.status_code, 200)
@@ -5040,10 +5043,13 @@ class TestTimestampView(OsfTestCase):
         ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
         assert 'osfstorage_test_file1.status_1' not in res
         assert 'osfstorage_test_file2.status_3' in res
-        assert 'osfstorage_test_file3.status_3' in res
+        assert 'osfstorage_test_file3.status_3' not in res
         assert 's3_test_file1.status_3' in res
 
-    def test_get_timestamp_error_data(self):
+    @mock.patch('requests.get')
+    def test_get_timestamp_error_data(self, mock_get):
+        mock_get.return_value.content = ''
+
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
         api_url_get_timestamp_error_data = self.project.api_url + 'timestamp/timestamp_error_data/'
         res = self.app.post_json(
@@ -5060,8 +5066,6 @@ class TestTimestampView(OsfTestCase):
         )
         self.project.reload()
         assert_equal(res.status_code, 200)
-
-#    def test_collect_timestamp_trees_to_json(self):
 
 
 class TestAddonFileViewTimestampFunc(OsfTestCase):
