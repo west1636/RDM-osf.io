@@ -48,8 +48,9 @@ def get_timestamp_error_data(auth, node, **kwargs):
 
 @must_be_contributor_or_public
 def add_timestamp_token(auth, node, **kwargs):
-    # timestamptoken add method
-    # request Get or Post data set
+    '''
+    Timestamptoken add method
+    '''
     if request.method == 'POST':
         request_data = request.json
         data = {}
@@ -59,54 +60,7 @@ def add_timestamp_token(auth, node, **kwargs):
     else:
         data = request.args.to_dict()
 
-    cookies = {settings.COOKIE_NAME: auth.user.get_or_create_cookie()}
-    headers = {'content-type': 'application/json'}
-    url = None
-    tmp_dir = None
-    try:
-        file_node = BaseFileNode.objects.get(_id=data['file_id'])
-        if data['provider'] == 'osfstorage':
-            url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    version=data['version'],
-                    direct=None, _internal=False
-                )
-            )
-
-        else:
-            url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    direct=None, _internal=False
-                )
-            )
-
-        # Request To Download File
-        res = requests.get(url, headers=headers, cookies=cookies)
-        tmp_dir = 'tmp_{}'.format(auth.user._id)
-        if not os.path.exists(tmp_dir):
-            os.mkdir(tmp_dir)
-        download_file_path = os.path.join(tmp_dir, data['file_name'])
-        with open(download_file_path, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
-
-        addTimestamp = AddTimestamp()
-        result = addTimestamp.add_timestamp(
-            auth.user._id, data['file_id'],
-            node._id, data['provider'], data['file_path'],
-            download_file_path, tmp_dir
-        )
-
-        shutil.rmtree(tmp_dir)
-        return result
-
-    except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-        logger.exception(err)
+    return timestamp.add_token(auth.user.id, node, data)
 
 @must_be_contributor_or_public
 def collect_timestamp_trees_to_json(auth, node, **kwargs):
