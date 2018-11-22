@@ -65,6 +65,7 @@ $(function () {
     var document_onready = function () {
         $('#btn-verify').on('click', btnVerify_onclick).focus();
         $('#btn-addtimestamp').on('click', btnAddtimestamp_onclick).focus();
+        timestampCommon.initList();
     };
     $(document).ready(document_onready);
 });

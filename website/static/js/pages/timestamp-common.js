@@ -147,7 +147,7 @@ function initList() {
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-
+console.log(list)
     var users = list.items.map(function(i) {return i.values().operator_user});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];

@@ -13,7 +13,20 @@
 
 {% block content %}
 <h3>TimeStamp Add ({{ project_title }})</h3>
-<form action "" id="addTimestampForm">
+<form action "" id="timestamp-form">
+    <span class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+        <div class="input-group">
+          <div class="input-group-addon">User</div>
+          <select id="userFilterSelect" class="form-control">
+             <option value=""></option>
+          </select>
+        </div>
+      </div>
+       &nbsp;
+      <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
+    </span>
     <a class="btn btn-success" id="btn-verify">Verify</a>
     <a class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</a>
     <font color="red">
@@ -29,7 +42,7 @@
                 <th>Timestamp verification</th>
             </tr>
         </thead>
-        <tbody id="timestamp_error_list">
+        <tbody class="list" id="timestamp_error_list">
         {% for provider_error_info in init_project_timestamp_error_list %}
             <tr><td colspan="5"><b>{{ provider_error_info.provider }}</b></td></tr>
             {% for error_info in provider_error_info.error_list %}
@@ -44,8 +57,8 @@
                     <input type="hidden" name="version" id="version" value="{{ error_info.version }}" />
                     <input type="hidden" name="file_name" id="file_name" value="{{ error_info.file_name }}" />
                 </td>
-                <td>{{ error_info.operator_user }}</td>
-                <td>{{ error_info.operator_date }}</td>
+                <td class="operator_user">{{ error_info.operator_user }}</td>
+                <td class="operator_date">{{ error_info.operator_date }}</td>
                 <td>{{ error_info.verify_result_title }}</td>
             </tr>
             {% endfor %}
