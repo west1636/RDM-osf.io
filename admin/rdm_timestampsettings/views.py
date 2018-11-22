@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from admin.base import settings
+from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.views.generic import ListView, View
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.urlresolvers import reverse
-from admin.base import settings
 from osf.models import Institution, Node, RdmTimestampGrantPattern
-from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):

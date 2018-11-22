@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-
-#import json
-
-#from django.core import serializers
-from django.shortcuts import redirect
-#from django.forms.models import model_to_dict
-#from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse
-from django.views.generic import ListView, View
-#from django.contrib.auth.mixins import PermissionRequiredMixin
-
-from django.contrib.auth.mixins import UserPassesTestMixin
-
-from django.core.urlresolvers import reverse
-
 from admin.base import settings
-#from admin.base.forms import ImportFileForm
-#from admin.institutions.forms import InstitutionForm
+from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.views.generic import ListView, View
 from osf.models import Institution, OSFUser
 from osf.models import RdmUserKey
-from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
+
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
-
     paginate_by = 25
     template_name = 'rdm_keymanagement/institutions.html'
     ordering = 'name'
@@ -71,7 +59,6 @@ class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
         return super(InstitutionList, self).get_context_data(**kwargs)
 
 class RemoveUserKeyList(RdmPermissionMixin, UserPassesTestMixin, ListView):
-
     template_name = 'rdm_keymanagement/delete_user_list.html'
     raise_exception = True
     paginate_by = 25
@@ -102,7 +89,6 @@ class RemoveUserKeyList(RdmPermissionMixin, UserPassesTestMixin, ListView):
         return super(RemoveUserKeyList, self).get_context_data(**kwargs)
 
 class RemoveUserKey(RdmPermissionMixin, UserPassesTestMixin, View):
-
     raise_exception = True
 
     def test_func(self):
