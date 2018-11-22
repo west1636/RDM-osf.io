@@ -13,6 +13,7 @@ from urllib3.util.retry import Retry
 from website import util
 from website import settings
 import datetime
+import hashlib
 import logging
 import os
 import pytz
@@ -20,11 +21,12 @@ import requests
 import shutil
 import subprocess
 import time
+import traceback
 
 
 logger = logging.getLogger(__name__)
 
-VERIFY_RESULT = {
+RESULT_MESSAGE = {
     api_settings.TIME_STAMP_TOKEN_CHECK_NG:
         api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG,  # 'NG'
     api_settings.TIME_STAMP_TOKEN_NO_DATA:
@@ -55,8 +57,8 @@ def get_error_list(pid):
             provider = data.provider
             error_list = []
 
-        if data.inspection_result_status in VERIFY_RESULT:
-            verify_result_title = VERIFY_RESULT[data.inspection_result_status]
+        if data.inspection_result_status in RESULT_MESSAGE:
+            verify_result_title = RESULT_MESSAGE[data.inspection_result_status]
         else:  # 'FILE missing(Unverify)'
             verify_result_title = \
                 api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
@@ -194,19 +196,15 @@ def check_file_timestamp(uid, node, data):
         file_node = BaseFileNode.objects.get(_id=data['file_id'])
         if data['provider'] == 'osfstorage':
             url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    version=data['version'],
-                    direct=None, _internal=False
-                )
+                action='download',
+                version=data['version'],
+                direct=None, _internal=False
             )
 
         else:
             url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    direct=None, _internal=False
-                )
+                action='download',
+                direct=None, _internal=False
             )
 
         res = requests.get(url, headers=headers, cookies=cookies)
@@ -231,9 +229,8 @@ def check_file_timestamp(uid, node, data):
         return result
 
     except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
+        if tmp_dir and os.path.exists(tmp_dir):
+            shutil.rmtree(tmp_dir)
         logger.exception(err)
         raise
 
@@ -249,18 +246,14 @@ def add_token(uid, node, data):
         file_node = BaseFileNode.objects.get(_id=data['file_id'])
         if data['provider'] == 'osfstorage':
             url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    version=data['version'],
-                    direct=None, _internal=False
-                )
+                action='download',
+                version=data['version'],
+                direct=None, _internal=False
             )
         else:
             url = file_node.generate_waterbutler_url(
-                **dict(
-                    action='download',
-                    direct=None, _internal=False
-                )
+                action='download',
+                direct=None, _internal=False
             )
 
         # Request To Download File
@@ -287,9 +280,8 @@ def add_token(uid, node, data):
         return result
 
     except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
+        if tmp_dir and os.path.exists(tmp_dir):
+            shutil.rmtree(tmp_dir)
         logger.exception(err)
         raise
 
@@ -347,31 +339,16 @@ def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
             file_list.append(file_info)
 
     file_list.extend(child_file_list)
-
     return file_list
 
-# userkey generation check
 def userkey_generation_check(guid):
-    from osf.models import RdmUserKey
+    return RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid).object_id).exists()
 
-    logger.info(' userkey_generation_check ')
-    # no user_key_info
-    if not RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid).object_id).exists():
-        return False
-
-    return True
-
-# userkey generation
 def userkey_generation(guid):
     logger.info('userkey_generation guid:' + guid)
-    from api.base import settings as api_settings
-    import os.path
-    import subprocess
-    from datetime import datetime
-    import hashlib
 
     try:
-        generation_date = datetime.now()
+        generation_date = datetime.datetime.now()
         generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
         generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
         generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
@@ -394,17 +371,15 @@ def userkey_generation(guid):
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
         ]
 
-        prc = subprocess.Popen(pvt_key_generation_cmd, shell=False,
-                               stdin=subprocess.PIPE,
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE)
+        prc = subprocess.Popen(
+            pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
         stdout_data, stderr_data = prc.communicate()
 
-        prc = subprocess.Popen(pub_key_generation_cmd, shell=False,
-                               stdin=subprocess.PIPE,
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE)
+        prc = subprocess.Popen(
+            pub_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
         stdout_data, stderr_data = prc.communicate()
 
@@ -423,8 +398,6 @@ def userkey_generation(guid):
         logger.exception(error)
 
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
-    from osf.models import RdmUserKey
-
     userkey_info = RdmUserKey()
     userkey_info.guid = user_id
     userkey_info.key_name = key_name
@@ -442,12 +415,14 @@ class AddTimestamp:
 
     #②ファイル情報 + 鍵情報をハッシュ化したタイムスタンプリクエスト（tsq）を生成する
     def get_timestamp_request(self, file_name):
-        cmd = [api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS, api_settings.OPENSSL_OPTION_QUERY, api_settings.OPENSSL_OPTION_DATA,
-               file_name, api_settings.OPENSSL_OPTION_CERT, api_settings.OPENSSL_OPTION_SHA512]
-        process = subprocess.Popen(cmd, shell=False,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+        cmd = [
+            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
+            api_settings.OPENSSL_OPTION_QUERY, api_settings.OPENSSL_OPTION_DATA,
+            file_name, api_settings.OPENSSL_OPTION_CERT, api_settings.OPENSSL_OPTION_SHA512
+        ]
+        process = subprocess.Popen(
+            cmd, shell=False, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         stdout_data, stderr_data = process.communicate()
         return stdout_data
@@ -456,19 +431,21 @@ class AddTimestamp:
     def get_timestamp_response(self, file_name, ts_request_file, key_file):
         res_content = None
         try:
-            retries = Retry(total=api_settings.REQUEST_TIME_OUT,
-                            backoff_factor=1, status_forcelist=api_settings.ERROR_HTTP_STATUS)
+            retries = Retry(
+                total=api_settings.REQUEST_TIME_OUT, backoff_factor=1,
+                status_forcelist=api_settings.ERROR_HTTP_STATUS)
             session = requests.Session()
             session.mount('http://', requests.adapters.HTTPAdapter(max_retries=retries))
             session.mount('https://', requests.adapters.HTTPAdapter(max_retries=retries))
 
-            res = requests.post(api_settings.TIME_STAMP_AUTHORITY_URL,
-                                headers=api_settings.REQUEST_HEADER, data=ts_request_file, stream=True)
+            res = requests.post(
+                api_settings.TIME_STAMP_AUTHORITY_URL, headers=api_settings.REQUEST_HEADER,
+                data=ts_request_file, stream=True)
             res_content = res.content
             res.close()
+
         except Exception as ex:
             logger.exception(ex)
-            import traceback
             traceback.print_exc()
             res_content = None
 
@@ -478,17 +455,14 @@ class AddTimestamp:
     def get_data(self, file_id, project_id, provider, path):
         try:
             res = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_id)
-
         except ObjectDoesNotExist:
-            #logger.exception(ex)
             res = None
-
         return res
 
     #⑤ファイルタイムスタンプトークン情報テーブルに登録。
-    def timestamptoken_register(self, file_id, project_id, provider, path,
-                                key_file, tsa_response, user_id, verify_data):
-
+    def timestamptoken_register(
+            self, file_id, project_id, provider, path, key_file,
+            tsa_response, user_id, verify_data):
         try:
             # データが登録されていない場合
             if not verify_data:
@@ -511,20 +485,12 @@ class AddTimestamp:
                 verify_data.update_date = datetime.datetime.now()
 
             verify_data.save()
-
         except Exception as ex:
             logger.exception(ex)
-#            res = None
-
-        return
 
     #⑥メイン処理
     def add_timestamp(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
-
-        #        logger.info('add_timestamp start guid:{guid} project_id:{project_id} provider:{provider} path:{path} file_name:{file_name} file_id:{file_id}'.format(guid=guid,project_id=project_id,provider=provider,path=path,file_name=file_name, file_id=file_id))
-
         # guid から user_idを取得する
-        #user_id = Guid.find_one(Q('_id', 'eq', guid)).object_id
         user_id = Guid.objects.get(_id=guid).object_id
 
         # ユーザ鍵情報を取得する。
@@ -540,12 +506,13 @@ class AddTimestamp:
         verify_data = self.get_data(file_id, project_id, provider, path)
 
         # 検証結果テーブルに登録する。
-        self.timestamptoken_register(file_id, project_id, provider, path,
-                                     key_file_name, tsa_response, user_id, verify_data)
+        self.timestamptoken_register(
+            file_id, project_id, provider, path, key_file_name, tsa_response,
+            user_id, verify_data)
 
         # （共通処理）タイムスタンプ検証処理の呼び出し
-        return TimeStampTokenVerifyCheck().timestamp_check(guid, file_id,
-                                                           project_id, provider, path, file_name, tmp_dir)
+        return TimeStampTokenVerifyCheck().timestamp_check(
+            guid, file_id, project_id, provider, path, file_name, tmp_dir)
 
 
 class TimeStampTokenVerifyCheck:
@@ -598,8 +565,8 @@ class TimeStampTokenVerifyCheck:
 
         return fname
 
-    def create_rdm_filetimestamptokenverify(self, file_id, project_id, provider, path,
-                                        inspection_result_status, userid):
+    def create_rdm_filetimestamptokenverify(
+            self, file_id, project_id, provider, path, inspection_result_status, userid):
 
         userKey = RdmUserKey.objects.get(guid=userid, key_kind=api_settings.PUBLIC_KEY_VALUE)
         create_data = RdmFileTimestamptokenVerifyResult()
@@ -608,18 +575,15 @@ class TimeStampTokenVerifyCheck:
         create_data.provider = provider
         create_data.key_file_name = userKey.key_name
         create_data.path = path
-#        create_data.inspection_result_status = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
         create_data.inspection_result_status = inspection_result_status
         create_data.validation_user = userid
         create_data.validation_date = timezone.now()
         create_data.create_user = userid
         create_data.create_date = timezone.now()
-
         return create_data
 
     # タイムスタンプトークンチェック
     def timestamp_check(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
-
         userid = Guid.objects.get(_id=guid).object_id
 
         # 検証結果取得
@@ -639,19 +603,24 @@ class TimeStampTokenVerifyCheck:
                     # ファイルが削除されていて検証結果がない場合
                     ret = api_settings.FILE_NOT_EXISTS
                     verify_result_title = api_settings.FILE_NOT_EXISTS_MSG  # 'FILE missing'
-                    verifyResult = self.create_rdm_filetimestamptokenverify(file_id, project_id, provider,
-                                                                       path, ret, userid)
+                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                        file_id, project_id, provider, path, ret, userid)
+
                 elif baseFileNode.is_deleted and verifyResult and not verifyResult.timestamp_token:
                     # ファイルが存在しなくてタイムスタンプトークンが未検証がない場合
-                    verifyResult.inspection_result_status = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
+                    verifyResult.inspection_result_status = \
+                        api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verifyResult.validation_user = userid
                     verifyResult.validation_date = datetime.datetime.now()
-#                    ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_NO_DATA
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verify_result_title = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG  # 'FILE missing(Unverify)'
+                    # 'FILE missing(Unverify)'
+                    verify_result_title = \
+                        api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
+
                 elif baseFileNode.is_deleted and verifyResult:
                     # ファイルが削除されていて、検証結果テーブルにレコードが存在する場合
-                    verifyResult.inspection_result_status = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
+                    verifyResult.inspection_result_status = \
+                        api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verifyResult.validation_user = userid
                     verifyResult.validation_date = datetime.datetime.now()
                     # ファイルが削除されていて検証結果があり場合、検証結果テーブルを更新する。
@@ -659,9 +628,11 @@ class TimeStampTokenVerifyCheck:
                 elif not baseFileNode.is_deleted and not verifyResult:
                     # ファイルは存在し、検証結果のタイムスタンプが未登録の場合は更新する。
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG  # 'TST missing(Unverify)'
-                    verifyResult = self.create_rdm_filetimestamptokenverify(file_id, project_id, provider,
-                                                                            path, ret, userid)
+                    # 'TST missing(Unverify)'
+                    verify_result_title = \
+                        api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
+                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                        file_id, project_id, provider, path, ret, userid)
 
                 elif not baseFileNode.is_deleted and not verifyResult.timestamp_token:
                     # ファイルは存在し、検証結果のタイムスタンプが未登録の場合は更新する。
@@ -670,21 +641,26 @@ class TimeStampTokenVerifyCheck:
                     verifyResult.validation_date = datetime.datetime.now()
                     # ファイルが削除されていて検証結果があり場合、検証結果テーブルを更新する。
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG  # 'TST missing(Retrieving Failed)'
+                    # 'TST missing(Retrieving Failed)'
+                    verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
+
             else:
                 if not verifyResult:
                     # ファイルが存在せず、検証結果がない場合
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG  # 'TST missing(Unverify)'
-                    verifyResult = self.create_rdm_filetimestamptokenverify(file_id, project_id, provider,
-                                                                             path, ret, userid)
+                    # 'TST missing(Unverify)'
+                    verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
+                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                        file_id, project_id, provider, path, ret, userid)
+
                 elif not verifyResult.timestamp_token:
                     verifyResult.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     verifyResult.validation_user = userid
                     verifyResult.validation_date = datetime.datetime.now()
                     # ファイルが削除されていて検証結果があり場合、検証結果テーブルを更新する。
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG  # 'TST missing(Retrieving Failed)'
+                    # 'TST missing(Retrieving Failed)'
+                    verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
 
             if ret == 0:
                 timestamptoken_file = guid + '.tsr'
@@ -697,23 +673,27 @@ class TimeStampTokenVerifyCheck:
                     raise err
 
                 # 取得したタイムスタンプトークンと鍵情報から検証を行う。
-                cmd = [api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS, api_settings.OPENSSL_OPTION_VERIFY,
-                       api_settings.OPENSSL_OPTION_DATA, file_name, api_settings.OPENSSL_OPTION_IN, timestamptoken_file_path,
-                       api_settings.OPENSSL_OPTION_CAFILE, os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)]
-                prc = subprocess.Popen(cmd, shell=False,
-                                       stdin=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       stdout=subprocess.PIPE)
+                cmd = [
+                    api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
+                    api_settings.OPENSSL_OPTION_VERIFY, api_settings.OPENSSL_OPTION_DATA,
+                    file_name, api_settings.OPENSSL_OPTION_IN, timestamptoken_file_path,
+                    api_settings.OPENSSL_OPTION_CAFILE,
+                    os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)
+                ]
+                prc = subprocess.Popen(
+                    cmd, shell=False, stdin=subprocess.PIPE,
+                    stderr=subprocess.PIPE, stdout=subprocess.PIPE)
                 stdout_data, stderr_data = prc.communicate()
                 ret = api_settings.TIME_STAMP_TOKEN_UNCHECKED
-#                print(stdout_data.__str__())
-#                print(stderr_data.__str__())
+
                 if stdout_data.__str__().find(api_settings.OPENSSL_VERIFY_RESULT_OK) > -1:
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS_MSG  # 'OK'
+
                 else:
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_NG
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
+
                 verifyResult.inspection_result_status = ret
                 verifyResult.validation_user = userid
                 verifyResult.validation_date = timezone.now()
@@ -723,6 +703,7 @@ class TimeStampTokenVerifyCheck:
                 verifyResult.update_date = None
                 operator_user = OSFUser.objects.get(id=verifyResult.create_user).fullname
                 operator_date = verifyResult.create_date.strftime('%Y/%m/%d %H:%M:%S')
+
             else:
                 operator_user = OSFUser.objects.get(id=verifyResult.update_user).fullname
                 operator_date = verifyResult.update_date.strftime('%Y/%m/%d %H:%M:%S')
@@ -744,9 +725,15 @@ class TimeStampTokenVerifyCheck:
             abstractNode = self.get_abstractNode(Guid.objects.get(_id=project_id).object_id)
 
         ## RDM Logger ##
-#        import sys
         rdmlogger = RdmLogger(rdmlog, {})
-        rdmlogger.info('RDM Project', RDMINFO='TimeStampVerify', result_status=ret, user=guid, project=abstractNode.title, file_path=filepath, file_id=file_id)
-        return {'verify_result': ret, 'verify_result_title': verify_result_title,
-                'operator_user': operator_user, 'operator_date': operator_date,
-                'filepath': filepath}
+        rdmlogger.info(
+            'RDM Project', RDMINFO='TimeStampVerify', result_status=ret, user=guid,
+            project=abstractNode.title, file_path=filepath, file_id=file_id)
+
+        return {
+            'verify_result': ret,
+            'verify_result_title': verify_result_title,
+            'operator_user': operator_user,
+            'operator_date': operator_date,
+            'filepath': filepath
+        }
