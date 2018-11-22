@@ -43,7 +43,7 @@
 		  </div>
                   &nbsp;
 		  <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
-		</div>              
+		</div>
                <span>
                     <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
                     <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
@@ -90,5 +90,4 @@
     </script>
 
     <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
-    <script src=${"/static/public/js/list.min.js" | webpack_asset}></script>
 </%def>

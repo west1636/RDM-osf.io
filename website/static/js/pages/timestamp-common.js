@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var Raven = require('raven-js');
+var List = require('list.js');
 
 
 var verify = function (params) {
@@ -139,15 +140,15 @@ var add = function (params) {
 };
 
 function initList() {
-    let list = new List('timestamp-form', {
+    var list = new List('timestamp-form', {
         valueNames: ['operator_user', 'operator_date'],
     });
 
-    let userFilterSelect = document.getElementById('userFilterSelect');
+    var userFilterSelect = document.getElementById('userFilterSelect');
 
-    let alreadyAdded = [''];
+    var alreadyAdded = [''];
 
-    for (let userName of list.items.map(i=>i.values().operator_user)) {
+    for (var userName of list.items.map(i=>i.values().operator_user)) {
         if (!alreadyAdded.includes(userName)) {
 		let option = document.createElement('option');
 		option.value = userName;
