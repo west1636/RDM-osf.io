@@ -148,7 +148,9 @@ function initList() {
 
     var alreadyAdded = [''];
 
-    for (var userName of list.items.map(i=>i.values().operator_user)) {
+    var users = list.items.map(function(i) {return i.values().operator_user});
+    for (var i = 0; i < users.length; i++) {
+        var userName = users[i];
         if (!alreadyAdded.includes(userName)) {
 		let option = document.createElement('option');
 		option.value = userName;
@@ -158,9 +160,9 @@ function initList() {
         }
     }
 
-    document.getElementById('applyFiltersButton').addEventListener('click', ()=>{
-        let userName = userFilterSelect.value;
-        let userNameFilter = i => !userName || (!i.values().operator_user || (i.values().operator_user === userName));
+    document.getElementById('applyFiltersButton').addEventListener('click', function() {
+        var userName = userFilterSelect.value;
+        var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName))};
         list.filter(userNameFilter);
     });
 }
