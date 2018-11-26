@@ -1,23 +1,17 @@
-from nose import tools as nt
-
-from django.test import RequestFactory
-
-from tests.base import AdminTestCase
-from osf_tests.factories import (
-    UserFactory,
-    AuthUserFactory,
-    InstitutionFactory,
-    ProjectFactory,
-)
-
 from admin.rdm_timestampadd import views
 from admin_tests.utilities import setup_user_view
-from website.util.timestamp import userkey_generation
-from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
 from api.base import settings as api_settings
+from api_tests.utils import create_test_file
+from django.test import RequestFactory
+from nose import tools as nt
+from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
+from osf_tests.factories import UserFactory, AuthUserFactory, InstitutionFactory, ProjectFactory
+from tests.base import AdminTestCase
+from tests.test_views import create_rdmfiletimestamptokenverifyresult
+from website.util.timestamp import userkey_generation
+import logging
 import os
 import mock
-from tests.test_views import create_rdmfiletimestamptokenverifyresult
 
 
 class TestInstitutionList(AdminTestCase):
@@ -28,8 +22,7 @@ class TestInstitutionList(AdminTestCase):
 
         self.request_url = '/timestampadd/'
         self.request = RequestFactory().get(self.request_url)
-        self.view = views.InstitutionList()
-        self.view = setup_user_view(self.view, self.request, user=self.user)
+        self.view = setup_user_view(views.InstitutionList(), self.request, user=self.user)
         self.view.kwargs = {'institution_id': self.institutions[0].id}
         self.redirect_url = '/timestampadd/' + str(self.view.kwargs['institution_id']) + '/nodes/'
 
@@ -188,8 +181,6 @@ class TestTimestampVerifyData(AdminTestCase):
             'operator_date': '2018/10/04 05:43:56',
             'filepath': u'osfstorage/test_get_timestamp_error_data'})
     def test_post(self, mock_func, **kwargs):
-        from api_tests.utils import create_test_file
-
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
         self.post_data = {
             'provider': [str(file_node.provider)],
@@ -286,6 +277,5 @@ class TestAddTimestampData(AdminTestCase):
         self.private_project1.reload()
 
         res_addtimestamp = self.view_addtimestamp.post(self, **kwargs)
-        import logging
         logging.info(res_addtimestamp)
         nt.assert_equal(res_addtimestamp.status_code, 200)

@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 from admin.base import settings
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-from datetime import datetime
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
@@ -13,8 +12,6 @@ from django.views.generic import ListView, View, TemplateView
 from osf.models import Institution, Node, AbstractNode, Guid
 from website.util import timestamp
 import json
-import requests
-import time
 
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
@@ -92,17 +89,12 @@ class TimeStampAddList(RdmPermissionMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(TimeStampAddList, self).get_context_data(**kwargs)
         absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
 
         ctx['init_project_timestamp_error_list'] = timestamp.get_error_list(absNodeData._id)
         ctx['project_title'] = absNodeData.title
         ctx['guid'] = self.kwargs['guid']
         ctx['institution_id'] = self.kwargs['institution_id']
-        ctx['web_api_url'] = self.web_api_url(guid._id)
         return ctx
-
-    def web_api_url(self, node_id):
-        return settings.osf_settings.DOMAIN + 'api/v1/project/' + node_id + '/'
 
 class VerifyTimeStampAddList(RdmPermissionMixin, View):
 
@@ -124,17 +116,7 @@ class VerifyTimeStampAddList(RdmPermissionMixin, View):
         # Admin User
         self.request.user = source_user
         ctx['provider_list'] = timestamp.get_full_list(uid, guid._id, absNodeData)
-        ctx['guid'] = self.kwargs['guid']
-        ctx['project_title'] = absNodeData.title
-        ctx['institution_id'] = self.kwargs['institution_id']
-        ctx['web_api_url'] = self.web_api_url(guid._id)
         return HttpResponse(json.dumps(ctx), content_type='application/json')
-
-    def web_url_path(self, node_id):
-        return settings.osf_settings.DOMAIN + node_id + '/timestamp/json/'
-
-    def web_api_url(self, node_id):
-        return settings.osf_settings.DOMAIN + 'api/v1/project/' + node_id + '/'
 
 class TimestampVerifyData(RdmPermissionMixin, View):
 
@@ -163,12 +145,6 @@ class TimestampVerifyData(RdmPermissionMixin, View):
         self.request.user = source_user
         return HttpResponse(json.dumps(response), content_type='application/json')
 
-    def web_api_url(self, node_id):
-        import sys
-        if 'pytest' in sys.modules:
-            return settings.osf_settings.INTERNAL_DOMAIN + 'api/v1/project/' + node_id + '/'
-        return settings.osf_settings.DOMAIN + 'api/v1/project/' + node_id + '/'
-
 class AddTimeStampResultList(RdmPermissionMixin, TemplateView):
     template_name = 'rdm_timestampadd/timestampadd.html'
 
@@ -179,27 +155,9 @@ class AddTimeStampResultList(RdmPermissionMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AddTimeStampResultList, self).get_context_data(**kwargs)
-        cookie = self.request.user.get_or_create_cookie()
-        cookies = {settings.osf_settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
         guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
-        absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-        web_url = self.web_url_path(guid._id)
-
-        web_response = requests.get(web_url, headers=headers, cookies=cookies)
-
-        ctx['provider_file_list'] = web_response.json()['provider_list']
-        ctx['guid'] = self.kwargs['guid']
-        ctx['project_title'] = absNodeData.title
-        ctx['institution_id'] = self.kwargs['institution_id']
-        ctx['web_api_url'] = self.web_api_url(guid._id)
+        ctx['provider_file_list'] = timestamp.get_error_list(guid._id)
         return ctx
-
-    def web_url_path(self, node_id):
-        return settings.ADMIN_URL + '/timestampadd/' + self.kwargs['institution_id'] + '/nodes/' + self.kwargs['guid'] + '/'
-
-    def web_api_url(self, node_id):
-        return settings.osf_settings.DOMAIN + 'api/v1/project/' + node_id + '/'
 
 class AddTimestampData(RdmPermissionMixin, View):
 
@@ -226,8 +184,3 @@ class AddTimestampData(RdmPermissionMixin, View):
             json.dumps({'result': result}),
             content_type='application/json'
         )
-
-
-def waterbutler_meta_parameter(self):
-    # get waterbutler api parameter value
-    return {'meta=&_': int(time.mktime(datetime.now().timetuple()))}
