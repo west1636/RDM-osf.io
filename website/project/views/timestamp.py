@@ -52,7 +52,6 @@ def add_timestamp_token(auth, node, **kwargs):
         data = {}
         for key in request_data.keys():
             data.update({key: request_data[key][0]})
-
     else:
         data = request.args.to_dict()
 
@@ -65,5 +64,4 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
-
     return {'provider_list': timestamp.get_full_list(uid, pid, node)}

@@ -396,6 +396,7 @@ def userkey_generation(guid):
 
     except Exception as error:
         logger.exception(error)
+        raise
 
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
@@ -403,7 +404,6 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info.key_name = key_name
     userkey_info.key_kind = key_kind
     userkey_info.created_time = date
-
     return userkey_info
 
 
@@ -625,6 +625,7 @@ class TimeStampTokenVerifyCheck:
                     verifyResult.validation_date = datetime.datetime.now()
                     # ファイルが削除されていて検証結果があり場合、検証結果テーブルを更新する。
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_NO_DATA
+
                 elif not baseFileNode.is_deleted and not verifyResult:
                     # ファイルは存在し、検証結果のタイムスタンプが未登録の場合は更新する。
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
