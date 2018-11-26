@@ -147,22 +147,21 @@ function initList() {
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-console.log(list)
-    var users = list.items.map(function(i) {return i.values().operator_user});
+    var users = list.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (!alreadyAdded.includes(userName)) {
-		let option = document.createElement('option');
-		option.value = userName;
-		option.textContent = userName;
-		userFilterSelect.add(option);
-                alreadyAdded.push(userName);
+            let option = document.createElement('option');
+            option.value = userName;
+            option.textContent = userName;
+            userFilterSelect.add(option);
+            alreadyAdded.push(userName);
         }
     }
 
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
         var userName = userFilterSelect.value;
-        var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName))};
+        var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName));};
         list.filter(userNameFilter);
     });
 }
