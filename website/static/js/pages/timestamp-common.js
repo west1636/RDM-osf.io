@@ -12,8 +12,12 @@ var verify = function (params) {
     $('#timestamp_errors_spinner').show();
 
     var postData = {};
-    var successCnt = 0;
-    var fileCnt, i;
+    var i;
+    var count = {
+        total: null,
+        success: 0,
+        fail: 0
+    };
 
     // Get files list
     $.ajax({
@@ -25,13 +29,13 @@ var verify = function (params) {
         var projectFileList = data.provider_list;
 
         // Count the number of files
-        fileCnt = projectFileList.reduce(function (accumulator, current) {
+        count.total = projectFileList.reduce(function (accumulator, current) {
             return accumulator + current.provider_file_list.length;
         }, 0);
 
         // Verify files for each provider
         for (i = 0; i < projectFileList.length; i++) {
-            successCnt = verifyProviderFiles(params, projectFileList[i], fileCnt, successCnt);
+            verifyProviderFiles(params, projectFileList[i], count);
         }
     }).fail(function (xhr, textStatus, error) {
         Raven.captureMessage('Timestamp Add Error', {
@@ -47,7 +51,7 @@ var verify = function (params) {
     });
 };
 
-var verifyProviderFiles = function (params, providerInfo, fileCnt, successCnt) {
+var verifyProviderFiles = function (params, providerInfo, count) {
     var i, fileList;
 
     fileList = providerInfo.provider_file_list;
@@ -65,14 +69,15 @@ var verifyProviderFiles = function (params, providerInfo, fileCnt, successCnt) {
             dataType: 'json',
             method: params.method
         }).done(function () {
-            successCnt++;
-            $('#timestamp_errors_spinner').text('Verification files : ' + successCnt + ' / ' + fileCnt + ' ...');
-            if (successCnt === fileCnt) {
+            count.success++;
+            $('#timestamp_errors_spinner').text('Verification files : ' + count.success + ' / ' + count.total + ' ...');
+            if (count.total === count.success) {
                 $('#timestamp_errors_spinner').text('Verification (100%) and Refreshing...');
                 window.location.reload();
             }
         }).fail(function (xhr, status, error) {
-            if (successCnt === fileCnt) {
+            count.fail++;
+            if (count.success + count.fail === count.total) {
                 Raven.captureMessage('Timestamp Add Error: ' + fileList[i].file_path, {
                     extra: {
                         url: params.urlVerifyData,
@@ -86,7 +91,6 @@ var verifyProviderFiles = function (params, providerInfo, fileCnt, successCnt) {
             }
         });
     }
-    return successCnt;
 };
 
 var add = function (params) {
