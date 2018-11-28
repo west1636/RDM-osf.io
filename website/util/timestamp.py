@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+
 from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
 from django.core.exceptions import ObjectDoesNotExist
@@ -64,10 +65,10 @@ def get_error_list(pid):
                 api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
         if not data.update_user:
-            operator_user = OSFUser.objects.get(id=data.create_user).fullname
+            operator_user = OSFUser.objects.get(id=data.create_user)
             operator_date = data.create_date.strftime('%Y/%m/%d %H:%M:%S')
         else:
-            operator_user = OSFUser.objects.get(id=data.update_user).fullname
+            operator_user = OSFUser.objects.get(id=data.update_user)
             operator_date = data.update_date.strftime('%Y/%m/%d %H:%M:%S')
 
         if provider == 'osfstorage':
@@ -79,7 +80,8 @@ def get_error_list(pid):
                 'project_id': data.project_id,
                 'file_id': data.file_id,
                 'version': base_file_data.current_version_number,
-                'operator_user': operator_user,
+                'operator_user': operator_user.fullname,
+                'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
                 'verify_result_title': verify_result_title
             }
@@ -92,7 +94,8 @@ def get_error_list(pid):
                 'project_id': data.project_id,
                 'file_id': data.file_id,
                 'version': '',
-                'operator_user': operator_user,
+                'operator_user': operator_user.fullname,
+                'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
                 'verify_result_title': verify_result_title
             }
@@ -396,6 +399,7 @@ def userkey_generation(guid):
 
     except Exception as error:
         logger.exception(error)
+        raise
 
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
@@ -403,7 +407,6 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info.key_name = key_name
     userkey_info.key_kind = key_kind
     userkey_info.created_time = date
-
     return userkey_info
 
 
@@ -625,6 +628,7 @@ class TimeStampTokenVerifyCheck:
                     verifyResult.validation_date = datetime.datetime.now()
                     # ファイルが削除されていて検証結果があり場合、検証結果テーブルを更新する。
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_NO_DATA
+
                 elif not baseFileNode.is_deleted and not verifyResult:
                     # ファイルは存在し、検証結果のタイムスタンプが未登録の場合は更新する。
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND

@@ -12,7 +12,14 @@ var verify = function (params) {
     $('#timestamp_errors_spinner').show();
 
     var postData = {};
-    var fileCnt = 0;
+    var i;
+    var count = {
+        total: null,
+        success: 0,
+        fail: 0
+    };
+
+    // Get files list
     $.ajax({
         url: params.urlVerify,
         data: postData,
@@ -20,51 +27,15 @@ var verify = function (params) {
         method: params.method
     }).done(function (data) {
         var projectFileList = data.provider_list;
-        var successCnt = 0;
-        var fileList, i, j;
+
+        // Count the number of files
+        count.total = projectFileList.reduce(function (accumulator, current) {
+            return accumulator + current.provider_file_list.length;
+        }, 0);
+
+        // Verify files for each provider
         for (i = 0; i < projectFileList.length; i++) {
-            fileList = projectFileList[i].provider_file_list;
-            for (j = 0; j < fileList.length; j++) {
-                fileCnt++;
-            }
-        }
-        for (i = 0; i < projectFileList.length; i++) {
-            fileList = projectFileList[i].provider_file_list;
-            for (j = 0; j < fileList.length; j++) {
-                var postData = {
-                    'provider': projectFileList[i].provider,
-                    'file_id': fileList[j].file_id,
-                    'file_path': fileList[j].file_path,
-                    'file_name': fileList[j].file_name,
-                    'version': fileList[j].version
-                };
-                $.ajax({
-                    url:  params.urlVerifyData,
-                    data: postData,
-                    dataType: 'json',
-                    method: params.method
-                }).done(function () {
-                    successCnt++;
-                    $('#timestamp_errors_spinner').text('Verification files : ' + successCnt + ' / ' + fileCnt + ' ...');
-                    if (successCnt === fileCnt) {
-                        $('#timestamp_errors_spinner').text('Verification (100%) and Refreshing...');
-                        window.location.reload();
-                    }
-                }).fail(function (xhr, status, error) {
-                    if (successCnt === fileCnt) {
-                        Raven.captureMessage('Timestamp Add Error: ' + fileList[j].file_path, {
-                            extra: {
-                                url: params.urlVerifyData,
-                                status: status,
-                                error: error
-                            }
-                        });
-                        $('#btn-verify').removeAttr('disabled');
-                        $('#btn-addtimestamp').removeAttr('disabled');
-                        $('#timestamp_errors_spinner').text('Error: ' + fileList[j].file_path);
-                    }
-                });
-            }
+            verifyProviderFiles(params, projectFileList[i], count);
         }
     }).fail(function (xhr, textStatus, error) {
         Raven.captureMessage('Timestamp Add Error', {
@@ -78,6 +49,48 @@ var verify = function (params) {
         $('#btn-addtimestamp').removeAttr('disabled');
         $('#timestamp_errors_spinner').text('Error: Storage files list gathering failed');
     });
+};
+
+var verifyProviderFiles = function (params, providerInfo, count) {
+    var i, fileList;
+
+    fileList = providerInfo.provider_file_list;
+    for (i = 0; i < fileList.length; i++) {
+        var postData = {
+            'provider': providerInfo.provider,
+            'file_id': fileList[i].file_id,
+            'file_path': fileList[i].file_path,
+            'file_name': fileList[i].file_name,
+            'version': fileList[i].version
+        };
+        $.ajax({
+            url:  params.urlVerifyData,
+            data: postData,
+            dataType: 'json',
+            method: params.method
+        }).done(function () {
+            count.success++;
+            $('#timestamp_errors_spinner').text('Verification files : ' + count.success + ' / ' + count.total + ' ...');
+            if (count.total === count.success) {
+                $('#timestamp_errors_spinner').text('Verification (100%) and Refreshing...');
+                window.location.reload();
+            }
+        }).fail(function (xhr, status, error) {
+            count.fail++;
+            if (count.success + count.fail === count.total) {
+                Raven.captureMessage('Timestamp Add Error: ' + fileList[i].file_path, {
+                    extra: {
+                        url: params.urlVerifyData,
+                        status: status,
+                        error: error
+                    }
+                });
+                $('#btn-verify').removeAttr('disabled');
+                $('#btn-addtimestamp').removeAttr('disabled');
+                $('#timestamp_errors_spinner').text('Error: ' + fileList[i].file_path);
+            }
+        });
+    }
 };
 
 var add = function (params) {
@@ -151,7 +164,7 @@ function initList() {
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (!alreadyAdded.includes(userName)) {
-            let option = document.createElement('option');
+            var option = document.createElement('option');
             option.value = userName;
             option.textContent = userName;
             userFilterSelect.add(option);

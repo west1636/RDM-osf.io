@@ -108,7 +108,7 @@
                                     <input type="hidden" name="version" id="version" value="${ error_info['version'] }" />
                                     <input type="hidden" name="file_name" id="file_name" value="${ error_info['file_name'] }" />
                                 </td>
-                                <td class="operator_user">${ error_info['operator_user'] }</td>
+                                <td class="operator_user">${ error_info['operator_user'] } (${ error_info['operator_user_id'] })</td>
                                 <td class="operator_date">${ error_info['operator_date'] }</td>
                                 <td>${ error_info['verify_result_title'] }</td>
                             </tr>
@@ -129,7 +129,7 @@ vertical-align: middle;
 </style>
 
 <%def name="javascript_bottom()">
-${parent.javascript_bottom()} 
+${parent.javascript_bottom()}
 % for script in tree_js:
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
