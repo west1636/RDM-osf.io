@@ -173,9 +173,30 @@ function initList() {
     }
 
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
+        
         var userName = userFilterSelect.value;
         var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName));};
         list.filter(userNameFilter);
+
+        var dateFilters = [
+            {
+                element: document.getElementById('startDateFilter'),
+                comparator: function(a, b) {return a >= b;}
+            },
+            {
+                element: document.getElementById('endDateFilter'),
+                comparator: function(a, b) {return a <= b;}
+            },
+        ];
+
+        for (var i = 0; i < dateFilters.length; i++) {
+            var element = dateFilters[i].element;
+            var comparator = dateFilters[i].comparator;
+            if (element.value) {
+                list.filter(function(i) {return comparator( new Date(i.values().operator_date), new Date(element.value) );});
+            }
+        }
+
     });
 }
 
