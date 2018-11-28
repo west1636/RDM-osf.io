@@ -33,33 +33,45 @@
     <div class="col-md-9 col-xs-12">
         <div id="timestamp-form" class="form">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xl-8 col-lg-10 col-sm-12">
                     <form>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon">Start Date</div>
-                                <input id="startDateFilter" type="datetime-local" class="form-control" />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Start Date</div>
+                                    <input id="startDateFilter" type="datetime-local" class="form-control" />
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-addon">End Date</div>
-                                <input id="endDateFilter" type="datetime-local" class="form-control" />
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">End Date</div>
+                                    <input id="endDateFilter" type="datetime-local" class="form-control" />
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-addon">User</div>
-                                <select id="userFilterSelect" class="form-control">
-                                    <option value=""></option>
-                                </select>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">User</div>
+                                    <select id="userFilterSelect" class="form-control">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
                             </div>
-                            <button type="reset" class="btn btn-primary">Reset</button>&nbsp;
-                            <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
+                            <div class="col-sm-12">
+                                <button type="reset" class="btn btn-primary">Reset</button>
+                                <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>
+                            </div>
                         </div>
                     </form>
                 </div>
-                <div class="col-xs-6">
-                    <span>
-                        <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
-                        <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
-                    </span>
+                <div class="col-sm-12" style="margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span>
+                                <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
+                                <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <span id="configureNodeAnchor" class="anchor"></span>
