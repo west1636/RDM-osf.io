@@ -39,13 +39,13 @@
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <div class="input-group-addon">Start Date</div>
-                                    <input id="startDateFilter" type="datetime-local" class="form-control" />
+                                    <input id="startDateFilter" type="date" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <div class="input-group-addon">End Date</div>
-                                    <input id="endDateFilter" type="datetime-local" class="form-control" />
+                                    <input id="endDateFilter" type="date" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
