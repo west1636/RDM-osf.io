@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from admin.rdm_timestampsettings import views
 from admin_tests.utilities import setup_user_view
 from api.base import settings as api_settings
@@ -49,11 +51,9 @@ class TestInstitutionNodeList(AdminTestCase):
         self.project_user = UserFactory()
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
         RdmTimestampGrantPattern.objects.get_or_create(institution_id=self.project_institution.id, node_guid=self.private_project1._id, timestamp_pattern_division=1)
-        # project2 timestamp_pattern_division=2
         self.private_project2 = ProjectFactory(creator=self.project_user)
         self.private_project2.affiliated_institutions.add(self.project_institution)
         RdmTimestampGrantPattern.objects.get_or_create(institution_id=self.project_institution.id, node_guid=self.private_project2._id, timestamp_pattern_division=2)
@@ -126,7 +126,6 @@ class TestNodeTimeStampPatternChange(AdminTestCase):
         self.project_user = UserFactory()
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
         RdmTimestampGrantPattern.objects.get_or_create(institution_id=self.project_institution.id, node_guid=self.private_project1._id, timestamp_pattern_division=1)

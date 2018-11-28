@@ -133,6 +133,7 @@ $(document).ready(function () {
 
         ArrangeLogDownload = function (d){
             var i, NodeLogs=[], x={};
+            console.log(d.data);
             for (i in d.data){
                 x={'date': new Date(d.data[i].attributes.date + 'Z').toLocaleString(),
                    'user': d.data[i].embeds.user.data.attributes.full_name,
@@ -164,7 +165,7 @@ $(document).ready(function () {
                 NodeLogs = NodeLogs.concat(x);
             }
             $('<a />', {
-                'download': 'NodeLogs_'+ node.id + '_' + $.now() + '.json', 'href' : 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({NodeLogs})),
+                'download': 'NodeLogs_'+ node.id + '_' + $.now() + '.json', 'href' : 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({'NodeLogs': NodeLogs},null,'    ')),
             }).appendTo('body')
              .click(function() {
                 $(this).remove();

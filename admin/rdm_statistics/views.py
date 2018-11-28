@@ -39,9 +39,7 @@ import matplotlib.pyplot as plt    # noqa
 import matplotlib.ticker as ticker  # noqa
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import seaborn as sns
-#from reportlab.pdfgen import canvas
 import pdfkit
-# from admin and rdm
 from admin.base import settings
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 from admin.rdm_addons import utils
@@ -60,7 +58,7 @@ class InstitutionListViewStat(RdmPermissionMixin, UserPassesTestMixin, TemplateV
     raise_exception = True
 
     def test_func(self):
-        """validate user permissions"""
+        """check user permissions"""
         if not self.is_authenticated:
             return False
         # allow superuser and institution_administrator
@@ -97,7 +95,7 @@ class StatisticsView(RdmPermissionMixin, UserPassesTestMixin, TemplateView):
     raise_exception = True
 
     def test_func(self):
-        """validate user permissions"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         return self.has_auth(institution_id)
 
@@ -233,7 +231,6 @@ class StatisticsData(object):
     def __init__(self, provider, current_date):
         self.provider = provider
         self.current_date = current_date
-        # self.provider_id = 0
         self.data_type = ''
         self.graphstyle = 'darkgrid'
         self.background = '#CCCCFF'
@@ -338,7 +335,6 @@ def create_pdf(request, is_pdf=True, **kwargs):
 def convert_to_pdf(html_string, file=False):
     # wkhtmltopdf settings
     wkhtmltopdf_path = os.path.join(os.path.dirname(__file__), '.', 'wkhtmltopdf')
-    # print wkhtmltopdf_path
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     options = {
         'page-size': 'A4',
@@ -403,7 +399,7 @@ class ImageView(RdmPermissionMixin, UserPassesTestMixin, View):
     raise_exception = True
 
     def test_func(self):
-        """validate user permissions"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         if not self.is_authenticated:
             return False
@@ -594,7 +590,7 @@ def simple_auth(access_token):
         return False
 
 def send_stat_mail(request, **kwargs):
-    """統計情報メール送信"""
+    """send statistics information email"""
     current_date = get_current_date()
     all_institutions = Institution.objects.order_by('id').all()
     all_staff_users = OSFUser.objects.filter(is_staff=True)
@@ -628,7 +624,7 @@ def send_stat_mail(request, **kwargs):
     return response
 
 def send_error_mail(err):
-    """エラーメール送信"""
+    """send error email"""
     current_date = get_current_date()
     # to list
     all_superusers_list = list(OSFUser.objects.filter(is_superuser=True).values_list('username', flat=True))
@@ -699,7 +695,7 @@ class SendView(RdmPermissionMixin, UserPassesTestMixin, TemplateView):
     raise_exception = True
 
     def test_func(self):
-        """validate user permissions"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         if not self.is_authenticated:
             return False
@@ -816,12 +812,12 @@ class DummyCreateView(RdmPermissionMixin, UserPassesTestMixin, TemplateView):
     raise_exception = True
 
     def test_func(self):
-        """権限等のチェック"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         return self.has_auth(institution_id)
 
     def get_context_data(self, **kwargs):
-        """コンテキスト取得"""
+        """get contexts"""
         ctx = super(DummyCreateView, self).get_context_data(**kwargs)
         user = self.request.user
         institution_id = int(kwargs['institution_id'])
