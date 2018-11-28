@@ -28,27 +28,41 @@
 
     <div class="col-md-9 col-xs-12">
         <form id="timestamp-form" class="form">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+            <div class="row">
+              <div class="col-xs-6">
                 <div class="form-inline">
                     <div class="form-group">
-                        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                         <div class="input-group">
-                    <div class="input-group-addon">User</div>
-                    <select id="userFilterSelect" class="form-control">
-                        <option value=""></option>
-                    </select>
-                </div>
-          </div>
-          &nbsp;
-          <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
-                </div>
-                <span>
+                            <div class="input-group-addon">Start Date</div>
+                            <input id="startDateFilter" type="datetime-local" class="form-control">
+                        </div>
+                        <br><br>
+			<div class="input-group">
+			  <div class="input-group-addon">End Date</div>
+			  <input id="endDateFilter" type="datetime-local" class="form-control">
+			</div>
+                        <br><br>
+                        <div class="input-group">
+                            <div class="input-group-addon">User</div>
+                            <select id="userFilterSelect" class="form-control">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <br><br>
+                    <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
+                </div> 
+              <div class="col-xs-6">
+               <span>
                     <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
                     <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
                 </span>
+              </div>
             </div>
+            <br>
             <span id="configureNodeAnchor" class="anchor"></span>
-            <table class="table table-bordered table-addon-terms">
+            <div class="row">
+              <table class="table table-bordered table-addon-terms">
                 <thead class="block-head">
                     <tr>
                         <th width="3%"><input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/></th>
@@ -86,7 +100,8 @@
                     % endfor
                 % endfor
                 </tbody>
-            </table>
+              </table>
+            </div>
         </form>
     </div>
 </div>
