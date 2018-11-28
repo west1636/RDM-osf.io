@@ -13,45 +13,47 @@
 
 {% block content %}
 <h3>TimeStamp Add ({{ project_title }})</h3>
-<form action "" id="timestamp-form">
-    <div class="row form-group">
-        <div class="col-xs-12">
-            <span class="form-inline">
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">Start Date</div>
-                        <input id="startDateFilter" type="date" class="form-control" />
-                    </div>
-                    <div class="input-group">
-                    <div class="input-group-addon">End Date</div>
-                        <input id="endDateFilter" type="date" class="form-control" />
-                    </div>
-                </div>
-            </span>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-xs-6">
-            <span class="form-inline">
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">User</div>
-                        <select id="userFilterSelect" class="form-control">
-                            <option value=""></option>
-                        </select>
-                    </div>
-                </div>
-            </span>
-        </div>
-        <div class="col-xs-6"></div>
-    </div>
+<div id="timestamp-form">
     <div class="row">
-        <div class="col-xs-6">
-            <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
+        <div class="col-xl-8 col-lg-10 col-sm-12">
+            <form>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">Start Date</div>
+                            <input id="startDateFilter" type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">End Date</div>
+                            <input id="endDateFilter" type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">User</div>
+                            <select id="userFilterSelect" class="form-control">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="col-xs-6">
-            <a class="btn btn-success" id="btn-verify">Verify</a>
-            <a class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</a>
+        <div class="col-sm-12" style="margin-bottom: 10px;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>
+                        <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
+                        <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -65,7 +67,7 @@
                     <th>FilePath</th>
                     <th>TimestampUpdateUser</th>
                     <th>TimestampUpdateDate</th>
-                    <th>Timestamp verification</th>
+                    <th width="17%">Timestamp verification</th>
                 </tr>
             </thead>
             <tbody class="list" id="timestamp_error_list">
@@ -93,7 +95,16 @@
         </table>
     </div>
     {% csrf_token %}
-</form>
+</div>
+
+<style type="text/css">
+.table>thead>tr>th {
+    vertical-align: middle;
+}
+.form-group .input-group {
+    margin-bottom: 10px;
+}
+</style>
 
 <script charset="utf-8">
     window.timestampaddUrls = {
