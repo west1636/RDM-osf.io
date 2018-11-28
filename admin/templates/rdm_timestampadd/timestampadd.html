@@ -13,59 +13,98 @@
 
 {% block content %}
 <h3>TimeStamp Add ({{ project_title }})</h3>
-<form action "" id="timestamp-form">
-    <span class="form-inline">
-      <div class="form-group">
-        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
-        <div class="input-group">
-          <div class="input-group-addon">User</div>
-          <select id="userFilterSelect" class="form-control">
-             <option value=""></option>
-          </select>
+<div id="timestamp-form">
+    <div class="row">
+        <div class="col-xl-8 col-lg-10 col-sm-12">
+            <form>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">Start Date</div>
+                            <input id="startDateFilter" type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">End Date</div>
+                            <input id="endDateFilter" type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <div class="input-group-addon">User</div>
+                            <select id="userFilterSelect" class="form-control">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </div>
-       &nbsp;
-      <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
-    </span>
-    <a class="btn btn-success" id="btn-verify">Verify</a>
-    <a class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</a>
-    <font color="red">
-        <h4 id="timestamp_errors_spinner"></h4>
-    </font>
-    <table id="datatables" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th width="1%"><input type="checkBox" id="addTimestampAllCheck" style="width: 14px; height: 14px;" /></th>
-                <th>FilePath</th>
-                <th>TimestampUpdateUser</th>
-                <th>TimestampUpdateDate</th>
-                <th>Timestamp verification</th>
-            </tr>
-        </thead>
-        <tbody class="list" id="timestamp_error_list">
-        {% for provider_error_info in init_project_timestamp_error_list %}
-            <tr><td colspan="5"><b>{{ provider_error_info.provider }}</b></td></tr>
-            {% for error_info in provider_error_info.error_list %}
-            <tr class="addTimestamp">
-                <td width="1%"><input type="checkBox" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
-                <td>
-                    {{ error_info.file_path }}
-                    <input type="hidden" name="provider" id="provider" value="{{ provider_error_info.provider }}" />
-                    <input type="hidden" name="file_id" id="file_id" value="{{ error_info.file_id }}" />
-                    <input type="hidden" name="file_path" id="file_path" value="{{ error_info.file_path }}" />
-                    <input type="hidden" name="project_id" id="project_id" value="{{ error_info.project_id }}" />
-                    <input type="hidden" name="version" id="version" value="{{ error_info.version }}" />
-                    <input type="hidden" name="file_name" id="file_name" value="{{ error_info.file_name }}" />
-                </td>
-                <td class="operator_user">{{ error_info.operator_user }}</td>
-                <td class="operator_date">{{ error_info.operator_date }}</td>
-                <td>{{ error_info.verify_result_title }}</td>
-            </tr>
+        <div class="col-sm-12" style="margin-bottom: 10px;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>
+                        <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
+                        <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <font color="red">
+            <h4 id="timestamp_errors_spinner"></h4>
+        </font>
+        <table id="datatables" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th width="1%"><input type="checkBox" id="addTimestampAllCheck" style="width: 14px; height: 14px;" /></th>
+                    <th>FilePath</th>
+                    <th>TimestampUpdateUser</th>
+                    <th>TimestampUpdateDate</th>
+                    <th width="17%">Timestamp verification</th>
+                </tr>
+            </thead>
+            <tbody class="list" id="timestamp_error_list">
+            {% for provider_error_info in init_project_timestamp_error_list %}
+                <tr><td colspan="5"><b>{{ provider_error_info.provider }}</b></td></tr>
+                {% for error_info in provider_error_info.error_list %}
+                <tr class="addTimestamp">
+                    <td width="1%"><input type="checkBox" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
+                    <td>
+                        {{ error_info.file_path }}
+                        <input type="hidden" name="provider" id="provider" value="{{ provider_error_info.provider }}" />
+                        <input type="hidden" name="file_id" id="file_id" value="{{ error_info.file_id }}" />
+                        <input type="hidden" name="file_path" id="file_path" value="{{ error_info.file_path }}" />
+                        <input type="hidden" name="project_id" id="project_id" value="{{ error_info.project_id }}" />
+                        <input type="hidden" name="version" id="version" value="{{ error_info.version }}" />
+                        <input type="hidden" name="file_name" id="file_name" value="{{ error_info.file_name }}" />
+                    </td>
+                    <td class="operator_user">{{ error_info.operator_user }} ({{ error_info.operator_user_id }})</td>
+                    <td class="operator_date">{{ error_info.operator_date }}</td>
+                    <td>{{ error_info.verify_result_title }}</td>
+                </tr>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        </tbody>
-    </table>
-</form>
+            </tbody>
+        </table>
+    </div>
+    {% csrf_token %}
+</div>
+
+<style type="text/css">
+.table>thead>tr>th {
+    vertical-align: middle;
+}
+.form-group .input-group {
+    margin-bottom: 10px;
+}
+</style>
 
 <script charset="utf-8">
     window.timestampaddUrls = {
