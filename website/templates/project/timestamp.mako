@@ -31,34 +31,29 @@
     </div>
 
     <div class="col-md-9 col-xs-12">
-        <form id="timestamp-form" class="form">
+        <div id="timestamp-form" class="form">
             <div class="row">
                 <div class="col-xs-6">
-                    <div class="form-inline">
+                    <form>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Start Date</div>
                                 <input id="startDateFilter" type="datetime-local" class="form-control" />
                             </div>
-                            <br />
-                            <br />
                             <div class="input-group">
                                 <div class="input-group-addon">End Date</div>
                                 <input id="endDateFilter" type="datetime-local" class="form-control" />
                             </div>
-                            <br />
-                            <br />
                             <div class="input-group">
                                 <div class="input-group-addon">User</div>
                                 <select id="userFilterSelect" class="form-control">
                                     <option value=""></option>
                                 </select>
                             </div>
+                            <button type="reset" class="btn btn-primary">Reset</button>&nbsp;
+                            <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
                         </div>
-                        <br />
-                        <br />
-                        <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>&nbsp;
-                    </div>
+                    </form>
                 </div>
                 <div class="col-xs-6">
                     <span>
@@ -67,7 +62,6 @@
                     </span>
                 </div>
             </div>
-            <br />
             <span id="configureNodeAnchor" class="anchor"></span>
             <div class="row">
                 <div class="col-xs-12">
@@ -118,13 +112,16 @@
                     </table>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <style type="text/css">
 .table>thead>tr>th {
-vertical-align: middle;
+    vertical-align: middle;
+}
+.form-group .input-group {
+    margin-bottom: 10px;
 }
 </style>
 
