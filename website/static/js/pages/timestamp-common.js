@@ -193,7 +193,7 @@ function initList() {
             var element = dateFilters[i].element;
             var comparator = dateFilters[i].comparator;
             if (element.value) {
-                list.filter(function(i) {return comparator( new Date(i.values().operator_date), new Date(element.value) );});
+                list.filter(function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(element.value) );});
             }
         }
 
