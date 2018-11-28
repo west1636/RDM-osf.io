@@ -65,10 +65,10 @@ def get_error_list(pid):
                 api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
         if not data.update_user:
-            operator_user = OSFUser.objects.get(id=data.create_user).fullname
+            operator_user = OSFUser.objects.get(id=data.create_user)
             operator_date = data.create_date.strftime('%Y/%m/%d %H:%M:%S')
         else:
-            operator_user = OSFUser.objects.get(id=data.update_user).fullname
+            operator_user = OSFUser.objects.get(id=data.update_user)
             operator_date = data.update_date.strftime('%Y/%m/%d %H:%M:%S')
 
         if provider == 'osfstorage':
@@ -80,7 +80,8 @@ def get_error_list(pid):
                 'project_id': data.project_id,
                 'file_id': data.file_id,
                 'version': base_file_data.current_version_number,
-                'operator_user': operator_user,
+                'operator_user': operator_user.fullname,
+                'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
                 'verify_result_title': verify_result_title
             }
@@ -93,7 +94,8 @@ def get_error_list(pid):
                 'project_id': data.project_id,
                 'file_id': data.file_id,
                 'version': '',
-                'operator_user': operator_user,
+                'operator_user': operator_user.fullname,
+                'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
                 'verify_result_title': verify_result_title
             }
