@@ -2,14 +2,14 @@
 """
 Timestamp views.
 """
+import logging
 from flask import request
 from website.util import rubeus
 from website.project.decorators import must_be_contributor_or_public
 from website.project.views.node import _view_project
+from website.util import timestamp
 from website import settings
 from osf.models import Guid
-from website.util import timestamp
-import logging
 
 
 logger = logging.getLogger(__name__)
