@@ -70,51 +70,53 @@
             <br />
             <span id="configureNodeAnchor" class="anchor"></span>
             <div class="row">
-                <table class="table table-bordered table-addon-terms">
-                    <thead class="block-head">
-                        <tr>
-                            <th width="3%">
-                                <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
-                            </th>
-                            <th width="40%">File Path</th>
-                            <th width="15%">Timestamp Update User</th>
-                            <th width="22%">Timestamp Update Date</th>
-                            <th widht="20%">Timestamp Verification</th>
-                        </tr>
-                    </thead>
-                    <font color="red">
-                        <div id="timestamp_errors_spinner" class="spinner-loading-wrapper">
-                            <div class="logo-spin logo-lg"></div>
-                            <p class="m-t-sm fg-load-message"> Loading timestamp error list ...  </p>
-                        </div>
-                    </font>
-                    <tbody class="list" id="timestamp_error_list">
-                        % for provider_error_info in provider_list:
-                        <tr>
-                            <td colspan="5">
-                                <b>${ provider_error_info['provider'] }</b>
-                            </td>
-                        </tr>
-                        % for error_info in provider_error_info['error_list']:
-                        <tr class="addTimestamp">
-                            <td>
-                                <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
-                            </td>
-                            <td>${ error_info['file_path'] }
-                                <input type="hidden" name="provider" id="provider" value="${ provider_error_info['provider'] }" />
-                                <input type="hidden" name="file_id" id="file_id" value="${ error_info['file_id'] }" />
-                                <input type="hidden" name="file_path" id="file_path" value="${ error_info['file_path'] }" />
-                                <input type="hidden" name="version" id="version" value="${ error_info['version'] }" />
-                                <input type="hidden" name="file_name" id="file_name" value="${ error_info['file_name'] }" />
-                            </td>
-                            <td class="operator_user">${ error_info['operator_user'] }</td>
-                            <td class="operator_date">${ error_info['operator_date'] }</td>
-                            <td>${ error_info['verify_result_title'] }</td>
-                        </tr>
-                        % endfor
-                        % endfor
-                    </tbody>
-                </table>
+                <div class="col-xs-12">
+                    <table class="table table-bordered table-addon-terms">
+                        <thead class="block-head">
+                            <tr>
+                                <th width="3%">
+                                    <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
+                                </th>
+                                <th width="40%">File Path</th>
+                                <th width="15%">Timestamp Update User</th>
+                                <th width="22%">Timestamp Update Date</th>
+                                <th widht="20%">Timestamp Verification</th>
+                            </tr>
+                        </thead>
+                        <font color="red">
+                            <div id="timestamp_errors_spinner" class="spinner-loading-wrapper">
+                                <div class="logo-spin logo-lg"></div>
+                                <p class="m-t-sm fg-load-message"> Loading timestamp error list ...  </p>
+                            </div>
+                        </font>
+                        <tbody class="list" id="timestamp_error_list">
+                            % for provider_error_info in provider_list:
+                            <tr>
+                                <td colspan="5">
+                                    <b>${ provider_error_info['provider'] }</b>
+                                </td>
+                            </tr>
+                            % for error_info in provider_error_info['error_list']:
+                            <tr class="addTimestamp">
+                                <td>
+                                    <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
+                                </td>
+                                <td>${ error_info['file_path'] }
+                                    <input type="hidden" name="provider" id="provider" value="${ provider_error_info['provider'] }" />
+                                    <input type="hidden" name="file_id" id="file_id" value="${ error_info['file_id'] }" />
+                                    <input type="hidden" name="file_path" id="file_path" value="${ error_info['file_path'] }" />
+                                    <input type="hidden" name="version" id="version" value="${ error_info['version'] }" />
+                                    <input type="hidden" name="file_name" id="file_name" value="${ error_info['file_name'] }" />
+                                </td>
+                                <td class="operator_user">${ error_info['operator_user'] }</td>
+                                <td class="operator_date">${ error_info['operator_date'] }</td>
+                                <td>${ error_info['verify_result_title'] }</td>
+                            </tr>
+                            % endfor
+                            % endfor
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </form>
     </div>
