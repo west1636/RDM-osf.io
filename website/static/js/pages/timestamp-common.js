@@ -190,11 +190,14 @@ function initList() {
         ];
 
         for (var i = 0; i < dateFilters.length; i++) {
-            var element = dateFilters[i].element;
+           var element = dateFilters[i].element;
             var comparator = dateFilters[i].comparator;
             if (element.value) {
-                filters.push(function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(element.value) );});
-            }
+                // closure to prevent different filters getting the same element
+                filters.push((function (elementValue, comparator) {
+                    return function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(elementValue) );};
+                })(element.value, comparator));
+            } 
         }
 
         list.filter(function (i) {
