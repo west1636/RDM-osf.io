@@ -163,7 +163,7 @@ function initList() {
     var users = list.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
-        if (!alreadyAdded.includes(userName)) {
+        if (alreadyAdded.indexOf(userName) === -1) {
             var option = document.createElement('option');
             option.value = userName;
             option.textContent = userName;
@@ -173,7 +173,7 @@ function initList() {
     }
 
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
-        
+
         var userName = userFilterSelect.value;
         var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName));};
         var filters = [userNameFilter];
@@ -190,14 +190,14 @@ function initList() {
         ];
 
         for (var i = 0; i < dateFilters.length; i++) {
-           var element = dateFilters[i].element;
+            var element = dateFilters[i].element;
             var comparator = dateFilters[i].comparator;
             if (element.value) {
                 // closure to prevent different filters getting the same element
                 filters.push((function (elementValue, comparator) {
                     return function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(elementValue) );};
                 })(element.value, comparator));
-            } 
+            }
         }
 
         list.filter(function (i) {
