@@ -143,4 +143,6 @@ ${parent.javascript_bottom()}
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
+<script src=${"node_modules/better-dom/dist/better-dom.js" | webpack_asset}></script>
+<script src=${"node_modules/better-dateinput-polyfill/dist/better-dateinput-polyfill.js" | webpack_asset}></script>
 </%def>
