@@ -135,6 +135,9 @@
 .form-group .input-group {
     margin-bottom: 10px;
 }
+date-input-polyfill {
+  z-index: 3;
+}
 </style>
 
 <%def name="javascript_bottom()">
