@@ -143,6 +143,5 @@ ${parent.javascript_bottom()}
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
-<script src="https://cdn.jsdelivr.net/npm/better-dom@4.0.0/dist/better-dom.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/better-dateinput-polyfill/3.1.3/better-dateinput-polyfill.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 </%def>
