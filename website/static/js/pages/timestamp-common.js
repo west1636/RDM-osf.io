@@ -153,6 +153,18 @@ var add = function (params) {
 };
 
 function initList() {
+
+    
+    document.querySelector('[type=reset]').addEventListener('click', function(event) {
+        // when using polyfill only
+        if (document.getElementById('startDateFilter').hasAttribute('data-has-picker')) {
+            document.getElementById('startDateFilter').value="";
+            document.getElementById('endDateFilter').value="";
+        }
+    });
+
+    
+
     var list = new List('timestamp-form', {
         valueNames: ['operator_user', 'operator_date'],
     });
