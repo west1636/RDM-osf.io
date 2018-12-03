@@ -153,6 +153,18 @@ var add = function (params) {
 };
 
 function initList() {
+
+    
+    document.querySelector('[type=reset]').addEventListener('click', function(event) {
+        // when using polyfill only
+        if (document.getElementById('startDateFilter').hasAttribute('data-has-picker')) {
+            document.getElementById('startDateFilter').value='';
+            document.getElementById('endDateFilter').value='';
+        }
+    });
+
+    
+
     var list = new List('timestamp-form', {
         valueNames: ['operator_user', 'operator_date'],
     });
@@ -163,7 +175,7 @@ function initList() {
     var users = list.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
-        if (alreadyAdded.indexOf(userName) === -1) {
+        if (alreadyAdded.indexOf(userName) !== -1) {
             var option = document.createElement('option');
             option.value = userName;
             option.textContent = userName;

@@ -135,6 +135,9 @@
 .form-group .input-group {
     margin-bottom: 10px;
 }
+date-input-polyfill {
+  z-index: 3;
+}
 </style>
 
 <%def name="javascript_bottom()">
@@ -143,4 +146,5 @@ ${parent.javascript_bottom()}
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 </%def>
