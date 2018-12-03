@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic import FormView, DetailView
 from django.views.defaults import page_not_found
@@ -16,6 +17,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 def error_404_view(request, exception):
+    messages.error(request, 'That page does not exist!')
     return redirect('/')
 
 

@@ -233,3 +233,11 @@
     .logo { background-color: #a53e35 !important;}
   </style>
 {% endif %}
+
+{% if messages %}
+<script charset="utf-8">
+    {% for message in messages %}
+    alert('{{ message }}');
+    {% endfor %}
+</script>
+{% endif %}
