@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import include, url, handler404
 from django.contrib import admin
 
 from settings import ADMIN_BASE
@@ -43,3 +43,5 @@ urlpatterns = [
 ]
 
 admin.site.site_header = 'OSF-Admin administration'
+
+handler404 = views.error_404_view

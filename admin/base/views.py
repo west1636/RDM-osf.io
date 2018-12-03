@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.views.generic import FormView, DetailView
 from django.views.defaults import page_not_found
+from django.shortcuts import redirect
 
 from admin.base.forms import GuidForm
 from admin.base.utils import osf_staff_check
@@ -13,6 +14,9 @@ from admin.base.utils import osf_staff_check
 def home(request):
     context = {}
     return render(request, 'home.html', context)
+
+def error_404_view(request, exception):
+    return redirect('/')
 
 
 class GuidFormView(FormView):
