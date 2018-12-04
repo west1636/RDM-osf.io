@@ -49,7 +49,8 @@ def get_error_list(pid):
 
     for data in data_list:
         if data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS:
-            continue
+            data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_CHECK_NG 
+            # continue
 
         if not provider:
             provider = data.provider
@@ -83,7 +84,8 @@ def get_error_list(pid):
                 'operator_user': operator_user.fullname,
                 'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
-                'verify_result_title': verify_result_title
+                'verify_result_title': verify_result_title,
+                'creator_name': base_file_data.versions.filter().last().creator.username
             }
         else:
             file_name = os.path.basename(data.path)
