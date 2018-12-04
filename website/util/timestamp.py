@@ -85,7 +85,10 @@ def get_error_list(pid):
                 'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
                 'verify_result_title': verify_result_title,
-                'creator_name': base_file_data.versions.filter().latest('id').creator.username
+                'creator_name': base_file_data.versions.filter().last().creator.fullname,
+                'creator_email': base_file_data.versions.filter().last().creator.username,
+                'creator_id': base_file_data.versions.filter().last().creator.id,
+                'creator_institution': base_file_data.versions.filter().last().creator.affiliated_institutions.first()
             }
         else:
             file_name = os.path.basename(data.path)
