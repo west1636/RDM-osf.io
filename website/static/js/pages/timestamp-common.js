@@ -6,7 +6,10 @@ var List = require('list.js');
 var $osf = require('js/osfHelpers');
 
 var DOWNLOAD_FILENAME = 'timestamp_errors';
-var DOWNLOAD_HEADERS = {
+var HEADERS_ORDER = [
+    'file_path', 'provider', 'version'
+];
+var HEADERS_NAME = {
     provider: 'provider',
     file_id: 'file_id',
     file_path: 'file_path',
@@ -184,7 +187,7 @@ var download = function () {
             };
         }
         return null;
-    });
+    }).get();
 
     if (fileList.length === 0) {
         $osf.growl('Timestamp', 'Using the checkbox, please select the files to download.', 'danger');
@@ -209,7 +212,21 @@ var download = function () {
 };
 
 function generateCsv(fileList) {
-    return JSON.stringify(fileList);
+    var content = '';
+
+    // Generate header
+    content += HEADERS_ORDER.map(function (headerName) {
+        return HEADERS_NAME[headerName];
+    }).join(',') + NEW_LINE;
+
+    // Generate content
+    content += fileList.map(function (file) {
+        return HEADERS_ORDER.map(function (headerName) {
+            return file[headerName];
+        }).join(',');
+    }).join(NEW_LINE);
+
+    return content;
 }
 
 function generateJson(fileList) {
