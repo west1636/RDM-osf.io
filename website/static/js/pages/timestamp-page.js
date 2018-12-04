@@ -10,7 +10,7 @@ $(document).ready(function () {
 });
 
 $(function () {
-    var btnVerify_onclick = function () {
+    $('#btn-verify').on('click', function () {
         if ($('#btn-verify').attr('disabled') !== undefined || $('#btn-addtimestamp').attr('disabled') !== undefined) {
             return false;
         }
@@ -19,9 +19,9 @@ $(function () {
             urlVerifyData: nodeApiUrl + 'timestamp/timestamp_error_data/',
             method: 'GET'
         });
-    };
+    });
 
-    var btnAddtimestamp_onclick = function () {
+    $('#btn-addtimestamp').on('click', function () {
         if ($('#btn-verify').attr('disabled') !== undefined || $('#btn-addtimestamp').attr('disabled') !== undefined) {
             return false;
         }
@@ -29,17 +29,15 @@ $(function () {
             url: nodeApiUrl + 'timestamp/add_timestamp/',
             method: 'GET'
         });
-    };
+    });
+
+    $('#btn-download').on('click', function () {
+        timestampCommon.download();
+    });
 
     $('#addTimestampAllCheck').on('change', function () {
         $('input[id=addTimestampCheck]').prop('checked', this.checked);
     });
 
-    var document_onready = function () {
-        $('#btn-verify').on('click', btnVerify_onclick);
-        $('#btn-addtimestamp').on('click', btnAddtimestamp_onclick).focus();
-    };
-
-    $(document).ready(document_onready);
     $('#timestamp_errors_spinner').hide();
 });

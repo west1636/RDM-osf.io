@@ -3,7 +3,26 @@
 var $ = require('jquery');
 var Raven = require('raven-js');
 var List = require('list.js');
+var $osf = require('js/osfHelpers');
 
+var DOWNLOAD_FILENAME = 'timestamp_errors';
+var DOWNLOAD_HEADERS = {
+    provider: 'provider',
+    file_id: 'file_id',
+    file_path: 'file_path',
+    file_name: 'file_name',
+    version: 'version'
+};
+
+
+function newLine() {
+    if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
+        return '\r\n';
+    }
+    return '\n';
+}
+
+var NEW_LINE = newLine();
 
 var verify = function (params) {
     $('#btn-verify').attr('disabled', true);
@@ -152,9 +171,73 @@ var add = function (params) {
     }
 };
 
+var download = function () {
+    var fileFormat = $('#fileFormat').val();
+    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
+        if ($(this).find('#addTimestampCheck').prop('checked')) {
+            return {
+                provider: $(this).find('#provider').val(),
+                file_id: $(this).find('#file_id').val(),
+                file_path: $(this).find('#file_path').val(),
+                version: $(this).find('#version').val(),
+                file_name: $(this).find('#file_name').val(),
+            };
+        }
+        return null;
+    });
+
+    if (fileList.length === 0) {
+        $osf.growl('Timestamp', 'Using the checkbox, please select the files to download.', 'danger');
+        return false;
+    }
+
+    var fileContent;
+    switch (fileFormat) {
+        case 'csv':
+            fileContent = generateCsv(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.csv', fileContent);
+            break;
+        case 'json-ld':
+            fileContent = generateJson(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
+            break;
+        case 'rdf-xml':
+            fileContent = generateXml(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            break;
+    }
+};
+
+function generateCsv(fileList) {
+    return JSON.stringify(fileList);
+}
+
+function generateJson(fileList) {
+    return JSON.stringify(fileList);
+}
+
+function generateXml(fileList) {
+    return JSON.stringify(fileList);
+}
+
+function saveTextFile(filename, content) {
+    if (window.navigator.msSaveOrOpenBlob) {
+        var blob = new Blob([content], {type: 'text/plain; charset=utf-8'});
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    }
+    else {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain; charset=utf-8,' + encodeURI(content));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+}
+
 function initList() {
 
-    
     document.querySelector('[type=reset]').addEventListener('click', function(event) {
         // when using polyfill only
         if (document.getElementById('startDateFilter').hasAttribute('data-has-picker')) {
@@ -162,8 +245,6 @@ function initList() {
             document.getElementById('endDateFilter').value='';
         }
     });
-
-    
 
     var list = new List('timestamp-form', {
         valueNames: ['operator_user', 'operator_date'],
@@ -223,4 +304,5 @@ module.exports = {
     verify: verify,
     add: add,
     initList: initList,
+    download: download
 };
