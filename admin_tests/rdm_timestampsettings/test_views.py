@@ -1,14 +1,16 @@
-# -*- coding: utf-8 -*-
+from nose import tools as nt
+
+from django.test import RequestFactory
+
+from tests.base import AdminTestCase
+from osf_tests.factories import UserFactory, AuthUserFactory, InstitutionFactory, ProjectFactory
+
 
 from admin.rdm_timestampsettings import views
 from admin_tests.utilities import setup_user_view
-from api.base import settings as api_settings
-from django.test import RequestFactory
-from nose import tools as nt
-from osf_tests.factories import UserFactory, AuthUserFactory, InstitutionFactory, ProjectFactory
+from website.views import userkey_generation
 from osf.models import RdmUserKey, RdmTimestampGrantPattern, Guid
-from tests.base import AdminTestCase
-from website.util.timestamp import userkey_generation
+from api.base import settings as api_settings
 import os
 
 

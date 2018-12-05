@@ -1,19 +1,23 @@
-# -*- coding: utf-8 -*-
+from nose import tools as nt
+
+from django.test import RequestFactory
+
+from tests.base import AdminTestCase
+from osf_tests.factories import (
+    UserFactory,
+    AuthUserFactory,
+    InstitutionFactory,
+    ProjectFactory,
+)
 
 from admin.rdm_timestampadd import views
 from admin_tests.utilities import setup_user_view
-from api.base import settings as api_settings
-from api_tests.utils import create_test_file
-from django.test import RequestFactory
-from nose import tools as nt
+from website.views import userkey_generation
 from osf.models import RdmUserKey, RdmFileTimestamptokenVerifyResult, Guid, BaseFileNode
-from osf_tests.factories import UserFactory, AuthUserFactory, InstitutionFactory, ProjectFactory
-from tests.base import AdminTestCase
-from tests.test_views import create_rdmfiletimestamptokenverifyresult
-from website.util.timestamp import userkey_generation
-import logging
+from api.base import settings as api_settings
 import os
 import mock
+from tests.test_views import create_rdmfiletimestamptokenverifyresult
 
 
 class TestInstitutionList(AdminTestCase):
@@ -24,7 +28,8 @@ class TestInstitutionList(AdminTestCase):
 
         self.request_url = '/timestampadd/'
         self.request = RequestFactory().get(self.request_url)
-        self.view = setup_user_view(views.InstitutionList(), self.request, user=self.user)
+        self.view = views.InstitutionList()
+        self.view = setup_user_view(self.view, self.request, user=self.user)
         self.view.kwargs = {'institution_id': self.institutions[0].id}
         self.redirect_url = '/timestampadd/' + str(self.view.kwargs['institution_id']) + '/nodes/'
 
@@ -133,6 +138,7 @@ class TestTimeStampAddList(AdminTestCase):
         res = self.view.get_context_data()
         nt.assert_is_instance(res, dict)
 
+        ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
         nt.assert_not_in('osfstorage_test_file1.status_1', str(res))
         nt.assert_in('osfstorage_test_file2.status_3', str(res))
         nt.assert_in('osfstorage_test_file3.status_3', str(res))
@@ -171,7 +177,7 @@ class TestTimestampVerifyData(AdminTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
-    @mock.patch('website.util.timestamp.check_file_timestamp',
+    @mock.patch('website.project.views.timestamp.do_get_timestamp_error_data',
         return_value={
             'verify_result': 3,
             'verify_result_title': 'TST missing(Unverify)',
@@ -179,6 +185,8 @@ class TestTimestampVerifyData(AdminTestCase):
             'operator_date': '2018/10/04 05:43:56',
             'filepath': u'osfstorage/test_get_timestamp_error_data'})
     def test_post(self, mock_func, **kwargs):
+        from api_tests.utils import create_test_file
+
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
         self.post_data = {
             'provider': [str(file_node.provider)],
@@ -241,10 +249,7 @@ class TestAddTimestampData(AdminTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
-    @mock.patch('requests.get')
-    def test_post(self, mock_get, **kwargs):
-        mock_get.return_value.content = ''
-
+    def test_post(self, **kwargs):
         res_timestampaddlist = self.view.get_context_data()
         nt.assert_is_instance(res_timestampaddlist, dict)
 
@@ -274,5 +279,6 @@ class TestAddTimestampData(AdminTestCase):
         self.private_project1.reload()
 
         res_addtimestamp = self.view_addtimestamp.post(self, **kwargs)
+        import logging
         logging.info(res_addtimestamp)
         nt.assert_equal(res_addtimestamp.status_code, 200)
