@@ -3,7 +3,29 @@
 var $ = require('jquery');
 var Raven = require('raven-js');
 var List = require('list.js');
+var $osf = require('js/osfHelpers');
 
+var DOWNLOAD_FILENAME = 'timestamp_errors';
+var HEADERS_ORDER = [
+    'file_path', 'provider', 'version'
+];
+var HEADERS_NAME = {
+    provider: 'Provider',
+    file_id: 'File ID',
+    file_path: 'File Path',
+    file_name: 'File Name',
+    version: 'Version'
+};
+
+
+function newLine() {
+    if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
+        return '\r\n';
+    }
+    return '\n';
+}
+
+var NEW_LINE = newLine();
 
 var verify = function (params) {
     $('#btn-verify').attr('disabled', true);
@@ -152,7 +174,107 @@ var add = function (params) {
     }
 };
 
+var download = function () {
+    var fileFormat = $('#fileFormat').val();
+    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
+        if ($(this).find('#addTimestampCheck').prop('checked')) {
+            return {
+                provider: $(this).find('#provider').val(),
+                file_id: $(this).find('#file_id').val(),
+                file_path: $(this).find('#file_path').val(),
+                version: $(this).find('#version').val(),
+                file_name: $(this).find('#file_name').val(),
+            };
+        }
+        return null;
+    }).get();
+
+    if (fileList.length === 0) {
+        $osf.growl('Timestamp', 'Using the checkbox, please select the files to download.', 'danger');
+        return false;
+    }
+
+    var fileContent;
+    switch (fileFormat) {
+        case 'csv':
+            fileContent = generateCsv(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.csv', fileContent);
+            break;
+        case 'json-ld':
+            fileContent = generateJson(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
+            break;
+        case 'rdf-xml':
+            fileContent = generateXml(fileList);
+            //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            break;
+    }
+};
+
+function generateCsv(fileList) {
+    var content = '';
+
+    // Generate header
+    content += HEADERS_ORDER.map(function (headerName) {
+        return HEADERS_NAME[headerName];
+    }).join(',') + NEW_LINE;
+
+    // Generate content
+    content += fileList.map(function (file) {
+        return HEADERS_ORDER.map(function (headerName) {
+            return file[headerName];
+        }).join(',');
+    }).join(NEW_LINE);
+
+    return content;
+}
+
+function generateJson(fileList) {
+    // Update headers as defined in HEADERS_NAME
+    fileList = fileList.map(function (file) {
+        return HEADERS_ORDER.reduce(function (accumulator, current) {
+            accumulator[HEADERS_NAME[current]] = file[current];
+            return accumulator;
+        }, {});
+    });
+
+    // Generate content
+    return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
+}
+
+function generateXml(fileList) {
+    var doc = document.implementation.createDocument(null, 'errorList');
+    doc.xmlVersion = '1.0';
+    doc.xmlEncoding = 'UTF-8';
+    return '';
+}
+
+function saveTextFile(filename, content) {
+    if (window.navigator.msSaveOrOpenBlob) {
+        var blob = new Blob([content], {type: 'text/plain; charset=utf-8'});
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    }
+    else {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain; charset=utf-8,' + encodeURI(content));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+}
+
 function initList() {
+
+    document.querySelector('[type=reset]').addEventListener('click', function(event) {
+        // when using polyfill only
+        if (document.getElementById('startDateFilter').hasAttribute('data-has-picker')) {
+            document.getElementById('startDateFilter').value='';
+            document.getElementById('endDateFilter').value='';
+        }
+    });
+
     var list = new List('timestamp-form', {
         valueNames: ['operator_user', 'operator_date'],
     });
@@ -163,7 +285,7 @@ function initList() {
     var users = list.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
-        if (!alreadyAdded.includes(userName)) {
+        if (alreadyAdded.indexOf(userName) === -1) {
             var option = document.createElement('option');
             option.value = userName;
             option.textContent = userName;
@@ -173,10 +295,10 @@ function initList() {
     }
 
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
-        
+
         var userName = userFilterSelect.value;
         var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName));};
-        list.filter(userNameFilter);
+        var filters = [userNameFilter];
 
         var dateFilters = [
             {
@@ -193,9 +315,16 @@ function initList() {
             var element = dateFilters[i].element;
             var comparator = dateFilters[i].comparator;
             if (element.value) {
-                list.filter(function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(element.value) );});
+                // closure to prevent different filters getting the same element
+                filters.push((function (elementValue, comparator) {
+                    return function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(elementValue) );};
+                })(element.value, comparator));
             }
         }
+
+        list.filter(function (i) {
+            return filters.every(function(f) {return f(i);});
+        });
 
     });
 }
@@ -204,4 +333,5 @@ module.exports = {
     verify: verify,
     add: add,
     initList: initList,
+    download: download
 };

@@ -65,10 +65,24 @@
                 </div>
                 <div class="col-sm-12" style="margin-bottom: 10px;">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-7">
                             <span>
                                 <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
                                 <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
+                            </span>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>
+                                <select id="fileFormat" class="form-control">
+                                    <option value="csv">CSV</option>
+                                    <option value="json-ld">JSON/LD</option>
+                                    <option value="rdf-xml">RDF/XML</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span>
+                                <button type="button" class="btn btn-success" id="btn-download">Download</button>
                             </span>
                         </div>
                     </div>
@@ -135,6 +149,9 @@
 .form-group .input-group {
     margin-bottom: 10px;
 }
+date-input-polyfill {
+  z-index: 3;
+}
 </style>
 
 <%def name="javascript_bottom()">
@@ -143,4 +160,5 @@ ${parent.javascript_bottom()}
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 </%def>
