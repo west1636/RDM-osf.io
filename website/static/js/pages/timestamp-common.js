@@ -206,7 +206,7 @@ var download = function () {
             break;
         case 'rdf-xml':
             fileContent = generateXml(fileList);
-            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
 };
@@ -243,7 +243,10 @@ function generateJson(fileList) {
 }
 
 function generateXml(fileList) {
-    return JSON.stringify(fileList);
+    var doc = document.implementation.createDocument(null, 'errorList');
+    doc.xmlVersion = '1.0';
+    doc.xmlEncoding = 'UTF-8';
+    return '';
 }
 
 function saveTextFile(filename, content) {
