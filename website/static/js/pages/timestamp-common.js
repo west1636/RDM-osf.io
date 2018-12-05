@@ -10,11 +10,11 @@ var HEADERS_ORDER = [
     'file_path', 'provider', 'version'
 ];
 var HEADERS_NAME = {
-    provider: 'provider',
-    file_id: 'file_id',
-    file_path: 'file_path',
-    file_name: 'file_name',
-    version: 'version'
+    provider: 'Provider',
+    file_id: 'File ID',
+    file_path: 'File Path',
+    file_name: 'File Name',
+    version: 'Version'
 };
 
 
@@ -230,7 +230,16 @@ function generateCsv(fileList) {
 }
 
 function generateJson(fileList) {
-    return JSON.stringify(fileList);
+    // Update headers as defined in HEADERS_NAME
+    fileList = fileList.map(function (file) {
+        return HEADERS_ORDER.reduce(function (accumulator, current) {
+            accumulator[HEADERS_NAME[current]] = file[current];
+            return accumulator;
+        }, {});
+    });
+
+    // Generate content
+    return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
 }
 
 function generateXml(fileList) {
