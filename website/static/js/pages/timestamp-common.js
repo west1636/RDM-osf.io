@@ -207,7 +207,14 @@ function initList() {
             if (element.value) {
                 // closure to prevent different filters getting the same element
                 filters.push((function (elementValue, comparator) {
-                    return function(i) {return !i.values().operator_date || comparator( new Date(i.values().operator_date), new Date(elementValue) );};
+                    return function(i) {
+                        // sets the time to midnight, which is the same as dates from the input fields
+                        // this is needed to make items appear when the filter is set to the same day
+                        var operator_date_day = new Date(i.values().operator_date);
+                        operator_date_day.setHours(0, 0, 0, 0);
+                        
+                        return !i.values().operator_date || comparator( operator_date_day, new Date(elementValue) );
+                    };
                 })(element.value, comparator));
             }
         }
