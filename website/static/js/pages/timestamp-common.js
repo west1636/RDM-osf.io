@@ -213,7 +213,10 @@ function initList() {
                         var operator_date_day = new Date(i.values().operator_date);
                         operator_date_day.setHours(0, 0, 0, 0);
                         
-                        return !i.values().operator_date || comparator( operator_date_day, new Date(elementValue) );
+                        var filter_date_day = new Date(elementValue);
+                        filter_date_day.setHours(0, 0, 0, 0);
+                        
+                        return !i.values().operator_date || comparator( operator_date_day, filter_date_day );
                     };
                 })(element.value, comparator));
             }
