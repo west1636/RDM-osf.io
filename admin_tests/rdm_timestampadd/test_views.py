@@ -141,8 +141,8 @@ class TestTimeStampAddList(AdminTestCase):
         nt.assert_is_instance(res['view'], views.TimeStampAddList)
 
         # test the presence of file creator information added to
-        # website/utils/timestamp.py:get_error_list if the provider is osfstorage 
-        # 
+        # website/utils/timestamp.py:get_error_list if the provider is osfstorage
+        #
         # nt.assert_equal('', res[''])
 
 class TestTimestampVerifyData(AdminTestCase):
