@@ -202,6 +202,11 @@ RUN cd ./admin \
     && yarn run webpack-prod
 # /Admin: Assets
 
+RUN invoke requirements --quick
+RUN invoke assets --dev
+
+RUN invoke admin.assets --dev
+
 # Copy the rest of the code over
 COPY ./ ./
 
@@ -222,10 +227,5 @@ RUN for module in \
         touch $file && chmod o+w $file \
     ; done \
     && rm ./website/settings/local.py ./api/base/settings/local.py ./api/timestamp/local.py
-
-RUN invoke requirements --quick
-RUN invoke assets --dev
-
-RUN invoke admin.assets --dev
 
 CMD ["gosu", "nobody", "invoke", "--list"]
