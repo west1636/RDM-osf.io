@@ -145,7 +145,7 @@ class TestTimeStampAddList(AdminTestCase):
         osfstorage_error_list = filter(lambda x: x['provider'] == 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
         nt.assert_in(u'freddiemercury', osfstorage_error_list[0]['creator_email'])
         nt.assert_equal(u'Freddie Mercury1', osfstorage_error_list[0]['creator_name'])
-        nt.assert_equal(16, osfstorage_error_list[0]['creator_id'])
+        nt.assert_not_equal(u'', osfstorage_error_list[0]['creator_id'])
         nt.assert_equal(u'Institution: Price, Corwin and Sanford : (5c08ac4aa82cb5001183dac9)', osfstorage_error_list[0]['creator_institution'])
 
         other_error_list = filter(lambda x: x['provider'] != 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
