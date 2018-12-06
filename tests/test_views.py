@@ -5008,9 +5008,8 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file3.status_3' in res
         assert 's3_test_file1.status_3' in res
 
-        assert 'name="creator_name" value="FreddiMercury0"' in res
+        assert 'name="creator_name" value="Freddie Mercury0"' in res
         assert 'name="creator_email" value="freddiemercury' in res
-        assert 'name="creator_id" value="21"' in res
         assert 'name="creator_institution" value="None"' in res
 
         assert 'name="creator_name" value=""' in res
