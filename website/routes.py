@@ -53,6 +53,9 @@ from website.identifiers import views as identifier_views
 from website.rdm_addons import views as rdm_addon_views
 from website.rdm_announcement import views as rdm_announcement_views
 
+import logging
+logger = logging.getLogger(__name__)
+
 def get_globals():
     """Context variables that are available for every template rendered by
     OSFWebRenderer.
@@ -60,6 +63,8 @@ def get_globals():
     user = _get_current_user()
     user_institutions = [{'id': inst._id, 'name': inst.name, 'logo_path': inst.logo_path_rounded_corners} for inst in user.affiliated_institutions.all()] if user else []
     location = geolite2.lookup(request.remote_addr) if request.remote_addr else None
+    logger.info('REQUEST.HOST_URL:{}'.format(request.host_url))
+    logger.info('SETTINGS.DOMAIN:{}'.format(settings.DOMAIN))
     if request.host_url != settings.DOMAIN:
         try:
             inst_id = Institution.objects.get(domains__icontains=[request.host])._id
