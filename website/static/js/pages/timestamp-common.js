@@ -206,6 +206,7 @@ var download = function () {
             break;
         case 'rdf-xml':
             fileContent = generateXml(fileList);
+            console.log(fileContent);
             //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
@@ -243,10 +244,21 @@ function generateJson(fileList) {
 }
 
 function generateXml(fileList) {
-    var doc = document.implementation.createDocument(null, 'errorList');
-    doc.xmlVersion = '1.0';
-    doc.xmlEncoding = 'UTF-8';
-    return '';
+    var xml = document.implementation.createDocument(null, 'errorList');
+    xml.xmlVersion = '1.0';
+
+    var errorList = xml.getElementsByTagName('errorList')[0];
+
+    var file = xml.createElement('file');
+    file.textContent = 'Hello';
+    errorList.appendChild(file);
+
+    var file2 = xml.createElement('file');
+    file2.textContent = 'Yay';
+    errorList.appendChild(file2);
+
+    var serializer = new XMLSerializer();
+    return serializer.serializeToString(xml);
 }
 
 function saveTextFile(filename, content) {
