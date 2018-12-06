@@ -143,7 +143,7 @@ class TestTimeStampAddList(AdminTestCase):
         # test the presence of file creator information added to
         # website/utils/timestamp.py:get_error_list if the provider is osfstorage
         osfstorage_error_list = filter(lambda x: x['provider'] == 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
-        nt.assert_equal(u'freddiemercury+4657435@cos.io', osfstorage_error_list[0]['creator_email'])
+        nt.assert_in(u'freddiemercury', osfstorage_error_list[0]['creator_email'])
         nt.assert_equal(u'Freddie Mercury1', osfstorage_error_list[0]['creator_name'])
         nt.assert_equal(16, osfstorage_error_list[0]['creator_id'])
         nt.assert_equal(u'Institution: Price, Corwin and Sanford : (5c08ac4aa82cb5001183dac9)', osfstorage_error_list[0]['creator_institution'])
