@@ -202,13 +202,13 @@ RUN cd ./admin \
     && yarn run webpack-prod
 # /Admin: Assets
 
+# Copy the rest of the code over
+COPY ./ ./
+
 RUN invoke requirements --quick
 RUN invoke assets --dev
 
 RUN invoke admin.assets --dev
-
-# Copy the rest of the code over
-COPY ./ ./
 
 ARG GIT_COMMIT=
 ENV GIT_COMMIT ${GIT_COMMIT}
