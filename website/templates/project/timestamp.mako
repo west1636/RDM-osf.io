@@ -127,6 +127,10 @@
                                     <input type="hidden" name="file_path" id="file_path" value="${ error_info['file_path'] }" />
                                     <input type="hidden" name="version" id="version" value="${ error_info['version'] }" />
                                     <input type="hidden" name="file_name" id="file_name" value="${ error_info['file_name'] }" />
+                                    <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
+                                    <input type="hidden" name="creator_email" value="${ error_info['creator_email'] }" />
+                                    <input type="hidden" name="creator_id" value="${ error_info['creator_id'] }" />
+                                    <input type="hidden" name="creator_institution" value="${ error_info['creator_institution'] }" />
                                 </td>
                                 <td class="operator_user">${ error_info['operator_user'] } (${ error_info['operator_user_id'] })</td>
                                 <td class="operator_date">${ error_info['operator_date'] }</td>

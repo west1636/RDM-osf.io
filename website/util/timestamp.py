@@ -83,7 +83,11 @@ def get_error_list(pid):
                 'operator_user': operator_user.fullname,
                 'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
-                'verify_result_title': verify_result_title
+                'verify_result_title': verify_result_title,
+                'creator_name': base_file_data.versions.filter().latest('id').creator.fullname,
+                'creator_email': base_file_data.versions.filter().latest('id').creator.username,
+                'creator_id': base_file_data.versions.filter().latest('id').creator.id,
+                'creator_institution': base_file_data.versions.filter().latest('id').creator.affiliated_institutions.first()
             }
         else:
             file_name = os.path.basename(data.path)
@@ -97,7 +101,11 @@ def get_error_list(pid):
                 'operator_user': operator_user.fullname,
                 'operator_user_id': operator_user._id,
                 'operator_date': operator_date,
-                'verify_result_title': verify_result_title
+                'verify_result_title': verify_result_title,
+                'creator_name': '',
+                'creator_email': '',
+                'creator_id': '',
+                'creator_institution': ''
             }
         error_list.append(error_info)
 

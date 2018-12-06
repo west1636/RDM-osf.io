@@ -140,6 +140,19 @@ class TestTimeStampAddList(AdminTestCase):
         nt.assert_in('s3_test_file1.status_3', str(res))
         nt.assert_is_instance(res['view'], views.TimeStampAddList)
 
+        # test the presence of file creator information added to
+        # website/utils/timestamp.py:get_error_list if the provider is osfstorage
+        osfstorage_error_list = filter(lambda x: x['provider'] == 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
+        nt.assert_in(u'freddiemercury', osfstorage_error_list[0]['creator_email'])
+        nt.assert_in(u'Freddie Mercury', osfstorage_error_list[0]['creator_name'])
+        nt.assert_not_equal(u'', osfstorage_error_list[0]['creator_id'])
+        nt.assert_equal('Institution', type(osfstorage_error_list[0]['creator_institution']).__name__)
+
+        other_error_list = filter(lambda x: x['provider'] != 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
+        nt.assert_equal(u'', other_error_list[0]['creator_email'])
+        nt.assert_equal(u'', other_error_list[0]['creator_name'])
+        nt.assert_equal(u'', other_error_list[0]['creator_id'])
+        nt.assert_equal(u'', other_error_list[0]['creator_institution'])
 
 class TestTimestampVerifyData(AdminTestCase):
     def setUp(self):
