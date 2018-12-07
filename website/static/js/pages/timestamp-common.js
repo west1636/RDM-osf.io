@@ -4,6 +4,7 @@ var $ = require('jquery');
 var Raven = require('raven-js');
 var List = require('list.js');
 var $osf = require('js/osfHelpers');
+var vkbeautify = require('vkbeautify');
 
 var DOWNLOAD_FILENAME = 'timestamp_errors';
 var HEADERS_ORDER = [
@@ -205,7 +206,7 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = generateXml(fileList);
+            fileContent = vkbeautify.xml(generateXml(fileList));
             console.log(fileContent);
             //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;

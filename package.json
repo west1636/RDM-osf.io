@@ -39,6 +39,7 @@
     "less": "^2.5.3",
     "linkifyjs": "^2.0.3",
     "list.js": "^1.5.0",
+    "vkbeautify": "^0.99.3",
     "loaders.css": "^0.1.2",
     "lodash.chunk": "^4.0.6",
     "lodash.find": "^4.3.0",
