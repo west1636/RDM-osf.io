@@ -10,7 +10,7 @@ var DOWNLOAD_FILENAME = 'timestamp_errors';
 var HEADERS_ORDER = [
     'file_path', 'provider', 'version'
 ];
-var HEADERS_NAME = {
+var HEADER_NAMES = {
     provider: 'Provider',
     file_id: 'File ID',
     file_path: 'File Path',
@@ -142,7 +142,7 @@ var add = function (params) {
     $('#timestamp_errors_spinner').text('Addtimestamp loading ...');
     $('#timestamp_errors_spinner').show();
 
-    var successCnt = 0;
+    var successCount = 0;
     for (var i = 0; i < fileList.length; i++) {
         var post_data = {
             'provider': fileList[i].provider,
@@ -157,9 +157,9 @@ var add = function (params) {
             dataType: 'json',
             method: params.method
         }).done(function () {
-            successCnt++;
-            $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCnt + ' / ' + fileList.length + ' ...');
-            if (successCnt === fileList.length) {
+            successCount++;
+            $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCount + ' / ' + fileList.length + ' ...');
+            if (successCount === fileList.length) {
                 $('#timestamp_errors_spinner').text('Added Timestamp (100%) and Refreshing...');
                 window.location.reload();
             }
@@ -201,32 +201,32 @@ var download = function () {
     var fileContent;
     switch (fileFormat) {
         case 'csv':
-            fileContent = generateCsv(fileList);
+            fileContent = generateCsv(fileList, HEADERS_ORDER, HEADER_NAMES);
             saveTextFile(DOWNLOAD_FILENAME + '.csv', fileContent);
             break;
         case 'json-ld':
-            fileContent = generateJson(fileList);
+            fileContent = generateJson(fileList, HEADERS_ORDER, HEADER_NAMES);
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = vkbeautify.xml(generateXml(fileList));
+            fileContent = vkbeautify.xml(generateXml(fileList, HEADERS_ORDER, HEADER_NAMES));
             console.log(fileContent);
             //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
 };
 
-function generateCsv(fileList) {
+function generateCsv(fileList, headersOrder, headerNames) {
     var content = '';
 
     // Generate header
-    content += HEADERS_ORDER.map(function (headerName) {
-        return HEADERS_NAME[headerName];
+    content += headersOrder.map(function (headerName) {
+        return headerNames[headerName];
     }).join(',') + NEW_LINE;
 
     // Generate content
     content += fileList.map(function (file) {
-        return HEADERS_ORDER.map(function (headerName) {
+        return headersOrder.map(function (headerName) {
             return file[headerName];
         }).join(',');
     }).join(NEW_LINE);
@@ -234,11 +234,11 @@ function generateCsv(fileList) {
     return content;
 }
 
-function generateJson(fileList) {
+function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
-        return HEADERS_ORDER.reduce(function (accumulator, current) {
-            accumulator[HEADERS_NAME[current]] = file[current];
+        return headersOrder.reduce(function (accumulator, current) {
+            accumulator[headerNames[current]] = file[current];
             return accumulator;
         }, {});
     });
@@ -247,7 +247,7 @@ function generateJson(fileList) {
     return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
 }
 
-function generateXml(fileList) {
+function generateXml(fileList, headersOrder, headerNames) {
     var xml = document.implementation.createDocument(null, 'errorList');
     xml.xmlVersion = '1.0';
 
