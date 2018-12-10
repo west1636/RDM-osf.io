@@ -19,7 +19,7 @@ var HEADER_NAMES = {
 };
 
 var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
-    valueNames: ['operator_user', 'operator_date'],
+    valueNames: ['provider', 'file_id', 'file_path', 'version', 'file_name', 'operator_user', 'operator_date'],
 });
 
 function newLine() {
@@ -120,17 +120,9 @@ var verifyProviderFiles = function (params, providerInfo, count) {
 };
 
 var add = function (params) {
-    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
-        if ($(this).find('#addTimestampCheck').prop('checked')) {
-            return {
-                provider: $(this).find('#provider').val(),
-                file_id: $(this).find('#file_id').val(),
-                file_path: $(this).find('#file_path').val(),
-                version: $(this).find('#version').val(),
-                file_name: $(this).find('#file_name').val(),
-            };
-        }
-        return null;
+
+    var fileList = TIMESTAMP_LIST_OBJECT.items.map(function (item) {
+        return item.values();
     });
 
     if (fileList.length === 0) {
@@ -180,18 +172,9 @@ var add = function (params) {
 
 var download = function () {
     var fileFormat = $('#fileFormat').val();
-    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
-        if ($(this).find('#addTimestampCheck').prop('checked')) {
-            return {
-                provider: $(this).find('#provider').val(),
-                file_id: $(this).find('#file_id').val(),
-                file_path: $(this).find('#file_path').val(),
-                version: $(this).find('#version').val(),
-                file_name: $(this).find('#file_name').val(),
-            };
-        }
-        return null;
-    }).get();
+    var fileList = TIMESTAMP_LIST_OBJECT.items.map(function (item) {
+        return item.values();
+    });
 
     if (fileList.length === 0) {
         $osf.growl('Timestamp', 'Using the checkbox, please select the files to download.', 'danger');
