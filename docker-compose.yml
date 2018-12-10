@@ -421,7 +421,11 @@ services:
 
   worker:
     image: quay.io/centerforopenscience/osf:develop
-    command: invoke celery_worker
+    command:
+    - /bin/bash
+    - -c
+    - apt-get update && apt-get install -y wget &&
+      invoke celery_worker
     restart: unless-stopped
     depends_on:
       - postgres
