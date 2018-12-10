@@ -18,6 +18,9 @@ var HEADERS_NAME = {
     version: 'Version'
 };
 
+var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
+    valueNames: ['operator_user', 'operator_date'],
+});
 
 function newLine() {
     if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
@@ -288,14 +291,10 @@ function initList() {
         }
     });
 
-    var list = new List('timestamp-form', {
-        valueNames: ['operator_user', 'operator_date'],
-    });
-
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-    var users = list.items.map(function(i) {return i.values().operator_user;});
+    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (alreadyAdded.indexOf(userName) === -1) {
@@ -345,7 +344,7 @@ function initList() {
             }
         }
 
-        list.filter(function (i) {
+        TIMESTAMP_LIST_OBJECT.filter(function (i) {
             return filters.every(function(f) {return f(i);});
         });
 
