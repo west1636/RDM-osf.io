@@ -75,7 +75,7 @@
                 <tr><td colspan="5"><b>{{ provider_error_info.provider }}</b></td></tr>
                 {% for error_info in provider_error_info.error_list %}
                 <tr class="addTimestamp">
-                    <td width="1%"><input type="checkBox" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
+                    <td width="1%"><input type="checkBox" class="check" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
                     <td>
                         {{ error_info.file_path }}
                         <input type="hidden" name="provider" class="provider" value="{{ provider_error_info.provider }}" />

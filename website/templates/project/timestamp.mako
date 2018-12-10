@@ -119,7 +119,7 @@
                             % for error_info in provider_error_info['error_list']:
                             <tr class="addTimestamp">
                                 <td>
-                                    <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
+                                    <input type="checkBox" class="check" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
                                 </td>
                                 <td>${ error_info['file_path'] }
                                     <input type="hidden" name="provider" class="provider" value="${ provider_error_info['provider'] }" />
