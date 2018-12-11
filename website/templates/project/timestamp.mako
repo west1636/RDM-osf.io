@@ -119,19 +119,20 @@
                             % for error_info in provider_error_info['error_list']:
                             <tr class="addTimestamp">
                                 <td>
-                                    <input type="checkBox" class="check" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
+                                    <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
                                 </td>
-                                <td>${ error_info['file_path'] }
-                                    <input type="hidden" name="provider" class="provider" value="${ provider_error_info['provider'] }" />
-                                    <input type="hidden" name="file_id" class="file_id" value="${ error_info['file_id'] }" />
-                                    <input type="hidden" name="file_path" class="file_path" value="${ error_info['file_path'] }" />
-                                    <input type="hidden" name="version" class="version" value="${ error_info['version'] }" />
-                                    <input type="hidden" name="file_name" class="file_name" value="${ error_info['file_name'] }" />
-                                    <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
-                                    <input type="hidden" name="creator_email" value="${ error_info['creator_email'] }" />
-                                    <input type="hidden" name="creator_id" value="${ error_info['creator_id'] }" />
-                                    <input type="hidden" name="creator_institution" value="${ error_info['creator_institution'] }" />
-                                </td>
+                                <td>${ error_info['file_path'] }</td>
+                                
+                                <input type="hidden" name="provider" class="provider" value="${ provider_error_info['provider'] }" />
+                                <input type="hidden" name="file_id" class="file_id" value="${ error_info['file_id'] }" />
+                                <input type="hidden" name="file_path" class="file_path" value="${ error_info['file_path'] }" />
+                                <input type="hidden" name="version" class="version" value="${ error_info['version'] }" />
+                                <input type="hidden" name="file_name" class="file_name" value="${ error_info['file_name'] }" />
+                                <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
+                                <input type="hidden" name="creator_email" value="${ error_info['creator_email'] }" />
+                                <input type="hidden" name="creator_id" value="${ error_info['creator_id'] }" />
+                                <input type="hidden" name="creator_institution" value="${ error_info['creator_institution'] }" />
+                                
                                 <td class="operator_user">${ error_info['operator_user'] } (${ error_info['operator_user_id'] })</td>
                                 <td class="operator_date">${ error_info['operator_date'] }</td>
                                 <td>${ error_info['verify_result_title'] }</td>

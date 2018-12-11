@@ -19,7 +19,15 @@ var HEADER_NAMES = {
 };
 
 var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
-    valueNames: [{name: 'check', attribute: 'checked'}, 'provider', 'file_id', 'file_path', 'version', 'file_name', 'operator_user', 'operator_date'],
+    valueNames: [
+        {name: 'provider', attr: 'value'},
+        {name: 'file_id', attr: 'value'},
+        {name: 'file_path', attr: 'value'},
+        {name: 'version', attr: 'value'},
+        {name: 'file_name', attr: 'value'},
+        'operator_user',
+        'operator_date',
+    ],
 });
 
 function newLine() {
@@ -122,7 +130,7 @@ var verifyProviderFiles = function (params, providerInfo, count) {
 var add = function (params) {
 
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
-        return item.values().check;
+        return true;
     }).map(function (item) {
         return item.values();
     });
@@ -174,7 +182,9 @@ var add = function (params) {
 
 var download = function () {
     var fileFormat = $('#fileFormat').val();
-    var fileList = TIMESTAMP_LIST_OBJECT.items.map(function (item) {
+    var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
+        return true;
+    }).map(function (item) {
         return item.values();
     });
 

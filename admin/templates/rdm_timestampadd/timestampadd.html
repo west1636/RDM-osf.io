@@ -75,16 +75,16 @@
                 <tr><td colspan="5"><b>{{ provider_error_info.provider }}</b></td></tr>
                 {% for error_info in provider_error_info.error_list %}
                 <tr class="addTimestamp">
-                    <td width="1%"><input type="checkBox" class="check" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
-                    <td>
-                        {{ error_info.file_path }}
-                        <input type="hidden" name="provider" class="provider" value="{{ provider_error_info.provider }}" />
-                        <input type="hidden" name="file_id" class="file_id" value="{{ error_info.file_id }}" />
-                        <input type="hidden" name="file_path" class="file_path" value="{{ error_info.file_path }}" />
-                        <input type="hidden" name="project_id" id="project_id" value="{{ error_info.project_id }}" />
-                        <input type="hidden" name="version" class="version" value="{{ error_info.version }}" />
-                        <input type="hidden" name="file_name" class="file_name" value="{{ error_info.file_name }}" />
-                    </td>
+                    <td width="1%"><input type="checkBox" id="addTimestampCheck" style="width: 14px; height: 14px;" /></td>
+                    <td>{{ error_info.file_path }}</td>
+                    
+                    <input type="hidden" name="provider" class="provider" value="{{ provider_error_info.provider }}" />
+                    <input type="hidden" name="file_id" class="file_id" value="{{ error_info.file_id }}" />
+                    <input type="hidden" name="file_path" class="file_path" value="{{ error_info.file_path }}" />
+                    <input type="hidden" name="project_id" id="project_id" value="{{ error_info.project_id }}" />
+                    <input type="hidden" name="version" class="version" value="{{ error_info.version }}" />
+                    <input type="hidden" name="file_name" class="file_name" value="{{ error_info.file_name }}" />
+                    
                     <td class="operator_user">{{ error_info.operator_user }} ({{ error_info.operator_user_id }})</td>
                     <td class="operator_date">{{ error_info.operator_date }}</td>
                     <td>{{ error_info.verify_result_title }}</td>
