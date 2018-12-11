@@ -213,8 +213,7 @@ var download = function () {
             break;
         case 'rdf-xml':
             fileContent = vkbeautify.xml(generateXml(fileList, HEADERS_ORDER, HEADER_NAMES));
-            console.log(fileContent);
-            //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
 };
@@ -264,21 +263,17 @@ function generateXml(fileList, headersOrder, headerNames) {
         for (var j = 0; j < headersOrder.length; j++) {
             var headerName = headerNames[headersOrder[j]];
             
-            var headerElement = xml.createElement(headerName);
-            headerElement.textContent = file[headerName];
+            // spaces not accepted in xml tag names
+            var headerElement = xml.createElement(headerName.replace(' ', ''));
+            headerElement.textContent = file[headersOrder[j]];
             
-            fileElement.appendChild()
+            fileElement.appendChild(headerElement)
     
         }
         
         errorList.appendChild(fileElement);
 
     }
-
-
-    // var file2 = xml.createElement('file');
-    // file2.textContent = 'Yay';
-    // errorList.appendChild(file2);
 
     var serializer = new XMLSerializer();
     return serializer.serializeToString(xml);
