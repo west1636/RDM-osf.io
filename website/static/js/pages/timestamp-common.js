@@ -253,16 +253,32 @@ function generateJson(fileList, headersOrder, headerNames) {
 function generateXml(fileList, headersOrder, headerNames) {
     var xml = document.implementation.createDocument(null, 'errorList');
     xml.xmlVersion = '1.0';
-
+    
     var errorList = xml.getElementsByTagName('errorList')[0];
+    
+    for (var i = 0; i < fileList.length; i++) {
+        var file = fileList[i];
 
-    var file = xml.createElement('file');
-    file.textContent = 'Hello';
-    errorList.appendChild(file);
+        var fileElement = xml.createElement('file');
+        
+        for (var j = 0; j < headersOrder.length; j++) {
+            var headerName = headerNames[headersOrder[j]];
+            
+            var headerElement = xml.createElement(headerName);
+            headerElement.textContent = file[headerName];
+            
+            fileElement.appendChild()
+    
+        }
+        
+        errorList.appendChild(fileElement);
 
-    var file2 = xml.createElement('file');
-    file2.textContent = 'Yay';
-    errorList.appendChild(file2);
+    }
+
+
+    // var file2 = xml.createElement('file');
+    // file2.textContent = 'Yay';
+    // errorList.appendChild(file2);
 
     var serializer = new XMLSerializer();
     return serializer.serializeToString(xml);
