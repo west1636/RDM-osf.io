@@ -267,7 +267,7 @@ function generateXml(fileList, headersOrder, headerNames) {
             var headerElement = xml.createElement(headerName.replace(' ', ''));
             headerElement.textContent = file[headersOrder[j]];
             
-            fileElement.appendChild(headerElement)
+            fileElement.appendChild(headerElement);
     
         }
         
