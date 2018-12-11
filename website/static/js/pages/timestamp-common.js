@@ -130,7 +130,11 @@ var verifyProviderFiles = function (params, providerInfo, count) {
 var add = function (params) {
 
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
-        return true;
+        var checkbox = item.elm.querySelector('[type=checkbox]');
+        if (checkbox) {
+            return checkbox.checked;
+        }
+        return false;
     }).map(function (item) {
         return item.values();
     });
@@ -183,7 +187,11 @@ var add = function (params) {
 var download = function () {
     var fileFormat = $('#fileFormat').val();
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
-        return true;
+        var checkbox = item.elm.querySelector('[type=checkbox]');
+        if (checkbox) {
+            return checkbox.checked;
+        }
+        return false;
     }).map(function (item) {
         return item.values();
     });
@@ -231,9 +239,7 @@ function generateCsv(fileList, headersOrder, headerNames) {
 
 function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
-    fileList = fileList.filter(function (item) {
-        return item.values().check;
-    }).map(function (file) {
+    fileList = fileList.map(function (file) {
         return headersOrder.reduce(function (accumulator, current) {
             accumulator[headerNames[current]] = file[current];
             return accumulator;
