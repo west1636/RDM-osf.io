@@ -4,12 +4,13 @@ var $ = require('jquery');
 var Raven = require('raven-js');
 var List = require('list.js');
 var $osf = require('js/osfHelpers');
+var vkbeautify = require('vkbeautify');
 
 var DOWNLOAD_FILENAME = 'timestamp_errors';
 var HEADERS_ORDER = [
     'file_path', 'provider', 'version'
 ];
-var HEADERS_NAME = {
+var HEADER_NAMES = {
     provider: 'Provider',
     file_id: 'File ID',
     file_path: 'File Path',
@@ -17,6 +18,17 @@ var HEADERS_NAME = {
     version: 'Version'
 };
 
+var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
+    valueNames: [
+        {name: 'provider', attr: 'value'},
+        {name: 'file_id', attr: 'value'},
+        {name: 'file_path', attr: 'value'},
+        {name: 'version', attr: 'value'},
+        {name: 'file_name', attr: 'value'},
+        'operator_user',
+        'operator_date',
+    ],
+});
 
 function newLine() {
     if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
@@ -116,17 +128,15 @@ var verifyProviderFiles = function (params, providerInfo, count) {
 };
 
 var add = function (params) {
-    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
-        if ($(this).find('#addTimestampCheck').prop('checked')) {
-            return {
-                provider: $(this).find('#provider').val(),
-                file_id: $(this).find('#file_id').val(),
-                file_path: $(this).find('#file_path').val(),
-                version: $(this).find('#version').val(),
-                file_name: $(this).find('#file_name').val(),
-            };
+
+    var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
+        var checkbox = item.elm.querySelector('[type=checkbox]');
+        if (checkbox) {
+            return checkbox.checked;
         }
-        return null;
+        return false;
+    }).map(function (item) {
+        return item.values();
     });
 
     if (fileList.length === 0) {
@@ -138,7 +148,7 @@ var add = function (params) {
     $('#timestamp_errors_spinner').text('Addtimestamp loading ...');
     $('#timestamp_errors_spinner').show();
 
-    var successCnt = 0;
+    var successCount = 0;
     for (var i = 0; i < fileList.length; i++) {
         var post_data = {
             'provider': fileList[i].provider,
@@ -153,9 +163,9 @@ var add = function (params) {
             dataType: 'json',
             method: params.method
         }).done(function () {
-            successCnt++;
-            $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCnt + ' / ' + fileList.length + ' ...');
-            if (successCnt === fileList.length) {
+            successCount++;
+            $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCount + ' / ' + fileList.length + ' ...');
+            if (successCount === fileList.length) {
                 $('#timestamp_errors_spinner').text('Added Timestamp (100%) and Refreshing...');
                 window.location.reload();
             }
@@ -176,18 +186,15 @@ var add = function (params) {
 
 var download = function () {
     var fileFormat = $('#fileFormat').val();
-    var fileList = $('#timestamp_error_list .addTimestamp').map(function () {
-        if ($(this).find('#addTimestampCheck').prop('checked')) {
-            return {
-                provider: $(this).find('#provider').val(),
-                file_id: $(this).find('#file_id').val(),
-                file_path: $(this).find('#file_path').val(),
-                version: $(this).find('#version').val(),
-                file_name: $(this).find('#file_name').val(),
-            };
+    var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
+        var checkbox = item.elm.querySelector('[type=checkbox]');
+        if (checkbox) {
+            return checkbox.checked;
         }
-        return null;
-    }).get();
+        return false;
+    }).map(function (item) {
+        return item.values();
+    });
 
     if (fileList.length === 0) {
         $osf.growl('Timestamp', 'Using the checkbox, please select the files to download.', 'danger');
@@ -197,32 +204,31 @@ var download = function () {
     var fileContent;
     switch (fileFormat) {
         case 'csv':
-            fileContent = generateCsv(fileList);
+            fileContent = generateCsv(fileList, HEADERS_ORDER, HEADER_NAMES);
             saveTextFile(DOWNLOAD_FILENAME + '.csv', fileContent);
             break;
         case 'json-ld':
-            fileContent = generateJson(fileList);
+            fileContent = generateJson(fileList, HEADERS_ORDER, HEADER_NAMES);
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = generateXml(fileList);
-            console.log(fileContent);
-            //saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            fileContent = vkbeautify.xml(generateXml(fileList, HEADERS_ORDER, HEADER_NAMES));
+            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
 };
 
-function generateCsv(fileList) {
+function generateCsv(fileList, headersOrder, headerNames) {
     var content = '';
 
     // Generate header
-    content += HEADERS_ORDER.map(function (headerName) {
-        return HEADERS_NAME[headerName];
+    content += headersOrder.map(function (headerName) {
+        return headerNames[headerName];
     }).join(',') + NEW_LINE;
 
     // Generate content
     content += fileList.map(function (file) {
-        return HEADERS_ORDER.map(function (headerName) {
+        return headersOrder.map(function (headerName) {
             return file[headerName];
         }).join(',');
     }).join(NEW_LINE);
@@ -230,11 +236,11 @@ function generateCsv(fileList) {
     return content;
 }
 
-function generateJson(fileList) {
+function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
-        return HEADERS_ORDER.reduce(function (accumulator, current) {
-            accumulator[HEADERS_NAME[current]] = file[current];
+        return headersOrder.reduce(function (accumulator, current) {
+            accumulator[headerNames[current]] = file[current];
             return accumulator;
         }, {});
     });
@@ -243,19 +249,31 @@ function generateJson(fileList) {
     return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
 }
 
-function generateXml(fileList) {
+function generateXml(fileList, headersOrder, headerNames) {
     var xml = document.implementation.createDocument(null, 'errorList');
     xml.xmlVersion = '1.0';
-
+    
     var errorList = xml.getElementsByTagName('errorList')[0];
+    
+    for (var i = 0; i < fileList.length; i++) {
+        var file = fileList[i];
 
-    var file = xml.createElement('file');
-    file.textContent = 'Hello';
-    errorList.appendChild(file);
+        var fileElement = xml.createElement('file');
+        
+        for (var j = 0; j < headersOrder.length; j++) {
+            var headerName = headerNames[headersOrder[j]];
+            
+            // spaces not accepted in xml tag names
+            var headerElement = xml.createElement(headerName.replace(' ', ''));
+            headerElement.textContent = file[headersOrder[j]];
+            
+            fileElement.appendChild(headerElement);
+    
+        }
+        
+        errorList.appendChild(fileElement);
 
-    var file2 = xml.createElement('file');
-    file2.textContent = 'Yay';
-    errorList.appendChild(file2);
+    }
 
     var serializer = new XMLSerializer();
     return serializer.serializeToString(xml);
@@ -287,14 +305,10 @@ function initList() {
         }
     });
 
-    var list = new List('timestamp-form', {
-        valueNames: ['operator_user', 'operator_date'],
-    });
-
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-    var users = list.items.map(function(i) {return i.values().operator_user;});
+    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().operator_user;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (alreadyAdded.indexOf(userName) === -1) {
@@ -344,7 +358,7 @@ function initList() {
             }
         }
 
-        list.filter(function (i) {
+        TIMESTAMP_LIST_OBJECT.filter(function (i) {
             return filters.every(function(f) {return f(i);});
         });
 

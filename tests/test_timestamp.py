@@ -77,7 +77,7 @@ class TestAddTimestamp(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 1)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
 
 class TestTimeStampTokenVerifyCheck(ApiTestCase):
@@ -151,7 +151,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 1)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
     def test_timestamp_check_return_status_2(self):
         """
@@ -202,7 +202,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 2)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
     def test_timestamp_check_return_status_3(self):
         """
@@ -245,7 +245,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 3)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
     def test_timestamp_check_return_status_4(self):
         """
@@ -287,7 +287,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 4)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
     def test_timestamp_check_return_status_5(self):
         """
@@ -329,7 +329,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 5)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
     def test_timestamp_check_return_status_6(self):
         """
@@ -372,7 +372,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
         osfuser_id = Guid.objects.get(_id=self.user._id).object_id
         nt.assert_equal(rdmfiletimestamptokenverifyresult.inspection_result_status, 6)
-        nt.assert_equal(rdmfiletimestamptokenverifyresult.validation_user, osfuser_id)
+        nt.assert_equal(rdmfiletimestamptokenverifyresult.verify_user, osfuser_id)
 
 
 class TestRdmUserKey(OsfTestCase):

@@ -64,12 +64,8 @@ def get_error_list(pid):
             verify_result_title = \
                 api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
-        if not data.update_user:
-            operator_user = OSFUser.objects.get(id=data.create_user)
-            operator_date = data.create_date.strftime('%Y/%m/%d %H:%M:%S')
-        else:
-            operator_user = OSFUser.objects.get(id=data.update_user)
-            operator_date = data.update_date.strftime('%Y/%m/%d %H:%M:%S')
+        operator_user = OSFUser.objects.get(id=data.verify_user)
+        operator_date = data.verify_date.strftime('%Y/%m/%d %H:%M:%S')
 
         if provider == 'osfstorage':
             base_file_data = BaseFileNode.objects.get(_id=data.file_id)
@@ -484,15 +480,15 @@ class AddTimestamp:
                 verify_data.path = path
                 verify_data.timestamp_token = tsa_response
                 verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
-                verify_data.create_user = user_id
-                verify_data.create_date = datetime.datetime.now()
+                verify_data.upload_file_created_user = user_id
+                verify_data.upload_file_created_at = datetime.datetime.now()
 
             # registered data:
             else:
                 verify_data.key_file_name = key_file
                 verify_data.timestamp_token = tsa_response
-                verify_data.update_user = user_id
-                verify_data.update_date = datetime.datetime.now()
+                verify_data.upload_file_modified_user = user_id
+                verify_data.upload_file_modified_at = datetime.datetime.now()
 
             verify_data.save()
         except Exception as ex:
@@ -584,10 +580,10 @@ class TimeStampTokenVerifyCheck:
         create_data.key_file_name = userKey.key_name
         create_data.path = path
         create_data.inspection_result_status = inspection_result_status
-        create_data.validation_user = userid
-        create_data.validation_date = timezone.now()
-        create_data.create_user = userid
-        create_data.create_date = timezone.now()
+        create_data.verify_user = userid
+        create_data.verify_date = timezone.now()
+        create_data.upload_file_created_user = userid
+        create_data.upload_file_created_at = timezone.now()
         return create_data
 
     # timestamp token check
@@ -620,8 +616,8 @@ class TimeStampTokenVerifyCheck:
                     # update verifyResult 'FILE missing(Unverify)'
                     verifyResult.inspection_result_status = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verifyResult.validation_user = userid
-                    verifyResult.validation_date = datetime.datetime.now()
+                    verifyResult.verify_user = userid
+                    verifyResult.verify_date = datetime.datetime.now()
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verify_result_title = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
@@ -631,8 +627,8 @@ class TimeStampTokenVerifyCheck:
                     # update verifyResult 'FILE missing(Unverify)'
                     verifyResult.inspection_result_status = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verifyResult.validation_user = userid
-                    verifyResult.validation_date = datetime.datetime.now()
+                    verifyResult.verify_user = userid
+                    verifyResult.verify_date = datetime.datetime.now()
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_NO_DATA
 
                 elif not baseFileNode.is_deleted and not verifyResult:
@@ -648,8 +644,8 @@ class TimeStampTokenVerifyCheck:
                     # if file exists and  verifyResult.timestamp_token does not exist:
                     # update verifyResult 'TST missing(Retrieving Failed)'
                     verifyResult.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verifyResult.validation_user = userid
-                    verifyResult.validation_date = datetime.datetime.now()
+                    verifyResult.verify_user = userid
+                    verifyResult.verify_date = datetime.datetime.now()
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
 
@@ -667,8 +663,8 @@ class TimeStampTokenVerifyCheck:
                     # if timestamptoken does not exist:
                     # update verifyResult 'TST missing(Retrieving Failed)'
                     verifyResult.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verifyResult.validation_user = userid
-                    verifyResult.validation_date = datetime.datetime.now()
+                    verifyResult.verify_user = userid
+                    verifyResult.verify_date = datetime.datetime.now()
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
 
@@ -705,18 +701,18 @@ class TimeStampTokenVerifyCheck:
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
 
                 verifyResult.inspection_result_status = ret
-                verifyResult.validation_user = userid
-                verifyResult.validation_date = timezone.now()
+                verifyResult.verify_user = userid
+                verifyResult.verify_date = timezone.now()
 
-            if not verifyResult.update_user:
-                verifyResult.update_user = None
-                verifyResult.update_date = None
-                operator_user = OSFUser.objects.get(id=verifyResult.create_user).fullname
-                operator_date = verifyResult.create_date.strftime('%Y/%m/%d %H:%M:%S')
+            if not verifyResult.upload_file_modified_user:
+                verifyResult.upload_file_modified_user = None
+                verifyResult.upload_file_modified_at = None
+                operator_user = OSFUser.objects.get(id=verifyResult.upload_file_created_user).fullname
+                operator_date = verifyResult.upload_file_created_at.strftime('%Y/%m/%d %H:%M:%S')
 
             else:
-                operator_user = OSFUser.objects.get(id=verifyResult.update_user).fullname
-                operator_date = verifyResult.update_date.strftime('%Y/%m/%d %H:%M:%S')
+                operator_user = OSFUser.objects.get(id=verifyResult.upload_file_modified_user).fullname
+                operator_date = verifyResult.upload_file_modified_at.strftime('%Y/%m/%d %H:%M:%S')
 
             verifyResult.save()
         except Exception as err:
