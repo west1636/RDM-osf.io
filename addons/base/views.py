@@ -1,5 +1,4 @@
 import datetime
-#import pytz
 import httplib
 import os
 import uuid
@@ -840,7 +839,6 @@ def upload_file_add_timestamptoken(payload, node):
 
         current_datetime = timezone.now()
         current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
-        #print(current_datetime_str)
         tmp_dir = 'tmp_{}_{}_{}'.format(auth_id, file_node._id, current_datetime_str)
         os.mkdir(tmp_dir)
         download_file_path = os.path.join(tmp_dir, metadata['name'])
@@ -867,8 +865,8 @@ def adding_timestamp(auth, node, file_node, version):
     from website.util.timestamp import AddTimestamp
     import shutil
 
-    #verify_result = 0
     tmp_dir = None
+    result = None
     try:
         ret = serialize_node(node, auth, primary=True)
         user_info = OSFUser.objects.get(id=Guid.objects.get(_id=ret['user']['id']).object_id)
@@ -892,7 +890,6 @@ def adding_timestamp(auth, node, file_node, version):
                                             tmp_file, tmp_dir)
 
         shutil.rmtree(tmp_dir)
-        return result
 
     except Exception as err:
         if tmp_dir:
@@ -900,7 +897,7 @@ def adding_timestamp(auth, node, file_node, version):
                 shutil.rmtree(tmp_dir)
         logger.exception(err)
 
-#    return result
+    return result
 
 def timestamptoken_verify(auth, node, file_node, version, guid):
     from website.util.timestamp import TimeStampTokenVerifyCheck
@@ -908,8 +905,6 @@ def timestamptoken_verify(auth, node, file_node, version, guid):
     from osf.models import Guid
     import shutil
 
-    #verify_result = 0
-    #verify_title = None
     tmp_dir = 'tmp_{}'.format(guid)
     current_datetime = timezone.now()
     current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')

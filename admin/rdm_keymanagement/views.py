@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from admin.base import settings
-from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+
 from django.shortcuts import redirect
+from django.http import HttpResponse
 from django.views.generic import ListView, View
+
+from django.contrib.auth.mixins import UserPassesTestMixin
+
+from django.core.urlresolvers import reverse
+
+from admin.base import settings
 from osf.models import Institution, OSFUser
 from osf.models import RdmUserKey
-
+from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 
 class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
+
     paginate_by = 25
     template_name = 'rdm_keymanagement/institutions.html'
     ordering = 'name'
@@ -20,24 +24,24 @@ class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
     model = Institution
 
     def test_func(self):
-        """権限等のチェック"""
-        # ログインチェック
+        """check user permissions"""
+        # login check
         if not self.is_authenticated:
             return False
-        # 統合管理者または機関管理者なら許可
+        # permitted if superuser or institution administrator
         if self.is_super_admin or self.is_admin:
             return True
         return False
 
     def get(self, request, *args, **kwargs):
-        """コンテキスト取得"""
+        """get contexts"""
         user = self.request.user
-        # 統合管理者
+        # superuser:
         if self.is_super_admin:
             self.object_list = self.get_queryset()
             ctx = self.get_context_data()
             return self.render_to_response(ctx)
-        # 機関管理者
+        # institution administraor:
         elif self.is_admin:
             institution = user.affiliated_institutions.first()
             if institution:
@@ -59,12 +63,13 @@ class InstitutionList(RdmPermissionMixin, UserPassesTestMixin, ListView):
         return super(InstitutionList, self).get_context_data(**kwargs)
 
 class RemoveUserKeyList(RdmPermissionMixin, UserPassesTestMixin, ListView):
+
     template_name = 'rdm_keymanagement/delete_user_list.html'
     raise_exception = True
     paginate_by = 25
 
     def test_func(self):
-        """権限等のチェック"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         return self.has_auth(institution_id)
 
@@ -89,10 +94,11 @@ class RemoveUserKeyList(RdmPermissionMixin, UserPassesTestMixin, ListView):
         return super(RemoveUserKeyList, self).get_context_data(**kwargs)
 
 class RemoveUserKey(RdmPermissionMixin, UserPassesTestMixin, View):
+
     raise_exception = True
 
     def test_func(self):
-        """権限等のチェック"""
+        """check user permissions"""
         institution_id = int(self.kwargs.get('institution_id'))
         return self.has_auth(institution_id)
 

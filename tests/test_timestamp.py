@@ -272,8 +272,6 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## create tmp_file (file_node)
         tmp_file = os.path.join(tmp_dir, filename)
-        #with open(tmp_file, 'wb') as fout:
-        #    fout.write('test_file_timestamp_check_context')
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
@@ -317,8 +315,6 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## create tmp_file (file_node)
         tmp_file = os.path.join(tmp_dir, filename)
-        #with open(tmp_file, 'wb') as fout:
-        #    fout.write('test_file_timestamp_check_context')
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
@@ -361,8 +357,6 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## create tmp_file (file_node)
         tmp_file = os.path.join(tmp_dir, filename)
-        #with open(tmp_file, 'wb') as fout:
-        #    fout.write('test_file_timestamp_check_context')
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()

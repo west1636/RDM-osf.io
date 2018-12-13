@@ -52,10 +52,8 @@ class TestInstitutionNodeList(AdminTestCase):
         self.project_user = UserFactory()
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
-        # project2 timestamp_pattern_division=2
         self.private_project2 = ProjectFactory(creator=self.project_user)
         self.private_project2.affiliated_institutions.add(self.project_institution)
 
@@ -99,7 +97,6 @@ class TestTimeStampAddList(AdminTestCase):
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
         self.node = self.private_project1
@@ -165,7 +162,6 @@ class TestTimestampVerifyData(AdminTestCase):
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
         self.node = self.private_project1
@@ -225,7 +221,6 @@ class TestAddTimestampData(AdminTestCase):
         userkey_generation(self.project_user._id)
         self.project_user.affiliated_institutions.add(self.project_institution)
         self.user = self.project_user
-        # project1 timestamp_pattern_division=1
         self.private_project1 = ProjectFactory(creator=self.project_user)
         self.private_project1.affiliated_institutions.add(self.project_institution)
         self.node = self.private_project1

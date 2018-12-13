@@ -78,7 +78,7 @@ class ShibLoginView(RedirectView):
             return redirect('auth:login')
 
         if not eppn:
-            message = 'login failed: eppn required'
+            message = 'login failed: permission denied.'
             logging.info(message)
             messages.error(self.request, message)
             return redirect('auth:login')
@@ -88,15 +88,13 @@ class ShibLoginView(RedirectView):
                 # login success
                 # code is below this if/else tree
                 eppn_user.is_staff = True
-                #eppn_user.is_superuser = True
                 eppn_user.save()
             else:
                 # login failure occurs and the screen transits to the error screen
                 # not sure about this code
                 eppn_user.is_staff = False
-                # eppn_user.is_superuser = False
                 eppn_user.save()
-                message = 'login failed: not staff or superuser'
+                message = 'login failed: permission denied.'
                 logging.info(message)
                 messages.error(self.request, message)
                 return redirect('auth:login')
