@@ -95,6 +95,9 @@ var verifyProviderFiles = function (params, providerInfo, count) {
             'file_id': fileList[i].file_id,
             'file_path': fileList[i].file_path,
             'file_name': fileList[i].file_name,
+            'size': fileList[i].size,
+            'created': fileList[i].created,
+            'modified': fileList[i].modified,
             'version': fileList[i].version
         };
         $.ajax({
@@ -252,25 +255,25 @@ function generateJson(fileList, headersOrder, headerNames) {
 function generateXml(fileList, headersOrder, headerNames) {
     var xml = document.implementation.createDocument(null, 'errorList');
     xml.xmlVersion = '1.0';
-    
+
     var errorList = xml.getElementsByTagName('errorList')[0];
-    
+
     for (var i = 0; i < fileList.length; i++) {
         var file = fileList[i];
 
         var fileElement = xml.createElement('file');
-        
+
         for (var j = 0; j < headersOrder.length; j++) {
             var headerName = headerNames[headersOrder[j]];
-            
+
             // spaces not accepted in xml tag names
             var headerElement = xml.createElement(headerName.replace(' ', ''));
             headerElement.textContent = file[headersOrder[j]];
-            
+
             fileElement.appendChild(headerElement);
-    
+
         }
-        
+
         errorList.appendChild(fileElement);
 
     }
@@ -348,10 +351,10 @@ function initList() {
                         // this is needed to make items appear when the filter is set to the same day
                         var operator_date_day = new Date(i.values().operator_date);
                         operator_date_day.setHours(0, 0, 0, 0);
-                        
+
                         var filter_date_day = new Date(elementValue);
                         filter_date_day.setHours(0, 0, 0, 0);
-                        
+
                         return !i.values().operator_date || comparator( operator_date_day, filter_date_day );
                     };
                 })(element.value, comparator));

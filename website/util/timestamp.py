@@ -159,7 +159,7 @@ def get_full_list(uid, pid, node):
             pid,
             provider_data['attributes']['provider'],
             '/',
-            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+            meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
         waterbutler_json_res = None
         waterbutler_res = requests.get(waterbutler_meta_url, headers=headers, cookies=cookies)
@@ -188,22 +188,17 @@ def get_full_list(uid, pid, node):
                     file_data['attributes']['path']
                 )
                 basefile_node.save()
+                file_info = {
+                    'file_id': basefile_node._id,
+                    'file_name': file_data['attributes']['name'],
+                    'file_path': file_data['attributes']['materialized'],
+                    'size': file_data['attributes']['size'],
+                    'created': file_data['attributes']['created_utc'],
+                    'modified': file_data['attributes']['modified_utc'],
+                    'version': ''
+                }
                 if provider_data['attributes']['provider'] == 'osfstorage':
-                    file_info = {
-                        'file_name': file_data['attributes']['name'],
-                        'file_path': file_data['attributes']['materialized'],
-                        'file_kind': file_data['attributes']['kind'],
-                        'file_id': basefile_node._id,
-                        'version': file_data['attributes']['extra']['version']
-                    }
-                else:
-                    file_info = {
-                        'file_name': file_data['attributes']['name'],
-                        'file_path': file_data['attributes']['materialized'],
-                        'file_kind': file_data['attributes']['kind'],
-                        'file_id': basefile_node._id,
-                        'version': ''
-                    }
+                    file_info['version'] = file_data['attributes']['extra']['version']
                 if file_info:
                     file_list.append(file_info)
 
