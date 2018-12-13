@@ -64,45 +64,73 @@ def get_error_list(pid):
             verify_result_title = \
                 api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
-        operator_user = OSFUser.objects.get(id=data.verify_user)
-        operator_date = data.verify_date.strftime('%Y/%m/%d %H:%M:%S')
+        # User and date of the verification
+        verify_user = OSFUser.objects.get(id=data.verify_user)
+        verify_date = data.verify_date.strftime('%Y/%m/%d %H:%M:%S')
 
-        if provider == 'osfstorage':
-            base_file_data = BaseFileNode.objects.get(_id=data.file_id)
-            error_info = {
-                'file_name': base_file_data.name,
-                'file_path': data.path,
-                'file_kind': 'file',
-                'project_id': data.project_id,
-                'file_id': data.file_id,
-                'version': base_file_data.current_version_number,
-                'operator_user': operator_user.fullname,
-                'operator_user_id': operator_user._id,
-                'operator_date': operator_date,
-                'verify_result_title': verify_result_title,
-                'creator_name': base_file_data.versions.filter().latest('id').creator.fullname,
-                'creator_email': base_file_data.versions.filter().latest('id').creator.username,
-                'creator_id': base_file_data.versions.filter().latest('id').creator.id,
-                'creator_institution': base_file_data.versions.filter().latest('id').creator.affiliated_institutions.first()
-            }
-        else:
-            file_name = os.path.basename(data.path)
-            error_info = {
-                'file_name': file_name,
-                'file_path': data.path,
-                'file_kind': 'file',
-                'project_id': data.project_id,
-                'file_id': data.file_id,
-                'version': '',
-                'operator_user': operator_user.fullname,
-                'operator_user_id': operator_user._id,
-                'operator_date': operator_date,
-                'verify_result_title': verify_result_title,
-                'creator_name': '',
-                'creator_email': '',
-                'creator_id': '',
-                'creator_institution': ''
-            }
+        # Get file info
+        base_file_data = BaseFileNode.objects.filter(_id=data.file_id)
+        base_file_data_exists = base_file_data.exists()
+        file_versions = None
+        if base_file_data_exists:
+            base_file_data = base_file_data.get()
+            file_versions = base_file_data.versions.all()
+
+        # Get creator info
+        creator = None
+        if data.upload_file_modified_user is not None:
+            creator = OSFUser.objects.get(id=data.upload_file_modified_user)
+        elif data.upload_file_created_user is not None:
+            creator = OSFUser.objects.get(id=data.upload_file_created_user)
+        elif file_versions is not None and file_versions.exists():
+            creator = file_versions.latest('id').creator
+
+        # Change None to '' (empty string)
+        data.path = '' if data.path is None else data.path
+        data.upload_file_created_at = '' if data.upload_file_created_at is None else \
+            data.upload_file_created_at
+        data.verify_file_created_at = '' if data.verify_file_created_at is None else \
+            data.verify_file_created_at
+        data.upload_file_modified_at = '' if data.upload_file_modified_at is None else \
+            data.upload_file_modified_at
+        data.verify_file_modified_at = '' if data.verify_file_modified_at is None else \
+            data.verify_file_modified_at
+        data.upload_file_size = '' if data.upload_file_size is None else \
+            data.upload_file_size
+        data.verify_file_size = '' if data.verify_file_size is None else \
+            data.verify_file_size
+
+        # Generate error_info dictionary
+        error_info = {
+            'creator_name': '',
+            'creator_email': '',
+            'creator_id': '',
+            'creator_institution': '',
+            'file_path': data.path,
+            'file_id': data.file_id,
+            'file_create_date_on_upload': data.upload_file_created_at,
+            'file_create_date_on_verify': data.verify_file_created_at,
+            'file_modify_date_on_upload': data.upload_file_modified_at,
+            'file_modify_date_on_verify': data.verify_file_modified_at,
+            'file_size_on_upload': data.upload_file_size,
+            'file_size_on_verify': data.verify_file_size,
+            'file_version': '',
+            'project_id': data.project_id,
+            'verify_user_id': verify_user._id,
+            'verify_user_name': verify_user.fullname,
+            'verify_date': verify_date,
+            'verify_result_title': verify_result_title,
+        }
+
+        if base_file_data_exists and provider == 'osfstorage':
+            error_info['version'] = base_file_data.current_version_number
+
+        if creator is not None:
+            error_info['creator_name'] = creator.fullname
+            error_info['creator_email'] = creator.username
+            error_info['creator_id'] = creator.id
+            error_info['creator_institution'] = creator.affiliated_institutions.first()
+
         error_list.append(error_info)
 
     if error_list:
