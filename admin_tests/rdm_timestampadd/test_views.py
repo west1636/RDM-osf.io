@@ -146,10 +146,10 @@ class TestTimeStampAddList(AdminTestCase):
         nt.assert_equal('Institution', type(osfstorage_error_list[0]['creator_institution']).__name__)
 
         other_error_list = filter(lambda x: x['provider'] != 'osfstorage', res['init_project_timestamp_error_list'])[0]['error_list']
-        nt.assert_equal(u'', other_error_list[0]['creator_email'])
-        nt.assert_equal(u'', other_error_list[0]['creator_name'])
-        nt.assert_equal(u'', other_error_list[0]['creator_id'])
-        nt.assert_equal(u'', other_error_list[0]['creator_institution'])
+        nt.assert_in(u'freddiemercury', other_error_list[0]['creator_email'])
+        nt.assert_in(u'Freddie Mercury', other_error_list[0]['creator_name'])
+        nt.assert_not_equal(u'', other_error_list[0]['creator_id'])
+        nt.assert_equal(u'Institution', type(other_error_list[0]['creator_institution']).__name__)
 
 class TestTimestampVerifyData(AdminTestCase):
     def setUp(self):

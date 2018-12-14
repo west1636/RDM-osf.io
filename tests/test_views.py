@@ -5012,11 +5012,6 @@ class TestTimestampView(OsfTestCase):
         assert 'name="creator_email" value="freddiemercury' in res
         assert 'name="creator_institution" value="None"' in res
 
-        assert 'name="creator_name" value=""' in res
-        assert 'name="creator_email" value=""' in res
-        assert 'name="creator_id" value=""' in res
-        assert 'name="creator_institution" value=""' in res
-
     @mock.patch('requests.get')
     def test_add_timestamp_token(self, mock_get):
         mock_get.return_value.content = ''
