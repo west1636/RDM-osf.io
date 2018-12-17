@@ -83,7 +83,8 @@
                                 <th width="3%">
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
-                                <th width="40%">File Path</th>
+                                <th width="10%">Provider</th>
+                                <th width="30%">File Path</th>
                                 <th width="15%">Timestamp by</th>
                                 <th width="22%">Timestamp Updated at</th>
                                 <th widht="20%">Timestamp Verification</th>
@@ -97,42 +98,37 @@
                         </font>
                         <tbody class="list" id="timestamp_error_list">
                             % for provider_error_info in provider_list:
-                            <tr>
-                                <td colspan="5">
-                                    <b>${ provider_error_info['provider'] }</b>
-                                </td>
-                            </tr>
-                            % for error_info in provider_error_info['error_list']:
-                            <tr class="addTimestamp">
-                                <td>
-                                    <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
-                                </td>
-                                <td>${ error_info['file_path'] }</td>
+                                % for error_info in provider_error_info['error_list']:
+                                <tr class="addTimestamp">
+                                    <td>
+                                        <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
+                                    </td>
+                                    <td>${ error_info['file_path'] }</td>
 
-                                <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
-                                <input type="hidden" name="creator_email" value="${ error_info['creator_email'] }" />
-                                <input type="hidden" name="creator_id" value="${ error_info['creator_id'] }" />
-                                <input type="hidden" name="creator_institution" value="${ error_info['creator_institution'] }" />
-                                <input type="hidden" name="file_path" value="${ error_info['file_path'] }" />
-                                <input type="hidden" name="file_id" value="${ error_info['file_id'] }" />
-                                <input type="hidden" name="file_create_date_on_upload" value="${ error_info['file_create_date_on_upload'] }" />
-                                <input type="hidden" name="file_create_date_on_verify" value="${ error_info['file_create_date_on_verify'] }" />
-                                <input type="hidden" name="file_modify_date_on_upload" value="${ error_info['file_modify_date_on_upload'] }" />
-                                <input type="hidden" name="file_modify_date_on_verify" value="${ error_info['file_modify_date_on_verify'] }" />
-                                <input type="hidden" name="file_size_on_upload" value="${ error_info['file_size_on_upload'] }" />
-                                <input type="hidden" name="file_size_on_verify" value="${ error_info['file_size_on_verify'] }" />
-                                <input type="hidden" name="file_version" value="${ error_info['file_version'] }" />
-                                <input type="hidden" name="provider" value="${ provider_error_info['provider'] }" />
-                                <input type="hidden" name="verify_user_id" value="${ error_info['verify_user_id'] }" />
-                                <input type="hidden" name="verify_user_name" value="${ error_info['verify_user_name'] }" />
-                                <input type="hidden" name="verify_date" value="${ error_info['verify_date'] }" />
-                                <input type="hidden" name="verify_result_title" value="${ error_info['verify_result_title'] }" />
+                                    <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
+                                    <input type="hidden" name="creator_email" value="${ error_info['creator_email'] }" />
+                                    <input type="hidden" name="creator_id" value="${ error_info['creator_id'] }" />
+                                    <input type="hidden" name="creator_institution" value="${ error_info['creator_institution'] }" />
+                                    <input type="hidden" name="file_path" value="${ error_info['file_path'] }" />
+                                    <input type="hidden" name="file_id" value="${ error_info['file_id'] }" />
+                                    <input type="hidden" name="file_create_date_on_upload" value="${ error_info['file_create_date_on_upload'] }" />
+                                    <input type="hidden" name="file_create_date_on_verify" value="${ error_info['file_create_date_on_verify'] }" />
+                                    <input type="hidden" name="file_modify_date_on_upload" value="${ error_info['file_modify_date_on_upload'] }" />
+                                    <input type="hidden" name="file_modify_date_on_verify" value="${ error_info['file_modify_date_on_verify'] }" />
+                                    <input type="hidden" name="file_size_on_upload" value="${ error_info['file_size_on_upload'] }" />
+                                    <input type="hidden" name="file_size_on_verify" value="${ error_info['file_size_on_verify'] }" />
+                                    <input type="hidden" name="file_version" value="${ error_info['file_version'] }" />
+                                    <input type="hidden" name="verify_user_id" value="${ error_info['verify_user_id'] }" />
+                                    <input type="hidden" name="verify_user_name" value="${ error_info['verify_user_name'] }" />
+                                    <input type="hidden" name="verify_date" value="${ error_info['verify_date'] }" />
+                                    <input type="hidden" name="verify_result_title" value="${ error_info['verify_result_title'] }" />
 
-                                <td>${ error_info['verify_user_name'] } (${ error_info['verify_user_id'] })</td>
-                                <td>${ error_info['verify_date'] }</td>
-                                <td>${ error_info['verify_result_title'] }</td>
-                            </tr>
-                            % endfor
+                                    <td>${ provider_error_info['provider'] }</td>
+                                    <td>${ error_info['verify_user_name'] } (${ error_info['verify_user_id'] })</td>
+                                    <td>${ error_info['verify_date'] }</td>
+                                    <td>${ error_info['verify_result_title'] }</td>
+                                </tr>
+                                % endfor
                             % endfor
                         </tbody>
                     </table>
