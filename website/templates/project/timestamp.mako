@@ -57,7 +57,6 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <button type="reset" class="btn btn-primary">Reset</button>
                                 <button type="button" class="btn btn-primary" id="applyFiltersButton">Apply</button>
                             </div>
                         </div>
@@ -71,20 +70,7 @@
                                 <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
                             </span>
                         </div>
-                        <div class="col-sm-3">
-                            <span>
-                                <select id="fileFormat" class="form-control">
-                                    <option value="csv">CSV</option>
-                                    <option value="json-ld">JSON/LD</option>
-                                    <option value="rdf-xml">RDF/XML</option>
-                                </select>
-                            </span>
-                        </div>
-                        <div class="col-sm-2">
-                            <span>
-                                <button type="button" class="btn btn-success" id="btn-download">Download</button>
-                            </span>
-                        </div>
+                        <div class="col-sm-5"></div>
                     </div>
                 </div>
             </div>
@@ -98,8 +84,8 @@
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
                                 <th width="40%">File Path</th>
-                                <th width="15%">Timestamp Update User</th>
-                                <th width="22%">Timestamp Update Date</th>
+                                <th width="15%">Timestamp by</th>
+                                <th width="22%">Timestamp Updated at</th>
                                 <th widht="20%">Timestamp Verification</th>
                             </tr>
                         </thead>
@@ -151,6 +137,23 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <span>
+                        <select id="fileFormat" class="form-control">
+                            <option value="csv">CSV</option>
+                            <option value="json-ld">JSON/LD</option>
+                            <option value="rdf-xml">RDF/XML</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="col-sm-2">
+                    <span>
+                        <button type="button" class="btn btn-success" id="btn-download">Download</button>
+                    </span>
+                </div>
+                <div class="col-sm-7"></div>
             </div>
         </div>
     </div>
