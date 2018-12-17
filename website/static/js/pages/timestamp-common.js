@@ -300,14 +300,6 @@ function saveTextFile(filename, content) {
 
 function initList() {
 
-    document.querySelector('[type=reset]').addEventListener('click', function(event) {
-        // when using polyfill only
-        if (document.getElementById('startDateFilter').hasAttribute('data-has-picker')) {
-            document.getElementById('startDateFilter').value='';
-            document.getElementById('endDateFilter').value='';
-        }
-    });
-
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
