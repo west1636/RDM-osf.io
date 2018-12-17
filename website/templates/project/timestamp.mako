@@ -103,6 +103,7 @@
                                     <td>
                                         <input type="checkBox" id="addTimestampCheck" style="width: 15px; height: 15px;"/>
                                     </td>
+                                    <td>${ provider_error_info['provider'] }</td>
                                     <td>${ error_info['file_path'] }</td>
 
                                     <input type="hidden" name="creator_name" value="${ error_info['creator_name'] }" />
@@ -123,7 +124,6 @@
                                     <input type="hidden" name="verify_date" value="${ error_info['verify_date'] }" />
                                     <input type="hidden" name="verify_result_title" value="${ error_info['verify_result_title'] }" />
 
-                                    <td>${ provider_error_info['provider'] }</td>
                                     <td>${ error_info['verify_user_name'] } (${ error_info['verify_user_id'] })</td>
                                     <td>${ error_info['verify_date'] }</td>
                                     <td>${ error_info['verify_result_title'] }</td>
