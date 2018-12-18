@@ -900,6 +900,9 @@ def adding_timestamp(auth, node, file_node, version):
     return result
 
 def timestamptoken_verify(auth, node, file_node, version, guid):
+    # This whole function may not be necessary, consider removing it
+    # Probably check_file_timestamp in util/timestamp is doing the same thing
+    # When doing so, check dependencies (tests and where this one is being called)
     from website.util.timestamp import TimeStampTokenVerifyCheck
     import requests
     from osf.models import Guid
@@ -930,9 +933,18 @@ def timestamptoken_verify(auth, node, file_node, version, guid):
         logger.exception(err)
 
     verifyCheck = TimeStampTokenVerifyCheck()
-    result = verifyCheck.timestamp_check(ret['user']['id'], file_node._id, node._id,
-                                         file_node.provider, file_node._path,
-                                         tmp_file, tmp_dir)
+    # TODO Send file_data as parameter
+    file_data = {
+        'file_id': file_node._id,
+        'file_name': '',
+        'file_path': file_node._path,
+        'size': 1234,
+        'created': '',
+        'modified': '',
+        'version': '',
+        'provider': file_node.provider
+    }
+    result = verifyCheck.timestamp_check(ret['user']['id'], file_data, node._id, tmp_file, tmp_dir)
     if os.path.exists(tmp_dir):
         shutil.rmtree(tmp_dir)
 

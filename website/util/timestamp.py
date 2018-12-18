@@ -539,8 +539,19 @@ class AddTimestamp:
             user_id, verify_data)
 
         # tsr verification request call
+        # TODO send file_data by parameter
+        file_data = {
+            'file_id': file_id,
+            'file_name': '',
+            'file_path': path,
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
         return TimeStampTokenVerifyCheck().timestamp_check(
-            guid, file_id, project_id, provider, path, file_name, tmp_dir)
+            guid, file_data, project_id, file_name, tmp_dir)
 
 
 class TimeStampTokenVerifyCheck:
