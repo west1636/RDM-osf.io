@@ -8,25 +8,23 @@ var vkbeautify = require('vkbeautify');
 
 var DOWNLOAD_FILENAME = 'timestamp_errors';
 var HEADERS_ORDER = [
-    'file_path', 'provider', 'version'
+    'file_path', 'provider', 'file_version'
 ];
 var HEADER_NAMES = {
     provider: 'Provider',
     file_id: 'File ID',
     file_path: 'File Path',
-    file_name: 'File Name',
-    version: 'Version'
+    file_version: 'Version'
 };
 
 var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
     valueNames: [
-        {name: 'provider', attr: 'value'},
+        'provider',
         {name: 'file_id', attr: 'value'},
         {name: 'file_path', attr: 'value'},
-        {name: 'version', attr: 'value'},
-        {name: 'file_name', attr: 'value'},
-        'operator_user',
-        'operator_date',
+        {name: 'file_version', attr: 'value'},
+        'verify_user_name',
+        'verify_date',
     ],
 });
 
@@ -94,11 +92,10 @@ var verifyProviderFiles = function (params, providerInfo, count) {
             'provider': providerInfo.provider,
             'file_id': fileList[i].file_id,
             'file_path': fileList[i].file_path,
-            'file_name': fileList[i].file_name,
             'size': fileList[i].size,
             'created': fileList[i].created,
             'modified': fileList[i].modified,
-            'version': fileList[i].version
+            'file_version': fileList[i].file_version
         };
         $.ajax({
             url:  params.urlVerifyData,
@@ -157,8 +154,7 @@ var add = function (params) {
             'provider': fileList[i].provider,
             'file_id': fileList[i].file_id,
             'file_path': fileList[i].file_path,
-            'file_name': fileList[i].file_name,
-            'version': fileList[i].version
+            'file_version': fileList[i].file_version
         };
         $.ajax({
             url: params.url,
@@ -303,7 +299,7 @@ function initList() {
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().operator_user;});
+    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (alreadyAdded.indexOf(userName) === -1) {
@@ -318,7 +314,7 @@ function initList() {
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
 
         var userName = userFilterSelect.value;
-        var userNameFilter = function(i) {return !userName || (!i.values().operator_user || (i.values().operator_user === userName));};
+        var userNameFilter = function(i) {return !userName || (!i.values().verify_user_name || (i.values().verify_user_name === userName));};
         var filters = [userNameFilter];
 
         var dateFilters = [
@@ -341,13 +337,13 @@ function initList() {
                     return function(i) {
                         // sets the time to midnight, which is the same as dates from the input fields
                         // this is needed to make items appear when the filter is set to the same day
-                        var operator_date_day = new Date(i.values().operator_date);
-                        operator_date_day.setHours(0, 0, 0, 0);
+                        var verify_date_day = new Date(i.values().verify_date);
+                        verify_date_day.setHours(0, 0, 0, 0);
 
                         var filter_date_day = new Date(elementValue);
                         filter_date_day.setHours(0, 0, 0, 0);
 
-                        return !i.values().operator_date || comparator( operator_date_day, filter_date_day );
+                        return !i.values().verify_date || comparator( verify_date_day, filter_date_day );
                     };
                 })(element.value, comparator));
             }
