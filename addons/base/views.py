@@ -1,6 +1,7 @@
 import datetime
 import httplib
 import os
+import requests
 import uuid
 import markupsafe
 import urllib
@@ -39,7 +40,7 @@ from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project
 from website.project.utils import serialize_node
 from website.settings import MFR_SERVER_URL
-from website.util import rubeus
+from website.util import rubeus, timestamp
 
 # import so that associated listener is instantiated and gets emails
 from website.notifications.events.files import FileEvent  # noqa
@@ -729,8 +730,6 @@ def addon_view_file(auth, node, file_node, version):
         error = None
 
     ret = serialize_node(node, auth, primary=True)
-    verify_result = timestamptoken_verify(auth, node,
-                                          file_node, version, ret['user']['id'])
 
     if file_node._id + '-' + version._id not in node.file_guid_to_share_uuids:
         node.file_guid_to_share_uuids[file_node._id + '-' + version._id] = uuid.uuid4()
@@ -751,6 +750,34 @@ def addon_view_file(auth, node, file_node, version):
             'public_file': node.is_public,
         })
     )
+
+    # Verify file
+    verify_result = {
+        'verify_result': '',
+        'verify_result_title': ''
+    }
+    cookie = auth.user.get_or_create_cookie()
+    headers = {'content-type': 'application/json'}
+    file_data_request = requests.get(
+        file_node.generate_waterbutler_url(
+            version=version.identifier, meta='', _internal=True
+        ), headers=headers, cookies={settings.COOKIE_NAME: cookie}
+    )
+    if file_data_request.status_code == 200:
+        file_data = file_data_request.json().get('data')
+        file_info = {
+            'provider': file_node.provider,
+            'file_id': file_node._id,
+            'file_name': file_data['attributes'].get('name'),
+            'file_path': file_data['attributes'].get('materialized'),
+            'size': file_data['attributes'].get('size'),
+            'created': file_data['attributes'].get('created_utc'),
+            'modified': file_data['attributes'].get('modified_utc'),
+            'version': ''
+        }
+        if file_node.provider == 'osfstorage':
+            file_info['version'] = file_data['attributes']['extra'].get('version')
+        verify_result = timestamp.check_file_timestamp(auth.user.id, node, file_info)
 
     render_url = furl.furl(settings.MFR_SERVER_URL).set(
         path=['render'],
@@ -896,56 +923,5 @@ def adding_timestamp(auth, node, file_node, version):
             if os.path.exists(tmp_dir):
                 shutil.rmtree(tmp_dir)
         logger.exception(err)
-
-    return result
-
-def timestamptoken_verify(auth, node, file_node, version, guid):
-    # This whole function may not be necessary, consider removing it
-    # Probably check_file_timestamp in util/timestamp is doing the same thing
-    # When doing so, check dependencies (tests and where this one is being called)
-    from website.util.timestamp import TimeStampTokenVerifyCheck
-    import requests
-    from osf.models import Guid
-    import shutil
-
-    tmp_dir = 'tmp_{}'.format(guid)
-    current_datetime = timezone.now()
-    current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
-    tmp_dir = 'tmp_{}_{}_{}'.format(guid, file_node._id, current_datetime_str)
-    tmp_file = None
-    try:
-        ret = serialize_node(node, auth, primary=True)
-        user_info = OSFUser.objects.get(id=Guid.objects.get(_id=ret['user']['id']).object_id)
-        cookie = user_info.get_or_create_cookie()
-        cookies = {settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
-        res = requests.get(file_node.generate_waterbutler_url(**dict(action='download',
-                           version=version.identifier, mode=None, _internal=False)), headers=headers, cookies=cookies)
-        if not os.path.exists(tmp_dir):
-            os.mkdir(tmp_dir)
-        tmp_file = os.path.join(tmp_dir, file_node.name)
-        with open(tmp_file, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
-    except Exception as err:
-        if os.path.exists(tmp_dir):
-            shutil.rmtree(tmp_dir)
-        logger.exception(err)
-
-    verifyCheck = TimeStampTokenVerifyCheck()
-    # TODO Send file_data as parameter
-    file_data = {
-        'file_id': file_node._id,
-        'file_name': '',
-        'file_path': file_node._path,
-        'size': 1234,
-        'created': '',
-        'modified': '',
-        'version': '',
-        'provider': file_node.provider
-    }
-    result = verifyCheck.timestamp_check(ret['user']['id'], file_data, node._id, tmp_file, tmp_dir)
-    if os.path.exists(tmp_dir):
-        shutil.rmtree(tmp_dir)
 
     return result

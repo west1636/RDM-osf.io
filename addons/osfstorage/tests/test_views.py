@@ -712,7 +712,7 @@ class TestMoveHook(HookTestCase):
         file = folder.append_file('No I don\'t wanna go')
         file.checkout = self.user
         file.save()
-        
+
         folder_two = self.root_node.append_folder('To There')
         res = self.send_hook(
             'osfstorage_move_hook',
@@ -738,7 +738,7 @@ class TestMoveHook(HookTestCase):
         file = folder_nested.append_file('No I don\'t wanna go')
         file.checkout = self.user
         file.save()
-        
+
         folder_two = self.root_node.append_folder('To There')
         res = self.send_hook(
             'osfstorage_move_hook',

@@ -5138,14 +5138,5 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
         assert_in('verify_result', result)
         assert_equal(result['verify_result'], 1)
 
-    def test_timestamptoken_verify(self):
-        from addons.base.views import timestamptoken_verify
-
-        filename='tests.test_views.test_timestamptoken_verify'
-        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
-        version = file_node.get_version(1, required=True)
-        verify_result = timestamptoken_verify(self.auth_obj, self.node, file_node, version, self.user.id)
-        assert_in('verify_result', verify_result)
-
 if __name__ == '__main__':
     unittest.main()
