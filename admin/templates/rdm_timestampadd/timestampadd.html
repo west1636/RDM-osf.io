@@ -52,20 +52,7 @@
                         <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
                     </span>
                 </div>
-                <div class="col-sm-3">
-                    <span>
-                        <select id="fileFormat" class="form-control">
-                            <option value="csv">CSV</option>
-                            <option value="json-ld">JSON/LD</option>
-                            <option value="rdf-xml">RDF/XML</option>
-                        </select>
-                    </span>
-                </div>
-                <div class="col-sm-2">
-                    <span>
-                        <button type="button" class="btn btn-success" id="btn-download">Download</button>
-                    </span>
-                </div>
+                <div class="col-sm-5"></div>
             </div>
         </div>
     </div>
@@ -106,6 +93,23 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <span>
+                <select id="fileFormat" class="form-control">
+                    <option value="csv">CSV</option>
+                    <option value="json-ld">JSON/LD</option>
+                    <option value="rdf-xml">RDF/XML</option>
+                </select>
+            </span>
+        </div>
+        <div class="col-sm-2">
+            <span>
+                <button type="button" class="btn btn-success" id="btn-download">Download</button>
+            </span>
+        </div>
+        <div class="col-sm-7"></div>
     </div>
     {% csrf_token %}
 </div>
