@@ -82,11 +82,11 @@
                     <input type="hidden" name="file_id" class="file_id" value="{{ error_info.file_id }}" />
                     <input type="hidden" name="file_path" class="file_path" value="{{ error_info.file_path }}" />
                     <input type="hidden" name="project_id" id="project_id" value="{{ error_info.project_id }}" />
-                    <input type="hidden" name="version" class="version" value="{{ error_info.version }}" />
+                    <input type="hidden" name="file_version" class="file_version" value="{{ error_info.file_version }}" />
                     <input type="hidden" name="file_name" class="file_name" value="{{ error_info.file_name }}" />
                     
-                    <td class="operator_user">{{ error_info.operator_user }} ({{ error_info.operator_user_id }})</td>
-                    <td class="operator_date">{{ error_info.operator_date }}</td>
+                    <td class="verify_user_name">{{ error_info.verify_user_name }} ({{ error_info.verify_user_id }})</td>
+                    <td class="verify_date">{{ error_info.verify_date }}</td>
                     <td>{{ error_info.verify_result_title }}</td>
                 </tr>
                 {% endfor %}
