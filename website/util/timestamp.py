@@ -18,7 +18,6 @@ import pytz
 
 from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
@@ -303,9 +302,7 @@ def add_token(uid, node, data):
 
         addTimestamp = AddTimestamp()
         result = addTimestamp.add_timestamp(
-            user._id, data['file_id'],
-            node._id, data['provider'], data['file_path'],
-            download_file_path, tmp_dir
+            user._id, data, node._id, download_file_path, tmp_dir
         )
 
         shutil.rmtree(tmp_dir)
@@ -440,12 +437,7 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
 
 
 class AddTimestamp:
-    #1 get user key info
-    def get_userkey(self, user_id):
-        userKey = RdmUserKey.objects.get(guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
-        return userKey.key_name
-
-    #2 create  tsq(timestamp request) from file, and keyinfo
+    #1 create tsq (timestamp request) from file, and keyinfo
     def get_timestamp_request(self, file_name):
         cmd = [
             api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
@@ -459,7 +451,7 @@ class AddTimestamp:
         stdout_data, stderr_data = process.communicate()
         return stdout_data
 
-    #3 send tsq to TSA, and recieve tsr(timestamp token)
+    #2 send tsq to TSA, and recieve tsr (timestamp token)
     def get_timestamp_response(self, file_name, ts_request_file, key_file):
         res_content = None
         try:
@@ -483,78 +475,39 @@ class AddTimestamp:
 
         return res_content
 
-    #4 get timestamp verified result
-    def get_data(self, file_id, project_id, provider, path):
-        try:
-            res = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_id)
-        except ObjectDoesNotExist:
-            res = None
-        return res
-    #5 register verify result in db
-    def timestamptoken_register(
-            self, file_id, project_id, provider, path, key_file,
-            tsa_response, user_id, verify_data):
-        try:
-            # data not registered yet
-            if not verify_data:
-                verify_data = RdmFileTimestamptokenVerifyResult()
-                verify_data.key_file_name = key_file
-                verify_data.file_id = file_id
-                verify_data.project_id = project_id
-                verify_data.provider = provider
-                verify_data.path = path
-                verify_data.timestamp_token = tsa_response
-                verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
-                verify_data.upload_file_created_user = user_id
-                verify_data.upload_file_created_at = datetime.datetime.now()
-
-            # registered data:
-            else:
-                verify_data.key_file_name = key_file
-                verify_data.timestamp_token = tsa_response
-                verify_data.upload_file_modified_user = user_id
-                verify_data.upload_file_modified_at = datetime.datetime.now()
-
-            verify_data.save()
-        except Exception as ex:
-            logger.exception(ex)
-
-    #6 main
-    def add_timestamp(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
-        # get user_id from guid
+    def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
         user_id = Guid.objects.get(_id=guid).object_id
 
-        # get user key info
-        key_file_name = self.get_userkey(user_id)
+        key_file_name = RdmUserKey.objects.get(
+            guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
+        ).key_name
 
-        # create tsq
-        tsa_request = self.get_timestamp_request(file_name)
+        tsa_response = self.get_timestamp_response(
+            file_name, self.get_timestamp_request(file_name), key_file_name
+        )
 
-        # get tsr
-        tsa_response = self.get_timestamp_response(file_name, tsa_request, key_file_name)
+        verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+            file_id=file_info['file_id'])
+        if verify_data.exists():
+            verify_data = verify_data.get()
+        else:
+            verify_data = RdmFileTimestamptokenVerifyResult()
+            verify_data.file_id = file_info['file_id']
+            verify_data.project_id = project_id
+            verify_data.provider = file_info['provider']
+            verify_data.path = file_info['file_path']
+            verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
 
-        # check that data exists
-        verify_data = self.get_data(file_id, project_id, provider, path)
+        verify_data.key_file_name = key_file_name
+        verify_data.timestamp_token = tsa_response
+        verify_data.verify_user = user_id
+        verify_data.verify_date = datetime.datetime.now()
+        verify_data.verify_file_created_at = file_info['created']
+        verify_data.verify_file_modified_at = file_info['modified']
+        verify_data.save()
 
-        # register in db
-        self.timestamptoken_register(
-            file_id, project_id, provider, path, key_file_name, tsa_response,
-            user_id, verify_data)
-
-        # tsr verification request call
-        # TODO send file_data by parameter
-        file_data = {
-            'file_id': file_id,
-            'file_name': '',
-            'file_path': path,
-            'size': 1234,
-            'created': '',
-            'modified': '',
-            'version': '',
-            'provider': provider
-        }
         return TimeStampTokenVerifyCheck().timestamp_check(
-            guid, file_data, project_id, file_name, tmp_dir)
+            guid, file_info, project_id, file_name, tmp_dir)
 
 
 class TimeStampTokenVerifyCheck:
