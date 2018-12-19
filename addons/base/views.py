@@ -720,8 +720,29 @@ def addon_view_or_download_file(auth, path, provider, **kwargs):
         return dict(guid=guid._id)
 
     if action == 'addtimestamp':
-        add_timestamp_result = adding_timestamp(auth, node, file_node, version)
-        if add_timestamp_result == 0:
+        cookie = auth.user.get_or_create_cookie()
+        headers = {'content-type': 'application/json'}
+        file_data_request = requests.get(
+            file_node.generate_waterbutler_url(
+                version=version.identifier, meta='', _internal=True
+            ), headers=headers, cookies={settings.COOKIE_NAME: cookie}
+        )
+        if file_data_request.status_code == 200:
+            file_data = file_data_request.json().get('data')
+            file_info = {
+                'provider': file_node.provider,
+                'file_id': file_node._id,
+                'file_name': file_data['attributes'].get('name'),
+                'file_path': file_data['attributes'].get('materialized'),
+                'size': file_data['attributes'].get('size'),
+                'created': file_data['attributes'].get('created_utc'),
+                'modified': file_data['attributes'].get('modified_utc'),
+                'version': ''
+            }
+            if file_node.provider == 'osfstorage':
+                file_info['version'] = file_data['attributes']['extra'].get('version')
+            timestamp.add_token(auth.user.id, node, file_info)
+        else:
             raise HTTPError(httplib.BAD_REQUEST, data={
                 'message_short': 'Add TimestampError',
                 'message_long': 'AddTimestamp setting error.'
@@ -856,43 +877,3 @@ def get_archived_from_url(node, file_node):
         if not trashed:
             return node.registered_from.web_url_for('addon_view_or_download_file', provider=file_node.provider, path=file_node.copied_from._id)
     return None
-
-def adding_timestamp(auth, node, file_node, version):
-    from osf.models import Guid
-    import requests
-    from website.util.timestamp import AddTimestamp
-    import shutil
-
-    tmp_dir = None
-    result = None
-    try:
-        ret = serialize_node(node, auth, primary=True)
-        user_info = OSFUser.objects.get(id=Guid.objects.get(_id=ret['user']['id']).object_id)
-        cookie = user_info.get_or_create_cookie()
-        cookies = {settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
-        res = requests.get(file_node.generate_waterbutler_url(**dict(action='download',
-                           version=version.identifier, mode=None, _internal=False)),
-                           headers=headers, cookies=cookies)
-        tmp_dir = 'tmp_{}'.format(ret['user']['id'])
-        os.mkdir(tmp_dir)
-        tmp_file = os.path.join(tmp_dir, file_node.name)
-        with open(tmp_file, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
-        addTimestamp = AddTimestamp()
-        result = addTimestamp.add_timestamp(ret['user']['id'],
-                                            file_node._id,
-                                            node._id, file_node.provider,
-                                            file_node._path,
-                                            tmp_file, tmp_dir)
-
-        shutil.rmtree(tmp_dir)
-
-    except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-        logger.exception(err)
-
-    return result
