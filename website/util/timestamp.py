@@ -1,6 +1,20 @@
 # -*- coding: utf-8 -*-
-
+'''
+Common functions for timestamp.
+'''
 from __future__ import absolute_import
+import datetime
+import hashlib
+import logging
+import os
+import shutil
+import subprocess
+import time
+import traceback
+
+from urllib3.util.retry import Retry
+import requests
+import pytz
 
 from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
@@ -10,19 +24,8 @@ from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
     OSFUser
 )
-from urllib3.util.retry import Retry
 from website import util
 from website import settings
-import datetime
-import hashlib
-import logging
-import os
-import pytz
-import requests
-import shutil
-import subprocess
-import time
-import traceback
 
 
 logger = logging.getLogger(__name__)
@@ -320,13 +323,13 @@ def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
         waterbutler_meta_url = util.waterbutler_api_url_for(
             pid, provider,
             '/' + path,
-            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+            meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
     else:
         waterbutler_meta_url = util.waterbutler_api_url_for(
             pid, provider,
             path,
-            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+            meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
 
     waterbutler_res = requests.get(waterbutler_meta_url, headers=headers, cookies=cookies)

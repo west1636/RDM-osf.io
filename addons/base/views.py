@@ -435,8 +435,31 @@ def create_waterbutler_log(payload, **kwargs):
 
             metadata['path'] = metadata['path'].lstrip('/')
 
+            # Add timestamp to file
             if action in (NodeLog.FILE_ADDED, NodeLog.FILE_UPDATED):
-                upload_file_add_timestamptoken(payload, node)
+                file_node = BaseFileNode.resolve_class(
+                    payload['metadata']['provider'], BaseFileNode.FILE
+                ).get_or_create(node, payload['metadata'].get('path'))
+                created_at = payload['metadata'].get('created_utc')
+                modified_at = payload['metadata'].get('modified_utc')
+                version = ''
+                if not created_at:
+                    created_at = None
+                if not modified_at:
+                    modified_at = None
+                if payload['metadata']['provider'] == 'osf_storage':
+                    version = payload['metadata']['extra'].get('version')
+                file_info = {
+                    'file_id': file_node._id,
+                    'file_name': payload['metadata'].get('name'),
+                    'file_path': payload['metadata'].get('materialized'),
+                    'size': payload['metadata'].get('size'),
+                    'created': created_at,
+                    'modified': modified_at,
+                    'version': version,
+                    'provider': payload['metadata'].get('provider')
+                }
+                timestamp.add_token(user.id, node, file_info)
 
             node_addon.create_waterbutler_log(auth, action, metadata)
 
@@ -833,58 +856,6 @@ def get_archived_from_url(node, file_node):
         if not trashed:
             return node.registered_from.web_url_for('addon_view_or_download_file', provider=file_node.provider, path=file_node.copied_from._id)
     return None
-
-# file update to timestamptoken add
-def upload_file_add_timestamptoken(payload, node):
-
-    from osf.models import Guid
-    import requests
-    from website.util.timestamp import AddTimestamp
-    import shutil
-
-    verify_result = 0
-    tmp_dir = None
-    try:
-        metadata = payload['metadata']
-        file_node = BaseFileNode.resolve_class(metadata['provider'], BaseFileNode.FILE).get_or_create(node, metadata['path'])
-        file_node.save()
-        auth_id = payload['auth']['id']
-        guid = Guid.objects.get(_id=auth_id)
-        user_info = OSFUser.objects.get(id=guid.object_id)
-        cookie = user_info.get_or_create_cookie()
-        cookies = {settings.COOKIE_NAME: cookie}
-        headers = {'content-type': 'application/json'}
-        res_content = None
-        if metadata['provider'] == 'osfstorage':
-            res = requests.get(file_node.generate_waterbutler_url(**dict(action='download',
-                                version=metadata['extra']['version'], direct=None, _internal=False)), headers=headers, cookies=cookies)
-        else:
-            res = requests.get(file_node.generate_waterbutler_url(**dict(action='download', mode=None, _internal=False)),
-                                headers=headers, cookies=cookies)
-        res_content = res.content
-        res.close()
-
-        current_datetime = timezone.now()
-        current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
-        tmp_dir = 'tmp_{}_{}_{}'.format(auth_id, file_node._id, current_datetime_str)
-        os.mkdir(tmp_dir)
-        download_file_path = os.path.join(tmp_dir, metadata['name'])
-        with open(download_file_path, 'wb') as fout:
-            fout.write(res_content)
-
-        addTimestamp = AddTimestamp()
-        verify_result, verify_result_title, operator_user, operator_date, filepath = addTimestamp.add_timestamp(auth_id, file_node._id,
-                                                                            node._id, metadata['provider'],
-            metadata['materialized'],
-            download_file_path, tmp_dir)
-        shutil.rmtree(tmp_dir)
-    except Exception as err:
-        if tmp_dir:
-            if os.path.exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-        logger.exception(err)
-
-    return verify_result
 
 def adding_timestamp(auth, node, file_node, version):
     from osf.models import Guid
