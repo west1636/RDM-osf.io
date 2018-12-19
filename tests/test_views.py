@@ -4948,7 +4948,17 @@ def create_rdmfiletimestamptokenverifyresult(self, filename='test_file_timestamp
     if inspection_result_status_1:
         ## add timestamp
         addTimestamp = AddTimestamp()
-        ret = addTimestamp.add_timestamp(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': provider
+        }
+        ret = addTimestamp.add_timestamp(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
     else:
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
