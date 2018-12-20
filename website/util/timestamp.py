@@ -1,28 +1,30 @@
 # -*- coding: utf-8 -*-
-
+'''
+Common functions for timestamp.
+'''
 from __future__ import absolute_import
+import datetime
+import hashlib
+import logging
+import os
+import shutil
+import subprocess
+import time
+import traceback
+
+from urllib3.util.retry import Retry
+import requests
+import pytz
 
 from api.base import settings as api_settings
 from api.base.rdmlogger import RdmLogger, rdmlog
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
     OSFUser
 )
-from urllib3.util.retry import Retry
 from website import util
 from website import settings
-import datetime
-import hashlib
-import logging
-import os
-import pytz
-import requests
-import shutil
-import subprocess
-import time
-import traceback
 
 
 logger = logging.getLogger(__name__)
@@ -190,15 +192,15 @@ def get_full_list(uid, pid, node):
                 basefile_node.save()
                 file_info = {
                     'file_id': basefile_node._id,
-                    'file_name': file_data['attributes']['name'],
-                    'file_path': file_data['attributes']['materialized'],
-                    'size': file_data['attributes']['size'],
-                    'created': file_data['attributes']['created_utc'],
-                    'modified': file_data['attributes']['modified_utc'],
+                    'file_name': file_data['attributes'].get('name'),
+                    'file_path': file_data['attributes'].get('materialized'),
+                    'size': file_data['attributes'].get('size'),
+                    'created': file_data['attributes'].get('created_utc'),
+                    'modified': file_data['attributes'].get('modified_utc'),
                     'version': ''
                 }
                 if provider_data['attributes']['provider'] == 'osfstorage':
-                    file_info['version'] = file_data['attributes']['extra']['version']
+                    file_info['version'] = file_data['attributes']['extra'].get('version')
                 if file_info:
                     file_list.append(file_info)
 
@@ -251,8 +253,7 @@ def check_file_timestamp(uid, node, data):
 
         verify_check = TimeStampTokenVerifyCheck()
         result = verify_check.timestamp_check(
-            user._id, data['file_id'],
-            node._id, data['provider'], data['file_path'], download_file_path, tmp_dir
+            user._id, data, node._id, download_file_path, tmp_dir
         )
 
         shutil.rmtree(tmp_dir)
@@ -301,9 +302,7 @@ def add_token(uid, node, data):
 
         addTimestamp = AddTimestamp()
         result = addTimestamp.add_timestamp(
-            user._id, data['file_id'],
-            node._id, data['provider'], data['file_path'],
-            download_file_path, tmp_dir
+            user._id, data, node._id, download_file_path, tmp_dir
         )
 
         shutil.rmtree(tmp_dir)
@@ -321,13 +320,13 @@ def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
         waterbutler_meta_url = util.waterbutler_api_url_for(
             pid, provider,
             '/' + path,
-            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+            meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
     else:
         waterbutler_meta_url = util.waterbutler_api_url_for(
             pid, provider,
             path,
-            **dict({'meta=&_': int(time.mktime(datetime.datetime.now().timetuple()))})
+            meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
 
     waterbutler_res = requests.get(waterbutler_meta_url, headers=headers, cookies=cookies)
@@ -438,12 +437,7 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
 
 
 class AddTimestamp:
-    #1 get user key info
-    def get_userkey(self, user_id):
-        userKey = RdmUserKey.objects.get(guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
-        return userKey.key_name
-
-    #2 create  tsq(timestamp request) from file, and keyinfo
+    #1 create tsq (timestamp request) from file, and keyinfo
     def get_timestamp_request(self, file_name):
         cmd = [
             api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
@@ -457,7 +451,7 @@ class AddTimestamp:
         stdout_data, stderr_data = process.communicate()
         return stdout_data
 
-    #3 send tsq to TSA, and recieve tsr(timestamp token)
+    #2 send tsq to TSA, and recieve tsr (timestamp token)
     def get_timestamp_response(self, file_name, ts_request_file, key_file):
         res_content = None
         try:
@@ -481,67 +475,35 @@ class AddTimestamp:
 
         return res_content
 
-    #4 get timestamp verified result
-    def get_data(self, file_id, project_id, provider, path):
-        try:
-            res = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_id)
-        except ObjectDoesNotExist:
-            res = None
-        return res
-    #5 register verify result in db
-    def timestamptoken_register(
-            self, file_id, project_id, provider, path, key_file,
-            tsa_response, user_id, verify_data):
-        try:
-            # data not registered yet
-            if not verify_data:
-                verify_data = RdmFileTimestamptokenVerifyResult()
-                verify_data.key_file_name = key_file
-                verify_data.file_id = file_id
-                verify_data.project_id = project_id
-                verify_data.provider = provider
-                verify_data.path = path
-                verify_data.timestamp_token = tsa_response
-                verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
-                verify_data.upload_file_created_user = user_id
-                verify_data.upload_file_created_at = datetime.datetime.now()
-
-            # registered data:
-            else:
-                verify_data.key_file_name = key_file
-                verify_data.timestamp_token = tsa_response
-                verify_data.upload_file_modified_user = user_id
-                verify_data.upload_file_modified_at = datetime.datetime.now()
-
-            verify_data.save()
-        except Exception as ex:
-            logger.exception(ex)
-
-    #6 main
-    def add_timestamp(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
-        # get user_id from guid
+    def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
         user_id = Guid.objects.get(_id=guid).object_id
 
-        # get user key info
-        key_file_name = self.get_userkey(user_id)
+        key_file_name = RdmUserKey.objects.get(
+            guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
+        ).key_name
 
-        # create tsq
-        tsa_request = self.get_timestamp_request(file_name)
+        tsa_response = self.get_timestamp_response(
+            file_name, self.get_timestamp_request(file_name), key_file_name
+        )
 
-        # get tsr
-        tsa_response = self.get_timestamp_response(file_name, tsa_request, key_file_name)
+        verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+            file_id=file_info['file_id'])
+        if verify_data.exists():
+            verify_data = verify_data.get()
+        else:
+            verify_data = RdmFileTimestamptokenVerifyResult()
+            verify_data.file_id = file_info['file_id']
+            verify_data.project_id = project_id
+            verify_data.provider = file_info['provider']
+            verify_data.path = file_info['file_path']
+            verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
 
-        # check that data exists
-        verify_data = self.get_data(file_id, project_id, provider, path)
+        verify_data.key_file_name = key_file_name
+        verify_data.timestamp_token = tsa_response
+        verify_data.save()
 
-        # register in db
-        self.timestamptoken_register(
-            file_id, project_id, provider, path, key_file_name, tsa_response,
-            user_id, verify_data)
-
-        # tsr verification request call
         return TimeStampTokenVerifyCheck().timestamp_check(
-            guid, file_id, project_id, provider, path, file_name, tmp_dir)
+            guid, file_info, project_id, file_name, tmp_dir)
 
 
 class TimeStampTokenVerifyCheck:
@@ -605,20 +567,19 @@ class TimeStampTokenVerifyCheck:
         create_data.inspection_result_status = inspection_result_status
         create_data.verify_user = userid
         create_data.verify_date = timezone.now()
-        create_data.upload_file_created_user = userid
-        create_data.upload_file_created_at = timezone.now()
         return create_data
 
     # timestamp token check
-    def timestamp_check(self, guid, file_id, project_id, provider, path, file_name, tmp_dir):
+    def timestamp_check(self, guid, file_info, project_id, file_name, tmp_dir):
         userid = Guid.objects.get(_id=guid).object_id
+        file_id = file_info['file_id']
+        provider = file_info['provider']
+        path = file_info['file_path']
 
         # get verify result
-        verifyResult = self.get_verifyResult(file_id, project_id, provider, path)
+        verify_result = self.get_verifyResult(file_id, project_id, provider, path)
 
         ret = 0
-        operator_user = None
-        operator_date = None
         verify_result_title = None
 
         try:
@@ -626,68 +587,60 @@ class TimeStampTokenVerifyCheck:
             if provider == 'osfstorage':
                 # 'osfstorage'
                 baseFileNode = self.get_baseFileNode(file_id)
-                if baseFileNode.is_deleted and not verifyResult:
+                if baseFileNode.is_deleted and not verify_result:
                     # if file was deleted ,and verify result does not exist:
                     # update verifyResult:'FILE missing'
                     ret = api_settings.FILE_NOT_EXISTS
                     verify_result_title = api_settings.FILE_NOT_EXISTS_MSG  # 'FILE missing'
-                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                    verify_result = self.create_rdm_filetimestamptokenverify(
                         file_id, project_id, provider, path, ret, userid)
 
-                elif baseFileNode.is_deleted and verifyResult and not verifyResult.timestamp_token:
+                elif baseFileNode.is_deleted and verify_result and not verify_result.timestamp_token:
                     # if file does not exist ,and verify result does not exist in db:
                     # update verifyResult 'FILE missing(Unverify)'
-                    verifyResult.inspection_result_status = \
+                    verify_result.inspection_result_status = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verifyResult.verify_user = userid
-                    verifyResult.verify_date = datetime.datetime.now()
                     ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verify_result_title = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
-                elif baseFileNode.is_deleted and verifyResult:
+                elif baseFileNode.is_deleted and verify_result:
                     # if file was deleted, and verify result exists in db:
                     # update verifyResult 'FILE missing(Unverify)'
-                    verifyResult.inspection_result_status = \
+                    verify_result.inspection_result_status = \
                         api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
-                    verifyResult.verify_user = userid
-                    verifyResult.verify_date = datetime.datetime.now()
-                    ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_NO_DATA
+                    ret = api_settings.FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
-                elif not baseFileNode.is_deleted and not verifyResult:
+                elif not baseFileNode.is_deleted and not verify_result:
                     # if file was deleted, and verify result does not exist in db:
                     # update verifyResult 'TST missing(Unverify)'
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verify_result_title = \
                         api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
-                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                    verify_result = self.create_rdm_filetimestamptokenverify(
                         file_id, project_id, provider, path, ret, userid)
 
-                elif not baseFileNode.is_deleted and not verifyResult.timestamp_token:
+                elif not baseFileNode.is_deleted and not verify_result.timestamp_token:
                     # if file exists and  verifyResult.timestamp_token does not exist:
                     # update verifyResult 'TST missing(Retrieving Failed)'
-                    verifyResult.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verifyResult.verify_user = userid
-                    verifyResult.verify_date = datetime.datetime.now()
+                    verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
 
             else:
                 # storage other than osfstorage:
-                if not verifyResult:
+                if not verify_result:
                     # if file does not exist, and  verify result does not exist:
                     # update verifyResult 'TST missing(Unverify)'
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
-                    verifyResult = self.create_rdm_filetimestamptokenverify(
+                    verify_result = self.create_rdm_filetimestamptokenverify(
                         file_id, project_id, provider, path, ret, userid)
 
-                elif not verifyResult.timestamp_token:
+                elif not verify_result.timestamp_token:
                     # if timestamptoken does not exist:
                     # update verifyResult 'TST missing(Retrieving Failed)'
-                    verifyResult.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verifyResult.verify_user = userid
-                    verifyResult.verify_date = datetime.datetime.now()
+                    verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
 
@@ -696,7 +649,7 @@ class TimeStampTokenVerifyCheck:
                 timestamptoken_file_path = os.path.join(tmp_dir, timestamptoken_file)
                 try:
                     with open(timestamptoken_file_path, 'wb') as fout:
-                        fout.write(verifyResult.timestamp_token)
+                        fout.write(verify_result.timestamp_token)
 
                 except Exception as err:
                     raise err
@@ -723,21 +676,25 @@ class TimeStampTokenVerifyCheck:
                     ret = api_settings.TIME_STAMP_TOKEN_CHECK_NG
                     verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
 
-                verifyResult.inspection_result_status = ret
-                verifyResult.verify_user = userid
-                verifyResult.verify_date = timezone.now()
+                verify_result.inspection_result_status = ret
 
-            if not verifyResult.upload_file_modified_user:
-                verifyResult.upload_file_modified_user = None
-                verifyResult.upload_file_modified_at = None
-                operator_user = OSFUser.objects.get(id=verifyResult.upload_file_created_user).fullname
-                operator_date = verifyResult.upload_file_created_at.strftime('%Y/%m/%d %H:%M:%S')
+            file_created_at = file_info.get('created')
+            file_modified_at = file_info.get('modified')
+            file_size = file_info.get('size')
 
-            else:
-                operator_user = OSFUser.objects.get(id=verifyResult.upload_file_modified_user).fullname
-                operator_date = verifyResult.upload_file_modified_at.strftime('%Y/%m/%d %H:%M:%S')
+            if not file_created_at:
+                file_created_at = None
+            if not file_modified_at:
+                file_modified_at = None
+            if not file_size:
+                file_size = None
 
-            verifyResult.save()
+            verify_result.verify_date = datetime.datetime.now()
+            verify_result.verify_user = userid
+            verify_result.verify_file_created_at = file_created_at
+            verify_result.verify_file_modified_at = file_modified_at
+            verify_result.verify_file_size = file_size
+            verify_result.save()
         except Exception as err:
             logging.exception(err)
 
@@ -762,7 +719,5 @@ class TimeStampTokenVerifyCheck:
         return {
             'verify_result': ret,
             'verify_result_title': verify_result_title,
-            'operator_user': operator_user,
-            'operator_date': operator_date,
             'filepath': filepath
         }

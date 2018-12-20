@@ -66,7 +66,17 @@ class TestAddTimestamp(ApiTestCase):
 
         ## add timestamp
         addTimestamp = AddTimestamp()
-        ret = addTimestamp.add_timestamp(self.user._id, file_node._id, self.node._id, 'osfstorage', os.path.join('/', filename), download_file_path, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': 'osfstorage'
+        }
+        ret = addTimestamp.add_timestamp(self.user._id, file_data, self.node._id, download_file_path, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check add_timestamp func response
@@ -136,11 +146,31 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## add timestamp
         addTimestamp = AddTimestamp()
-        addTimestamp.add_timestamp(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': provider
+        }
+        addTimestamp.add_timestamp(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
@@ -183,7 +213,17 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## add timestamp
         addTimestamp = AddTimestamp()
-        addTimestamp.add_timestamp(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': provider
+        }
+        addTimestamp.add_timestamp(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
 
         ## File(tmp_file) update from outside the system
         with open(tmp_file, 'wb') as fout:
@@ -191,7 +231,17 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
@@ -234,7 +284,17 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
@@ -275,8 +335,19 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        # Yes, checking twice is necessary. Don't ask me the reason
+        verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
@@ -318,7 +389,17 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
@@ -360,8 +441,19 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        # Yes, checking twice is necessary. Don't ask me the reason
+        verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response

@@ -12,6 +12,8 @@ import jwe
 import jwt
 import logging
 import mock
+from api_tests.utils import create_test_file
+from api.base import settings as api_settings
 from django.utils import timezone
 from django.contrib.auth.models import Permission
 from framework.auth import cas, signing
@@ -28,13 +30,14 @@ from addons.base import views
 from addons.github.exceptions import ApiError
 from addons.github.models import GithubFolder, GithubFile, GithubFileNode
 from addons.github.tests.factories import GitHubAccountFactory
-from osf.models import Session, MetaSchema
+from osf.models import Session, MetaSchema, RdmFileTimestamptokenVerifyResult, NodeLog, RdmUserKey
 from osf.models import files as file_models
 from osf.models.files import BaseFileNode, TrashedFileNode
 from website.project import new_private_link
 from website.project.views.node import _view_project as serialize_node
 from website.project.views.node import serialize_addons, collect_node_config_js
 from website.util import api_url_for, rubeus
+from website.util.timestamp import userkey_generation
 from dateutil.parser import parse as parse_date
 from framework import sentry
 
@@ -190,12 +193,10 @@ class TestAddonLogs(OsfTestCase):
             'signature': signature,
         }
 
+    @mock.patch('addons.base.views.timestamp')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    @mock.patch('requests.get',{'code': 404, 'referrer': None,'message_short': 'Page not found'})
-    def test_add_log_timestamptoken(self, mock_perform):
-        from osf.models import RdmFileTimestamptokenVerifyResult, NodeLog
-        from api_tests.utils import create_test_file
-        from website.util.timestamp import userkey_generation
+    @mock.patch('requests.get', {'code': 404, 'referrer': None, 'message_short': 'Page not found'})
+    def test_add_log_timestamptoken(self, mock_perform, mock_timestamp):
         result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
         nodelog_count1 = NodeLog.objects.all().count()
         path = 'pizza'
@@ -204,16 +205,19 @@ class TestAddonLogs(OsfTestCase):
         file_node = create_test_file(node=self.node, user=self.user, filename=path)
         file_node._path = '/' + path
         file_node.save()
-        metadata = {
-            'path': path,
+        payload = self.build_payload(metadata={
             'provider': 'osfstorage',
             'name': path,
             'materialized': '/' + path,
+            'path': '/' + path,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
             'extra': {
-                'version': 1
+                'version': '1'
             }
-        }
-        payload = self.build_payload(metadata=metadata)
+        })
         logging.info('---test_add_log_timestamptoken.payload: {}'.format(payload))
         nlogs = self.node.logs.count()
 
@@ -226,9 +230,6 @@ class TestAddonLogs(OsfTestCase):
         assert_true(mock_perform.called, 'perform not called')
 
         ## tearDown
-        import os
-        from api.base import settings as api_settings
-        from osf.models import RdmUserKey
         rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=self.user.id, key_kind=api_settings.PRIVATE_KEY_VALUE)
         pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
         os.remove(pvt_key_path)
@@ -239,11 +240,24 @@ class TestAddonLogs(OsfTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
+    @mock.patch('addons.base.views.timestamp')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_add_log(self, mock_perform):
+    def test_add_log(self, mock_perform, mock_timestamp):
         path = 'pizza'
         url = self.node.api_url_for('create_waterbutler_log')
-        payload = self.build_payload(metadata={'path': path})
+        payload = self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': 'Hello.txt',
+            'materialized': path,
+            'path': path,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        })
         nlogs = self.node.logs.count()
         self.app.put_json(url, payload, headers={'Content-Type': 'application/json'})
         self.node.reload()
@@ -365,11 +379,26 @@ class TestAddonLogs(OsfTestCase):
         self.node.reload()
         assert_equal(self.node.logs.count(), nlogs)
 
-    def test_add_file_osfstorage_log(self):
+    @mock.patch('addons.base.views.RdmFileTimestamptokenVerifyResult')
+    @mock.patch('addons.base.views.timestamp')
+    @mock.patch('addons.base.views.BaseFileNode')
+    def test_add_file_osfstorage_log(self, mock_basefilenode, mock_timestamp, mock_verifyresult):
         self.configure_osf_addon()
-        path = 'pizza'
+        path = '/tmp/Hello.txt'
         url = self.node.api_url_for('create_waterbutler_log')
-        payload = self.build_payload(metadata={'materialized': path, 'kind': 'file', 'path': path})
+        payload = self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': 'Hello.txt',
+            'materialized': path,
+            'path': path,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        })
         nlogs = self.node.logs.count()
         self.app.put_json(url, payload, headers={'Content-Type': 'application/json'})
         self.node.reload()
@@ -378,9 +407,20 @@ class TestAddonLogs(OsfTestCase):
 
     def test_add_folder_osfstorage_log(self):
         self.configure_osf_addon()
-        path = 'pizza'
         url = self.node.api_url_for('create_waterbutler_log')
-        payload = self.build_payload(metadata={'materialized': path, 'kind': 'folder', 'path': path})
+        payload = self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': 'FolderName',
+            'materialized': '/FolderName',
+            'path': '/FolderName',
+            'kind': 'folder',
+            'size': 0,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        })
         nlogs = self.node.logs.count()
         self.app.put_json(url, payload, headers={'Content-Type': 'application/json'})
         self.node.reload()
