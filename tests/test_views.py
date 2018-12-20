@@ -5056,6 +5056,9 @@ class TestTimestampView(OsfTestCase):
                 'file_id': [file_verify_result.file_id],
                 'file_path': [file_verify_result.path],
                 'file_name': [file_node.name],
+                'size': [2345],
+                'created': ['2018-12-17 00:00'],
+                'modified': ['2018-12-19 00:00'],
                 'version': [file_node.current_version_number]
             },
             content_type='application/json',
@@ -5139,11 +5142,19 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
             file.write(numpy.random.bytes(1000))
         version = file_node.get_version(1, required=True)
         addTimestamp = AddTimestamp()
-        result = addTimestamp.add_timestamp(ret['user']['id'],
-                                            file_node._id,
-                                            self.node._id, file_node.provider,
-                                            file_node._path,
-                                            tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': file_node._path,
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': file_node.provider
+        }
+        result = addTimestamp.add_timestamp(
+            ret['user']['id'], file_data, self.node._id, tmp_file, tmp_dir
+        )
         shutil.rmtree(tmp_dir)
         assert_in('verify_result', result)
         assert_equal(result['verify_result'], 1)

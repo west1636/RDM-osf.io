@@ -436,7 +436,8 @@ def create_waterbutler_log(payload, **kwargs):
             metadata['path'] = metadata['path'].lstrip('/')
 
             # Add timestamp to file
-            if action in (NodeLog.FILE_ADDED, NodeLog.FILE_UPDATED):
+            if action in (NodeLog.FILE_ADDED, NodeLog.FILE_UPDATED) \
+                    and payload['metadata']['kind'] == 'file':
                 file_node = BaseFileNode.resolve_class(
                     payload['metadata']['provider'], BaseFileNode.FILE
                 ).get_or_create(node, payload['metadata'].get('path'))
