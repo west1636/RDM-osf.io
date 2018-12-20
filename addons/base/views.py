@@ -34,7 +34,8 @@ from addons.base import exceptions
 from addons.base import signals as file_signals
 from osf.models import (BaseFileNode, TrashedFileNode,
                         OSFUser, AbstractNode,
-                        NodeLog, DraftRegistration, MetaSchema)
+                        NodeLog, DraftRegistration, MetaSchema,
+                        RdmFileTimestamptokenVerifyResult)
 from website.profile.utils import get_profile_image_url
 from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project
@@ -461,6 +462,19 @@ def create_waterbutler_log(payload, **kwargs):
                     'provider': payload['metadata'].get('provider')
                 }
                 timestamp.add_token(user.id, node, file_info)
+
+                # Update created/modified user in timestamp result
+                verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+                    file_id=file_info['file_id']).first()
+                if verify_data:
+                    if action == NodeLog.FILE_ADDED:
+                        verify_data.upload_file_created_user = user.id
+                    else:
+                        verify_data.upload_file_modified_user = user.id
+                    verify_data.upload_file_created_at = file_info['created']
+                    verify_data.upload_file_modified_at = file_info['modified']
+                    verify_data.upload_file_size = file_info['size']
+                    verify_data.save()
 
             node_addon.create_waterbutler_log(auth, action, metadata)
 

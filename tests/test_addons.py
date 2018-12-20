@@ -379,9 +379,10 @@ class TestAddonLogs(OsfTestCase):
         self.node.reload()
         assert_equal(self.node.logs.count(), nlogs)
 
+    @mock.patch('addons.base.views.RdmFileTimestamptokenVerifyResult')
     @mock.patch('addons.base.views.timestamp')
     @mock.patch('addons.base.views.BaseFileNode')
-    def test_add_file_osfstorage_log(self, mock_basefilenode, mock_timestamp):
+    def test_add_file_osfstorage_log(self, mock_basefilenode, mock_timestamp, mock_verifyresult):
         self.configure_osf_addon()
         path = '/tmp/Hello.txt'
         url = self.node.api_url_for('create_waterbutler_log')

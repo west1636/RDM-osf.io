@@ -500,10 +500,6 @@ class AddTimestamp:
 
         verify_data.key_file_name = key_file_name
         verify_data.timestamp_token = tsa_response
-        verify_data.verify_user = user_id
-        verify_data.verify_date = datetime.datetime.now()
-        verify_data.verify_file_created_at = file_info['created']
-        verify_data.verify_file_modified_at = file_info['modified']
         verify_data.save()
 
         return TimeStampTokenVerifyCheck().timestamp_check(
@@ -571,8 +567,6 @@ class TimeStampTokenVerifyCheck:
         create_data.inspection_result_status = inspection_result_status
         create_data.verify_user = userid
         create_data.verify_date = timezone.now()
-        create_data.upload_file_created_user = userid
-        create_data.upload_file_created_at = timezone.now()
         return create_data
 
     # timestamp token check
