@@ -5028,9 +5028,9 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file3.status_3' in res
         assert 's3_test_file1.status_3' in res
 
-        assert 'name="creator_name" value="Freddie Mercury' in res
-        assert 'name="creator_email" value="freddiemercury' in res
-        assert 'name="creator_institution" value="None"' in res
+        assert 'class="creator_name" value="Freddie Mercury' in res
+        assert 'class="creator_email" value="freddiemercury' in res
+        assert 'class="creator_institution" value="None"' in res
 
     @mock.patch('requests.get')
     def test_add_timestamp_token(self, mock_get):
