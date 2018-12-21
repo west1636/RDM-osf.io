@@ -87,7 +87,7 @@
                                 <th width="30%">File Path</th>
                                 <th width="15%">Timestamp by</th>
                                 <th width="22%">Updated at</th>
-                                <th widht="20%">Timestamp Verification</th>
+                                <th width="20%">Timestamp Verification</th>
                             </tr>
                         </thead>
                         <font color="red">
