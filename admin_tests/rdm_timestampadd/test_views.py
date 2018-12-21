@@ -274,6 +274,9 @@ class TestAddTimestampData(AdminTestCase):
             'file_id': [file_verify_result.file_id],
             'file_path': [file_verify_result.path],
             'file_name': [file_node.name],
+            'size': [2345],
+            'created': ['2018-12-17 00:00'],
+            'modified': ['2018-12-19 00:00'],
             'version': [file_node.current_version_number]
         }
         self.request_url_addtimestamp = '/timestampadd/' + str(self.project_institution.id) + '/nodes/' + str(self.private_project1.id) + '/addtimestamp/add_timestamp_data/'

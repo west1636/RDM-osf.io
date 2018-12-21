@@ -4948,11 +4948,31 @@ def create_rdmfiletimestamptokenverifyresult(self, filename='test_file_timestamp
     if inspection_result_status_1:
         ## add timestamp
         addTimestamp = AddTimestamp()
-        ret = addTimestamp.add_timestamp(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': provider
+        }
+        ret = addTimestamp.add_timestamp(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
     else:
         ## verify timestamptoken
         verifyCheck = TimeStampTokenVerifyCheck()
-        ret = verifyCheck.timestamp_check(self.user._id, file_node._id, self.node._id, provider, os.path.join('/', filename), tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': '',
+            'file_path': os.path.join('/', filename),
+            'size': 1234,
+            'created': '',
+            'modified': '',
+            'version': '',
+            'provider': provider
+        }
+        ret = verifyCheck.timestamp_check(self.user._id, file_data, self.node._id, tmp_file, tmp_dir)
     shutil.rmtree(tmp_dir)
 
 
@@ -5036,6 +5056,9 @@ class TestTimestampView(OsfTestCase):
                 'file_id': [file_verify_result.file_id],
                 'file_path': [file_verify_result.path],
                 'file_name': [file_node.name],
+                'size': [2345],
+                'created': ['2018-12-17 00:00'],
+                'modified': ['2018-12-19 00:00'],
                 'version': [file_node.current_version_number]
             },
             content_type='application/json',
@@ -5119,23 +5142,22 @@ class TestAddonFileViewTimestampFunc(OsfTestCase):
             file.write(numpy.random.bytes(1000))
         version = file_node.get_version(1, required=True)
         addTimestamp = AddTimestamp()
-        result = addTimestamp.add_timestamp(ret['user']['id'],
-                                            file_node._id,
-                                            self.node._id, file_node.provider,
-                                            file_node._path,
-                                            tmp_file, tmp_dir)
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': file_node._path,
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': file_node.provider
+        }
+        result = addTimestamp.add_timestamp(
+            ret['user']['id'], file_data, self.node._id, tmp_file, tmp_dir
+        )
         shutil.rmtree(tmp_dir)
         assert_in('verify_result', result)
         assert_equal(result['verify_result'], 1)
-
-    def test_timestamptoken_verify(self):
-        from addons.base.views import timestamptoken_verify
-
-        filename='tests.test_views.test_timestamptoken_verify'
-        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
-        version = file_node.get_version(1, required=True)
-        verify_result = timestamptoken_verify(self.auth_obj, self.node, file_node, version, self.user.id)
-        assert_in('verify_result', verify_result)
 
 if __name__ == '__main__':
     unittest.main()

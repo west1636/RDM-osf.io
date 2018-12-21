@@ -712,7 +712,7 @@ class TestMoveHook(HookTestCase):
         file = folder.append_file('No I don\'t wanna go')
         file.checkout = self.user
         file.save()
-        
+
         folder_two = self.root_node.append_folder('To There')
         res = self.send_hook(
             'osfstorage_move_hook',
@@ -738,7 +738,7 @@ class TestMoveHook(HookTestCase):
         file = folder_nested.append_file('No I don\'t wanna go')
         file.checkout = self.user
         file.save()
-        
+
         folder_two = self.root_node.append_folder('To There')
         res = self.send_hook(
             'osfstorage_move_hook',
@@ -1026,7 +1026,11 @@ class TestFileTags(StorageTestCase):
 @pytest.mark.django_db
 class TestFileViews(StorageTestCase):
 
-    def test_file_views(self):
+    @mock.patch('addons.base.views.requests')
+    def test_file_views(self, mock_requests):
+        # Pretend timestamp request to waterbutler failed
+        mock_requests.get.return_value.status_code = 400
+
         file = create_test_file(node=self.node, user=self.user)
         url = self.node.web_url_for('addon_view_or_download_file', path=file._id, provider=file.provider)
         # Test valid url file 200 on redirect
