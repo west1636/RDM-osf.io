@@ -20,12 +20,25 @@ var HEADER_NAMES = {
 var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
     valueNames: [
         'provider',
-        {name: 'file_id', attr: 'value'},
+        {name: 'creator_name', attr: 'value'},
+        {name: 'creator_email', attr: 'value'},
+        {name: 'creator_id', attr: 'value'},
+        {name: 'creator_institution', attr: 'value'},
         {name: 'file_path', attr: 'value'},
+        {name: 'file_id', attr: 'value'},
+        {name: 'file_create_date_on_upload', attr: 'value'},
+        {name: 'file_create_date_on_verify', attr: 'value'},
+        {name: 'file_modify_date_on_upload', attr: 'value'},
+        {name: 'file_modify_date_on_verify', attr: 'value'},
+        {name: 'file_size_on_upload', attr: 'value'},
+        {name: 'file_size_on_verify', attr: 'value'},
         {name: 'file_version', attr: 'value'},
-        'verify_user_name',
-        'verify_date',
-    ],
+        {name: 'verify_user_id', attr: 'value'},
+        {name: 'verify_user_name', attr: 'value'},
+        {name: 'verify_date', attr: 'value'},
+        {name: 'verify_result_title', attr: 'value'},
+        'verify_user_name_id'
+    ]
 });
 
 function newLine() {
@@ -299,7 +312,7 @@ function initList() {
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
-    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name;});
+    var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name_id;});
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (alreadyAdded.indexOf(userName) === -1) {
@@ -314,7 +327,7 @@ function initList() {
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
 
         var userName = userFilterSelect.value;
-        var userNameFilter = function(i) {return !userName || (!i.values().verify_user_name || (i.values().verify_user_name === userName));};
+        var userNameFilter = function(i) {return !userName || (!i.values().verify_user_name_id || (i.values().verify_user_name_id === userName));};
         var filters = [userNameFilter];
 
         var dateFilters = [
