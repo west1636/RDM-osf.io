@@ -25,6 +25,7 @@ from osf.models import (
 )
 from website import util
 from website import settings
+from website.util import waterbutler
 
 
 logger = logging.getLogger(__name__)
@@ -218,39 +219,19 @@ def get_full_list(uid, pid, node):
 def check_file_timestamp(uid, node, data):
     user = OSFUser.objects.get(id=uid)
     cookie = user.get_or_create_cookie()
-    headers = {'content-type': 'application/json'}
-    cookies = {settings.COOKIE_NAME: cookie}
-    url = None
     tmp_dir = None
     result = None
 
     try:
         file_node = BaseFileNode.objects.get(_id=data['file_id'])
-        if data['provider'] == 'osfstorage':
-            url = file_node.generate_waterbutler_url(
-                action='download',
-                version=data.get('file_version'),
-                direct=None, _internal=False
-            )
-
-        else:
-            url = file_node.generate_waterbutler_url(
-                action='download',
-                direct=None, _internal=False
-            )
-
-        res = requests.get(url, headers=headers, cookies=cookies)
         current_datetime = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
         tmp_dir = 'tmp_{}_{}_{}'.format(user._id, file_node._id, current_datetime_str)
 
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
-        file_name = os.path.basename(data['file_path'])
-        download_file_path = os.path.join(tmp_dir, file_name)
-        with open(download_file_path, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
+
+        download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
         verify_check = TimeStampTokenVerifyCheck()
         result = verify_check.timestamp_check(
@@ -269,38 +250,19 @@ def check_file_timestamp(uid, node, data):
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
     cookie = user.get_or_create_cookie()
-    headers = {'content-type': 'application/json'}
-    cookies = {settings.COOKIE_NAME: cookie}
-    url = None
     tmp_dir = None
 
     try:
         file_node = BaseFileNode.objects.get(_id=data['file_id'])
-        if data['provider'] == 'osfstorage':
-            url = file_node.generate_waterbutler_url(
-                action='download',
-                version=data.get('file_version'),
-                direct=None, _internal=False
-            )
-        else:
-            url = file_node.generate_waterbutler_url(
-                action='download',
-                direct=None, _internal=False
-            )
 
         # Request To Download File
-        res = requests.get(url, headers=headers, cookies=cookies)
         tmp_dir = 'tmp_{}'.format(user._id)
         count = 1
         while os.path.exists(tmp_dir):
             count += 1
             tmp_dir = 'tmp_{}_{}'.format(user._id, count)
         os.mkdir(tmp_dir)
-        file_name = os.path.basename(data['file_path'])
-        download_file_path = os.path.join(tmp_dir, file_name)
-        with open(download_file_path, 'wb') as fout:
-            fout.write(res.content)
-            res.close()
+        download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
         addTimestamp = AddTimestamp()
         result = addTimestamp.add_timestamp(
