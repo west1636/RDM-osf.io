@@ -125,7 +125,7 @@ def get_error_list(pid):
         }
 
         if base_file_data_exists and provider == 'osfstorage':
-            error_info['version'] = base_file_data.current_version_number
+            error_info['file_version'] = base_file_data.current_version_number
 
         if creator is not None:
             error_info['creator_name'] = creator.fullname
@@ -197,10 +197,10 @@ def get_full_list(uid, pid, node):
                     'size': file_data['attributes'].get('size'),
                     'created': file_data['attributes'].get('created_utc'),
                     'modified': file_data['attributes'].get('modified_utc'),
-                    'version': ''
+                    'file_version': ''
                 }
                 if provider_data['attributes']['provider'] == 'osfstorage':
-                    file_info['version'] = file_data['attributes']['extra'].get('version')
+                    file_info['file_version'] = file_data['attributes']['extra'].get('version')
                 if file_info:
                     file_list.append(file_info)
 
@@ -279,7 +279,7 @@ def add_token(uid, node, data):
         if data['provider'] == 'osfstorage':
             url = file_node.generate_waterbutler_url(
                 action='download',
-                version=data['version'],
+                version=data.get('file_version'),
                 direct=None, _internal=False
             )
         else:
@@ -296,7 +296,8 @@ def add_token(uid, node, data):
             count += 1
             tmp_dir = 'tmp_{}_{}'.format(user._id, count)
         os.mkdir(tmp_dir)
-        download_file_path = os.path.join(tmp_dir, data['file_name'])
+        file_name = os.path.basename(data['file_path'])
+        download_file_path = os.path.join(tmp_dir, file_name)
         with open(download_file_path, 'wb') as fout:
             fout.write(res.content)
             res.close()

@@ -141,7 +141,6 @@ var verifyProviderFiles = function (params, providerInfo, count) {
 };
 
 var add = function (params) {
-
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
         var checkbox = item.elm.querySelector('[type=checkbox]');
         if (checkbox) {
