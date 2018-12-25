@@ -5032,8 +5032,9 @@ class TestTimestampView(OsfTestCase):
         assert 'class="creator_email" value="freddiemercury' in res
         assert 'class="creator_institution" value="None"' in res
 
+    @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_add_timestamp_token(self, mock_get):
+    def test_add_timestamp_token(self, mock_get, mock_shutil):
         mock_get.return_value.content = ''
 
         url_timestamp = self.project.url + 'timestamp/'
@@ -5073,8 +5074,9 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file3.status_3' not in res
         assert 's3_test_file1.status_3' in res
 
+    @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_get_timestamp_error_data(self, mock_get):
+    def test_get_timestamp_error_data(self, mock_get, mock_shutil):
         mock_get.return_value.content = ''
 
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')

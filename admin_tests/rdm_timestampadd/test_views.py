@@ -252,8 +252,9 @@ class TestAddTimestampData(AdminTestCase):
         os.remove(pub_key_path)
         rdmuserkey_pub_key.delete()
 
+    @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_post(self, mock_get, **kwargs):
+    def test_post(self, mock_get, mock_shutil, **kwargs):
         mock_get.return_value.content = ''
 
         res_timestampaddlist = self.view.get_context_data()
