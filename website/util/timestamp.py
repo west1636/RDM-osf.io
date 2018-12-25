@@ -229,7 +229,7 @@ def check_file_timestamp(uid, node, data):
         if data['provider'] == 'osfstorage':
             url = file_node.generate_waterbutler_url(
                 action='download',
-                version=data['version'],
+                version=data.get('file_version'),
                 direct=None, _internal=False
             )
 
@@ -246,7 +246,8 @@ def check_file_timestamp(uid, node, data):
 
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
-        download_file_path = os.path.join(tmp_dir, data['file_name'])
+        file_name = os.path.basename(data['file_path'])
+        download_file_path = os.path.join(tmp_dir, file_name)
         with open(download_file_path, 'wb') as fout:
             fout.write(res.content)
             res.close()
