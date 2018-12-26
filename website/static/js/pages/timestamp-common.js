@@ -38,7 +38,36 @@ var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
         {name: 'verify_date', attr: 'value'},
         {name: 'verify_result_title', attr: 'value'},
         'verify_user_name_id'
-    ]
+    ],
+    page: 10,
+    pagination: {
+        paginationClass: 'listjs-pagination',
+        innerWindow: 3,
+        outerWindow: 1
+    }
+});
+
+TIMESTAMP_LIST_OBJECT.on('updated', function (list) {
+    var isFirst = list.i === 1;
+    var isLast = list.i > list.matchingItems.length - list.page;
+
+    $('.pagination-prev.disabled, .pagination-next.disabled').removeClass('disabled');
+    if (isFirst) {
+        $('.pagination-prev').addClass('disabled');
+    }
+    if (isLast) {
+        $('.pagination-next').addClass('disabled');
+    }
+});
+
+$('.pagination-prev').click(function () {
+    $('.listjs-pagination .active').prev().trigger('click');
+    return false;
+});
+
+$('.pagination-next').click(function () {
+    $('.listjs-pagination .active').next().trigger('click');
+    return false;
 });
 
 function newLine() {
@@ -307,11 +336,10 @@ function saveTextFile(filename, content) {
 }
 
 function initList() {
-
     var userFilterSelect = document.getElementById('userFilterSelect');
-
     var alreadyAdded = [''];
     var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name_id;});
+
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];
         if (alreadyAdded.indexOf(userName) === -1) {
@@ -324,11 +352,9 @@ function initList() {
     }
 
     document.getElementById('applyFiltersButton').addEventListener('click', function() {
-
         var userName = userFilterSelect.value;
         var userNameFilter = function(i) {return !userName || (!i.values().verify_user_name_id || (i.values().verify_user_name_id === userName));};
         var filters = [userNameFilter];
-
         var dateFilters = [
             {
                 element: document.getElementById('startDateFilter'),
@@ -364,7 +390,6 @@ function initList() {
         TIMESTAMP_LIST_OBJECT.filter(function (i) {
             return filters.every(function(f) {return f(i);});
         });
-
     });
 }
 

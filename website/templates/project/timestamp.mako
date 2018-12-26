@@ -77,6 +77,15 @@
             <span id="configureNodeAnchor" class="anchor"></span>
             <div class="row">
                 <div class="col-xs-12">
+                    <ul class="pagination-wrap">
+                        <li class="pagination-prev">
+                            <a class="page" href="#">&#060;</a>
+                        </li>
+                        <ul class="listjs-pagination"></ul>
+                        <li class="pagination-next">
+                            <a class="page" href="#">&#062;</a>
+                        </li>
+                    </ul>
                     <table class="table table-bordered table-addon-terms">
                         <thead class="block-head">
                             <tr>
