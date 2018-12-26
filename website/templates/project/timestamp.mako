@@ -83,11 +83,11 @@
                                 <th width="3%">
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
-                                <th width="10%"><span id="sort_provider">Provider <span class="fa fa-sort-down"></span></span></th>
-                                <th width="30%"><span id="sort_file_path">File Path <span class="fa fa-sort-down"></span></span></th>
-                                <th width="15%"><span id="sort_verify_user_name_id">Timestamp by <span class="fa fa-sort-down"></span></span></th>
-                                <th width="22%"><span id="sort_verify_date">Updated at <span class="fa fa-sort-down"></span></span></th>
-                                <th width="20%"><span id="sort_verify_result_title">Timestamp Verification <span class="fa fa-sort-down"></span></span></th>
+                                <th width="11%"><span id="sort_provider">Provider <span class="fa fa-sort"></span></span></th>
+                                <th width="29%"><span id="sort_file_path">File Path <span class="fa fa-sort"></span></span></th>
+                                <th width="15%"><span id="sort_verify_user_name_id">Timestamp by <span class="fa fa-sort"></span></span></th>
+                                <th width="22%"><span id="sort_verify_date">Updated at <span class="fa fa-sort"></span></span></th>
+                                <th width="20%"><span id="sort_verify_result_title">Timestamp Verification <span class="fa fa-sort"></span></span></th>
                             </tr>
                         </thead>
                         <font color="red">
