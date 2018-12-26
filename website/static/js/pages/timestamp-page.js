@@ -35,9 +35,5 @@ $(function () {
         timestampCommon.download();
     });
 
-    $('#addTimestampAllCheck').on('change', function () {
-        $('input[id=addTimestampCheck]').prop('checked', this.checked);
-    });
-
     $('#timestamp_errors_spinner').hide();
 });

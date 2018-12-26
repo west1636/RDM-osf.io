@@ -76,6 +76,13 @@ $('#pageLength').change(function () {
     $('.listjs-pagination li').first().trigger('click');
 });
 
+$('#addTimestampAllCheck').on('change', function () {
+    var checkAll = this.checked;
+    TIMESTAMP_LIST_OBJECT.items.map(function (item) {
+        $(item.elm).find('#addTimestampCheck').prop('checked', checkAll);
+    });
+});
+
 function newLine() {
     if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
         return '\r\n';
