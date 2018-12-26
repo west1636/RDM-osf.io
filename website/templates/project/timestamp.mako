@@ -74,9 +74,8 @@
                     </div>
                 </div>
             </div>
-            <span id="configureNodeAnchor" class="anchor"></span>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-sm-8">
                     <ul class="pagination-wrap">
                         <li class="pagination-prev">
                             <a class="page" href="#">&#060;</a>
@@ -86,6 +85,21 @@
                             <a class="page" href="#">&#062;</a>
                         </li>
                     </ul>
+                </div>
+                <div class="col-sm-2">
+                    <label class="pull-right">per page:</label>
+                </div>
+                <div class="col-sm-2">
+                    <select id="pageLength" class="form-control">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+            </div>
+            <span id="configureNodeAnchor" class="anchor"></span>
+            <div class="row">
+                <div class="col-xs-12">
                     <table class="table table-bordered table-addon-terms">
                         <thead class="block-head">
                             <tr>

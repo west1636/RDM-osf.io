@@ -70,6 +70,12 @@ $('.pagination-next').click(function () {
     return false;
 });
 
+$('#pageLength').change(function () {
+    TIMESTAMP_LIST_OBJECT.page = $(this).val();
+    TIMESTAMP_LIST_OBJECT.update();
+    $('.listjs-pagination li').first().trigger('click');
+});
+
 function newLine() {
     if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
         return '\r\n';
