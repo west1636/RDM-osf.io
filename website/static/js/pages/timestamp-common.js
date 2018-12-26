@@ -328,7 +328,7 @@ function initList() {
         clickSortElement.addEventListener('click', (function(propertyName, clickSortElements) {
             return function(event) {
 
-                var currentClassString = event.target.lastElementChild.classList.value;
+                var currentClassString = event.target.lastElementChild.classList.toString();
 
                 clickSortElements.forEach(function(element) {
                     // written this way to ensure it works with IE
