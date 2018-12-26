@@ -308,6 +308,22 @@ function saveTextFile(filename, content) {
 
 function initList() {
 
+    // list sort buttons code
+
+    var property_names = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
+    var click_sort_elements = property_names.map(function(property_name) {
+        return 'sort_' + property_name;
+    }).map(function(click_sort_name) {
+        return document.getElementById(click_sort_name);
+    });
+
+    for (var i = 0; i < click_sort_elements.length; i++) {
+        var click_sort_element = click_sort_elements[i];
+        click_sort_element.addEventListener('click', function() {console.log(click_sort_element.id);});
+    }
+
+    // filter by users and date code
+
     var userFilterSelect = document.getElementById('userFilterSelect');
 
     var alreadyAdded = [''];
