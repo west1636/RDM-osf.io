@@ -83,11 +83,11 @@
                                 <th width="3%">
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
-                                <span id="provider" ><th width="10%">Provider</th></span>
-                                <span id="file_path" ><th width="30%">File Path</th></span>
-                                <span id="verify_user_name_id" ><th width="15%">Timestamp by</th></span>
-                                <span id="" ><th width="22%">Updated at</th></span>
-                                <span id="" ><th width="20%">Timestamp Verification</th></span>
+                                <span id="sort_provider" ><th width="10%">Provider</th></span>
+                                <span id="sort_file_path" ><th width="30%">File Path</th></span>
+                                <span id="sort_verify_user_name_id" ><th width="15%">Timestamp by</th></span>
+                                <span id="sort_verify_date" ><th width="22%">Updated at</th></span>
+                                <span id="sort_verify_result_title" ><th width="20%">Timestamp Verification</th></span>
                             </tr>
                         </thead>
                         <font color="red">
