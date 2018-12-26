@@ -323,8 +323,13 @@ function initList() {
     });
 
     for (var propertyName in propertyToElement) {
-        var click_sort_element = propertyToElement[propertyName];
-        click_sort_element.addEventListener('click', function() {console.log(propertyName);});
+        var clickSortElement = propertyToElement[propertyName];
+        // closure to make sure propertyName is in scope at click time
+        clickSortElement.addEventListener('click', (function(propertyName) {
+            return function() {
+                console.log(propertyName);
+            };
+        })(propertyName));
     }
 
     // filter by users and date code
