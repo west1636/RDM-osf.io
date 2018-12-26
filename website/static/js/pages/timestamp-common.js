@@ -51,6 +51,12 @@ TIMESTAMP_LIST_OBJECT.on('updated', function (list) {
     var isFirst = list.i === 1;
     var isLast = list.i > list.matchingItems.length - list.page;
 
+    if (list.items.length > list.page) {
+        $('.pagination-wrap').show();
+    } else {
+        $('.pagination-wrap').hide();
+    }
+
     $('.pagination-prev.disabled, .pagination-next.disabled').removeClass('disabled');
     if (isFirst) {
         $('.pagination-prev').addClass('disabled');
@@ -352,6 +358,12 @@ function initList() {
     var userFilterSelect = document.getElementById('userFilterSelect');
     var alreadyAdded = [''];
     var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name_id;});
+
+    if (TIMESTAMP_LIST_OBJECT.items.length > TIMESTAMP_LIST_OBJECT.page) {
+        $('.pagination-wrap').show();
+    } else {
+        $('.pagination-wrap').hide();
+    }
 
     for (var i = 0; i < users.length; i++) {
         var userName = users[i];

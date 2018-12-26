@@ -76,7 +76,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-8">
-                    <ul class="pagination-wrap">
+                    <ul class="pagination-wrap" style="display: none;">
                         <li class="pagination-prev">
                             <a class="page">&#060;</a>
                         </li>
