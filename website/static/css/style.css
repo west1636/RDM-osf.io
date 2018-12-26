@@ -6,6 +6,7 @@ html, body {
 
 html {
     padding-bottom: 50px;
+    min-height: 600px;
 }
 
 body {
