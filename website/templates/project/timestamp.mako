@@ -78,19 +78,19 @@
                 <div class="col-sm-8">
                     <ul class="pagination-wrap">
                         <li class="pagination-prev">
-                            <a class="page" href="#">&#060;</a>
+                            <a class="page">&#060;</a>
                         </li>
                         <ul class="listjs-pagination"></ul>
                         <li class="pagination-next">
-                            <a class="page" href="#">&#062;</a>
+                            <a class="page">&#062;</a>
                         </li>
                     </ul>
                 </div>
                 <div class="col-sm-2">
-                    <label class="pull-right">per page:</label>
+                    <label class="pull-right" style="margin: 20px 0;">per page:</label>
                 </div>
                 <div class="col-sm-2">
-                    <select id="pageLength" class="form-control">
+                    <select id="pageLength" class="form-control" style="margin: 15px 0;">
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>
@@ -178,17 +178,7 @@
     </div>
 </div>
 
-<style type="text/css">
-.table>thead>tr>th {
-    vertical-align: middle;
-}
-.form-group .input-group {
-    margin-bottom: 10px;
-}
-date-input-polyfill {
-  z-index: 3;
-}
-</style>
+<link href="/static/css/pages/timestamp-page.css" rel="stylesheet" />
 
 <%def name="javascript_bottom()">
 ${parent.javascript_bottom()}
