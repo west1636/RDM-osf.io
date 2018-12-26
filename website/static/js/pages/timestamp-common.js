@@ -347,8 +347,6 @@ function initList() {
                 event.target.lastElementChild.classList.remove('fa-sort');
                 event.target.lastElementChild.classList.add(sortStyleMap[newSortString]);
 
-                console.log(propertyName);
-
             };
         })(propertyName, clickSortElements));
     }
