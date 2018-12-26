@@ -15,7 +15,7 @@
 <%def name="content()">
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div id="home-hero" style="height: 600px">
+    <div id="home-hero" style="height: 100%">
       <div class="container text-center">
         <div class="visible-xs-block visible-sm-block visible-md-block network-bg"></div>
         <h1 class="hero-brand">GakuNin RDM</h1>

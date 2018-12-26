@@ -1,6 +1,11 @@
 /* Global Styles are in base.css */
 
 html, body {
+    height: 100%;
+}
+
+html {
+    padding-bottom: 50px;
 }
 
 body {
@@ -8,6 +13,10 @@ body {
     position: relative; /* for bootstrap affix */
     -webkit-font-smoothing: antialiased;
     font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.watermarked {
+    height: 100%;
 }
 
 a {
