@@ -83,11 +83,11 @@
                                 <th width="3%">
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
-                                <th width="10%">Provider</th>
-                                <th width="30%">File Path</th>
-                                <th width="15%">Timestamp by</th>
-                                <th width="22%">Updated at</th>
-                                <th width="20%">Timestamp Verification</th>
+                                <span id="provider" ><th width="10%">Provider</th></span>
+                                <span id="file_path" ><th width="30%">File Path</th></span>
+                                <span id="verify_user_name_id" ><th width="15%">Timestamp by</th></span>
+                                <span id="" ><th width="22%">Updated at</th></span>
+                                <span id="" ><th width="20%">Timestamp Verification</th></span>
                             </tr>
                         </thead>
                         <font color="red">
@@ -125,8 +125,8 @@
                                     <input type="hidden" class="verify_result_title" value="${ error_info['verify_result_title'] }" />
 
                                     <td class="verify_user_name_id">${ error_info['verify_user_name'] } (${ error_info['verify_user_id'] })</td>
-                                    <td>${ error_info['verify_date'] }</td>
-                                    <td>${ error_info['verify_result_title'] }</td>
+                                    <td class="verify_date">${ error_info['verify_date'] }</td>
+                                    <td class="verify_result_title">${ error_info['verify_result_title'] }</td>
                                 </tr>
                                 % endfor
                             % endfor
