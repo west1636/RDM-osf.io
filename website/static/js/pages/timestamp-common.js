@@ -325,11 +325,32 @@ function initList() {
     for (var propertyName in propertyToElement) {
         var clickSortElement = propertyToElement[propertyName];
         // closure to make sure propertyName is in scope at click time
-        clickSortElement.addEventListener('click', (function(propertyName) {
-            return function() {
+        clickSortElement.addEventListener('click', (function(propertyName, clickSortElements) {
+            return function(event) {
+
+                var currentClassString = event.target.lastElementChild.classList.value;
+
+                clickSortElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.lastElementChild.classList.remove('fa-sort-up');
+                    element.lastElementChild.classList.remove('fa-sort-down');
+                    element.lastElementChild.classList.add('fa-sort');
+                });
+
+                var newSortString = currentClassString.indexOf('up') === -1 ? 'asc' : 'desc';
+                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: newSortString});
+
+                var sortStyleMap = {
+                    asc: 'fa-sort-up',
+                    desc: 'fa-sort-down',
+                };
+                event.target.lastElementChild.classList.remove('fa-sort');
+                event.target.lastElementChild.classList.add(sortStyleMap[newSortString]);
+
                 console.log(propertyName);
+
             };
-        })(propertyName));
+        })(propertyName, clickSortElements));
     }
 
     // filter by users and date code
