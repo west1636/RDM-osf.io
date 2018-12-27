@@ -57,17 +57,69 @@ $(function () {
         });
     };
 
-    $('#addTimestampAllCheck').on('change', function () {
-        $('input[id=addTimestampCheck]').prop('checked', this.checked);
+    var updatePaginationElements = function () {
+        // Page info
+        var currentPage = $('.listjs-pagination .active a').text();
+        var numPages = $('.listjs-pagination li a').last().text();
+        $('.pagination .current').text('Page ' + currentPage + ' of ' + numPages);
+
+        // Enable/disable buttons
+        $('.pagination #first-page').removeClass('disabled');
+        $('.pagination #previous-page').removeClass('disabled');
+        $('.pagination #last-page').removeClass('disabled');
+        $('.pagination #next-page').removeClass('disabled');
+        if (!currentPage || currentPage === '1') {
+            $('.pagination #first-page').addClass('disabled');
+            $('.pagination #previous-page').addClass('disabled');
+        }
+        if (currentPage === numPages) {
+            $('.pagination #last-page').addClass('disabled');
+            $('.pagination #next-page').addClass('disabled');
+        }
+    };
+
+    $('.pagination #first-page').on('click', function () {
+        $('.listjs-pagination li').first().click();
+        updatePaginationElements();
     });
 
-    var document_onready = function () {
+    $('.pagination #previous-page').on('click', function () {
+        $('.pagination-prev').click();
+        updatePaginationElements();
+    });
+
+    $('.pagination #next-page').on('click', function () {
+        $('.pagination-next').click();
+        updatePaginationElements();
+    });
+
+    $('.pagination #last-page').on('click', function () {
+        $('.listjs-pagination li').last().click();
+        updatePaginationElements();
+    });
+
+    $('.pagination #pageLength-10').on('click', function () {
+        $('#pageLength').val(10).change();
+        updatePaginationElements();
+    });
+
+    $('.pagination #pageLength-25').on('click', function () {
+        $('#pageLength').val(25).change();
+        updatePaginationElements();
+    });
+
+    $('.pagination #pageLength-50').on('click', function () {
+        $('#pageLength').val(50).change();
+        updatePaginationElements();
+    });
+
+    $(document).ready(function () {
+        timestampCommon.initList();
         $('#btn-verify').on('click', btnVerify_onclick).focus();
         $('#btn-addtimestamp').on('click', btnAddtimestamp_onclick).focus();
-        timestampCommon.initList();
         $('#btn-download').on('click', function () {
             timestampCommon.download();
         });
-    };
-    $(document).ready(document_onready);
+        updatePaginationElements();
+    });
 });

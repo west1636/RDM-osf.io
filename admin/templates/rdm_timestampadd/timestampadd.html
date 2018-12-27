@@ -56,6 +56,54 @@
             </div>
         </div>
     </div>
+    <div class="row" style="display: none;">
+        <!--
+            Same block as in web, but as the styling here is different,
+            we permanently hide it. The clicks on the visible pagination
+            elements are redirected to these hidden elements.
+            List.js don't generate page navigation as it was requested,
+            that's why we're doing this.
+        -->
+        <div class="col-sm-8">
+            <ul class="pagination-wrap" style="display: none;">
+                <li class="pagination-prev">
+                    <a class="page">&#060;</a>
+                </li>
+                <ul class="listjs-pagination"></ul>
+                <li class="pagination-next">
+                    <a class="page">&#062;</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-2">
+            <label class="pull-right" style="margin: 20px 0;">per page:</label>
+        </div>
+        <div class="col-sm-2">
+            <select id="pageLength" class="form-control" style="margin: 15px 0;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pagination pagination-lg">
+                <span>
+                    <div class="btn btn-primary disabled" id="first-page">|</div>
+                    <div class="btn btn-primary disabled" id="previous-page"><i class="fa fa-angle-left"></i></div>
+                    <span class="current">Page of </span>
+                    <div class="btn btn-primary disabled" id="next-page"><i class="fa fa-angle-right"></i></div>
+                    <div class="btn btn-primary disabled" id="last-page">|</div>
+                </span>
+                <span>
+                    <div class="btn btn-primary" id="pageLength-10">10</div>
+                    <div class="btn btn-primary" id="pageLength-25">25</div>
+                    <div class="btn btn-primary" id="pageLength-50">50</div>
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <font color="red">
             <h4 id="timestamp_errors_spinner"></h4>
@@ -150,4 +198,3 @@ date-input-polyfill {
 <script src={{ '/static/public/js/rdm-timestampadd-page.js' }}></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 {% endblock content %}
-
