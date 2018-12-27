@@ -36,6 +36,7 @@
           <div class="circle" id="circle-8"><span></span></div>
         </div>
 
+<!--
         <div id="hero-signup" class="container" style="visibility: hidden">
           <div class="row">
             <div class="col-sm-6 hidden-xs">
@@ -115,6 +116,7 @@
             </div>
           </div>
         </div>
+-->
       </div>
     </div>
 
