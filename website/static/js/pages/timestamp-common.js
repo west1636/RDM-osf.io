@@ -308,47 +308,69 @@ function saveTextFile(filename, content) {
 
 function initList() {
 
-    // list sort buttons code
+    // sort up buttons code
 
     var propertyNames = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
-    var clickSortElements = propertyNames.map(function(property_name) {
-        return 'sort_' + property_name;
+    var clickSortUpElements = propertyNames.map(function(property_name) {
+        return 'sort_up_' + property_name;
     }).map(function(click_sort_name) {
         return document.getElementById(click_sort_name);
     });
 
-    var propertyToElement = {};
+    var propertyToUpElement = {};
     propertyNames.forEach(function(propertyName, i) {
-        propertyToElement[propertyName] = clickSortElements[i];
+        propertyToUpElement[propertyName] = clickSortUpElements[i];
     });
 
-    for (var propertyName in propertyToElement) {
-        var clickSortElement = propertyToElement[propertyName];
+    for (var upPropertyName in propertyToUpElement) {
+        var clickSortUpElement = propertyToUpElement[upPropertyName];
         // closure to make sure propertyName is in scope at click time
-        clickSortElement.addEventListener('click', (function(propertyName, clickSortElements) {
+        clickSortUpElement.addEventListener('click', (function(propertyName, clickSortUpElements) {
             return function(event) {
 
-                var currentClassString = event.target.lastElementChild.classList.toString();
-
-                clickSortElements.forEach(function(element) {
+                clickSortUpElements.forEach(function(element) {
                     // written this way to ensure it works with IE
-                    element.lastElementChild.classList.remove('fa-sort-up');
-                    element.lastElementChild.classList.remove('fa-sort-down');
-                    element.lastElementChild.classList.add('fa-sort');
+                    element.classList.add('text-muted');
                 });
 
-                var newSortString = currentClassString.indexOf('up') === -1 ? 'asc' : 'desc';
-                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: newSortString});
+                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: 'asc'});
 
-                var sortStyleMap = {
-                    asc: 'fa-sort-up',
-                    desc: 'fa-sort-down',
-                };
-                event.target.lastElementChild.classList.remove('fa-sort');
-                event.target.lastElementChild.classList.add(sortStyleMap[newSortString]);
+                event.target.classList.remove('text-muted');
 
             };
-        })(propertyName, clickSortElements));
+        })(upPropertyName, clickSortUpElements));
+    }
+
+    // sort down buttons code
+
+    var clickSortDownElements = propertyNames.map(function(property_name) {
+        return 'sort_down_' + property_name;
+    }).map(function(click_sort_name) {
+        return document.getElementById(click_sort_name);
+    });
+
+    var propertyToDownElement = {};
+    propertyNames.forEach(function(propertyName, i) {
+        propertyToDownElement[propertyName] = clickSortDownElements[i];
+    });
+
+    for (var downPropertyName in propertyToDownElement) {
+        var clickSortDownElement = propertyToDownElement[downPropertyName];
+        // closure to make sure upPropertyName is in scope at click time
+        clickSortDownElement.addEventListener('click', (function(upPropertyName, clickSortDownElements) {
+            return function(event) {
+
+                clickSortDownElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                TIMESTAMP_LIST_OBJECT.sort(upPropertyName, {order: 'desc'});
+
+                event.target.classList.remove('text-muted');
+
+            };
+        })(downPropertyName, clickSortDownElements));
     }
 
     // filter by users and date code
