@@ -308,7 +308,7 @@ function saveTextFile(filename, content) {
 
 function initList() {
 
-    // sort up buttons code
+    // sort buttons code
 
     var propertyNames = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
     var clickSortUpElements = propertyNames.map(function(property_name) {
@@ -322,6 +322,17 @@ function initList() {
         propertyToUpElement[propertyName] = clickSortUpElements[i];
     });
 
+    var clickSortDownElements = propertyNames.map(function(property_name) {
+        return 'sort_down_' + property_name;
+    }).map(function(click_sort_name) {
+        return document.getElementById(click_sort_name);
+    });
+
+    var propertyToDownElement = {};
+    propertyNames.forEach(function(propertyName, i) {
+        propertyToDownElement[propertyName] = clickSortDownElements[i];
+    });
+
     for (var upPropertyName in propertyToUpElement) {
         var clickSortUpElement = propertyToUpElement[upPropertyName];
         // closure to make sure propertyName is in scope at click time
@@ -329,6 +340,11 @@ function initList() {
             return function(event) {
 
                 clickSortUpElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                clickSortDownElements.forEach(function(element) {
                     // written this way to ensure it works with IE
                     element.classList.add('text-muted');
                 });
@@ -341,19 +357,6 @@ function initList() {
         })(upPropertyName, clickSortUpElements));
     }
 
-    // sort down buttons code
-
-    var clickSortDownElements = propertyNames.map(function(property_name) {
-        return 'sort_down_' + property_name;
-    }).map(function(click_sort_name) {
-        return document.getElementById(click_sort_name);
-    });
-
-    var propertyToDownElement = {};
-    propertyNames.forEach(function(propertyName, i) {
-        propertyToDownElement[propertyName] = clickSortDownElements[i];
-    });
-
     for (var downPropertyName in propertyToDownElement) {
         var clickSortDownElement = propertyToDownElement[downPropertyName];
         // closure to make sure upPropertyName is in scope at click time
@@ -361,6 +364,11 @@ function initList() {
             return function(event) {
 
                 clickSortDownElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                clickSortUpElements.forEach(function(element) {
                     // written this way to ensure it works with IE
                     element.classList.add('text-muted');
                 });
