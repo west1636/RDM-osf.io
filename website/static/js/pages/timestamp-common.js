@@ -310,6 +310,15 @@ function initList() {
 
     // sort buttons code
 
+    var sortFunction = function(a, b, options) {
+        if (a.values()['provider'] !== b.values()['provider']) {
+            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()['provider'], b.values()['provider']);
+        }
+        else {
+            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()[options.valueName], b.values()[options.valueName]);
+        }
+    }
+
     var propertyNames = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
     var clickSortUpElements = propertyNames.map(function(property_name) {
         return 'sort_up_' + property_name;
@@ -349,7 +358,7 @@ function initList() {
                     element.classList.add('text-muted');
                 });
 
-                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: 'asc'});
+                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: 'asc', sortFunction: sortFunction});
 
                 event.target.classList.remove('text-muted');
 
@@ -373,7 +382,7 @@ function initList() {
                     element.classList.add('text-muted');
                 });
 
-                TIMESTAMP_LIST_OBJECT.sort(upPropertyName, {order: 'desc'});
+                TIMESTAMP_LIST_OBJECT.sort(upPropertyName, {order: 'desc', sortFunction: sortFunction});
 
                 event.target.classList.remove('text-muted');
 
