@@ -108,6 +108,7 @@ h6 {
 }
 .hero-brand {
     font-weight: bold;
+    padding-top: 100px;
 }
 #hero-signup {
     background: rgba(255, 255, 255, 0.15);
@@ -557,6 +558,9 @@ footer {
         padding-top: 0;
     }
 
+    .hero-brand {
+        padding-top: 0;
+    }
     #hero-signup {
         height:400px;
     }
