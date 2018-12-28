@@ -16,7 +16,7 @@
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div id="home-hero" style="height: 100%">
-      <div class="container text-center">
+      <div class="container text-center" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding-top: 100px;">
         <div class="visible-xs-block visible-sm-block visible-md-block network-bg"></div>
         <h1 class="hero-brand">GakuNin RDM</h1>
         <h3 class="hero-tagline">A scholarly commons to connect the entire research cycle</h3>

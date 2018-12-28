@@ -104,6 +104,7 @@ h6 {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%
 }
 .hero-brand {
     font-weight: bold;
@@ -481,9 +482,13 @@ footer {
 .network-bg {
     background: url("/static/img/front-page/bg-web.png") repeat;
     background-size: contain;
-    height: 1000px;
-    margin-bottom: -1000px;
+    height: 100%;
     opacity: 0.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
 }
 
@@ -515,8 +520,6 @@ footer {
         left: 125px;
     }
     .network-bg {
-        height: 750px;
-        margin-bottom: -750px;
     }
     .feature-1 .icon {
         font-size: 100px;
