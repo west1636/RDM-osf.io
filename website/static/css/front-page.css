@@ -73,7 +73,7 @@ h6 {
     /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#67a3bf', endColorstr='#000000', GradientType=1);
     /* IE6-9 fallback on horizontal gradient */
-    height: 900px;
+    height: 100%;
     color: #fff;
     padding-top: 100px;
     position: relative;
@@ -104,8 +104,6 @@ h6 {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100% !important;
-    width: 100% !important;
 }
 .hero-brand {
     font-weight: bold;
@@ -136,7 +134,7 @@ h6 {
 @media(max-width: 767px){
 
     #home-hero {
-        height: 1000px;
+        height: 100%;
     }
 
     .sign-up-div {
