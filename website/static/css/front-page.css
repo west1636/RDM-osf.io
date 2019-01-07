@@ -81,6 +81,7 @@ h6 {
     -webkit-flex: 1 0 auto;
     -ms-flex: 1 0 auto;
     flex: 1 0 auto;
+    z-index: -1;
 }
 #home-hero h1 {
     font-size: 3.5em;
