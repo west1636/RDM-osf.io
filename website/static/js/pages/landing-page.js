@@ -46,7 +46,7 @@ var waitForFinalEvent = (function () {
 
     function initHeader() {
         width = window.innerWidth;
-        height = window.innerHeight;
+        height = 500;
         target = {
             x: width/2,
             y: 300
