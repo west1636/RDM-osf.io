@@ -73,7 +73,7 @@ h6 {
     /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#67a3bf', endColorstr='#000000', GradientType=1);
     /* IE6-9 fallback on horizontal gradient */
-    height: 100%;
+    height: 900px;
     color: #fff;
     padding-top: 100px;
     position: relative;
@@ -82,6 +82,7 @@ h6 {
     -ms-flex: 1 0 auto;
     flex: 1 0 auto;
     z-index: -1;
+    overflow: hidden;
 }
 #home-hero h1 {
     font-size: 3.5em;
@@ -109,11 +110,9 @@ h6 {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%
 }
 .hero-brand {
     font-weight: bold;
-    padding-top: 100px;
 }
 #hero-signup {
     background: rgba(255, 255, 255, 0.15);
@@ -141,7 +140,7 @@ h6 {
 @media(max-width: 767px){
 
     #home-hero {
-        height: 100%;
+        height: 1000px;
     }
 
     .sign-up-div {
@@ -488,13 +487,9 @@ footer {
 .network-bg {
     background: url("/static/img/front-page/bg-web.png") repeat;
     background-size: contain;
-    height: 100%;
+    height: 1000px;
+    margin-bottom: -1000px;
     opacity: 0.25;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
 }
 
@@ -525,6 +520,8 @@ footer {
         left: 125px;
     }
     .network-bg {
+        height: 750px;
+        margin-bottom: -750px;
     }
     .feature-1 .icon {
         font-size: 100px;
@@ -562,9 +559,6 @@ footer {
         padding-top: 0;
     }
 
-    .hero-brand {
-        padding-top: 0;
-    }
     #hero-signup {
         height:400px;
     }

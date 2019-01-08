@@ -15,8 +15,8 @@
 <%def name="content()">
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div id="home-hero" style="height: 100%">
-      <div class="container text-center" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;">
+    <div id="home-hero" style="height: 600px">
+      <div class="container text-center">
         <div class="visible-xs-block visible-sm-block visible-md-block network-bg"></div>
         <h1 class="hero-brand">GakuNin RDM</h1>
         <h3 class="hero-tagline">A scholarly commons to connect the entire research cycle</h3>
@@ -36,7 +36,7 @@
           <div class="circle" id="circle-8"><span></span></div>
         </div>
 
-        <div id="hero-signup" class="container" style="visibility: hidden; display:none">
+        <div id="hero-signup" class="container" style="visibility: hidden; display: none;">
           <div class="row">
             <div class="col-sm-6 hidden-xs">
               <a class="youtube" href="//www.youtube.com/watch?v=2TV21gOzfhw" aria-label="OSF YouTube Video"><i class="icon icon-play"></i></a>

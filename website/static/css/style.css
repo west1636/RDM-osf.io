@@ -4,10 +4,6 @@ html, body {
     height: 100%;
 }
 
-html {
-    min-height: 600px;
-}
-
 body {
     padding-top: 50px; /* body padding for fixed top nav */
     position: relative; /* for bootstrap affix */
@@ -19,10 +15,10 @@ body {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    height: auto;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    height: auto !important;
     min-height: 100%;
 }
 
@@ -38,6 +34,12 @@ body {
     -webkit-flex: 3 0 auto;
     -ms-flex: 3 0 auto;
     flex: 3 0 auto;
+}
+
+@media (max-width: 767px) {
+    .watermarked .container {
+        width: 100%;
+    }
 }
 
 a {

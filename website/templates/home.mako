@@ -2,7 +2,7 @@
 <%def name="title()">Home</%def>
 
 <%def name="content_wrap()">
-    <div class="watermarked" style="height: auto;">
+    <div class="watermarked">
         ## Maintenance alert
         % if maintenance:
         <div id="maintenance" class="scripted alert alert-dismissible" role="alert">
@@ -31,7 +31,7 @@
 
 <%def name="content()">
 
-    <div id="osfHome" style="height: 100%;"></div>
+    <div id="osfHome"></div>
 
 </%def>
 
