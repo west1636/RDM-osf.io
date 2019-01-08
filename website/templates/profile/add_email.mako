@@ -144,6 +144,7 @@
                         % endfor
                         </tbody>
                     </div>
+                </div>
                 </div>  <!-- hidden -->
 		<div style="visibility:hidden">
                 <div id="changePassword" class="panel panel-default">
