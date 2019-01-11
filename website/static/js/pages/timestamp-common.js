@@ -309,7 +309,7 @@ function generateJson(fileList, headersOrder, headerNames) {
 }
 
 function generateXml(fileList, headersOrder, headerNames) {
-    var xml = document.implementation.createDocument(null, 'errorList');
+    var xml = document.implementation.createDocument(null, 'errorList', null);
     xml.xmlVersion = '1.0';
 
     var errorList = xml.getElementsByTagName('errorList')[0];
