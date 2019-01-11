@@ -311,13 +311,13 @@ function initList() {
     // sort buttons code
 
     var sortFunction = function(a, b, options) {
-        if (a.values()['provider'] !== b.values()['provider']) {
-            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()['provider'], b.values()['provider']);
+        if (a.values().provider !== b.values().provider) {
+            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values().provider, b.values().provider);
         }
         else {
             return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()[options.valueName], b.values()[options.valueName]);
         }
-    }
+    };
 
     var propertyNames = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
     var clickSortUpElements = propertyNames.map(function(property_name) {
