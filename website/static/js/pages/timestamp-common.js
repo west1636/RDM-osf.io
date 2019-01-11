@@ -355,6 +355,91 @@ function saveTextFile(filename, content) {
 }
 
 function initList() {
+
+    // sort buttons code
+
+    var sortFunction = function(a, b, options) {
+        if (a.values().provider !== b.values().provider) {
+            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values().provider, b.values().provider);
+        }
+        else {
+            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()[options.valueName], b.values()[options.valueName]);
+        }
+    };
+
+    var propertyNames = ['provider', 'file_path', 'verify_user_name_id', 'verify_date', 'verify_result_title'];
+    var clickSortUpElements = propertyNames.map(function(property_name) {
+        return 'sort_up_' + property_name;
+    }).map(function(click_sort_name) {
+        return document.getElementById(click_sort_name);
+    });
+
+    var propertyToUpElement = {};
+    propertyNames.forEach(function(propertyName, i) {
+        propertyToUpElement[propertyName] = clickSortUpElements[i];
+    });
+
+    var clickSortDownElements = propertyNames.map(function(property_name) {
+        return 'sort_down_' + property_name;
+    }).map(function(click_sort_name) {
+        return document.getElementById(click_sort_name);
+    });
+
+    var propertyToDownElement = {};
+    propertyNames.forEach(function(propertyName, i) {
+        propertyToDownElement[propertyName] = clickSortDownElements[i];
+    });
+
+    for (var upPropertyName in propertyToUpElement) {
+        var clickSortUpElement = propertyToUpElement[upPropertyName];
+        // closure to make sure propertyName is in scope at click time
+        clickSortUpElement.addEventListener('click', (function(propertyName, clickSortUpElements) {
+            return function(event) {
+
+                clickSortUpElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                clickSortDownElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: 'asc', sortFunction: sortFunction});
+
+                event.target.classList.remove('text-muted');
+
+            };
+        })(upPropertyName, clickSortUpElements));
+    }
+
+    for (var downPropertyName in propertyToDownElement) {
+        var clickSortDownElement = propertyToDownElement[downPropertyName];
+        // closure to make sure upPropertyName is in scope at click time
+        clickSortDownElement.addEventListener('click', (function(upPropertyName, clickSortDownElements) {
+            return function(event) {
+
+                clickSortDownElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                clickSortUpElements.forEach(function(element) {
+                    // written this way to ensure it works with IE
+                    element.classList.add('text-muted');
+                });
+
+                TIMESTAMP_LIST_OBJECT.sort(upPropertyName, {order: 'desc', sortFunction: sortFunction});
+
+                event.target.classList.remove('text-muted');
+
+            };
+        })(downPropertyName, clickSortDownElements));
+    }
+
+    // filter by users and date code
+
     var userFilterSelect = document.getElementById('userFilterSelect');
     var alreadyAdded = [''];
     var users = TIMESTAMP_LIST_OBJECT.items.map(function(i) {return i.values().verify_user_name_id;});
