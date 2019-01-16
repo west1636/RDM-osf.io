@@ -252,7 +252,10 @@ var download = function () {
         }
         return false;
     }).map(function (item) {
-        return item.values();
+        var fileInfo = item.values();
+        var filePathArr = fileInfo.file_path.split('/');
+        fileInfo.file_name = filePathArr[filePathArr.length - 1];
+        return fileInfo;
     });
 
     if (fileList.length === 0) {
@@ -271,7 +274,7 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = vkbeautify.xml(generateXml(fileList, HEADERS_ORDER, HEADER_NAMES));
+            fileContent = generateXml(fileList, HEADERS_ORDER, HEADER_NAMES);
             saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
             break;
     }
@@ -310,13 +313,11 @@ function generateJson(fileList, headersOrder, headerNames) {
 
 function generateXml(fileList, headersOrder, headerNames) {
     var xml = document.implementation.createDocument(null, 'errorList', null);
-    xml.xmlVersion = '1.0';
-
     var errorList = xml.getElementsByTagName('errorList')[0];
+    xml.xmlVersion = '1.0';
 
     for (var i = 0; i < fileList.length; i++) {
         var file = fileList[i];
-
         var fileElement = xml.createElement('file');
 
         for (var j = 0; j < headersOrder.length; j++) {
@@ -327,15 +328,12 @@ function generateXml(fileList, headersOrder, headerNames) {
             headerElement.textContent = file[headersOrder[j]];
 
             fileElement.appendChild(headerElement);
-
         }
-
         errorList.appendChild(fileElement);
-
     }
 
     var serializer = new XMLSerializer();
-    return serializer.serializeToString(xml);
+    return vkbeautify.xml(serializer.serializeToString(xml));
 }
 
 function saveTextFile(filename, content) {
