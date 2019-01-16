@@ -576,10 +576,10 @@ class GatherView(TemplateView):
                 if not ext:
                     ext = 'none'
                 if obj['attributes']['kind'] == 'file':
-                    self.count_list.append(['file', obj['id'], obj['attributes']['size'], ext])
+                    self.count_list.append(['file', obj['id'], int(obj['attributes']['size']), ext])
                 elif obj['attributes']['kind'] == 'folder':
                     path = re.sub('^' + provider, '', obj['id'])
-                    self.count_list.append(['folder', obj['id'], obj['attributes']['size'], ext])
+                    self.count_list.append(['folder', obj['id'], int(obj['attributes']['size'] if obj['attributes']['size'] else 0), ext])
                     self.count_project_files(provider=provider, node_id=node_id, path='/' + path, cookies=cookies)
 
 def simple_auth(access_token):
