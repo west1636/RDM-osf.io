@@ -33,6 +33,9 @@ var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
         {name: 'file_size_on_upload', attr: 'value'},
         {name: 'file_size_on_verify', attr: 'value'},
         {name: 'file_version', attr: 'value'},
+        {name: 'project_id', attr: 'value'},
+        {name: 'organization_id', attr: 'value'},
+        {name: 'organization_name', attr: 'value'},
         {name: 'verify_user_id', attr: 'value'},
         {name: 'verify_user_name', attr: 'value'},
         {name: 'verify_date', attr: 'value'},
@@ -301,14 +304,115 @@ function generateCsv(fileList, headersOrder, headerNames) {
 function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
-        return headersOrder.reduce(function (accumulator, current) {
-            accumulator[headerNames[current]] = file[current];
-            return accumulator;
-        }, {});
+        return [
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/project/z36a9',
+            '@type': 'foaf:Project',
+            'rdfs:label': '"PROJ:z36a9"@en',
+            'rdfs:seeAlso': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/z36a9'
+            }
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/Yusuke_Komiyama',
+            '@type': 'foaf:Person',
+            'rdfs:label': '"Yusuke Komiyama"@en'
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/62615',
+            '@type': 'org:Organization',
+            'rdfs:label': '"ORG:62615"@en'
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/National_Institute_of_Informatics',
+            '@type': 'frapo:organization',
+            'rdfs:label': '"National Institute of Informatics"@en'
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/qcpxh',
+            '@type': 'sio:000396',
+            'dcat:bytes': 8083300.0,
+            'dcterms:created': {
+                '@type': 'xsd:dateTime',
+                '@value': '2018-12-06_191407JST'
+            },
+            'dcterms:hasVersion': {
+                '@type': 'xsd:int',
+                '@value': '1'
+            },
+            'dcterms:modified': {
+                '@type': 'xsd:dateTime',
+                '@value': '2018-12-16_191407JST'
+            },
+            'dcterms:title': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/RCOS_leafletA3_2018.pdf'
+            },
+            'rdfs:label': '"FILE:qcpxh"@en',
+            'rdfs:seeAlso': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/qcpxh'
+            }
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/RCOS_leafletA3_2018.pdf',
+            'rdfs:label': '"RCOS_leafletA3_2018.pdf"@en'
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/ts/' + file.project_id + '/' + file.file_id + '/' + file.verify_user_id + '/' + file.verify_date,
+            '@type': 'dcat:Dataset',
+            'dcterms:identifier': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/qcpxh'
+            },
+            'frapo:hasProjectIdentifier': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/project/z36a9'
+            },
+            'rdfs:label': '"TS:z36a9/qcpxh/sga29/2018-12-26_191407JST"@en',
+            'sem:hasLatestEndTimeStamp': '2018-12-26_191407JST',
+            'sem:hasTimestamp': 'OK',
+            'sioc:id': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/sga29'
+            }
+            },
+            {
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/sga29',
+            '@type': 'foaf:Agent',
+            'dcterms:creator': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/Yusuke_Komiyama'
+            },
+            'org:memberOf': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/62615'
+            },
+            'rdfs:label': '"USER:sga29"@en',
+            'rdfs:seeAlso': {
+                '@id': 'https://rdf.rdm.nii.ac.jp/sga29'
+            },
+            'vcard:hasEmail': 'komiyama@nii.ac.jp'
+            }
+        ];
     });
 
+    var JSONFile = {
+        '@context': {
+            'dcat': 'http://www.w3.org/ns/dcat#',
+            'dcterms': 'http://purl.org/dc/terms/',
+            'foaf': 'http://xmlns.com/foaf/0.1/',
+            'frapo': 'http://purl.org/cerif/frapo/',
+            'org': 'http://www.w3.org/ns/org#',
+            'owl': 'http://www.w3.org/2002/07/owl#',
+            'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+            'rdmr': 'https://rdf.rdm.nii.ac.jp/resource/',
+            'schema': 'http://schema.org/',
+            'sem': 'http://semanticweb.cs.vu.nl/2009/11/sem/',
+            'sio': 'http://semanticscience.org/resource/',
+            'sioc': 'http://rdfs.org/sioc/ns#',
+            'vcard': 'http://www.w3.org/2006/vcard/ns#',
+            'xsd': 'http://www.w3.org/2001/XMLSchema#'
+        },
+        '@graph': [fileList],
+    }
+
     // Generate content
-    return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
+    return vkbeautify.json(JSON.stringify(JSONFile, null, 2));
 }
 
 function generateXml(fileList, headersOrder, headerNames) {
