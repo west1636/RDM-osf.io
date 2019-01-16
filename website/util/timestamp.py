@@ -52,7 +52,8 @@ def get_error_list(pid):
 
     for data in data_list:
         if data.inspection_result_status == api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS:
-            continue
+            # continue
+            data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_CHECK_NG
 
         if not provider:
             provider = data.provider
@@ -119,6 +120,8 @@ def get_error_list(pid):
             'file_size_on_verify': data.verify_file_size,
             'file_version': '',
             'project_id': data.project_id,
+            'organization_id': verify_user.affiliated_institutions.first()._id,
+            'organization_name': verify_user.affiliated_institutions.first().name,
             'verify_user_id': verify_user._id,
             'verify_user_name': verify_user.fullname,
             'verify_date': verify_date,
