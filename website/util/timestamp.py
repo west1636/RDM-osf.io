@@ -131,7 +131,7 @@ def get_error_list(pid):
         if creator is not None:
             error_info['creator_name'] = creator.fullname
             error_info['creator_email'] = creator.username
-            error_info['creator_id'] = creator.id
+            error_info['creator_id'] = creator._id
             error_info['creator_institution'] = creator.affiliated_institutions.first()
 
         error_list.append(error_info)
