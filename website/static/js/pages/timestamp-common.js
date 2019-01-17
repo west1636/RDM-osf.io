@@ -274,8 +274,8 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = generateXml(fileList, HEADERS_ORDER, HEADER_NAMES);
-            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            fileContent = generateRdf(fileList, HEADERS_ORDER, HEADER_NAMES);
+            saveTextFile(DOWNLOAD_FILENAME + '.rdf', fileContent);
             break;
     }
 };
@@ -311,29 +311,93 @@ function generateJson(fileList, headersOrder, headerNames) {
     return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
 }
 
-function generateXml(fileList, headersOrder, headerNames) {
-    var xml = document.implementation.createDocument(null, 'errorList', null);
-    var errorList = xml.getElementsByTagName('errorList')[0];
-    xml.xmlVersion = '1.0';
+function generateRdf(fileList, headersOrder, headerNames) {
+    var i, key;
+    var doc = document.implementation.createDocument(
+        'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:RDF', null);
+    doc.xmlVersion = '1.0';
 
-    for (var i = 0; i < fileList.length; i++) {
-        var file = fileList[i];
-        var fileElement = xml.createElement('file');
+    var rdf = doc.documentElement;
 
-        for (var j = 0; j < headersOrder.length; j++) {
-            var headerName = headerNames[headersOrder[j]];
+    var namespaces = [
+        {schema: 'http://schema.org/'},
+        {rdmr: 'https://rdf.rdm.nii.ac.jp/resource/'},
+        {owl: 'http://www.w3.org/2002/07/owl#'},
+        {org: 'http://www.w3.org/ns/org#'},
+        {frapo: 'http://purl.org/cerif/frapo/'},
+        {xsd: 'http://www.w3.org/2001/XMLSchema#'},
+        {rdfs: 'http://www.w3.org/2000/01/rdf-schema#'},
+        {vcard: 'http://www.w3.org/2006/vcard/ns#'},
+        {rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'},
+        {sio: 'http://semanticscience.org/resource/'},
+        {dcterms: 'http://purl.org/dc/terms/'},
+        {sem: 'http://semanticweb.cs.vu.nl/2009/11/sem/'},
+        {dcat: 'http://www.w3.org/ns/dcat#'},
+        {foaf: 'http://xmlns.com/foaf/0.1/'},
+        {sioc: 'http://rdfs.org/sioc/ns#'},
+    ];
 
-            // spaces not accepted in xml tag names
-            var headerElement = xml.createElement(headerName.replace(' ', ''));
-            headerElement.textContent = file[headersOrder[j]];
-
-            fileElement.appendChild(headerElement);
+    // Add namespaces to root (rdf)
+    for (i = 0; i < namespaces.length; i++) {
+        for (key in namespaces[i]) {
+            if (namespaces[i].hasOwnProperty(key)) {
+                rdf.setAttribute('xmlns:' + key, namespaces[i][key]);
+            }
         }
-        errorList.appendChild(fileElement);
+    }
+
+    for (i = 0; i < fileList.length; i++) {
+        // Common variables
+        var pid = fileList[i].project_id;
+        var fid = fileList[i].file_id;
+        var uid = fileList[i].verify_user_id;
+        var tsDate = fileList[i].verify_date.replace(' ', '_').replace(/[/]/g, '-')
+            .replace(/:/g, '');
+
+        var timestampId = 'https://rdf.rdm.nii.ac.jp/resource/ts/' +
+            pid + '/' + fid + '/' + uid + '/' + tsDate;
+        var fileId = 'https://rdf.rdm.nii.ac.jp/' + fid;
+        var fileIdResource = 'https://rdf.rdm.nii.ac.jp/resource/file/' + fid;
+
+        // Outer element
+        var outerEl = doc.createElement('rdmr:Timestamp');
+        outerEl.setAttribute('rdf:about', timestampId);
+
+        // Types
+        var rdfTypes = {
+            dataset: doc.createElement('rdf:type'),
+            file: doc.createElement('rdf:type'),
+        };
+        rdfTypes.dataset.setAttribute('rdf:resource', 'http://www.w3.org/ns/dcat#Dataset');
+        rdfTypes.file.setAttribute('rdf:resource', 'http://semanticscience.org/resource/SIO_000396');
+
+        // See also
+        var rdfSeeAlso = {
+            file: doc.createElement('rdf:seeAlso')
+        };
+        rdfSeeAlso.file.setAttribute('rdf:resource', fileId);
+
+        // Descriptions
+        var rdfDescriptions = {
+            ts: doc.createElement('rdf:Description'),
+            file: doc.createElement('rdf:Description'),
+        };
+        rdfDescriptions.ts.setAttribute('rdf:about', timestampId);
+        rdfDescriptions.file.setAttribute('rdf:about', fileIdResource);
+
+        rdfDescriptions.ts.appendChild(rdfTypes.dataset);
+        outerEl.appendChild(rdfDescriptions.ts);
+
+        rdfDescriptions.file.appendChild(rdfTypes.file);
+        rdfDescriptions.file.appendChild(rdfSeeAlso.file);
+        outerEl.appendChild(rdfDescriptions.file);
+
+        // Append to root
+        rdf.appendChild(outerEl);
     }
 
     var serializer = new XMLSerializer();
-    return vkbeautify.xml(serializer.serializeToString(xml));
+    return vkbeautify.xml(serializer.serializeToString(doc)).replace(/\n/g, NEW_LINE);
 }
 
 function saveTextFile(filename, content) {
