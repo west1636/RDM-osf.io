@@ -474,7 +474,7 @@ function generateJson(fileList, headersOrder, headerNames) {
             'vcard': 'http://www.w3.org/2006/vcard/ns#',
             'xsd': 'http://www.w3.org/2001/XMLSchema#'
         },
-        '@graph': [fileList],
+        '@graph': fileList,
     };
 
     // Generate content
