@@ -337,7 +337,7 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = generateRdf(fileList, HEADERS_ORDER, HEADER_NAMES);
+            fileContent = generateRdf(fileList);
             saveTextFile(DOWNLOAD_FILENAME + '.rdf', fileContent);
             break;
     }
@@ -380,7 +380,7 @@ function generateJson(fileList, headersOrder, headerNames) {
     return JSON.stringify(fileList, null, 2).replace(/\n/g, NEW_LINE);
 }
 
-function generateRdf(fileList, headersOrder, headerNames) {
+function generateRdf(fileList) {
     var i, key;
     var doc = document.implementation.createDocument(
         'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:RDF', null);
@@ -418,10 +418,6 @@ function generateRdf(fileList, headersOrder, headerNames) {
     for (i = 0; i < fileList.length; i++) {
         var item = fileList[i];
 
-        // Outer element
-        var outerEl = doc.createElement('rdmr:Timestamp');
-        outerEl.setAttribute('rdf:about', item.timestampId);
-
         // Types
         var rdfTypes = {
             dataset: doc.createElement('rdf:type'),
@@ -432,9 +428,15 @@ function generateRdf(fileList, headersOrder, headerNames) {
 
         // See also
         var rdfSeeAlso = {
-            file: doc.createElement('rdf:seeAlso')
+            file: doc.createElement('rdfs:seeAlso')
         };
         rdfSeeAlso.file.setAttribute('rdf:resource', item.fileGuid);
+
+        // Label
+        var rdfLabels = {
+            file: doc.createElement('rdfs:label')
+        };
+        rdfLabels.file.textContent = item.fileGuidLabel;
 
         // Descriptions
         var rdfDescriptions = {
@@ -445,14 +447,12 @@ function generateRdf(fileList, headersOrder, headerNames) {
         rdfDescriptions.file.setAttribute('rdf:about', item.fileGuidResource);
 
         rdfDescriptions.ts.appendChild(rdfTypes.dataset);
-        outerEl.appendChild(rdfDescriptions.ts);
+        rdf.appendChild(rdfDescriptions.ts);
 
         rdfDescriptions.file.appendChild(rdfTypes.file);
         rdfDescriptions.file.appendChild(rdfSeeAlso.file);
-        outerEl.appendChild(rdfDescriptions.file);
-
-        // Append to root
-        rdf.appendChild(outerEl);
+        rdfDescriptions.file.appendChild(rdfLabels.file);
+        rdf.appendChild(rdfDescriptions.file);
     }
 
     var serializer = new XMLSerializer();
