@@ -416,21 +416,11 @@ function generateRdf(fileList, headersOrder, headerNames) {
     }
 
     for (i = 0; i < fileList.length; i++) {
-        // Common variables
-        var pid = fileList[i].project_id;
-        var fid = fileList[i].file_id;
-        var uid = fileList[i].verify_user_id;
-        var tsDate = fileList[i].verify_date.replace(' ', '_').replace(/[/]/g, '-')
-            .replace(/:/g, '');
-
-        var timestampId = 'https://rdf.rdm.nii.ac.jp/resource/ts/' +
-            pid + '/' + fid + '/' + uid + '/' + tsDate;
-        var fileId = 'https://rdf.rdm.nii.ac.jp/' + fid;
-        var fileIdResource = 'https://rdf.rdm.nii.ac.jp/resource/file/' + fid;
+        var item = fileList[i];
 
         // Outer element
         var outerEl = doc.createElement('rdmr:Timestamp');
-        outerEl.setAttribute('rdf:about', timestampId);
+        outerEl.setAttribute('rdf:about', item.timestampId);
 
         // Types
         var rdfTypes = {
@@ -444,15 +434,15 @@ function generateRdf(fileList, headersOrder, headerNames) {
         var rdfSeeAlso = {
             file: doc.createElement('rdf:seeAlso')
         };
-        rdfSeeAlso.file.setAttribute('rdf:resource', fileId);
+        rdfSeeAlso.file.setAttribute('rdf:resource', item.fileGuid);
 
         // Descriptions
         var rdfDescriptions = {
             ts: doc.createElement('rdf:Description'),
             file: doc.createElement('rdf:Description'),
         };
-        rdfDescriptions.ts.setAttribute('rdf:about', timestampId);
-        rdfDescriptions.file.setAttribute('rdf:about', fileIdResource);
+        rdfDescriptions.ts.setAttribute('rdf:about', item.timestampId);
+        rdfDescriptions.file.setAttribute('rdf:about', item.fileGuidResource);
 
         rdfDescriptions.ts.appendChild(rdfTypes.dataset);
         outerEl.appendChild(rdfDescriptions.ts);
