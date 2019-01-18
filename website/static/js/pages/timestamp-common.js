@@ -475,7 +475,7 @@ function generateJson(fileList, headersOrder, headerNames) {
             'xsd': 'http://www.w3.org/2001/XMLSchema#'
         },
         '@graph': [fileList],
-    }
+    };
 
     // Generate content
     return vkbeautify.json(JSON.stringify(JSONFile, null, 2));
