@@ -367,6 +367,10 @@ function generateCsv(fileList, headersOrder, headerNames) {
     return content;
 }
 
+function formatDateString(date) {
+    return date.toJSON().substring(0, 10) + '_' + date.getHours() + date.getMinutes() + date.getSeconds();
+}
+
 function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
@@ -395,38 +399,38 @@ function generateJson(fileList, headersOrder, headerNames) {
             'rdfs:label': '"National Institute of Informatics"@en'
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/qcpxh',
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/' + file.file_id,
             '@type': 'sio:000396',
-            'dcat:bytes': 8083300.0,
+            'dcat:bytes': file.file_size_on_upload,
             'dcterms:created': {
                 '@type': 'xsd:dateTime',
-                '@value': '2018-12-06_191407JST'
+                '@value': formatDateString(file.file_create_date_on_upload)
             },
             'dcterms:hasVersion': {
                 '@type': 'xsd:int',
-                '@value': '1'
+                '@value': file.file_version
             },
             'dcterms:modified': {
                 '@type': 'xsd:dateTime',
-                '@value': '2018-12-16_191407JST'
+                '@value': formatDateString(file.file_modify_date_on_upload)
             },
             'dcterms:title': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/RCOS_leafletA3_2018.pdf'
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file' + file.file_path,
             },
-            'rdfs:label': '"FILE:qcpxh"@en',
+            'rdfs:label': '"FILE:' + file.file_id + '"@en',
             'rdfs:seeAlso': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/qcpxh'
+                '@id': 'https://rdf.rdm.nii.ac.jp/' + file.file_id
             }
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/RCOS_leafletA3_2018.pdf',
-            'rdfs:label': '"RCOS_leafletA3_2018.pdf"@en'
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file' + file.file_path,
+            'rdfs:label': '"' + file.file_path + '"@en'
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/ts/' + file.project_id + '/' + file.file_id + '/' + file.verify_user_id + '/' + file.verify_date,
+            '@id': 'https://rdf.rdm.nii.ac.jp/resource/ts/' + file.project_id + '/' + file.file_id + '/' + file.verify_user_id + '/' + formatDateString(file.verify_date),
             '@type': 'dcat:Dataset',
             'dcterms:identifier': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/qcpxh'
+                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/' + file.file_id
             },
             'frapo:hasProjectIdentifier': {
                 '@id': 'https://rdf.rdm.nii.ac.jp/resource/project/z36a9'
