@@ -357,7 +357,7 @@ function generateCsv(fileList, headersOrder, headerNames) {
             if (file[headerName] === null) {
                 return 'Unknown';
             }
-            if (RegExp('["|,]').test(file[headerName])) {
+            if (/["|,]/.test(file[headerName])) {
                 return '"' + file[headerName].replace(/"/g, '""') + '"';
             }
             return file[headerName];

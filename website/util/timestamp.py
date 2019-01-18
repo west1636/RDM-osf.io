@@ -79,6 +79,10 @@ def get_error_list(pid):
             base_file_data = base_file_data.get()
             file_versions = base_file_data.versions.all()
 
+        # Get institution info from project
+        project = AbstractNode.objects.get(guids___id=data.project_id)
+        institution = project.affiliated_institutions.first()
+
         # Get creator info
         creator = None
         if data.upload_file_modified_user is not None:
@@ -119,8 +123,8 @@ def get_error_list(pid):
             'file_size_on_verify': data.verify_file_size,
             'file_version': '',
             'project_id': data.project_id,
-            'organization_id': verify_user.affiliated_institutions.first()._id,
-            'organization_name': verify_user.affiliated_institutions.first().name,
+            'organization_id': institution._id if institution is not None else '',
+            'organization_name': institution.name if institution is not None else '',
             'verify_user_id': verify_user._id,
             'verify_user_name': verify_user.fullname,
             'verify_date': verify_date,
