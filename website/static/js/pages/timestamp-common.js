@@ -8,13 +8,40 @@ var vkbeautify = require('vkbeautify');
 
 var DOWNLOAD_FILENAME = 'timestamp_errors';
 var HEADERS_ORDER = [
-    'file_path', 'provider', 'file_version'
+    'timestampId', 'fileGuidResource', 'fileGuidLabel', 'fileGuid', 'fileNameResource',
+    'fileNameLabel', 'fileCreationDate', 'fileModificationDate', 'fileByteSize',
+    'fileVersion', 'projectGuidResource', 'projectGuidLabel', 'projectGuid', 'userGuidResource',
+    'userGuidLabel', 'userNameResource', 'userNameLabel', 'mail', 'orgIdResource', 'orgIdLabel',
+    'orgNameResource', 'orgNameLabel', 'userGuid', 'tsIdLabel', 'tsVerificationStatus',
+    'latestTsVerificationDate'
 ];
 var HEADER_NAMES = {
-    provider: 'Provider',
-    file_id: 'File ID',
-    file_path: 'File Path',
-    file_version: 'Version'
+    timestampId: 'Timestamp ID',
+    fileGuidResource: 'File GUID Resource',
+    fileGuidLabel: 'File GUID Label',
+    fileGuid: 'File GUID',
+    fileNameResource: 'File Name Resource',
+    fileNameLabel: 'File Name Label',
+    fileCreationDate: 'File Creation Date',
+    fileModificationDate: 'File Modification Date',
+    fileByteSize: 'File ByteSize',
+    fileVersion: 'File Version',
+    projectGuidResource: 'Project GUID Resource',
+    projectGuidLabel: 'Project GUID Label',
+    projectGuid: 'Project GUID',
+    userGuidResource: 'User GUID Resource',
+    userGuidLabel: 'User GUID Label',
+    userNameResource: 'User Name Resource',
+    userNameLabel: 'User Name Label',
+    mail: 'Mail',
+    orgIdResource: 'Organization ID Resource',
+    orgIdLabel: 'Organization ID Label',
+    orgNameResource: 'Organization Name Resource',
+    orgNameLabel: 'Organization Name Label',
+    userGuid: 'User GUID',
+    tsIdLabel: 'Timestamp ID Label',
+    tsVerificationStatus: 'Timestamp Verification Status',
+    latestTsVerificationDate: 'Latest Timestamp Verification Date'
 };
 
 var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
@@ -255,10 +282,43 @@ var download = function () {
         }
         return false;
     }).map(function (item) {
-        var fileInfo = item.values();
-        var filePathArr = fileInfo.file_path.split('/');
-        fileInfo.file_name = filePathArr[filePathArr.length - 1];
-        return fileInfo;
+        item = item.values();
+
+        var filePathArr = item.file_path.split('/');
+        var fileName = filePathArr[filePathArr.length - 1];
+
+        var tsDate = item.verify_date.replace(' ', '_').replace(/[/]/g, '-').replace(/:/g, '');
+        var fileCreationDate = item.file_create_date_on_verify ? item.file_create_date_on_verify.replace(' ', '_').replace(/[/]/g, '-').replace(/:/g, '') : null;
+        var fileModificationDate = item.file_modify_date_on_verify ? item.file_modify_date_on_verify.replace(' ', '_').replace(/[/]/g, '-').replace(/:/g, '') : null;
+
+        return {
+            timestampId: 'https://rdf.rdm.nii.ac.jp/resource/ts/' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate,
+            fileGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + item.file_id,
+            fileGuidLabel: '"FILE:' + item.file_id + '"@en',
+            fileGuid: 'https://rdf.rdm.nii.ac.jp/' + item.file_id,
+            fileNameResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + fileName,
+            fileNameLabel: '"' + fileName + '"@en',
+            fileCreationDate: fileCreationDate,
+            fileModificationDate: fileModificationDate,
+            fileByteSize: item.file_size_on_verify,
+            fileVersion: item.file_version,
+            projectGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/project/' + item.project_id,
+            projectGuidLabel: '"PROJ:' + item.project_id + '"@en',
+            projectGuid: 'https://rdf.rdm.nii.ac.jp/' + item.project_id,
+            userGuidResource: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_id : null,
+            userGuidLabel: item.creator_id ? '"USER:' + item.creator_id + '"@en' : null,
+            userNameResource: item.creator_name ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_name : null,
+            userNameLabel: item.creator_name ? '"' + item.creator_name + '"@en' : null,
+            mail: item.creator_email,
+            orgIdResource: 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_id,
+            orgIdLabel: '"ORG:' + item.organization_id + '"@en',
+            orgNameResource: 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name,
+            orgNameLabel: '"' + item.organization_name + '"@en',
+            userGuid: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/' + item.creator_id : null,
+            tsIdLabel: '"TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate + '"@en',
+            tsVerificationStatus: item.verify_result_title,
+            latestTsVerificationDate: tsDate
+        };
     });
 
     if (fileList.length === 0) {
@@ -294,6 +354,12 @@ function generateCsv(fileList, headersOrder, headerNames) {
     // Generate content
     content += fileList.map(function (file) {
         return headersOrder.map(function (headerName) {
+            if (file[headerName] === null) {
+                return 'Unknown';
+            }
+            if (/["|,]/.test(file[headerName])) {
+                return '"' + file[headerName].replace(/"/g, '""') + '"';
+            }
             return file[headerName];
         }).join(',');
     }).join(NEW_LINE);
