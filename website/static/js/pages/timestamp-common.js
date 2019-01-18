@@ -367,44 +367,40 @@ function generateCsv(fileList, headersOrder, headerNames) {
     return content;
 }
 
-function formatDateString(date) {
-    return date.toJSON().substring(0, 10) + '_' + date.getHours() + date.getMinutes() + date.getSeconds();
-}
-
 function generateJson(fileList, headersOrder, headerNames) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
         return [
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/project/z36a9',
+            '@id': file.projectGuidResource,
             '@type': 'foaf:Project',
-            'rdfs:label': '"PROJ:z36a9"@en',
+            'rdfs:label': file.projectGuidLabel,
             'rdfs:seeAlso': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/z36a9'
+                '@id': file.projectGuid
             }
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/Yusuke_Komiyama',
+            '@id': file.userNameResource,
             '@type': 'foaf:Person',
-            'rdfs:label': '"Yusuke Komiyama"@en'
+            'rdfs:label': file.userNameLabel
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/62615',
+            '@id': file.orgIdResource,
             '@type': 'org:Organization',
-            'rdfs:label': '"ORG:62615"@en'
+            'rdfs:label': file.orgIdLabel
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/National_Institute_of_Informatics',
+            '@id': file.orgNameResource,
             '@type': 'frapo:organization',
-            'rdfs:label': '"National Institute of Informatics"@en'
+            'rdfs:label': file.orgNameLabel
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/' + file.file_id,
+            '@id': file.fileGuidResource,
             '@type': 'sio:000396',
-            'dcat:bytes': file.file_size_on_upload,
+            'dcat:bytes': file.fileByteSize,
             'dcterms:created': {
                 '@type': 'xsd:dateTime',
-                '@value': formatDateString(file.file_create_date_on_upload)
+                '@value': file.fileCreationDate
             },
             'dcterms:hasVersion': {
                 '@type': 'xsd:int',
@@ -412,50 +408,50 @@ function generateJson(fileList, headersOrder, headerNames) {
             },
             'dcterms:modified': {
                 '@type': 'xsd:dateTime',
-                '@value': formatDateString(file.file_modify_date_on_upload)
+                '@value': file.fileModificationDate
             },
             'dcterms:title': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file' + file.file_path,
+                '@id': file.fileNameResource
             },
-            'rdfs:label': '"FILE:' + file.file_id + '"@en',
+            'rdfs:label': file.fileGuidLabel,
             'rdfs:seeAlso': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/' + file.file_id
+                '@id': file.fileGuid
             }
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/file' + file.file_path,
-            'rdfs:label': '"' + file.file_path + '"@en'
+            '@id': file.fileNameResource,
+            'rdfs:label': file.fileNameLabel
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/ts/' + file.project_id + '/' + file.file_id + '/' + file.verify_user_id + '/' + formatDateString(file.verify_date),
+            '@id': file.timestampId,
             '@type': 'dcat:Dataset',
             'dcterms:identifier': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/file/' + file.file_id
+                '@id': file.fileGuidResource
             },
             'frapo:hasProjectIdentifier': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/project/z36a9'
+                '@id': file.projectGuidResource
             },
-            'rdfs:label': '"TS:z36a9/qcpxh/sga29/2018-12-26_191407JST"@en',
-            'sem:hasLatestEndTimeStamp': '2018-12-26_191407JST',
-            'sem:hasTimestamp': 'OK',
+            'rdfs:label': file.tsIdLabel,
+            'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
+            'sem:hasTimestamp': file.tsVerificationStatus,
             'sioc:id': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/sga29'
+                '@id': file.userGuidResource
             }
             },
             {
-            '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/sga29',
+            '@id': file.userGuidResource,
             '@type': 'foaf:Agent',
             'dcterms:creator': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/user/Yusuke_Komiyama'
+                '@id': file.userNameResource
             },
             'org:memberOf': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/resource/org/62615'
+                '@id': file.orgIdResource
             },
-            'rdfs:label': '"USER:sga29"@en',
+            'rdfs:label': file.userGuidLabel,
             'rdfs:seeAlso': {
-                '@id': 'https://rdf.rdm.nii.ac.jp/sga29'
+                '@id': file.userGuid
             },
-            'vcard:hasEmail': 'komiyama@nii.ac.jp'
+            'vcard:hasEmail': file.mail
             }
         ];
     });
