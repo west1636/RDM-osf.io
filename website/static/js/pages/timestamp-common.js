@@ -517,6 +517,36 @@ function generateRdf (fileList) {
                     {element: createEl(doc, 'dcterms:creator', [{'rdf:resource': item.userNameResource ? item.userNameResource : 'Unknown'}])},
                     {element: createEl(doc, 'vcard:hasEmail', null, item.mail ? item.mail : 'Unknown')}
                 ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgIdResource ? item.orgIdResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://www.w3.org/ns/org#Organization'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.orgIdLabel ? item.orgIdLabel : 'Unknown')},
+                    {element: createEl(doc, 'frapo:organization', [{'rdf:resource': item.orgNameResource ? item.orgNameResource : 'Unknown'}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgNameResource ? item.orgNameResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdfs:label', null, item.orgNameLabel ? item.orgNameLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuid ? item.userGuid : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'org:memberOf', [{'rdf:resource': item.orgIdResource ? item.orgIdResource : 'Unknown'}])},
+                    {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.userGuid ? item.userGuid : 'Unknown'}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'sioc:id', [{'rdf:resource': item.userGuidResource ? item.userGuidResource : 'Unknown'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.tsIdLabel)},
+                    {element: createEl(doc, 'sem:hasTimestamp', null, item.tsVerificationStatus)},
+                    {element: createEl(doc, 'sem:hasLatestEndTimeStamp', null, item.latestTsVerificationDate)}
+                ]
             }
         ];
 
