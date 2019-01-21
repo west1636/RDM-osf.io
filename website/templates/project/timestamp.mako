@@ -132,7 +132,6 @@
                                     <input type="hidden" class="creator_name" value="${ error_info['creator_name'] }" />
                                     <input type="hidden" class="creator_email" value="${ error_info['creator_email'] }" />
                                     <input type="hidden" class="creator_id" value="${ error_info['creator_id'] }" />
-                                    <input type="hidden" class="creator_institution" value="${ error_info['creator_institution'] }" />
                                     <input type="hidden" class="file_path" value="${ error_info['file_path'] }" />
                                     <input type="hidden" class="file_id" value="${ error_info['file_id'] }" />
                                     <input type="hidden" class="file_create_date_on_upload" value="${ error_info['file_create_date_on_upload'] }" />
