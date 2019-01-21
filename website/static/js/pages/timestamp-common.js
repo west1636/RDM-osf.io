@@ -482,6 +482,41 @@ function generateRdf (fileList) {
                 children: [
                     {element: createEl(doc, 'dcterms:identifier', [{'rdf:resource': item.fileGuidResource}])}
                 ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.projectGuidResource}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Project'}])},
+                    {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.projectGuid}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.projectGuidLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'frapo:hasProjectIdentifier', [{'rdf:resource': item.projectGuidResource}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuidResource ? item.userGuidResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Agent'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.userGuidLabel ? item.userGuidLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userNameResource ? item.userNameResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.userNameLabel ? item.userNameLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuidResource ? item.userGuidResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:creator', [{'rdf:resource': item.userNameResource ? item.userNameResource : 'Unknown'}])},
+                    {element: createEl(doc, 'vcard:hasEmail', null, item.mail ? item.mail : 'Unknown')}
+                ]
             }
         ];
 
