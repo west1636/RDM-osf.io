@@ -581,20 +581,22 @@ class GatherView(TemplateView):
                     try:
                         self.count_list.append(['file', obj['id'], int(obj['attributes']['size'] if obj['attributes']['size'] else 0), ext])
                     except Exception as err:
-                        logger.error('file:{}{} error occured (size:{}). - {}'.format(obj['attributes']['provider'],
-                                                                                      obj['attributes']['path'],
-                                                                                      obj['attributes']['size'],
-                                                                                      err))
+                        logger.error('resource:{} {}{} error occured (file size:{}). - {}'.format(obj['attributes']['resource'],
+                                                                                                  obj['attributes']['provider'],
+                                                                                                  obj['attributes']['path'],
+                                                                                                  obj['attributes']['size'],
+                                                                                                  err))
                         pass
                 elif obj['attributes']['kind'] == 'folder':
                     path = re.sub('^' + provider, '', obj['id'])
                     try:
                         self.count_list.append(['folder', obj['id'], int(obj['attributes']['size'] if obj['attributes']['size'] else 0), ext])
                     except Exception as err:
-                        logger.error('file:{}{} error occured (size:{}). - {}'.format(obj['attributes']['provider'],
-                                                                                      obj['attributes']['path'],
-                                                                                      obj['attributes']['size'],
-                                                                                      err))
+                        logger.error('resource:{} {}{} error occured (file size:{}). - {}'.format(obj['attributes']['resource'],
+                                                                                                  obj['attributes']['provider'],
+                                                                                                  obj['attributes']['path'],
+                                                                                                  obj['attributes']['size'],
+                                                                                                  err))
                         pass
                     self.count_project_files(provider=provider, node_id=node_id, path='/' + path, cookies=cookies)
 
