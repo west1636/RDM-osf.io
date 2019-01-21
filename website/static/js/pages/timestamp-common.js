@@ -382,8 +382,7 @@ function generateJson(fileList, headersOrder, headerNames) {
 
 function generateRdf (fileList) {
     var i, key;
-    var doc = document.implementation.createDocument(
-        'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:RDF', null);
+    var doc = document.implementation.createDocument('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:RDF', null);
     doc.xmlVersion = '1.0';
 
     // Auxiliary functions for generating the RDF file
@@ -460,6 +459,28 @@ function generateRdf (fileList) {
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://semanticscience.org/resource/SIO_000396'}])},
                     {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.fileGuid}])},
                     {element: createEl(doc, 'rdfs:label', null, item.fileGuidLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileNameResource}]),
+                children: [
+                    {element: createEl(doc, 'rdfs:label', null, item.fileNameLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileGuidResource}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:title', [{'rdf:resource': item.fileNameResource}])},
+                    {element: createEl(doc, 'dcterms:created', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'}], item.fileCreationDate ? item.fileCreationDate : 'Unknown')},
+                    {element: createEl(doc, 'dcterms:modified', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'}], item.fileModificationDate ? item.fileModificationDate : 'Unknown')},
+                    {element: createEl(doc, 'dcat:bytes', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#double'}], item.fileByteSize ? item.fileByteSize : 'Unknown')},
+                    {element: createEl(doc, 'dcterms:hasVersion', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#int'}], item.fileVersion ? item.fileVersion : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:identifier', [{'rdf:resource': item.fileGuidResource}])}
                 ]
             }
         ];
