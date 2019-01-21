@@ -79,10 +79,6 @@ def get_error_list(pid):
             base_file_data = base_file_data.get()
             file_versions = base_file_data.versions.all()
 
-        # Get institution info from project
-        project = AbstractNode.objects.get(guids___id=data.project_id)
-        institution = project.affiliated_institutions.first()
-
         # Get creator info
         creator = None
         if data.upload_file_modified_user is not None:
@@ -112,7 +108,6 @@ def get_error_list(pid):
             'creator_name': '',
             'creator_email': '',
             'creator_id': '',
-            'creator_institution': '',
             'file_path': data.path,
             'file_id': data.file_id,
             'file_create_date_on_upload': data.upload_file_created_at,
@@ -123,8 +118,8 @@ def get_error_list(pid):
             'file_size_on_verify': data.verify_file_size,
             'file_version': '',
             'project_id': data.project_id,
-            'organization_id': institution._id if institution is not None else '',
-            'organization_name': institution.name if institution is not None else '',
+            'organization_id': '',
+            'organization_name': '',
             'verify_user_id': verify_user._id,
             'verify_user_name': verify_user.fullname,
             'verify_date': verify_date,
@@ -138,7 +133,11 @@ def get_error_list(pid):
             error_info['creator_name'] = creator.fullname
             error_info['creator_email'] = creator.username
             error_info['creator_id'] = creator._id
-            error_info['creator_institution'] = creator.affiliated_institutions.first()
+
+            institution = creator.affiliated_institutions.first()
+            if institution is not None:
+                error_info['organization_id'] = institution._id
+                error_info['organization_name'] = institution.name
 
         error_list.append(error_info)
 
