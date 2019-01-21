@@ -50,7 +50,6 @@ var TIMESTAMP_LIST_OBJECT = new List('timestamp-form', {
         {name: 'creator_name', attr: 'value'},
         {name: 'creator_email', attr: 'value'},
         {name: 'creator_id', attr: 'value'},
-        {name: 'creator_institution', attr: 'value'},
         {name: 'file_path', attr: 'value'},
         {name: 'file_id', attr: 'value'},
         {name: 'file_create_date_on_upload', attr: 'value'},
@@ -310,10 +309,10 @@ var download = function () {
             userNameResource: item.creator_name ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_name : null,
             userNameLabel: item.creator_name ? '"' + item.creator_name + '"@en' : null,
             mail: item.creator_email,
-            orgIdResource: 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_id,
-            orgIdLabel: '"ORG:' + item.organization_id + '"@en',
-            orgNameResource: 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name,
-            orgNameLabel: '"' + item.organization_name + '"@en',
+            orgIdResource: item.organization_id ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_id : null,
+            orgIdLabel: item.organization_id ? '"ORG:' + item.organization_id + '"@en' : null,
+            orgNameResource: item.organization_name ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name : null,
+            orgNameLabel: item.organization_name ? '"' + item.organization_name + '"@en' : null,
             userGuid: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/' + item.creator_id : null,
             tsIdLabel: '"TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate + '"@en',
             tsVerificationStatus: item.verify_result_title,
@@ -337,8 +336,8 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
-            fileContent = generateXml(fileList, HEADERS_ORDER, HEADER_NAMES);
-            saveTextFile(DOWNLOAD_FILENAME + '.xml', fileContent);
+            fileContent = generateRdf(fileList);
+            saveTextFile(DOWNLOAD_FILENAME + '.rdf', fileContent);
             break;
     }
 };
@@ -481,29 +480,181 @@ function generateJson(fileList, headersOrder, headerNames) {
     return vkbeautify.json(JSON.stringify(JSONFile, null, 2));
 }
 
-function generateXml(fileList, headersOrder, headerNames) {
-    var xml = document.implementation.createDocument(null, 'errorList', null);
-    var errorList = xml.getElementsByTagName('errorList')[0];
-    xml.xmlVersion = '1.0';
+function generateRdf (fileList) {
+    var i, key;
+    var doc = document.implementation.createDocument('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:RDF', null);
+    doc.xmlVersion = '1.0';
 
-    for (var i = 0; i < fileList.length; i++) {
-        var file = fileList[i];
-        var fileElement = xml.createElement('file');
-
-        for (var j = 0; j < headersOrder.length; j++) {
-            var headerName = headerNames[headersOrder[j]];
-
-            // spaces not accepted in xml tag names
-            var headerElement = xml.createElement(headerName.replace(' ', ''));
-            headerElement.textContent = file[headersOrder[j]];
-
-            fileElement.appendChild(headerElement);
+    // Auxiliary functions for generating the RDF file
+    var createEl = function (doc, elementName, attributes, text) {
+        var element = doc.createElement(elementName);
+        if (attributes) {
+            var i, attr, attrName;
+            for (i = 0; i < attributes.length; i++) {
+                attr = attributes[i];
+                for (attrName in attr) {
+                    if (attr.hasOwnProperty(attrName)) {
+                        element.setAttribute(attrName, attr[attrName]);
+                    }
+                }
+            }
         }
-        errorList.appendChild(fileElement);
+        if (text) {
+            element.textContent = text;
+        }
+        return element;
+    };
+    var linkChildren = function (element, childrenArray) {
+        if (!childrenArray) {
+            return;
+        }
+        var i, child;
+        for (i = 0; i < childrenArray.length; i++) {
+            child = childrenArray[i];
+            linkChildren(child.element, child.children);
+            element.appendChild(child.element);
+        }
+    };
+
+    var namespaces = [
+        {schema: 'http://schema.org/'},
+        {rdmr: 'https://rdf.rdm.nii.ac.jp/resource/'},
+        {owl: 'http://www.w3.org/2002/07/owl#'},
+        {org: 'http://www.w3.org/ns/org#'},
+        {frapo: 'http://purl.org/cerif/frapo/'},
+        {xsd: 'http://www.w3.org/2001/XMLSchema#'},
+        {rdfs: 'http://www.w3.org/2000/01/rdf-schema#'},
+        {vcard: 'http://www.w3.org/2006/vcard/ns#'},
+        {rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'},
+        {sio: 'http://semanticscience.org/resource/'},
+        {dcterms: 'http://purl.org/dc/terms/'},
+        {sem: 'http://semanticweb.cs.vu.nl/2009/11/sem/'},
+        {dcat: 'http://www.w3.org/ns/dcat#'},
+        {foaf: 'http://xmlns.com/foaf/0.1/'},
+        {sioc: 'http://rdfs.org/sioc/ns#'},
+    ];
+
+    // Add namespaces to root (rdf)
+    for (i = 0; i < namespaces.length; i++) {
+        for (key in namespaces[i]) {
+            if (namespaces[i].hasOwnProperty(key)) {
+                doc.documentElement.setAttribute('xmlns:' + key, namespaces[i][key]);
+            }
+        }
+    }
+
+    for (i = 0; i < fileList.length; i++) {
+        var item = fileList[i];
+
+        var rdfElements = [
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://www.w3.org/ns/dcat#Dataset'}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileGuidResource}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://semanticscience.org/resource/SIO_000396'}])},
+                    {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.fileGuid}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.fileGuidLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileNameResource}]),
+                children: [
+                    {element: createEl(doc, 'rdfs:label', null, item.fileNameLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileGuidResource}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:title', [{'rdf:resource': item.fileNameResource}])},
+                    {element: createEl(doc, 'dcterms:created', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'}], item.fileCreationDate ? item.fileCreationDate : 'Unknown')},
+                    {element: createEl(doc, 'dcterms:modified', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'}], item.fileModificationDate ? item.fileModificationDate : 'Unknown')},
+                    {element: createEl(doc, 'dcat:bytes', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#double'}], item.fileByteSize ? item.fileByteSize : 'Unknown')},
+                    {element: createEl(doc, 'dcterms:hasVersion', [{'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#int'}], item.fileVersion ? item.fileVersion : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:identifier', [{'rdf:resource': item.fileGuidResource}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.projectGuidResource}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Project'}])},
+                    {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.projectGuid}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.projectGuidLabel)}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'frapo:hasProjectIdentifier', [{'rdf:resource': item.projectGuidResource}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuidResource ? item.userGuidResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Agent'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.userGuidLabel ? item.userGuidLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userNameResource ? item.userNameResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.userNameLabel ? item.userNameLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuidResource ? item.userGuidResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'dcterms:creator', [{'rdf:resource': item.userNameResource ? item.userNameResource : 'Unknown'}])},
+                    {element: createEl(doc, 'vcard:hasEmail', null, item.mail ? item.mail : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgIdResource ? item.orgIdResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://www.w3.org/ns/org#Organization'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.orgIdLabel ? item.orgIdLabel : 'Unknown')},
+                    {element: createEl(doc, 'frapo:organization', [{'rdf:resource': item.orgNameResource ? item.orgNameResource : 'Unknown'}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgNameResource ? item.orgNameResource : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'rdfs:label', null, item.orgNameLabel ? item.orgNameLabel : 'Unknown')}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuid ? item.userGuid : 'Unknown'}]),
+                children: [
+                    {element: createEl(doc, 'org:memberOf', [{'rdf:resource': item.orgIdResource ? item.orgIdResource : 'Unknown'}])},
+                    {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.userGuid ? item.userGuid : 'Unknown'}])}
+                ]
+            },
+            {
+                element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
+                children: [
+                    {element: createEl(doc, 'sioc:id', [{'rdf:resource': item.userGuidResource ? item.userGuidResource : 'Unknown'}])},
+                    {element: createEl(doc, 'rdfs:label', null, item.tsIdLabel)},
+                    {element: createEl(doc, 'sem:hasTimestamp', null, item.tsVerificationStatus)},
+                    {element: createEl(doc, 'sem:hasLatestEndTimeStamp', null, item.latestTsVerificationDate)}
+                ]
+            }
+        ];
+
+        linkChildren(doc.documentElement, rdfElements);
     }
 
     var serializer = new XMLSerializer();
-    return vkbeautify.xml(serializer.serializeToString(xml));
+    return vkbeautify.xml(serializer.serializeToString(doc)).replace(/\n/g, NEW_LINE);
 }
 
 function saveTextFile(filename, content) {
