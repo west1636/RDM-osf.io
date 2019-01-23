@@ -1593,7 +1593,7 @@ class TestUserMerging(OsfTestCase):
                 'shared_lt': True,
             },
             'osf_mailing_lists': {
-                'GakuNin RDM Help': True
+                'Open Science Framework Help': True
             },
             'security_messages': {
                 'user': today,
