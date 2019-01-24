@@ -677,12 +677,19 @@ function initList() {
 
     // sort buttons code
 
+    // this is necessary because javascript doesn't provide the default compare function it uses
+    var defaultSort = function (a, b) {
+        var list = [a, b];
+        list.sort();
+        return list.indexOf(a) === 0 ? -1 : 1;
+    };
+
     var sortFunction = function(a, b, options) {
         if (a.values().provider !== b.values().provider) {
-            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values().provider, b.values().provider);
+            return defaultSort(a.values().provider, b.values().provider);
         }
         else {
-            return TIMESTAMP_LIST_OBJECT.utils.naturalSort.caseInsensitive(a.values()[options.valueName], b.values()[options.valueName]);
+            return defaultSort(a.values()[options.valueName], b.values()[options.valueName]);
         }
     };
 
