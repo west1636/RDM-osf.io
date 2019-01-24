@@ -827,6 +827,9 @@ function initList() {
             return filters.every(function(f) {return f(i);});
         });
     });
+
+    TIMESTAMP_LIST_OBJECT.sort('file_path', {order: 'asc', sortFunction: sortFunction});
+
 }
 
 module.exports = {
