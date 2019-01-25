@@ -907,7 +907,7 @@ class TestProjectViews(OsfTestCase):
             assert_equal(res.status_code, 200, route)
             assert_in('This project is a withdrawn registration of', res.body, route)
 
-    # TODO: Use mock add-on
+    # TODO: Use mock add-on (same as a TODO of TestAddonUserViews)
     def test_choose_addons_add(self):
         url = self.project.api_url_for('node_choose_addons')
         self.app.post_json(
