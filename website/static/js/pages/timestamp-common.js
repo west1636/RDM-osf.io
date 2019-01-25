@@ -679,9 +679,12 @@ function initList() {
 
     // this is necessary because javascript doesn't provide the default compare function it uses
     var defaultSort = function (a, b) {
-        var list = [a, b];
-        list.sort();
-        return list.indexOf(a) === 0 ? -1 : 1;
+        if (a === b) {return 0;}
+        else {
+            var list = [a, b];
+            list.sort();
+            return list.indexOf(a) === 0 ? -1 : 1;
+        }
     };
 
     var sortFunction = function(a, b, options) {
