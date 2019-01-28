@@ -226,7 +226,11 @@ class ExternalProvider(object):
         try:
             cached_credentials = session.data['oauth_states'][self.short_name]
         except KeyError:
-            raise PermissionsError('OAuth flow not recognized.')
+            if self.client_secret and request.args.get('code'):
+                cached_credentials = {}
+                cached_credentials['state'] = request.args.get('state')
+            else:
+                raise PermissionsError('OAuth flow not recognized.')
 
         if self._oauth_version == OAUTH1:
             request_token = request.args.get('oauth_token')
