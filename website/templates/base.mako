@@ -96,7 +96,7 @@
 
     <link href='//fonts.googleapis.com/css?family=Carrois+Gothic|Inika|Patua+One' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
-    <link rel="manifest" href="/static/public/js/manifest.json">
+    <link rel="manifest" href="/static/js/manifest.json">
 </head>
 <body data-spy="scroll" data-target=".scrollspy">
 
