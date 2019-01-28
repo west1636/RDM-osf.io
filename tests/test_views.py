@@ -5030,7 +5030,6 @@ class TestTimestampView(OsfTestCase):
 
         assert 'class="creator_name" value="Freddie Mercury' in res
         assert 'class="creator_email" value="freddiemercury' in res
-        assert 'class="creator_institution" value="None"' in res
 
     @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
