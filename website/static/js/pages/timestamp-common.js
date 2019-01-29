@@ -6,16 +6,22 @@ var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
 
-var filename_start = document.title === 'TimeStampAddList' ? 'admin_' : 'web_';
-var dateString = new Date().toLocaleDateString('ja-JP', {
+var datesString = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit'
-}).replace(/[\/ :]/g, '');
-var DOWNLOAD_FILENAME = filename_start + dateString + '_';
+}).replace(/[\/ :年月日]/g, '');
+
+var DOWNLOAD_FILENAME;
+// called on rdm-timestampadd-page.js and timestamp-page.js/
+// argument should be 'web' or 'admin'
+var setWebOrAdmin = function(webOrAdminString) {
+    DOWNLOAD_FILENAME = webOrAdminString + '_' + datesString + '_';
+};
+
 var HEADERS_ORDER = [
     'timestampId', 'fileGuidResource', 'fileGuidLabel', 'fileGuid', 'fileNameResource',
     'fileNameLabel', 'fileCreationDate', 'fileModificationDate', 'fileByteSize',
@@ -853,6 +859,7 @@ module.exports = {
     verify: verify,
     add: add,
     initList: initList,
-    download: download
+    download: download,
+    setWebOrAdmin: setWebOrAdmin
 };
 

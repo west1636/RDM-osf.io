@@ -4,6 +4,7 @@ var $ = require('jquery');
 var jQuery = $;
 var urls = window.timestampaddUrls;
 var timestampCommon = require('js/pages/timestamp-common.js');  // website/static/js/pages
+timestampCommon.setWebOrAdmin('admin');
 
 
 $(function () {
