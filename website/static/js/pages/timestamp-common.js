@@ -482,6 +482,8 @@ function generateJson(fileList) {
         ];
     });
 
+    fileList = fileList.reduce(function(a, b) {return a.concat(b);}, []);
+
     var JSONFile = {
         '@context': {
             'dcat': 'http://www.w3.org/ns/dcat#',
@@ -868,3 +870,4 @@ module.exports = {
     initList: initList,
     download: download
 };
+
