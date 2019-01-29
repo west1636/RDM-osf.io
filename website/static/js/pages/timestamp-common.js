@@ -561,13 +561,13 @@ function generateRdf (fileList) {
                 children: [
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://semanticscience.org/resource/SIO_000396'}])},
                     {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.fileGuid}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.fileGuidLabel)}
+                    {element: createEl(doc, 'rdfs:label', [{'xml:lang': item.fileGuidLabel.lang}], item.fileGuidLabel.text)}
                 ]
             },
             {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.fileNameResource}]),
                 children: [
-                    {element: createEl(doc, 'rdfs:label', null, item.fileNameLabel)}
+                    {element: createEl(doc, 'rdfs:label', [{'xml:lang': item.fileNameLabel.lang}], item.fileNameLabel.text)}
                 ]
             },
             {
@@ -591,7 +591,7 @@ function generateRdf (fileList) {
                 children: [
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Project'}])},
                     {element: createEl(doc, 'rdfs:seeAlso', [{'rdf:resource': item.projectGuid}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.projectGuidLabel)}
+                    {element: createEl(doc, 'rdfs:label', [{'xml:lang': item.projectGuidLabel.lang}], item.projectGuidLabel.text)}
                 ]
             },
             {
@@ -604,14 +604,14 @@ function generateRdf (fileList) {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userGuidResource ? item.userGuidResource : 'Unknown'}]),
                 children: [
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Agent'}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.userGuidLabel ? item.userGuidLabel : 'Unknown')}
+                    {element: createEl(doc, 'rdfs:label', item.userGuidLabel ? [{'xml:lang': item.userGuidLabel.lang}] : null, item.userGuidLabel ? item.userGuidLabel.text : 'Unknown')}
                 ]
             },
             {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.userNameResource ? item.userNameResource : 'Unknown'}]),
                 children: [
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.userNameLabel ? item.userNameLabel : 'Unknown')}
+                    {element: createEl(doc, 'rdfs:label', item.userNameLabel ? [{'xml:lang': item.userNameLabel.lang}] : null, item.userNameLabel ? item.userNameLabel.text : 'Unknown')}
                 ]
             },
             {
@@ -625,14 +625,14 @@ function generateRdf (fileList) {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgIdResource ? item.orgIdResource : 'Unknown'}]),
                 children: [
                     {element: createEl(doc, 'rdf:type', [{'rdf:resource': 'http://www.w3.org/ns/org#Organization'}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.orgIdLabel ? item.orgIdLabel : 'Unknown')},
+                    {element: createEl(doc, 'rdfs:label', item.orgIdLabel ? [{'xml:lang': item.orgIdLabel.lang}] : null, item.orgIdLabel ? item.orgIdLabel.text : 'Unknown')},
                     {element: createEl(doc, 'frapo:organization', [{'rdf:resource': item.orgNameResource ? item.orgNameResource : 'Unknown'}])}
                 ]
             },
             {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.orgNameResource ? item.orgNameResource : 'Unknown'}]),
                 children: [
-                    {element: createEl(doc, 'rdfs:label', null, item.orgNameLabel ? item.orgNameLabel : 'Unknown')}
+                    {element: createEl(doc, 'rdfs:label', item.orgNameLabel ? [{'xml:lang': item.orgNameLabel.lang}] : null, item.orgNameLabel ? item.orgNameLabel.text : 'Unknown')}
                 ]
             },
             {
@@ -646,7 +646,7 @@ function generateRdf (fileList) {
                 element: createEl(doc, 'rdf:Description', [{'rdf:about': item.timestampId}]),
                 children: [
                     {element: createEl(doc, 'sioc:id', [{'rdf:resource': item.userGuidResource ? item.userGuidResource : 'Unknown'}])},
-                    {element: createEl(doc, 'rdfs:label', null, item.tsIdLabel)},
+                    {element: createEl(doc, 'rdfs:label', [{'xml:lang': item.tsIdLabel.lang}], item.tsIdLabel.text)},
                     {element: createEl(doc, 'sem:hasTimestamp', null, item.tsVerificationStatus)},
                     {element: createEl(doc, 'sem:hasLatestEndTimeStamp', null, item.latestTsVerificationDate)}
                 ]
