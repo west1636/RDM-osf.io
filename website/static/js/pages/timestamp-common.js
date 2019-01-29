@@ -374,86 +374,86 @@ function generateJson(fileList, headersOrder, headerNames) {
     fileList = fileList.map(function (file) {
         return [
             {
-            '@id': file.projectGuidResource,
-            '@type': 'foaf:Project',
-            'rdfs:label': file.projectGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.projectGuid
-            }
+                '@id': file.projectGuidResource,
+                '@type': 'foaf:Project',
+                'rdfs:label': file.projectGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.projectGuid
+                }
             },
             {
-            '@id': file.userNameResource,
-            '@type': 'foaf:Person',
-            'rdfs:label': file.userNameLabel
+                '@id': file.userNameResource,
+                '@type': 'foaf:Person',
+                'rdfs:label': file.userNameLabel
             },
             {
-            '@id': file.orgIdResource,
-            '@type': 'org:Organization',
-            'rdfs:label': file.orgIdLabel
+                '@id': file.orgIdResource,
+                '@type': 'org:Organization',
+                'rdfs:label': file.orgIdLabel
             },
             {
-            '@id': file.orgNameResource,
-            '@type': 'frapo:organization',
-            'rdfs:label': file.orgNameLabel
+                '@id': file.orgNameResource,
+                '@type': 'frapo:organization',
+                'rdfs:label': file.orgNameLabel
             },
             {
-            '@id': file.fileGuidResource,
-            '@type': 'sio:000396',
-            'dcat:bytes': file.fileByteSize,
-            'dcterms:created': {
-                '@type': 'xsd:dateTime',
-                '@value': file.fileCreationDate
-            },
-            'dcterms:hasVersion': {
-                '@type': 'xsd:int',
-                '@value': file.file_version
-            },
-            'dcterms:modified': {
-                '@type': 'xsd:dateTime',
-                '@value': file.fileModificationDate
-            },
-            'dcterms:title': {
-                '@id': file.fileNameResource
-            },
-            'rdfs:label': file.fileGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.fileGuid
-            }
-            },
-            {
-            '@id': file.fileNameResource,
-            'rdfs:label': file.fileNameLabel
+                '@id': file.fileGuidResource,
+                '@type': 'sio:000396',
+                'dcat:bytes': file.fileByteSize,
+                'dcterms:created': {
+                    '@type': 'xsd:dateTime',
+                    '@value': file.fileCreationDate
+                },
+                'dcterms:hasVersion': {
+                    '@type': 'xsd:int',
+                    '@value': file.file_version
+                },
+                'dcterms:modified': {
+                    '@type': 'xsd:dateTime',
+                    '@value': file.fileModificationDate
+                },
+                'dcterms:title': {
+                    '@id': file.fileNameResource
+                },
+                'rdfs:label': file.fileGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.fileGuid
+                }
             },
             {
-            '@id': file.timestampId,
-            '@type': 'dcat:Dataset',
-            'dcterms:identifier': {
-                '@id': file.fileGuidResource
-            },
-            'frapo:hasProjectIdentifier': {
-                '@id': file.projectGuidResource
-            },
-            'rdfs:label': file.tsIdLabel,
-            'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
-            'sem:hasTimestamp': file.tsVerificationStatus,
-            'sioc:id': {
-                '@id': file.userGuidResource
-            }
+                '@id': file.fileNameResource,
+                'rdfs:label': file.fileNameLabel
             },
             {
-            '@id': file.userGuidResource,
-            '@type': 'foaf:Agent',
-            'dcterms:creator': {
-                '@id': file.userNameResource
+                '@id': file.timestampId,
+                '@type': 'dcat:Dataset',
+                'dcterms:identifier': {
+                    '@id': file.fileGuidResource
+                },
+                'frapo:hasProjectIdentifier': {
+                    '@id': file.projectGuidResource
+                },
+                'rdfs:label': file.tsIdLabel,
+                'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
+                'sem:hasTimestamp': file.tsVerificationStatus,
+                'sioc:id': {
+                    '@id': file.userGuidResource
+                }
             },
-            'org:memberOf': {
-                '@id': file.orgIdResource
-            },
-            'rdfs:label': file.userGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.userGuid
-            },
-            'vcard:hasEmail': file.mail
+            {
+                '@id': file.userGuidResource,
+                '@type': 'foaf:Agent',
+                'dcterms:creator': {
+                    '@id': file.userNameResource
+                },
+                'org:memberOf': {
+                    '@id': file.orgIdResource
+                },
+                'rdfs:label': file.userGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.userGuid
+                },
+                'vcard:hasEmail': file.mail
             }
         ];
     });
