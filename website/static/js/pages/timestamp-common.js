@@ -385,7 +385,7 @@ function generateJson(fileList) {
                 }
             },
             {
-                '@id': file.userNameResource,
+                '@id': file.userNameResource ? file.userNameResource : 'Unknown',
                 '@type': 'foaf:Person',
                 'rdfs:label': file.userNameLabel ? {
                     '@language': file.userNameLabel.lang,
@@ -393,7 +393,7 @@ function generateJson(fileList) {
                 } : 'Unknown'
             },
             {
-                '@id': file.orgIdResource,
+                '@id': file.orgIdResource ? file.orgIdResource : 'Unknown',
                 '@type': 'org:Organization',
                 'rdfs:label': file.orgIdLabel ? {
                     '@language': file.orgIdLabel.lang,
@@ -401,7 +401,7 @@ function generateJson(fileList) {
                 } : 'Unknown'
             },
             {
-                '@id': file.orgNameResource,
+                '@id': file.orgNameResource ? file.orgNameResource : 'Unknown',
                 '@type': 'frapo:organization',
                 'rdfs:label': file.orgNameLabel ? {
                     '@language': file.orgNameLabel.lang,
@@ -414,7 +414,7 @@ function generateJson(fileList) {
                 'dcat:bytes': file.fileByteSize,
                 'dcterms:created': {
                     '@type': 'xsd:dateTime',
-                    '@value': file.fileCreationDate
+                    '@value': file.fileCreationDate ? file.fileCreationDate : 'Unknown'
                 },
                 'dcterms:hasVersion': {
                     '@type': 'xsd:int',
@@ -422,7 +422,7 @@ function generateJson(fileList) {
                 },
                 'dcterms:modified': {
                     '@type': 'xsd:dateTime',
-                    '@value': file.fileModificationDate
+                    '@value': file.fileModificationDate ? file.fileModificationDate : 'Unknown'
                 },
                 'dcterms:title': {
                     '@id': file.fileNameResource
@@ -458,26 +458,26 @@ function generateJson(fileList) {
                 'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
                 'sem:hasTimestamp': file.tsVerificationStatus,
                 'sioc:id': {
-                    '@id': file.userGuidResource
+                    '@id': file.userGuidResource ? file.userGuidResource : 'Unknown'
                 }
             },
             {
-                '@id': file.userGuidResource,
+                '@id': file.userGuidResource ? file.userGuidResource : 'Unknown',
                 '@type': 'foaf:Agent',
                 'dcterms:creator': {
-                    '@id': file.userNameResource
+                    '@id': file.userNameResource ? file.userNameResource : 'Unknown'
                 },
                 'org:memberOf': {
-                    '@id': file.orgIdResource
+                    '@id': file.orgIdResource ? file.orgIdResource : 'Unknown'
                 },
                 'rdfs:label': file.userGuidLabel ? {
                     '@language': file.userGuidLabel.lang,
                     '@value': file.userGuidLabel.text
                 } : 'Unknown',
                 'rdfs:seeAlso': {
-                    '@id': file.userGuid
+                    '@id': file.userGuid ? file.userGuid : 'Unknown'
                 },
-                'vcard:hasEmail': file.mail
+                'vcard:hasEmail': file.mail ? file.mail : 'Unknown'
             }
         ];
     });
