@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var nodeApiUrl = window.contextVars.node.urls.api;
 var timestampCommon = require('./timestamp-common.js');
+timestampCommon.setWebOrAdmin('web');
 
 
 $(document).ready(function () {
