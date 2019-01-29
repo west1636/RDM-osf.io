@@ -295,26 +295,26 @@ var download = function () {
             fileGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + item.file_id,
             fileGuidLabel: '"FILE:' + item.file_id + '"@en',
             fileGuid: 'https://rdf.rdm.nii.ac.jp/' + item.file_id,
-            fileNameResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + fileName,
+            fileNameResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + fileName.replace(/ /g, '_'),
             fileNameLabel: '"' + fileName + '"@en',
             fileCreationDate: fileCreationDate,
             fileModificationDate: fileModificationDate,
             fileByteSize: item.file_size_on_verify,
             fileVersion: item.file_version,
             projectGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/project/' + item.project_id,
-            projectGuidLabel: '"PROJ:' + item.project_id + '"@en',
+            projectGuidLabel: {text: 'PROJ:' + item.project_id, lang: 'en'},
             projectGuid: 'https://rdf.rdm.nii.ac.jp/' + item.project_id,
             userGuidResource: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_id : null,
-            userGuidLabel: item.creator_id ? '"USER:' + item.creator_id + '"@en' : null,
-            userNameResource: item.creator_name ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_name : null,
-            userNameLabel: item.creator_name ? '"' + item.creator_name + '"@en' : null,
+            userGuidLabel: item.creator_id ? {text: 'USER:' + item.creator_id, lang: 'en'} : null,
+            userNameResource: item.creator_name ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_name.replace(/ /g, '_') : null,
+            userNameLabel: item.creator_name ? {text: item.creator_name, lang: 'en'} : null,
             mail: item.creator_email,
             orgIdResource: item.organization_id ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_id : null,
-            orgIdLabel: item.organization_id ? '"ORG:' + item.organization_id + '"@en' : null,
-            orgNameResource: item.organization_name ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name : null,
-            orgNameLabel: item.organization_name ? '"' + item.organization_name + '"@en' : null,
+            orgIdLabel: item.organization_id ? {text: 'ORG:' + item.organization_id, lang: 'en'} : null,
+            orgNameResource: item.organization_name ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name.replace(/ /g, '_') : null,
+            orgNameLabel: item.organization_name ? {text: item.organization_name, lang: 'en'} : null,
             userGuid: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/' + item.creator_id : null,
-            tsIdLabel: '"TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate + '"@en',
+            tsIdLabel: {text: 'TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate, lang: 'en'},
             tsVerificationStatus: item.verify_result_title,
             latestTsVerificationDate: tsDate
         };
@@ -356,6 +356,9 @@ function generateCsv(fileList, headersOrder, headerNames) {
             if (file[headerName] === null) {
                 return 'Unknown';
             }
+            if (typeof file[headerName] === 'object') {
+                return '"""' + file[headerName].text + '""@' + file[headerName].lang + '"';
+            }
             if (/["|,]/.test(file[headerName])) {
                 return '"' + file[headerName].replace(/"/g, '""') + '"';
             }
@@ -371,89 +374,91 @@ function generateJson(fileList, headersOrder, headerNames) {
     fileList = fileList.map(function (file) {
         return [
             {
-            '@id': file.projectGuidResource,
-            '@type': 'foaf:Project',
-            'rdfs:label': file.projectGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.projectGuid
-            }
+                '@id': file.projectGuidResource,
+                '@type': 'foaf:Project',
+                'rdfs:label': file.projectGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.projectGuid
+                }
             },
             {
-            '@id': file.userNameResource,
-            '@type': 'foaf:Person',
-            'rdfs:label': file.userNameLabel
+                '@id': file.userNameResource,
+                '@type': 'foaf:Person',
+                'rdfs:label': file.userNameLabel
             },
             {
-            '@id': file.orgIdResource,
-            '@type': 'org:Organization',
-            'rdfs:label': file.orgIdLabel
+                '@id': file.orgIdResource,
+                '@type': 'org:Organization',
+                'rdfs:label': file.orgIdLabel
             },
             {
-            '@id': file.orgNameResource,
-            '@type': 'frapo:organization',
-            'rdfs:label': file.orgNameLabel
+                '@id': file.orgNameResource,
+                '@type': 'frapo:organization',
+                'rdfs:label': file.orgNameLabel
             },
             {
-            '@id': file.fileGuidResource,
-            '@type': 'sio:000396',
-            'dcat:bytes': file.fileByteSize,
-            'dcterms:created': {
-                '@type': 'xsd:dateTime',
-                '@value': file.fileCreationDate
-            },
-            'dcterms:hasVersion': {
-                '@type': 'xsd:int',
-                '@value': file.file_version
-            },
-            'dcterms:modified': {
-                '@type': 'xsd:dateTime',
-                '@value': file.fileModificationDate
-            },
-            'dcterms:title': {
-                '@id': file.fileNameResource
-            },
-            'rdfs:label': file.fileGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.fileGuid
-            }
-            },
-            {
-            '@id': file.fileNameResource,
-            'rdfs:label': file.fileNameLabel
+                '@id': file.fileGuidResource,
+                '@type': 'sio:000396',
+                'dcat:bytes': file.fileByteSize,
+                'dcterms:created': {
+                    '@type': 'xsd:dateTime',
+                    '@value': file.fileCreationDate
+                },
+                'dcterms:hasVersion': {
+                    '@type': 'xsd:int',
+                    '@value': file.file_version
+                },
+                'dcterms:modified': {
+                    '@type': 'xsd:dateTime',
+                    '@value': file.fileModificationDate
+                },
+                'dcterms:title': {
+                    '@id': file.fileNameResource
+                },
+                'rdfs:label': file.fileGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.fileGuid
+                }
             },
             {
-            '@id': file.timestampId,
-            '@type': 'dcat:Dataset',
-            'dcterms:identifier': {
-                '@id': file.fileGuidResource
-            },
-            'frapo:hasProjectIdentifier': {
-                '@id': file.projectGuidResource
-            },
-            'rdfs:label': file.tsIdLabel,
-            'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
-            'sem:hasTimestamp': file.tsVerificationStatus,
-            'sioc:id': {
-                '@id': file.userGuidResource
-            }
+                '@id': file.fileNameResource,
+                'rdfs:label': file.fileNameLabel
             },
             {
-            '@id': file.userGuidResource,
-            '@type': 'foaf:Agent',
-            'dcterms:creator': {
-                '@id': file.userNameResource
+                '@id': file.timestampId,
+                '@type': 'dcat:Dataset',
+                'dcterms:identifier': {
+                    '@id': file.fileGuidResource
+                },
+                'frapo:hasProjectIdentifier': {
+                    '@id': file.projectGuidResource
+                },
+                'rdfs:label': file.tsIdLabel,
+                'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
+                'sem:hasTimestamp': file.tsVerificationStatus,
+                'sioc:id': {
+                    '@id': file.userGuidResource
+                }
             },
-            'org:memberOf': {
-                '@id': file.orgIdResource
-            },
-            'rdfs:label': file.userGuidLabel,
-            'rdfs:seeAlso': {
-                '@id': file.userGuid
-            },
-            'vcard:hasEmail': file.mail
+            {
+                '@id': file.userGuidResource,
+                '@type': 'foaf:Agent',
+                'dcterms:creator': {
+                    '@id': file.userNameResource
+                },
+                'org:memberOf': {
+                    '@id': file.orgIdResource
+                },
+                'rdfs:label': file.userGuidLabel,
+                'rdfs:seeAlso': {
+                    '@id': file.userGuid
+                },
+                'vcard:hasEmail': file.mail
             }
         ];
     });
+
+    fileList = fileList.reduce(function(a, b) {return a.concat(b);}, []);
 
     var JSONFile = {
         '@context': {
@@ -841,3 +846,4 @@ module.exports = {
     initList: initList,
     download: download
 };
+
