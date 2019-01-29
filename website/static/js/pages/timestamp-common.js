@@ -6,7 +6,16 @@ var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
 
-var DOWNLOAD_FILENAME = 'timestamp_errors';
+var filename_start = document.title === 'TimeStampAddList' ? 'admin_' : 'web_';
+var dateString = new Date().toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+}).replace(/[\/ :]/g, '');
+var DOWNLOAD_FILENAME = filename_start + dateString + '_';
 var HEADERS_ORDER = [
     'timestampId', 'fileGuidResource', 'fileGuidLabel', 'fileGuid', 'fileNameResource',
     'fileNameLabel', 'fileCreationDate', 'fileModificationDate', 'fileByteSize',
