@@ -332,7 +332,7 @@ var download = function () {
             saveTextFile(DOWNLOAD_FILENAME + '.csv', fileContent);
             break;
         case 'json-ld':
-            fileContent = generateJson(fileList, HEADERS_ORDER, HEADER_NAMES);
+            fileContent = generateJson(fileList);
             saveTextFile(DOWNLOAD_FILENAME + '.json', fileContent);
             break;
         case 'rdf-xml':
@@ -369,14 +369,17 @@ function generateCsv(fileList, headersOrder, headerNames) {
     return content;
 }
 
-function generateJson(fileList, headersOrder, headerNames) {
+function generateJson(fileList) {
     // Update headers as defined in HEADERS_NAME
     fileList = fileList.map(function (file) {
         return [
             {
                 '@id': file.projectGuidResource,
                 '@type': 'foaf:Project',
-                'rdfs:label': file.projectGuidLabel,
+                'rdfs:label': {
+                    '@language': file.projectGuidLabel.lang,
+                    '@value': file.projectGuidLabel.text
+                },
                 'rdfs:seeAlso': {
                     '@id': file.projectGuid
                 }
@@ -384,17 +387,26 @@ function generateJson(fileList, headersOrder, headerNames) {
             {
                 '@id': file.userNameResource,
                 '@type': 'foaf:Person',
-                'rdfs:label': file.userNameLabel
+                'rdfs:label': file.userNameLabel ? {
+                    '@language': file.userNameLabel.lang,
+                    '@value': file.userNameLabel.text
+                } : 'Unknown'
             },
             {
                 '@id': file.orgIdResource,
                 '@type': 'org:Organization',
-                'rdfs:label': file.orgIdLabel
+                'rdfs:label': file.orgIdLabel ? {
+                    '@language': file.orgIdLabel.lang,
+                    '@value': file.orgIdLabel.text
+                } : 'Unknown'
             },
             {
                 '@id': file.orgNameResource,
                 '@type': 'frapo:organization',
-                'rdfs:label': file.orgNameLabel
+                'rdfs:label': file.orgNameLabel ? {
+                    '@language': file.orgNameLabel.lang,
+                    '@value': file.orgNameLabel.text
+                } : 'Unknown'
             },
             {
                 '@id': file.fileGuidResource,
@@ -415,14 +427,20 @@ function generateJson(fileList, headersOrder, headerNames) {
                 'dcterms:title': {
                     '@id': file.fileNameResource
                 },
-                'rdfs:label': file.fileGuidLabel,
+                'rdfs:label': {
+                    '@language': file.fileGuidLabel.lang,
+                    '@value': file.fileGuidLabel.text
+                },
                 'rdfs:seeAlso': {
                     '@id': file.fileGuid
                 }
             },
             {
                 '@id': file.fileNameResource,
-                'rdfs:label': file.fileNameLabel
+                'rdfs:label': {
+                    '@language': file.fileNameLabel.leng,
+                    '@value': file.fileNameLabel.text
+                }
             },
             {
                 '@id': file.timestampId,
@@ -433,7 +451,10 @@ function generateJson(fileList, headersOrder, headerNames) {
                 'frapo:hasProjectIdentifier': {
                     '@id': file.projectGuidResource
                 },
-                'rdfs:label': file.tsIdLabel,
+                'rdfs:label': {
+                    '@language': file.tsIdLabel.lang,
+                    '@value': file.tsIdLabel.text
+                },
                 'sem:hasLatestEndTimeStamp': file.latestTsVerificationDate,
                 'sem:hasTimestamp': file.tsVerificationStatus,
                 'sioc:id': {
@@ -449,7 +470,10 @@ function generateJson(fileList, headersOrder, headerNames) {
                 'org:memberOf': {
                     '@id': file.orgIdResource
                 },
-                'rdfs:label': file.userGuidLabel,
+                'rdfs:label': file.userGuidLabel ? {
+                    '@language': file.userGuidLabel.lang,
+                    '@value': file.userGuidLabel.text
+                } : 'Unknown',
                 'rdfs:seeAlso': {
                     '@id': file.userGuid
                 },
@@ -480,7 +504,7 @@ function generateJson(fileList, headersOrder, headerNames) {
     };
 
     // Generate content
-    return vkbeautify.json(JSON.stringify(JSONFile, null, 2));
+    return vkbeautify.json(JSON.stringify(JSONFile)).replace(/\n/g, NEW_LINE);
 }
 
 function generateRdf (fileList) {
