@@ -293,10 +293,10 @@ var download = function () {
         return {
             timestampId: 'https://rdf.rdm.nii.ac.jp/resource/ts/' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate,
             fileGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + item.file_id,
-            fileGuidLabel: '"FILE:' + item.file_id + '"@en',
+            fileGuidLabel: {text: 'FILE:' + item.file_id, lang: 'en'},
             fileGuid: 'https://rdf.rdm.nii.ac.jp/' + item.file_id,
             fileNameResource: 'https://rdf.rdm.nii.ac.jp/resource/file/' + fileName.replace(/ /g, '_'),
-            fileNameLabel: '"' + fileName + '"@en',
+            fileNameLabel: {text: fileName, lang: 'en'},
             fileCreationDate: fileCreationDate,
             fileModificationDate: fileModificationDate,
             fileByteSize: item.file_size_on_verify,
