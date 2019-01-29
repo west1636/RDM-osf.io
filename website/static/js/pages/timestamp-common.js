@@ -302,19 +302,19 @@ var download = function () {
             fileByteSize: item.file_size_on_verify,
             fileVersion: item.file_version,
             projectGuidResource: 'https://rdf.rdm.nii.ac.jp/resource/project/' + item.project_id,
-            projectGuidLabel: '"PROJ:' + item.project_id + '"@en',
+            projectGuidLabel: {text: 'PROJ:' + item.project_id, lang: 'en'},
             projectGuid: 'https://rdf.rdm.nii.ac.jp/' + item.project_id,
             userGuidResource: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_id : null,
-            userGuidLabel: item.creator_id ? '"USER:' + item.creator_id + '"@en' : null,
+            userGuidLabel: item.creator_id ? {text: 'USER:' + item.creator_id, lang: 'en'} : null,
             userNameResource: item.creator_name ? 'https://rdf.rdm.nii.ac.jp/resource/user/' + item.creator_name.replace(/ /g, '_') : null,
-            userNameLabel: item.creator_name ? '"' + item.creator_name + '"@en' : null,
+            userNameLabel: item.creator_name ? {text: item.creator_name, lang: 'en'} : null,
             mail: item.creator_email,
             orgIdResource: item.organization_id ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_id : null,
-            orgIdLabel: item.organization_id ? '"ORG:' + item.organization_id + '"@en' : null,
+            orgIdLabel: item.organization_id ? {text: 'ORG:' + item.organization_id, lang: 'en'} : null,
             orgNameResource: item.organization_name ? 'https://rdf.rdm.nii.ac.jp/resource/org/' + item.organization_name.replace(/ /g, '_') : null,
-            orgNameLabel: item.organization_name ? '"' + item.organization_name + '"@en' : null,
+            orgNameLabel: item.organization_name ? {text: item.organization_name, lang: 'en'} : null,
             userGuid: item.creator_id ? 'https://rdf.rdm.nii.ac.jp/' + item.creator_id : null,
-            tsIdLabel: '"TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate + '"@en',
+            tsIdLabel: {text: 'TS:' + item.project_id + '/' + item.file_id + '/' + item.verify_user_id + '/' + tsDate, lang: 'en'},
             tsVerificationStatus: item.verify_result_title,
             latestTsVerificationDate: tsDate
         };
@@ -355,6 +355,9 @@ function generateCsv(fileList, headersOrder, headerNames) {
         return headersOrder.map(function (headerName) {
             if (file[headerName] === null) {
                 return 'Unknown';
+            }
+            if (typeof file[headerName] === 'object') {
+                return '"""' + file[headerName].text + '""@' + file[headerName].lang + '"';
             }
             if (/["|,]/.test(file[headerName])) {
                 return '"' + file[headerName].replace(/"/g, '""') + '"';
