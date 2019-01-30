@@ -867,7 +867,7 @@ function initDatePickers() {
 
     datePickerIds.forEach(function(id) {
         var TinyDatePicker = window.TinyDatePicker; // this lets the tests pass
-        TinyDatePicker(document.getElementById(id), {
+        new TinyDatePicker(document.getElementById(id), {
             format: function(date) {
                 var dateString = date.toLocaleDateString('ja-JP', {
                     year: 'numeric',
