@@ -102,15 +102,55 @@
                 <div class="col-xs-12">
                     <table class="table table-bordered table-addon-terms">
                         <thead class="block-head">
-                            <tr>
+                            <tr style="background-color: #f5f5f5;">
                                 <th width="3%">
                                     <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
                                 </th>
-                                <th width="11%">Provider <span id="sort_up_provider" class="fa fa-chevron-up text-muted"></span><span id="sort_down_provider" class="fa fa-chevron-down text-muted"></span></th>
-                                <th width="29%">File Path <span id="sort_up_file_path" class="fa fa-chevron-up text-muted"></span><span id="sort_down_file_path" class="fa fa-chevron-down text-muted"></span></th>
-                                <th width="15%">Timestamp by <span id="sort_up_verify_user_name_id" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_user_name_id" class="fa fa-chevron-down text-muted"></span></th>
-                                <th width="22%">Updated at <span id="sort_up_verify_date" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_date" class="fa fa-chevron-down text-muted"></span></th>
-                                <th width="20%">Timestamp Verification <span id="sort_up_verify_result_title" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_result_title" class="fa fa-chevron-down text-muted"></span></th>
+                                <th width="14%">
+                                    <div>
+                                        <span class="sorter">
+                                            <span id="sort_up_provider" class="fa fa-chevron-up tb-sort-inactive asc-btn"></span>
+                                            <span id="sort_down_provider" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        </span>
+                                        <span class="header_text m-r-sm" title="Provider">Provider</span>
+                                    </div>
+                                </th>
+                                <th width="29%">
+                                    <div>
+                                        <span class="sorter">
+                                            <span id="sort_up_file_path" class="fa fa-chevron-up tb-sort-inactive asc-btn"></span>
+                                            <span id="sort_down_file_path" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        </span>
+                                        <span class="header_text m-r-sm" title="File Path">File Path</span>
+                                    </div>
+                                </th>
+                                <th width="15%">
+                                    <div>
+                                        <span class="sorter">
+                                            <span id="sort_up_verify_user_name_id" class="fa fa-chevron-up tb-sort-inactive asc-btn"></span>
+                                            <span id="sort_down_verify_user_name_id" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        </span>
+                                        <span class="header_text m-r-sm" title="Timestamp by">Timestamp by</span>
+                                    </div>
+                                </th>
+                                <th width="19%">
+                                    <div>
+                                        <span class="sorter">
+                                            <span id="sort_up_verify_date" class="fa fa-chevron-up tb-sort-inactive asc-btn"></span>
+                                            <span id="sort_down_verify_date" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        </span>
+                                        <span class="header_text m-r-sm" title="Updated at">Updated at</span>
+                                    </div>
+                                </th>
+                                <th width="20%">
+                                    <div>
+                                        <span class="sorter">
+                                            <span id="sort_up_verify_result_title" class="fa fa-chevron-up tb-sort-inactive asc-btn"></span>
+                                            <span id="sort_down_verify_result_title" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        </span>
+                                        <span class="header_text m-r-sm" title="Timestamp Verification">Timestamp Verification</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <font color="red">

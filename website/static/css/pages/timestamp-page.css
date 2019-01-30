@@ -52,3 +52,18 @@ date-input-polyfill {
     display: inline;
     padding: 0;
 }
+
+/* Table */
+.table-addon-terms .sorter {
+    display: block;
+    float: right;
+}
+.table-addon-terms .header_text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.table-addon-terms td {
+    background-color: white;
+}

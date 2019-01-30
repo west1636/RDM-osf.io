@@ -756,17 +756,17 @@ function initList() {
 
                 clickSortUpElements.forEach(function(element) {
                     // written this way to ensure it works with IE
-                    element.classList.add('text-muted');
+                    element.classList.add('tb-sort-inactive');
                 });
 
                 clickSortDownElements.forEach(function(element) {
                     // written this way to ensure it works with IE
-                    element.classList.add('text-muted');
+                    element.classList.add('tb-sort-inactive');
                 });
 
                 TIMESTAMP_LIST_OBJECT.sort(propertyName, {order: 'asc', sortFunction: sortFunction});
 
-                event.target.classList.remove('text-muted');
+                event.target.classList.remove('tb-sort-inactive');
 
             };
         })(upPropertyName, clickSortUpElements));
@@ -780,17 +780,17 @@ function initList() {
 
                 clickSortDownElements.forEach(function(element) {
                     // written this way to ensure it works with IE
-                    element.classList.add('text-muted');
+                    element.classList.add('tb-sort-inactive');
                 });
 
                 clickSortUpElements.forEach(function(element) {
                     // written this way to ensure it works with IE
-                    element.classList.add('text-muted');
+                    element.classList.add('tb-sort-inactive');
                 });
 
                 TIMESTAMP_LIST_OBJECT.sort(upPropertyName, {order: 'desc', sortFunction: sortFunction});
 
-                event.target.classList.remove('text-muted');
+                event.target.classList.remove('tb-sort-inactive');
 
             };
         })(downPropertyName, clickSortDownElements));
