@@ -6,7 +6,7 @@ var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
 
-var datesString = new Date().toLocaleDateString('ja-JP', {
+var dateString = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -855,10 +855,37 @@ function initList() {
 
 }
 
+function initDatePickers() {
+
+    var datePickerIds = ['startDateFilter', 'endDateFilter'];
+
+    datePickerIds.forEach(function(id) {
+        TinyDatePicker(document.getElementById(id), {
+            format: function(date) {
+                var dateString = date.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }).replace(/\//g, '-');
+                return dateString;
+            },
+            parse: function(str){
+                return new Date(str);
+            },
+        });
+    });
+
+}
+
+function init() {
+    initList();
+    initDatePickers();
+}
+
 module.exports = {
     verify: verify,
     add: add,
-    initList: initList,
+    init: init,
     download: download,
     setWebOrAdmin: setWebOrAdmin
 };

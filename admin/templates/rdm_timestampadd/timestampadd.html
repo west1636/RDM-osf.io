@@ -5,6 +5,7 @@
 
 {% block top_includes %}
   <link rel="stylesheet" type="text/css" href="/static/css/institutions.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block title %}
@@ -21,13 +22,13 @@
                     <div class="col-sm-6">
                         <div class="input-group">
                             <div class="input-group-addon">Start Date</div>
-                            <input id="startDateFilter" type="date" class="form-control" />
+                            <input id="startDateFilter" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="input-group">
                             <div class="input-group-addon">End Date</div>
-                            <input id="endDateFilter" type="date" class="form-control" />
+                            <input id="endDateFilter" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -197,6 +198,7 @@ date-input-polyfill {
         addtimestamp: "{% url 'timestampadd:addtimestamp' institution_id=institution_id guid=guid %}"
     };
 </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.js"></script>
 <script src={{ '/static/public/js/rdm-timestampadd-page.js' }}></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 {% endblock content %}
