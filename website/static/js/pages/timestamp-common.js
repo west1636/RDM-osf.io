@@ -860,13 +860,14 @@ function initDatePickers() {
     var datePickerIds = ['startDateFilter', 'endDateFilter'];
 
     datePickerIds.forEach(function(id) {
+        var TinyDatePicker = window.TinyDatePicker; // this lets the tests pass
         TinyDatePicker(document.getElementById(id), {
             format: function(date) {
                 var dateString = date.toLocaleDateString('ja-JP', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
-                }).replace(/[\/年月日]/g, '-');
+                }).replace(/[\/年月]/g, '-').replace(/日/, '');
                 return dateString;
             },
             mode: 'dp-below',
