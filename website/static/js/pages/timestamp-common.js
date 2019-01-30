@@ -19,7 +19,7 @@ var DOWNLOAD_FILENAME;
 // called on rdm-timestampadd-page.js and timestamp-page.js/
 // argument should be 'web' or 'admin'
 var setWebOrAdmin = function(webOrAdminString) {
-    DOWNLOAD_FILENAME = webOrAdminString + '_' + datesString + '_';
+    DOWNLOAD_FILENAME = webOrAdminString + '_' + dateString + '_';
 };
 
 var HEADERS_ORDER = [
