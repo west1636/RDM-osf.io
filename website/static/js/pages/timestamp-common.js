@@ -871,7 +871,7 @@ function initDatePickers() {
                 return dateString;
             },
             mode: 'dp-below',
-            parse(str) {
+            parse: function(str) {
                 var dateString = str.replace(/-/g, '/'); // IE can't parse the dates without this
                 var date = new Date(dateString);
                 return isNaN(date) ? new Date() : date;
