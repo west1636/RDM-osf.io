@@ -108,36 +108,36 @@
                                 </th>
                                 <th width="14%">
                                     <span class="sorter">
-                                        <span id="sort_up_provider" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></span>
-                                        <span id="sort_down_provider" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        <i id="sort_up_provider" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
+                                        <i id="sort_down_provider" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                     </span>
                                     <span class="header_text m-r-sm" title="Provider">Provider</span>
                                 </th>
                                 <th width="29%">
                                     <span class="sorter">
-                                        <span id="sort_up_file_path" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></span>
-                                        <span id="sort_down_file_path" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        <i id="sort_up_file_path" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
+                                        <i id="sort_down_file_path" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                     </span>
                                     <span class="header_text m-r-sm" title="File Path">File Path</span>
                                 </th>
                                 <th width="15%">
                                     <span class="sorter">
-                                        <span id="sort_up_verify_user_name_id" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></span>
-                                        <span id="sort_down_verify_user_name_id" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        <i id="sort_up_verify_user_name_id" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
+                                        <i id="sort_down_verify_user_name_id" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                     </span>
                                     <span class="header_text m-r-sm" title="Timestamp by">Timestamp by</span>
                                 </th>
                                 <th width="19%">
                                     <span class="sorter">
-                                        <span id="sort_up_verify_date" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></span>
-                                        <span id="sort_down_verify_date" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        <i id="sort_up_verify_date" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
+                                        <i id="sort_down_verify_date" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                     </span>
                                     <span class="header_text m-r-sm" title="Updated at">Updated at</span>
                                 </th>
                                 <th width="20%">
                                     <span class="sorter">
-                                        <span id="sort_up_verify_result_title" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></span>
-                                        <span id="sort_down_verify_result_title" class="fa fa-chevron-down tb-sort-inactive desc-btn"></span>
+                                        <i id="sort_up_verify_result_title" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
+                                        <i id="sort_down_verify_result_title" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                     </span>
                                     <span class="header_text m-r-sm" title="Timestamp Verification">Timestamp Verification</span>
                                 </th>
