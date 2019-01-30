@@ -842,7 +842,7 @@ function initList() {
 
                         return !i.values().verify_date || comparator( verify_date_day, filter_date_day );
                     };
-                })(element.value.replace(/-/, '/'), comparator)); // .replace is an IE date parsing fix
+                })(element.value.replace(/-/g, '/'), comparator)); // .replace is an IE date parsing fix
             }
         }
 
