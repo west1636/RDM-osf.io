@@ -866,7 +866,7 @@ function initDatePickers() {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
-                }).replace(/\//g, '-');
+                }).replace(/[\/年月日]/g, '-');
                 return dateString;
             },
             mode: 'dp-below',
