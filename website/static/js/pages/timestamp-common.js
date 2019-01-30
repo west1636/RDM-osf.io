@@ -6,7 +6,7 @@ var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
 
-var datesString = new Date().toLocaleDateString('ja-JP', {
+var dateString = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -19,7 +19,7 @@ var DOWNLOAD_FILENAME;
 // called on rdm-timestampadd-page.js and timestamp-page.js/
 // argument should be 'web' or 'admin'
 var setWebOrAdmin = function(webOrAdminString) {
-    DOWNLOAD_FILENAME = webOrAdminString + '_' + datesString + '_';
+    DOWNLOAD_FILENAME = webOrAdminString + '_' + dateString + '_';
 };
 
 var HEADERS_ORDER = [
@@ -861,7 +861,13 @@ function initList() {
                         var verify_date_day = new Date(i.values().verify_date);
                         verify_date_day.setHours(0, 0, 0, 0);
 
-                        var filter_date_day = new Date(elementValue);
+                        // .replace below gets rid of invisible characters IE inserts
+                        var dateComponents = elementValue.replace(/\u200E/g, '').split('-');
+
+                        var year = dateComponents[0];
+                        var month = dateComponents[1] - 1; // string starts at 1, parameter starts at 0
+                        var day = dateComponents[2];
+                        var filter_date_day = new Date(year, month, day);
                         filter_date_day.setHours(0, 0, 0, 0);
 
                         return !i.values().verify_date || comparator( verify_date_day, filter_date_day );
@@ -879,10 +885,36 @@ function initList() {
 
 }
 
+function initDatePickers() {
+
+    var datePickerIds = ['startDateFilter', 'endDateFilter'];
+
+    datePickerIds.forEach(function(id) {
+        var TinyDatePicker = window.TinyDatePicker; // this lets the tests pass
+        new TinyDatePicker(document.getElementById(id), {
+            format: function(date) {
+                var dateString = date.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }).replace(/[\/年月]/g, '-').replace(/日/, '');
+                return dateString;
+            },
+            mode: 'dp-below',
+        });
+    });
+
+}
+
+function init() {
+    initList();
+    initDatePickers();
+}
+
 module.exports = {
     verify: verify,
     add: add,
-    initList: initList,
+    init: init,
     download: download,
     setWebOrAdmin: setWebOrAdmin
 };

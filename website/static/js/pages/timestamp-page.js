@@ -7,7 +7,7 @@ timestampCommon.setWebOrAdmin('web');
 
 
 $(document).ready(function () {
-    timestampCommon.initList();
+    timestampCommon.init();
 });
 
 $(function () {

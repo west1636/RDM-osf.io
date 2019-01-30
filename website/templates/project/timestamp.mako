@@ -39,13 +39,13 @@
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <div class="input-group-addon">Start Date</div>
-                                    <input id="startDateFilter" type="date" class="form-control" />
+                                    <input id="startDateFilter" type="text" placeholder="YYYY-MM-DD" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <div class="input-group-addon">End Date</div>
-                                    <input id="endDateFilter" type="date" class="form-control" />
+                                    <input id="endDateFilter" type="text" placeholder="YYYY-MM-DD" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -211,12 +211,13 @@
 </div>
 
 <link href="/static/css/pages/timestamp-page.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.css" rel="stylesheet" />
 
 <%def name="javascript_bottom()">
 ${parent.javascript_bottom()}
 % for script in tree_js:
 <script type="text/javascript" src="${script | webpack_asset}"></script>
 % endfor
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.js"></script>
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 </%def>
