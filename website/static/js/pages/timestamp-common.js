@@ -837,12 +837,16 @@ function initList() {
                         var verify_date_day = new Date(i.values().verify_date);
                         verify_date_day.setHours(0, 0, 0, 0);
 
-                        var filter_date_day = new Date(elementValue);
+                        var dateComponents = elementValue.split('-');
+                        var year = dateComponents[0];
+                        var month = dateComponents[1] - 1; // string starts at 1, parameter starts at 0
+                        var day = dateComponents[2];
+                        var filter_date_day = new Date(year, month, day);
                         filter_date_day.setHours(0, 0, 0, 0);
 
                         return !i.values().verify_date || comparator( verify_date_day, filter_date_day );
                     };
-                })(element.value.replace(/-/g, '/'), comparator)); // .replace is an IE date parsing fix
+                })(element.value, comparator));
             }
         }
 
