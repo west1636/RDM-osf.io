@@ -869,10 +869,7 @@ function initDatePickers() {
                 }).replace(/\//g, '-');
                 return dateString;
             },
-            // parse: function(str){
-            //     console.log(str);
-            //     return new Date(str);
-            // },
+            mode: 'dp-below',
         });
     });
 
