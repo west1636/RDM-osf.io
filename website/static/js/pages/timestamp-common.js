@@ -842,7 +842,7 @@ function initList() {
 
                         return !i.values().verify_date || comparator( verify_date_day, filter_date_day );
                     };
-                })(element.value, comparator));
+                })(element.value.replace(/-/, '/'), comparator)); // .replace is an IE date parsing fix
             }
         }
 
@@ -871,11 +871,6 @@ function initDatePickers() {
                 return dateString;
             },
             mode: 'dp-below',
-            parse: function(str) {
-                var dateString = str.replace(/-/g, '/'); // IE can't parse the dates without this
-                var date = new Date(dateString);
-                return isNaN(date) ? new Date() : date;
-            },
         });
     });
 
