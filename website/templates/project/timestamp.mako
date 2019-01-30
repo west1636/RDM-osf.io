@@ -190,5 +190,4 @@ ${parent.javascript_bottom()}
 % endfor
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.js"></script>
 <script src=${"/static/public/js/timestamp-page.js" | webpack_asset}></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nodep-date-input-polyfill@5.2.0/nodep-date-input-polyfill.dist.min.js"></script>
 </%def>
