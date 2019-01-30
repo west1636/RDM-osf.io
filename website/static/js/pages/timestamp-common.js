@@ -837,7 +837,9 @@ function initList() {
                         var verify_date_day = new Date(i.values().verify_date);
                         verify_date_day.setHours(0, 0, 0, 0);
 
-                        var dateComponents = elementValue.split('-');
+                        // .replace below gets rid of invisible characters IE inserts
+                        var dateComponents = elementValue.replace(/\u200E/g, '').split('-');
+
                         var year = dateComponents[0];
                         var month = dateComponents[1] - 1; // string starts at 1, parameter starts at 0
                         var day = dateComponents[2];
