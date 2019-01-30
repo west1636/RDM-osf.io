@@ -111,12 +111,54 @@
         <table id="datatables" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th width="3%"><input type="checkBox" id="addTimestampAllCheck" style="width: 14px; height: 14px;" /></th>
-                    <th width="11%">Provider <span id="sort_up_provider" class="fa fa-chevron-up text-muted"></span><span id="sort_down_provider" class="fa fa-chevron-down text-muted"></span></th>
-                    <th width="29%">FilePath <span id="sort_up_file_path" class="fa fa-chevron-up text-muted"></span><span id="sort_down_file_path" class="fa fa-chevron-down text-muted"></span></th>
-                    <th width="15%">Timestamp by <span id="sort_up_verify_user_name_id" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_user_name_id" class="fa fa-chevron-down text-muted"></span></th>
-                    <th width="22%">Updated at <span id="sort_up_verify_date" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_date" class="fa fa-chevron-down text-muted"></span></th>
-                    <th width="20%">Timestamp verification <span id="sort_up_verify_result_title" class="fa fa-chevron-up text-muted"></span><span id="sort_down_verify_result_title" class="fa fa-chevron-down text-muted"></span></th>
+                    <th width="3%">
+                        <input type="checkBox" id="addTimestampAllCheck" style="width: 15px; height: 15px;"/>
+                    </th>
+                    <th width="14%">
+                        <span class="header_text">Provider</span>
+                        <span class="sorter">
+                            <a id="sort_down_provider" class="caret"></a>
+                            <span class="dropup">
+                                <a id="sort_up_provider" class="caret"></a>
+                            </span>
+                        </span>
+                    </th>
+                    <th width="29%">
+                        <span class="header_text">File Path</span>
+                        <span class="sorter">
+                            <a id="sort_down_file_path" class="caret"></a>
+                            <span class="dropup">
+                                <a id="sort_up_file_path" class="caret"></a>
+                            </span>
+                        </span>
+                    </th>
+                    <th width="15%">
+                        <span class="header_text">Timestamp by</span>
+                        <span class="sorter">
+                            <a id="sort_down_verify_user_name_id" class="caret"></a>
+                            <span class="dropup">
+                                <a id="sort_up_verify_user_name_id" class="caret"></a>
+                            </span>
+                        </span>
+                    </th>
+                    <th width="19%">
+                        <span class="header_text">Updated at</span>
+                        <span class="sorter">
+                            <a id="sort_down_verify_date" class="caret"></a>
+                            <span class="dropup">
+                                <a id="sort_up_verify_date" class="caret"></a>
+                            </span>
+                        </span>
+                    </th>
+                    <th width="20%">
+                        <span class="header_text">Timestamp Verification</span>
+                        <span class="sorter">
+                            <a id="sort_down_verify_result_title" class="caret"></a>
+                            <span class="dropup">
+                                <a id="sort_up_verify_result_title" class="caret"></a>
+                            </span>
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody class="list" id="timestamp_error_list">
@@ -185,7 +227,23 @@
     margin-bottom: 10px;
 }
 date-input-polyfill {
-  z-index: 3;
+    z-index: 3;
+}
+.caret {
+    cursor: pointer;
+}
+.table .sorter {
+    display: block;
+    float: left;
+    margin-left: -28px;
+}
+.table .header_text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: left;
+    margin-right: 30px;
 }
 </style>
 
