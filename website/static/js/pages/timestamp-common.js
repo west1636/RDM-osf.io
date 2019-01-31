@@ -13,7 +13,7 @@ var dateString = new Date().toLocaleDateString('ja-JP', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit'
-}).replace(/[/ :年月日]/g, '');
+}).replace(/[/ :年月日]/g, '').replace(/\u200E/g, '');
 
 var DOWNLOAD_FILENAME;
 // called on rdm-timestampadd-page.js and timestamp-page.js/
