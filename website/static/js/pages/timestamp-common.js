@@ -698,7 +698,7 @@ function generateRdf (fileList) {
     }
 
     var serializer = new XMLSerializer();
-    return vkbeautify.xml(serializer.serializeToString(doc)).replace(/\n/g, NEW_LINE);
+    return vkbeautify.xml(serializer.serializeToString(doc).replace(/xmlns:NS\d+="" NS\d+:/g, '')).replace(/\n/g, NEW_LINE);
 }
 
 function saveTextFile(filename, content) {
