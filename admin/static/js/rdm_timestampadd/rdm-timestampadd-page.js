@@ -115,7 +115,7 @@ $(function () {
     });
 
     $(document).ready(function () {
-        timestampCommon.initList();
+        timestampCommon.init();
         $('#btn-verify').on('click', btnVerify_onclick).focus();
         $('#btn-addtimestamp').on('click', btnAddtimestamp_onclick).focus();
         $('#btn-download').on('click', function () {
