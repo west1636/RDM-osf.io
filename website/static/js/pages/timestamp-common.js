@@ -13,7 +13,7 @@ var dateString = new Date().toLocaleDateString('ja-JP', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit'
-}).replace(/[\/ :年月日]/g, '');
+}).replace(/[/ :年月日]/g, '');
 
 var DOWNLOAD_FILENAME;
 // called on rdm-timestampadd-page.js and timestamp-page.js/
@@ -897,7 +897,7 @@ function initDatePickers() {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
-                }).replace(/[\/年月]/g, '-').replace(/日/, '');
+                }).replace(/[/年月]/g, '-').replace(/日/, '');
                 return dateString;
             },
             mode: 'dp-below',
