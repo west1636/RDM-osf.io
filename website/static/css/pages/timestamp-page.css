@@ -4,8 +4,14 @@
 .form-group .input-group {
     margin-bottom: 10px;
 }
-date-input-polyfill {
-  z-index: 3;
+.panel.affix {
+    top: 105px;
+}
+@media (max-width: 992px) {
+    .panel.affix {
+        position: relative;
+        top: 0px;
+    }
 }
 
 /* Pagination */

@@ -20,7 +20,7 @@
 
     <!-- Begin left column -->
     <div class="col-md-3 col-xs-12 affix-parent scrollspy">
-        <div class="panel panel-default osf-affix" data-spy="affix" data-offset-top="0" data-offset-bottom="263">
+        <div class="panel panel-default osf-affix" data-spy="affix" data-offset-top="105" data-offset-bottom="263">
             <!-- Begin sidebar -->
             <ul class="nav nav-stacked nav-pills">
                 <li class="active">
