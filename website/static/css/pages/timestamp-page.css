@@ -72,4 +72,5 @@
 }
 .table-addon-terms td {
     background-color: white;
+    word-break: break-all;
 }
