@@ -210,6 +210,27 @@ class NodeView(PermissionRequiredMixin, GuidView):
         return serialize_node(node)
 
 
+class StorageQuotaView(View):
+    """
+    Changes the allowed quota for the node.
+    """
+    context_object_name = 'node'
+    permission_required = 'osf.view_node'
+    raise_exception = True
+
+    def post(self, request, *args, **kwargs):
+        guid = self.kwargs.get('guid')
+        node = Node.load(guid) or Registration.load(guid)
+        max_quota = int(request.POST.get('maxQuota'))
+
+        if node.storage_set.exists():
+            node.storage_set.update(max_quota=max_quota)
+        else:
+            node.storage_set.create(max_quota=max_quota)
+
+        return redirect(reverse_node(self.kwargs.get('guid')))
+
+
 class AdminNodeLogView(PermissionRequiredMixin, ListView):
     """ Allow admins to see logs"""
 

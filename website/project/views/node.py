@@ -726,6 +726,10 @@ def _view_project(node, auth, primary=False,
                 status.push_status_message(message, kind='info', dismissible=False, trust=True)
     NodeRelation = apps.get_model('osf.NodeRelation')
 
+    storage_quota = {'osfstorage': 100}
+    for storage in node.storage_set.all():
+        storage_quota['osfstorage'] = storage.max_quota
+
     is_registration = node.is_registration
     data = {
         'node': {
@@ -734,6 +738,7 @@ def _view_project(node, auth, primary=False,
             'title': node.title,
             'category': node.category_display,
             'category_short': node.category,
+            'quota': storage_quota,
             'node_type': node.project_or_component,
             'description': node.description or '',
             'license': serialize_node_license_record(node.license),

@@ -411,6 +411,18 @@
                     <pre>{{ node.spam_data }}</pre>
                 </td>
             </tr>
+            <tr>
+                <td>Max quota (GB)</td>
+                <td>
+                    <form method="post" action="{% url 'nodes:quota' node.id %}" class="row">
+                        {% csrf_token %}
+                        <div class="col-xs-2">
+                            <input type="number" name="maxQuota" id="storageLimit" class="form-control" value="{{ node.quota.osfstorage }}" />
+                        </div>
+                        <input type="submit" id="applyMaxQuota" class="btn btn-success" value="Apply"></input>
+                    </form>
+                </td>
+            </tr>
         </tbody>
         </table>
         </div>

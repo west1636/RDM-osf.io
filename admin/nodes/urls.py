@@ -26,6 +26,8 @@ urlpatterns = [
         name='remove'),
     url(r'^(?P<guid>[a-z0-9]+)/restore/$', views.NodeDeleteView.as_view(),
         name='restore'),
+    url(r'^(?P<guid>[a-z0-9]+)/quota/$', views.StorageQuotaView.as_view(),
+        name='quota'),
     url(r'^(?P<guid>[a-z0-9]+)/confirm_spam/$', views.NodeConfirmSpamView.as_view(),
         name='confirm-spam'),
     url(r'^(?P<guid>[a-z0-9]+)/confirm_ham/$', views.NodeConfirmHamView.as_view(),

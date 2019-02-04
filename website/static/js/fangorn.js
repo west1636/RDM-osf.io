@@ -942,6 +942,12 @@ function _fangornComplete(treebeard, file) {
  */
 function _fangornDropzoneSuccess(treebeard, file, response) {
     treebeard.options.uploadInProgress = false;
+    if (window.contextVars.node.usedQuota > window.contextVars.node.maxQuota) {
+        $osf.growl('Quota usage alert', 'You have surpassed the maximum quota allowed for your project.', 'danger');
+    }
+    else if (window.contextVars.node.usedQuota > window.contextVars.node.maxQuota * 0.8) {
+        $osf.growl('Quota usage alert', 'You have used more than 80% of the quota allowed for your project.', 'warning');
+    }
     var parent = file.treebeardParent,
         item,
         revisedItem,

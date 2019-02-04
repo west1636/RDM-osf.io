@@ -2,6 +2,7 @@
 from django.db import models
 
 from osf.models.base import BaseModel
+from .node import Node
 
 PROVIDER_ASSET_NAME_CHOICES = [
     ('favicon', 'favicon'),
@@ -24,3 +25,9 @@ class ProviderAssetFile(BaseModel):
     name = models.CharField(choices=PROVIDER_ASSET_NAME_CHOICES, max_length=63)
     file = models.FileField(upload_to='assets')
     providers = models.ManyToManyField('AbstractProvider', blank=True, related_name='asset_files')
+
+
+class Storage(BaseModel):
+    ''' Stores information about a storage (osfstorage etc) '''
+    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+    max_quota = models.IntegerField(default=100)
