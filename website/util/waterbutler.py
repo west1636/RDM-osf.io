@@ -65,3 +65,26 @@ def upload_file(osf_cookie, pid, file_path, file_name, dest_path):
             }
         )
     return response
+
+def get_node_info(osf_cookie, pid, provider, path):
+    response = requests.get(
+        waterbutler_api_url_for(
+            pid, provider, path=path, _internal=True, meta=''
+        ),
+        headers={'content-type': 'application/json'},
+        cookies={'osf': osf_cookie}
+    )
+    content = response.json()
+    response.close()
+    return content
+
+def get_folder_size(osf_cookie, pid, provider, path='/'):
+    size = 0
+    folder_info = get_node_info(osf_cookie, pid, provider, path)
+    for child_info in folder_info['data']:
+        if child_info['attributes']['kind'] == 'folder':
+            path = child_info['attributes']['path']
+            size += get_folder_size(osf_cookie, pid, provider, path)
+        else:
+            size += int(child_info['attributes']['size'])
+    return size

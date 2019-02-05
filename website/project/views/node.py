@@ -34,6 +34,7 @@ from website.project.decorators import (
 )
 from website.tokens import process_token_or_pass
 from website.util.rubeus import collect_addon_js
+from website.util import waterbutler
 from website.project.model import has_anonymous_link, NodeUpdateError, validate_title
 from website.project.forms import NewNodeForm
 from website.project.metadata.utils import serialize_meta_schemas
@@ -730,6 +731,14 @@ def _view_project(node, auth, primary=False,
     for storage in node.storage_set.all():
         storage_quota['osfstorage'] = storage.max_quota
 
+    cookie = user.get_or_create_cookie()
+    storage_usage = {
+        'osfstorage': waterbutler.get_folder_size(cookie, node._id, 'osfstorage')
+    }
+    # Convert byte to giga
+    for provider in storage_usage:
+        storage_usage[provider] = float(storage_usage[provider]) / (1000 * 1000 * 1000)
+
     is_registration = node.is_registration
     data = {
         'node': {
@@ -739,6 +748,7 @@ def _view_project(node, auth, primary=False,
             'category': node.category_display,
             'category_short': node.category,
             'quota': storage_quota,
+            'quota_usage': storage_usage,
             'node_type': node.project_or_component,
             'description': node.description or '',
             'license': serialize_node_license_record(node.license),
