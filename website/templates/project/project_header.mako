@@ -75,6 +75,10 @@
                         % if user['has_read_permissions'] and not node['is_registration'] or (node['is_registration'] and 'write' in user['permissions']):
                             <li><a href="${node['url']}settings/">Settings</a></li>
                         % endif
+
+                        % if 'admin' in user['permissions']:
+                            <li id="projectNavTimestamp"><a href="${node['url']}timestamp/">Timestamp</a></li>
+                        % endif
                     % endif
                     % if (user['can_comment'] or node['has_comments']) and not node['anonymous']:
                         <li id="commentsLink">

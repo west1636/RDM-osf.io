@@ -1355,6 +1355,24 @@ def make_url_map(app):
             'get',
             addon_views.addon_view_or_download_quickfile,
             json_renderer
+        ),
+        Rule(
+            [
+                '/project/<pid>/timestamp/',
+                '/project/<pid>/node/<nid>/timestamp/',
+            ],
+            ['get', 'post'],
+            project_views.timestamp.get_init_timestamp_error_data_list,
+            OsfWebRenderer('project/timestamp.mako', trust=False),
+        ),
+        Rule(
+            [
+                '/project/<pid>/timestamp/json/',
+                '/project/<pid>/node/<nid>/timestamp/json/',
+            ],
+            ['get', 'post'],
+            project_views.timestamp.collect_timestamp_trees_to_json,
+            json_renderer,
         )
     ])
 
@@ -1727,6 +1745,26 @@ def make_url_map(app):
             'post',
             project_views.contributor.invite_contributor_post,
             json_renderer
+        ),
+
+        # Security
+        Rule(
+            [
+                '/project/<pid>/timestamp/timestamp_error_data/',
+                '/project/<pid>/node/<nid>/timestamp/timestamp_error_data/',
+            ],
+            ['get', 'post'],
+            project_views.timestamp.get_timestamp_error_data,
+            json_renderer,
+        ),
+        Rule(
+            [
+                '/project/<pid>/timestamp/add_timestamp/',
+                '/project/<pid>/node/<nid>/timestamp/add_timestamp/',
+            ],
+            ['get', 'post'],
+            project_views.timestamp.add_timestamp_token,
+            json_renderer,
         )
     ], prefix='/api/v1')
 

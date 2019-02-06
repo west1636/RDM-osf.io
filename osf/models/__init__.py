@@ -42,3 +42,5 @@ from osf.models.dismissed_alerts import DismissedAlert  # noqa
 from osf.models.action import ReviewAction  # noqa
 from osf.models.action import NodeRequestAction, PreprintRequestAction, ReviewAction  # noqa
 from osf.models.storage import ProviderAssetFile  # noqa
+from osf.models.rdm_file_timestamptoken_verify_result import RdmFileTimestamptokenVerifyResult  # noqa
+from osf.models.rdm_user_key import RdmUserKey  # noqa
