@@ -36,13 +36,14 @@ from addons.base.utils import format_last_known_metadata, get_mfr_url
 from osf.models import (BaseFileNode, TrashedFileNode,
                         OSFUser, AbstractNode,
                         NodeLog, DraftRegistration, RegistrationSchema,
-                        Guid, FileVersionUserMetadata, FileVersion)
+                        Guid, FileVersionUserMetadata, FileVersion,
+                        RdmFileTimestamptokenVerifyResult)
 from website.profile.utils import get_profile_image_url
 from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project, check_contributor_auth
 from website.ember_osf_web.decorators import ember_flag_is_active
 from website.project.utils import serialize_node
-from website.util import rubeus
+from website.util import rubeus, timestamp
 
 # import so that associated listener is instantiated and gets emails
 from website.notifications.events.files import FileEvent  # noqa
@@ -484,6 +485,12 @@ def create_waterbutler_log(payload, **kwargs):
                 raise HTTPError(httplib.BAD_REQUEST)
 
             metadata['path'] = metadata['path'].lstrip('/')
+
+            # Add timestamp to file
+            if action in (NodeLog.FILE_ADDED, NodeLog.FILE_UPDATED) \
+                    and payload['metadata']['kind'] == 'file':
+                created_flag = action == NodeLog.FILE_ADDED
+                timestamp.file_created_or_updated(node, payload, user.id, created_flag)
 
             node_addon.create_waterbutler_log(auth, action, metadata)
 

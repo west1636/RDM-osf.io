@@ -272,6 +272,9 @@ def add_token(uid, node, data):
         os.mkdir(tmp_dir)
         download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
+        if not userkey_generation_check(user._id):
+            userkey_generation(user._id)
+
         addTimestamp = AddTimestamp()
         result = addTimestamp.add_timestamp(
             user._id, data, node._id, download_file_path, tmp_dir
@@ -285,6 +288,44 @@ def add_token(uid, node, data):
             shutil.rmtree(tmp_dir)
         logger.exception(err)
         raise
+
+def file_created_or_updated(node, payload, user_id, created_flag):
+    file_node = BaseFileNode.resolve_class(
+        payload['metadata']['provider'], BaseFileNode.FILE
+    ).get_or_create(node, payload['metadata'].get('path'))
+    created_at = payload['metadata'].get('created_utc')
+    modified_at = payload['metadata'].get('modified_utc')
+    version = ''
+    if not created_at:
+        created_at = None
+    if not modified_at:
+        modified_at = None
+    if payload['metadata']['provider'] == 'osf_storage':
+        version = payload['metadata']['extra'].get('version')
+    file_info = {
+        'file_id': file_node._id,
+        'file_name': payload['metadata'].get('name'),
+        'file_path': payload['metadata'].get('materialized'),
+        'size': payload['metadata'].get('size'),
+        'created': created_at,
+        'modified': modified_at,
+        'version': version,
+        'provider': payload['metadata'].get('provider')
+    }
+    add_token(user_id, node, file_info)
+
+    # Update created/modified user in timestamp result
+    verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+        file_id=file_info['file_id']).first()
+    if verify_data:
+        if created_flag:
+            verify_data.upload_file_created_user = user_id
+        else:  # Updated
+            verify_data.upload_file_modified_user = user_id
+        verify_data.upload_file_created_at = file_info['created']
+        verify_data.upload_file_modified_at = file_info['modified']
+        verify_data.upload_file_size = file_info['size']
+        verify_data.save()
 
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
