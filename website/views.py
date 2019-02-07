@@ -269,6 +269,37 @@ def resolve_guid(guid, suffix=None):
                 url = _build_guid_url(urllib.unquote(file_referent.deep_url))
                 return proxy_url(url)
 
+        # Handle `/addtimestamp` shortcut
+        if suffix and suffix.rstrip('/').lower() == 'addtimestamp':
+            file_referent = None
+            if isinstance(referent, PreprintService) and referent.primary_file:
+                if not referent.is_published:
+                    # TODO: Ideally, permissions wouldn't be checked here.
+                    # This is necessary to prevent a logical inconsistency with
+                    # the routing scheme - if a preprint is not published, only
+                    # admins should be able to know it exists.
+                    auth = Auth.from_kwargs(request.args.to_dict(), {})
+                    if not referent.node.has_permission(auth.user, permissions.ADMIN):
+                        raise HTTPError(http.NOT_FOUND)
+                file_referent = referent.primary_file
+            elif isinstance(referent, BaseFileNode) and referent.is_file:
+                file_referent = referent
+
+            if file_referent:
+                # Extend `request.args` adding `action=addtimestamp`.
+                request.args = request.args.copy()
+                request.args.update({'action': 'addtimestamp'})
+                # Do not include the `addtimestamp` suffix in the url rebuild.
+                url = _build_guid_url(urllib.unquote(file_referent.deep_url))
+                return proxy_url(url)
+        elif suffix and suffix.rstrip('/').split('/')[-1].lower() == 'addtimestamp':
+            # Extend `request.args` adding `action=addtimestamp`.
+            request.args = request.args.copy()
+            request.args.update({'action': 'addtimestamp'})
+            # Do not include the `addtimestamp` suffix in the url rebuild.
+            url = _build_guid_url(urllib.unquote(referent.deep_url), suffix.split('/')[0])
+            return proxy_url(url)
+
         # Handle Ember Applications
         if isinstance(referent, PreprintService):
             if referent.provider.domain_redirect_enabled:
