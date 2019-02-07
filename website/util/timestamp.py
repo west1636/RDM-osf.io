@@ -17,6 +17,7 @@ import requests
 import pytz
 
 from api.base import settings as api_settings
+from api.base.utils import waterbutler_api_url_for
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
@@ -162,7 +163,7 @@ def get_full_list(uid, pid, node):
     provider_list = []
 
     for provider_data in provider_json_res['data']:
-        waterbutler_meta_url = util.waterbutler_api_url_for(
+        waterbutler_meta_url = waterbutler_api_url_for(
             pid,
             provider_data['attributes']['provider'],
             '/',
@@ -237,6 +238,9 @@ def check_file_timestamp(uid, node, data):
 
         download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
+        if not userkey_generation_check(user._id):
+            userkey_generation(user._id)
+
         verify_check = TimeStampTokenVerifyCheck()
         result = verify_check.timestamp_check(
             user._id, data, node._id, download_file_path, tmp_dir
@@ -285,13 +289,13 @@ def add_token(uid, node, data):
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
     if provider == 'osfstorage':
-        waterbutler_meta_url = util.waterbutler_api_url_for(
+        waterbutler_meta_url = waterbutler_api_url_for(
             pid, provider,
             '/' + path,
             meta=int(time.mktime(datetime.datetime.now().timetuple()))
         )
     else:
-        waterbutler_meta_url = util.waterbutler_api_url_for(
+        waterbutler_meta_url = waterbutler_api_url_for(
             pid, provider,
             path,
             meta=int(time.mktime(datetime.datetime.now().timetuple()))

@@ -39,6 +39,7 @@ var entry = {
     'request-access-page': staticPath('js/pages/request-access-page.js'),
     'file-page': staticPath('js/pages/file-page.js'),
     'files-page': staticPath('js/pages/files-page.js'),
+    'timestamp-page': staticPath('js/pages/timestamp-page.js'),
     'reg-landing-page': staticPath('js/pages/reg-landing-page.js'),
     'profile-settings-page': staticPath('js/pages/profile-settings-page.js'),
     'profile-account-settings-page': staticPath('js/pages/profile-account-settings-page.js'),
