@@ -33,6 +33,7 @@ urlpatterns = [
                                       namespace='metrics')),
             url(r'^desk/', include('admin.desk.urls',
                                    namespace='desk')),
+            url(r'^timestampadd/', include('admin.rdm_timestampadd.urls', namespace='timestampadd')),
         ]),
     ),
 ]
