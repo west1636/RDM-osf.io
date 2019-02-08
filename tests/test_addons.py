@@ -24,21 +24,25 @@ from api_tests.utils import create_test_file
 from osf_tests.factories import (AuthUserFactory, ProjectFactory,
                              RegistrationFactory)
 from website import settings
+from api.base import settings as api_settings
 from addons.base import views
 from addons.github.exceptions import ApiError
 from addons.github.models import GithubFolder, GithubFile, GithubFileNode
 from addons.github.tests.factories import GitHubAccountFactory
 from addons.osfstorage.models import OsfStorageFileNode
 from addons.osfstorage.tests.factories import FileVersionFactory
-from osf.models import Session, RegistrationSchema, QuickFilesNode
+from osf.models import NodeLog, Session, RegistrationSchema, QuickFilesNode, RdmFileTimestamptokenVerifyResult, RdmUserKey
 from osf.models import files as file_models
 from osf.models.files import BaseFileNode, TrashedFileNode, FileVersion
 from website.project import new_private_link
 from website.project.views.node import _view_project as serialize_node
 from website.project.views.node import serialize_addons, collect_node_config_js
 from website.util import api_url_for, rubeus
+from website.util.timestamp import userkey_generation
 from dateutil.parser import parse as parse_date
 from framework import sentry
+from tests.test_timestamp import create_test_file
+
 
 class SetEnvironMiddleware(object):
 
@@ -222,6 +226,52 @@ class TestAddonLogs(OsfTestCase):
             'payload': message,
             'signature': signature,
         }
+
+    @mock.patch('addons.base.views.timestamp')
+    @mock.patch('website.notifications.events.files.FileAdded.perform')
+    @mock.patch('requests.get', {'code': 404, 'referrer': None, 'message_short': 'Page not found'})
+    def test_add_log_timestamptoken(self, mock_perform, mock_timestamp):
+        result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
+        nodelog_count1 = NodeLog.objects.all().count()
+        path = 'pizza'
+        url = self.node.api_url_for('create_waterbutler_log')
+        userkey_generation(self.user._id)
+        file_node = create_test_file(node=self.node, user=self.user, filename=path)
+        file_node._path = '/' + path
+        file_node.save()
+        payload = self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': path,
+            'materialized': '/' + path,
+            'path': '/' + path,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        })
+        nlogs = self.node.logs.count()
+
+        self.app.put_json(url, payload, headers={'Content-Type': 'application/json'})
+        self.node.reload()
+        assert_equal(self.node.logs.count(), nlogs + 1)
+        nodelog_count2 = NodeLog.objects.all().count()
+        assert_equal(nodelog_count1 + 1, nodelog_count2)
+        result_list2 = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_true(mock_perform.called, 'perform not called')
+
+        ## tearDown
+        rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=self.user.id, key_kind=api_settings.PRIVATE_KEY_VALUE)
+        pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
+        os.remove(pvt_key_path)
+        rdmuserkey_pvt_key.delete()
+
+        rdmuserkey_pub_key = RdmUserKey.objects.get(guid=self.user.id, key_kind=api_settings.PUBLIC_KEY_VALUE)
+        pub_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pub_key.key_name)
+        os.remove(pub_key_path)
+        rdmuserkey_pub_key.delete()
 
     @mock.patch('addons.base.views.timestamp')
     @mock.patch('website.notifications.events.files.FileAdded.perform')

@@ -7,9 +7,12 @@ from __future__ import absolute_import
 import datetime as dt
 import httplib as http
 import json
+import os
+import shutil
 import time
 import unittest
 import urllib
+import uuid
 
 from flask import request
 import mock
@@ -22,6 +25,7 @@ from django.db import connection, transaction
 from django.test import TransactionTestCase
 from django.test.utils import CaptureQueriesContext
 
+from api.base import settings as api_settings
 from addons.github.tests.factories import GitHubAccountFactory
 from addons.wiki.models import WikiPage
 from framework.auth import cas
@@ -44,6 +48,7 @@ from website.profile.views import fmt_date_or_none, update_osf_help_mails_subscr
 from website.project.decorators import check_can_access
 from website.project.model import has_anonymous_link
 from website.project.signals import contributor_added
+from website.project.utils import serialize_node
 from website.project.views.contributor import (
     deserialize_contributors,
     notify_added_contributor,
@@ -53,6 +58,7 @@ from website.project.views.contributor import (
 from website.project.views.node import _should_show_wiki_widget, _view_project, abbrev_authors
 from website.util import api_url_for, web_url_for
 from website.util import rubeus
+from website.util.timestamp import userkey_generation, AddTimestamp
 from osf.utils import permissions
 from osf.models import Comment
 from osf.models import OSFUser
@@ -66,11 +72,11 @@ from tests.base import (
     assert_datetime_equal,
 )
 from tests.base import test_app as mock_app
-from api_tests.utils import create_test_file
+from tests.test_timestamp import create_test_file, create_rdmfiletimestamptokenverifyresult
 
 pytestmark = pytest.mark.django_db
 
-from osf.models import NodeRelation, QuickFilesNode
+from osf.models import BaseFileNode, NodeRelation, QuickFilesNode, Guid, RdmUserKey, RdmFileTimestamptokenVerifyResult
 from osf_tests.factories import (
     fake_email,
     ApiOAuth2ApplicationFactory,
@@ -5067,6 +5073,185 @@ class TestConfirmationViewBlockBingPreview(OsfTestCase):
             }
         )
         assert_equal(res.status_code, 403)
+
+
+class TestTimestampView(OsfTestCase):
+    def setUp(self):
+        super(TestTimestampView, self).setUp()
+        self.user = AuthUserFactory()
+        self.other_user = AuthUserFactory()
+        self.project = ProjectFactory(creator=self.user, is_public=True)
+        self.project.add_contributor(self.other_user, permissions=['read', 'write'], save=True)
+        self.node = self.project
+        self.auth_obj = Auth(user=self.project.creator)
+        userkey_generation(self.user._id)
+        # Refresh records from database; necessary for comparing dates
+        self.project.reload()
+        self.user.reload()
+
+        self.project.save()
+        self.user.save()
+        self.project_guid = Guid.objects.get(_id=self.project._id)
+        self.user_guid =  Guid.objects.get(_id=self.user._id)
+
+        create_rdmfiletimestamptokenverifyresult(self, filename='osfstorage_test_file1.status_1', provider='osfstorage', inspection_result_status_1=True)
+        create_rdmfiletimestamptokenverifyresult(self, filename='osfstorage_test_file2.status_3', provider='osfstorage', inspection_result_status_1=False)
+        create_rdmfiletimestamptokenverifyresult(self, filename='osfstorage_test_file3.status_3', provider='osfstorage', inspection_result_status_1=False)
+        create_rdmfiletimestamptokenverifyresult(self, filename='s3_test_file1.status_3', provider='s3', inspection_result_status_1=False)
+
+    def tearDown(self):
+        super(TestTimestampView, self).tearDown()
+        osfuser_id = Guid.objects.get(_id=self.user._id).object_id
+        self.user.delete()
+
+        rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
+        pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
+        os.remove(pvt_key_path)
+        rdmuserkey_pvt_key.delete()
+        rdmuserkey_pub_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
+        pub_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pub_key.key_name)
+        os.remove(pub_key_path)
+        rdmuserkey_pub_key.delete()
+
+    @mock.patch('website.project.views.node.find_bookmark_collection')
+    def test_get_init_timestamp_error_data_list(self, mock_collection):
+        url_timestamp = self.project.url + 'timestamp/'
+        res = self.app.get(url_timestamp, auth=self.user.auth)
+        assert_equal(res.status_code, 200)
+
+        ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
+        assert 'osfstorage_test_file1.status_1' not in res
+        assert 'osfstorage_test_file2.status_3' in res
+        assert 'osfstorage_test_file3.status_3' in res
+        assert 's3_test_file1.status_3' in res
+
+        assert 'class="creator_name" value="Freddie Mercury' in res
+        assert 'class="creator_email" value="freddiemercury' in res
+
+    @mock.patch('website.project.views.node.find_bookmark_collection')
+    @mock.patch('website.util.waterbutler.shutil')
+    @mock.patch('requests.get')
+    def test_add_timestamp_token(self, mock_get, mock_shutil, mock_collection):
+        mock_get.return_value.content = ''
+
+        url_timestamp = self.project.url + 'timestamp/'
+        res = self.app.get(url_timestamp, auth=self.user.auth)
+        assert_equal(res.status_code, 200)
+
+        ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
+        assert 'osfstorage_test_file1.status_1' not in res
+        assert 'osfstorage_test_file2.status_3' in res
+        assert 'osfstorage_test_file3.status_3' in res
+        assert 's3_test_file1.status_3' in res
+
+        file_node = BaseFileNode.objects.get(name='osfstorage_test_file3.status_3')
+        file_verify_result = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
+        api_url_add_timestamp = self.project.api_url + 'timestamp/add_timestamp/'
+        self.app.post_json(
+            api_url_add_timestamp,
+            {
+                'provider': [file_verify_result.provider],
+                'file_id': [file_verify_result.file_id],
+                'file_path': [file_verify_result.path],
+                'file_name': [file_node.name],
+                'size': [2345],
+                'created': ['2018-12-17 00:00'],
+                'modified': ['2018-12-19 00:00'],
+                'version': [file_node.current_version_number]
+            },
+            content_type='application/json',
+            auth=self.user.auth
+        )
+        self.project.reload()
+        res = self.app.get(url_timestamp, auth=self.user.auth)
+        assert_equal(res.status_code, 200)
+        ## check TimestampError(TimestampVerifyResult.inspection_result_statu != 1) in response
+        assert 'osfstorage_test_file1.status_1' not in res
+        assert 'osfstorage_test_file2.status_3' in res
+        assert 'osfstorage_test_file3.status_3' not in res
+        assert 's3_test_file1.status_3' in res
+
+    @mock.patch('website.util.waterbutler.shutil')
+    @mock.patch('requests.get')
+    def test_get_timestamp_error_data(self, mock_get, mock_shutil):
+        mock_get.return_value.content = ''
+
+        file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
+        api_url_get_timestamp_error_data = self.project.api_url + 'timestamp/timestamp_error_data/'
+        res = self.app.post_json(
+            api_url_get_timestamp_error_data,
+            {
+                'provider': [file_node.provider],
+                'file_id': [file_node._id],
+                'file_path': ['/' + file_node.name],
+                'file_name': [file_node.name],
+                'version': [file_node.current_version_number]
+            },
+            content_type='application/json',
+            auth=self.user.auth
+        )
+        self.project.reload()
+        assert_equal(res.status_code, 200)
+
+
+class TestAddonFileViewTimestampFunc(OsfTestCase):
+    def setUp(self):
+        super(TestAddonFileViewTimestampFunc, self).setUp()
+        self.user = AuthUserFactory()
+        self.project = ProjectFactory(creator=self.user)
+        self.node = self.project
+        self.node_settings = self.project.get_addon('osfstorage')
+        self.auth_obj = Auth(user=self.user)
+        userkey_generation(self.user._id)
+
+        # Refresh records from database; necessary for comparing dates
+        self.project.reload()
+        self.user.reload()
+
+    def tearDown(self):
+        super(TestAddonFileViewTimestampFunc, self).tearDown()
+        osfuser_id = Guid.objects.get(_id=self.user._id).object_id
+        self.user.delete()
+
+        rdmuserkey_pvt_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PRIVATE_KEY_VALUE)
+        pvt_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pvt_key.key_name)
+        os.remove(pvt_key_path)
+        rdmuserkey_pvt_key.delete()
+
+        rdmuserkey_pub_key = RdmUserKey.objects.get(guid=osfuser_id, key_kind=api_settings.PUBLIC_KEY_VALUE)
+        pub_key_path = os.path.join(api_settings.KEY_SAVE_PATH, rdmuserkey_pub_key.key_name)
+        os.remove(pub_key_path)
+        rdmuserkey_pub_key.delete()
+
+    @mock.patch('website.project.views.node.find_bookmark_collection')
+    def test_adding_timestamp(self, mock_collection):
+        ret = serialize_node(self.node, self.auth_obj, primary=True)
+        user_info = OSFUser.objects.get(id=Guid.objects.get(_id=ret['user']['id']).object_id)
+        filename='tests.test_views.test_timestamptoken_verify'
+        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
+        tmp_dir = 'tmp_{}'.format(ret['user']['id'])
+        os.mkdir(tmp_dir)
+        tmp_file = os.path.join(tmp_dir, file_node.name)
+        with open(tmp_file, 'wb') as file:
+            file.write(str(uuid.uuid4()))
+        version = file_node.get_version(1, required=True)
+        addTimestamp = AddTimestamp()
+        file_data = {
+            'file_id': file_node._id,
+            'file_name': 'Hello.txt',
+            'file_path': file_node._path,
+            'size': 1234,
+            'created': None,
+            'modified': None,
+            'version': '',
+            'provider': file_node.provider
+        }
+        result = addTimestamp.add_timestamp(
+            ret['user']['id'], file_data, self.node._id, tmp_file, tmp_dir
+        )
+        shutil.rmtree(tmp_dir)
+        assert_in('verify_result', result)
+        assert_equal(result['verify_result'], 1)
 
 
 if __name__ == '__main__':
