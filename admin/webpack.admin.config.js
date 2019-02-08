@@ -40,6 +40,7 @@ var config = Object.assign({}, common, {
         'whitelist-page': staticAdminPath('js/pages/whitelist-page.js'),
         'collection-provider-page': staticAdminPath('js/pages/collection-provider-page.js'),
         'registration-provider-page': staticAdminPath('js/pages/registration-provider-page.js'),
+        'rdm-timestampadd-page': staticAdminPath('js/rdm_timestampadd/rdm-timestampadd-page.js'),
     },
     plugins: plugins,
     devtool: 'source-map',

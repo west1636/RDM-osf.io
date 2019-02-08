@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
 {% load static %}
 {% load user_extras %}
 {% load spam_extras %}
@@ -261,5 +262,8 @@
     };
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tiny-date-picker/3.2.8/tiny-date-picker.min.js"></script>
-<script src={{ '/static/public/js/rdm-timestampadd-page.js' }}></script>
 {% endblock content %}
+
+{% block bottom_js %}
+    {% render_bundle 'rdm-timestampadd-page' %}
+{% endblock %}
