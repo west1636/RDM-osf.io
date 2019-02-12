@@ -261,7 +261,10 @@ def add_token(uid, node, data):
     tmp_dir = None
 
     try:
-        file_node = BaseFileNode.objects.get(_id=data['file_id'])
+        file_node = BaseFileNode.resolve_class(
+            data['provider'], BaseFileNode.FILE).get_or_create(node, data['file_path'])
+        file_node.save()
+        data['file_id'] = file_node._id
 
         # Request To Download File
         tmp_dir = 'tmp_{}'.format(user._id)
@@ -292,7 +295,8 @@ def add_token(uid, node, data):
 def file_created_or_updated(node, payload, user_id, created_flag):
     file_node = BaseFileNode.resolve_class(
         payload['metadata']['provider'], BaseFileNode.FILE
-    ).get_or_create(node, payload['metadata'].get('path'))
+    ).get_or_create(node, payload['metadata'].get('materialized'))
+    file_node.save()
     created_at = payload['metadata'].get('created_utc')
     modified_at = payload['metadata'].get('modified_utc')
     version = ''

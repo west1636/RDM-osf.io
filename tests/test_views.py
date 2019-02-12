@@ -5152,7 +5152,7 @@ class TestTimestampView(OsfTestCase):
             {
                 'provider': [file_verify_result.provider],
                 'file_id': [file_verify_result.file_id],
-                'file_path': [file_verify_result.path],
+                'file_path': [file_node.path],
                 'file_name': [file_node.name],
                 'size': [2345],
                 'created': ['2018-12-17 00:00'],

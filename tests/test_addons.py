@@ -227,10 +227,12 @@ class TestAddonLogs(OsfTestCase):
             'signature': signature,
         }
 
-    @mock.patch('addons.base.views.timestamp')
+    @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     @mock.patch('requests.get', {'code': 404, 'referrer': None, 'message_short': 'Page not found'})
-    def test_add_log_timestamptoken(self, mock_perform, mock_timestamp):
+    def test_add_log_timestamptoken(self, mock_perform, mock_downloadfile):
+        mock_downloadfile.return_value = '/testfile'
+
         result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
         nodelog_count1 = NodeLog.objects.all().count()
         path = 'pizza'
