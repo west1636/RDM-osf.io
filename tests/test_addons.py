@@ -419,6 +419,134 @@ class TestAddonLogs(OsfTestCase):
             'github_addon_file_renamed',
         )
 
+    @pytest.mark.skip('Not yet implemented')
+    @mock.patch('website.util.waterbutler.download_file')
+    @mock.patch('website.notifications.events.files.FileAdded.perform')
+    def test_action_file_rename_timestamp(self, mock_perform, mock_downloadfile):
+        mock_downloadfile.return_value = '/file_ver1'
+        wb_log_url = self.node.api_url_for('create_waterbutler_log')
+
+        # Create file
+        filename = 'file_ver1'
+        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
+        file_node._path = '/' + filename
+        file_node.save()
+        self.app.put_json(wb_log_url, self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': filename,
+            'materialized': '/' + filename,
+            'path': '/' + filename,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        }), headers={'Content-Type': 'application/json'})
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        created_file = files_query.get()
+        assert_equal('/' + filename, created_file.path)
+
+        # Rename the file
+        newfilename = 'file_ver2'
+        self.app.put_json(wb_log_url, self.build_payload(
+            action='rename',
+            metadata={
+                'path': '/' + newfilename,
+            },
+            source={
+                'provider': 'github',
+                'name': filename,
+                'materialized': '/' + filename,
+                'path': '/' + filename,
+                'node': {'_id': self.node._id},
+                'kind': 'file',
+            },
+            destination={
+                'provider': 'github',
+                'name': newfilename,
+                'materialized': '/' + newfilename,
+                'path': '/' + newfilename,
+                'node': {'_id': self.node._id},
+                'kind': 'file',
+            },
+        ), headers={'Content-Type': 'application/json'})
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        renamed_file = files_query.get()
+        assert_equal('/' + newfilename, renamed_file.path)
+
+    @pytest.mark.skip('Not yet implemented')
+    @mock.patch('website.util.waterbutler.download_file')
+    @mock.patch('website.notifications.events.files.FileAdded.perform')
+    def test_action_folder_rename_timestamp(self, mock_perform, mock_downloadfile):
+        mock_downloadfile.return_value = '/my_precious_file'
+        wb_log_url = self.node.api_url_for('create_waterbutler_log')
+
+        # Create a folder
+        foldername = 'folder_ver1'
+        self.app.put_json(wb_log_url, self.build_payload(metadata={
+            'materialized': '/' + foldername,
+            'path': '/' + foldername,
+            'kind': 'folder'
+        }), headers={'Content-Type': 'application/json'})
+
+        # Create file inside folder
+        filename = 'my_precious_file'
+        filepath = '/{}/{}'.format(foldername, filename)
+        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
+        file_node._path = '/' + filename
+        file_node.save()
+        self.app.put_json(wb_log_url, self.build_payload(metadata={
+            'provider': 'osfstorage',
+            'name': filename,
+            'materialized': filepath,
+            'path': filepath,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        }), headers={'Content-Type': 'application/json'})
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        created_file = files_query.get()
+        assert_equal(filepath, created_file.path)
+
+        # Rename the folder
+        newfoldername = 'folder_ver2'
+        self.app.put_json(wb_log_url, self.build_payload(
+            action='rename',
+            metadata={
+                'path': '/' + newfoldername,
+            },
+            source={
+                'provider': 'github',
+                'name': foldername,
+                'materialized': '/' + foldername,
+                'path': '/' + foldername,
+                'node': {'_id': self.node._id},
+                'kind': 'folder',
+            },
+            destination={
+                'provider': 'github',
+                'name': newfoldername,
+                'materialized': '/' + newfoldername,
+                'path': '/' + newfoldername,
+                'node': {'_id': self.node._id},
+                'kind': 'folder',
+            },
+        ), headers={'Content-Type': 'application/json'})
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        renamed_file = files_query.get()
+        filepath = '/{}/{}'.format(newfoldername, filename)
+        assert_equal(filepath, renamed_file.path)
+
     def test_action_downloads_contrib(self):
         url = self.node.api_url_for('create_waterbutler_log')
         download_actions=('download_file', 'download_zip')
