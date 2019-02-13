@@ -419,7 +419,6 @@ class TestAddonLogs(OsfTestCase):
             'github_addon_file_renamed',
         )
 
-    @pytest.mark.skip('Not yet implemented')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_action_file_rename_timestamp(self, mock_perform, mock_downloadfile):
@@ -478,7 +477,6 @@ class TestAddonLogs(OsfTestCase):
         renamed_file = files_query.get()
         assert_equal('/' + newfilename, renamed_file.path)
 
-    @pytest.mark.skip('Not yet implemented')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_action_folder_rename_timestamp(self, mock_perform, mock_downloadfile):

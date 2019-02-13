@@ -292,29 +292,29 @@ def add_token(uid, node, data):
         logger.exception(err)
         raise
 
-def file_created_or_updated(node, payload, user_id, created_flag):
+def file_created_or_updated(node, metadata, user_id, created_flag):
     file_node = BaseFileNode.resolve_class(
-        payload['metadata']['provider'], BaseFileNode.FILE
-    ).get_or_create(node, payload['metadata'].get('materialized'))
+        metadata['provider'], BaseFileNode.FILE
+    ).get_or_create(node, metadata.get('materialized'))
     file_node.save()
-    created_at = payload['metadata'].get('created_utc')
-    modified_at = payload['metadata'].get('modified_utc')
+    created_at = metadata.get('created_utc')
+    modified_at = metadata.get('modified_utc')
     version = ''
     if not created_at:
         created_at = None
     if not modified_at:
         modified_at = None
-    if payload['metadata']['provider'] == 'osf_storage':
-        version = payload['metadata']['extra'].get('version')
+    if metadata['provider'] == 'osf_storage':
+        version = metadata['extra'].get('version')
     file_info = {
         'file_id': file_node._id,
-        'file_name': payload['metadata'].get('name'),
-        'file_path': payload['metadata'].get('materialized'),
-        'size': payload['metadata'].get('size'),
+        'file_name': metadata.get('name'),
+        'file_path': metadata.get('materialized'),
+        'size': metadata.get('size'),
         'created': created_at,
         'modified': modified_at,
         'version': version,
-        'provider': payload['metadata'].get('provider')
+        'provider': metadata.get('provider')
     }
     add_token(user_id, node, file_info)
 
@@ -330,6 +330,15 @@ def file_created_or_updated(node, payload, user_id, created_flag):
         verify_data.upload_file_modified_at = file_info['modified']
         verify_data.upload_file_size = file_info['size']
         verify_data.save()
+
+def file_node_moved(src_path, dest_path):
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+    dest_path = dest_path if dest_path[0] == '/' else '/' + dest_path
+
+    moved_files = RdmFileTimestamptokenVerifyResult.objects.filter(path__startswith=src_path).all()
+    for moved_file in moved_files:
+        moved_file.path = moved_file.path.replace(src_path, dest_path, 1)
+        moved_file.save()
 
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
