@@ -482,20 +482,14 @@ class TestAddonLogs(OsfTestCase):
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_action_folder_rename_timestamp(self, mock_perform, mock_downloadfile):
-        mock_downloadfile.return_value = '/my_precious_file'
+        mock_downloadfile.return_value = '/folder_ver1/my_precious_file'
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
-        # Create a folder
-        foldername = 'folder_ver1'
-        self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'materialized': '/' + foldername,
-            'path': '/' + foldername,
-            'kind': 'folder'
-        }), headers={'Content-Type': 'application/json'})
-
         # Create file inside folder
+        foldername = 'folder_ver1'
         filename = 'my_precious_file'
         filepath = '/{}/{}'.format(foldername, filename)
+
         file_node = create_test_file(node=self.node, user=self.user, filename=filename)
         file_node._path = '/' + filename
         file_node.save()
