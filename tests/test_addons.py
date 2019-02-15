@@ -764,6 +764,45 @@ class TestAddonLogs(OsfTestCase):
         removed_file = files_query.get()
         assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
 
+    @pytest.mark.skip('Not yet implemented')
+    @mock.patch('website.util.waterbutler.download_file')
+    @mock.patch('website.notifications.events.files.FileAdded.perform')
+    def test_disconnect_provider_timestamp(self, mock_perform, mock_downloadfile):
+        mock_downloadfile.return_value = '/file_ver1'
+        wb_log_url = self.node.api_url_for('create_waterbutler_log')
+
+        # Create file
+        filename = 'file_ver1'
+        file_node = create_test_file(node=self.node, user=self.user, filename=filename)
+        file_node._path = '/' + filename
+        file_node.save()
+        self.app.put_json(wb_log_url, self.build_payload(metadata={
+            'provider': 'github',
+            'name': filename,
+            'materialized': '/' + filename,
+            'path': '/' + filename,
+            'kind': 'file',
+            'size': 2345,
+            'created_utc': '',
+            'modified_utc': '',
+            'extra': {
+                'version': '1'
+            }
+        }), headers={'Content-Type': 'application/json'})
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        created_file = files_query.get()
+        assert_equal('/' + filename, created_file.path)
+
+        # Disable addon
+        self.node.delete_addon('github', Auth(self.user))
+        self.node.save()
+
+        files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
+        assert_equal(1, files_query.count())
+        removed_file = files_query.get()
+        assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
+
     def test_action_downloads_contrib(self):
         url = self.node.api_url_for('create_waterbutler_log')
         download_actions=('download_file', 'download_zip')
