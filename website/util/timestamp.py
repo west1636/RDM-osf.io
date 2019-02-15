@@ -331,11 +331,15 @@ def file_created_or_updated(node, metadata, user_id, created_flag):
         verify_data.upload_file_size = file_info['size']
         verify_data.save()
 
-def file_node_moved(src_path, dest_path):
+def file_node_moved(project_id, provider, src_path, dest_path):
     src_path = src_path if src_path[0] == '/' else '/' + src_path
     dest_path = dest_path if dest_path[0] == '/' else '/' + dest_path
 
-    moved_files = RdmFileTimestamptokenVerifyResult.objects.filter(path__startswith=src_path).all()
+    moved_files = RdmFileTimestamptokenVerifyResult.objects.filter(
+        path__startswith=src_path,
+        project_id=project_id,
+        provider=provider
+    ).all()
     for moved_file in moved_files:
         moved_file.path = moved_file.path.replace(src_path, dest_path, 1)
         moved_file.save()
