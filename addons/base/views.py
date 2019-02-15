@@ -498,7 +498,8 @@ def create_waterbutler_log(payload, **kwargs):
         elif action in (NodeLog.FILE_MOVED, NodeLog.FILE_RENAMED):
             src_path = payload['source']['materialized']
             dest_path = payload['destination']['materialized']
-            timestamp.file_node_moved(src_path, dest_path)
+            provider = payload['source']['provider']
+            timestamp.file_node_moved(node._id, provider, src_path, dest_path)
 
     with transaction.atomic():
         file_signals.file_updated.send(target=node, user=user, event_type=action, payload=payload)

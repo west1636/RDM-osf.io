@@ -456,7 +456,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + newfilename,
             },
             source={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -464,7 +464,7 @@ class TestAddonLogs(OsfTestCase):
                 'kind': 'file',
             },
             destination={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': newfilename,
                 'materialized': '/' + newfilename,
                 'path': '/' + newfilename,
@@ -517,7 +517,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + newfoldername,
             },
             source={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': foldername,
                 'materialized': '/' + foldername,
                 'path': '/' + foldername,
@@ -525,7 +525,7 @@ class TestAddonLogs(OsfTestCase):
                 'kind': 'folder',
             },
             destination={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': newfoldername,
                 'materialized': '/' + newfoldername,
                 'path': '/' + newfoldername,
@@ -576,7 +576,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + movedfilepath,
             },
             source={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -585,7 +585,7 @@ class TestAddonLogs(OsfTestCase):
                 'nid': self.node._id,
             },
             destination={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': filename,
                 'materialized': '/' + movedfilepath,
                 'path': '/' + movedfilepath,
@@ -638,7 +638,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + movedfolderpath,
             },
             source={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': foldername,
                 'materialized': '/' + folderpath,
                 'path': '/' + folderpath,
@@ -647,7 +647,7 @@ class TestAddonLogs(OsfTestCase):
                 'nid': self.node._id,
             },
             destination={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': foldername,
                 'materialized': '/' + movedfolderpath,
                 'path': '/' + movedfolderpath,
