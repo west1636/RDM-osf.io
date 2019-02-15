@@ -695,7 +695,7 @@ class TestAddonLogs(OsfTestCase):
         self.app.put_json(wb_log_url, self.build_payload(
             action='delete',
             metadata={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -748,7 +748,7 @@ class TestAddonLogs(OsfTestCase):
         self.app.put_json(wb_log_url, self.build_payload(
             action='delete',
             metadata={
-                'provider': 'github',
+                'provider': 'osfstorage',
                 'name': foldername,
                 'materialized': '/' + folderpath,
                 'path': '/' + folderpath,
