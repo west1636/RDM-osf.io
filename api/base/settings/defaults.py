@@ -309,6 +309,17 @@ OPENSSL_OPTION_GENRSA = 'genrsa'
 OPENSSL_OPTION_OUT = '-out'
 OPENSSL_OPTION_RSA = 'rsa'
 OPENSSL_OPTION_PUBOUT = '-pubout'
+
+# test commands
+SSL_GENERATE_KEY = 'openssl genrsa -des3 -out {0}.key {1}'
+SSL_GENERATE_KEY_NOPASS = 'openssl rsa -in {0}.key -out {0}.key.nopass'
+SSL_GENERATE_CSR = 'openssl req -new -key {0}.key.nopass -out {0}.csr'
+SSL_GENERATE_SELF_SIGNED = 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout {0}.key -out {0}.crt'
+SSL_PRIVATE_KEY_GENERATION = 'openssl genrsa -out {0} {1}'
+SSL_PUBLIC_KEY_GENERATION = 'openssl rsa -in {0} -pubout -out {1}'
+SSL_CREATE_TIMESTAMP_REQUEST = 'openssl ts -query -data {0} -cert --sha512'
+SSL_GET_TIMESTAMP_RESPONSE = 'openssl ts -verify -data {0} -in {1} -CAfile {2}'
+
 # UserKey Placement destination
 KEY_NAME_PRIVATE = 'pvt'
 KEY_NAME_PUBLIC = 'pub'
