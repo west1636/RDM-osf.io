@@ -566,7 +566,6 @@ class AddTimestamp:
         return stdout_data
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
-        user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
         user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
@@ -581,7 +580,6 @@ class AddTimestamp:
             )
         else:
             tsa_response = self.get_timestamp_upki(file_name, tmp_dir)
-
 
         verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
             file_id=file_info['file_id'])
@@ -604,6 +602,7 @@ class AddTimestamp:
                 guid, file_info, project_id, file_name, tmp_dir)
         else:
             return TimeStampTokenVerifyCheck().timestamp_check_upki(file_info, file_name, tmp_dir)
+
 
 class TimeStampTokenVerifyCheck:
     # get abstractNode
