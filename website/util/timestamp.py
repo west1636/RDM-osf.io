@@ -759,7 +759,6 @@ class TimeStampTokenVerifyCheck:
                     timestamptoken_file_path,
                     os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)
                 ).split(' ')
-
                 prc = subprocess.Popen(
                     cmd, shell=False, stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE, stdout=subprocess.PIPE)

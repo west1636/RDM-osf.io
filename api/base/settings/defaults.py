@@ -304,6 +304,8 @@ SSL_PUBLIC_KEY_GENERATION = 'openssl rsa -in {0} -pubout -out {1}'
 
 # UPKI flag
 USE_UPKI = False
+SSL_CREATE_TIMESTAMP_REQUEST = 'openssl ts -query -data {0} -cert --sha512'
+SSL_GET_TIMESTAMP_RESPONSE = 'openssl ts -verify -data {0} -in {1} -CAfile {2}'
 
 # UserKey Placement destination
 KEY_NAME_PRIVATE = 'pvt'
