@@ -443,52 +443,55 @@ def userkey_generation_check(guid):
     return RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id).exists()
 
 def userkey_generation(guid):
-    logger.info('userkey_generation guid:' + guid)
 
-    try:
-        generation_date = datetime.datetime.now()
-        generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
-        generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
-        generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
-            guid, generation_date_hash, api_settings.KEY_NAME_PRIVATE, api_settings.KEY_EXTENSION)
-        generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
-            guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
-        # private key generation
-        pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
-            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
-        ).split(' ')
+    if api_settings.USE_OPENSSL:
 
-        pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
-            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
-            os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
-        ).split(' ')
+        logger.info('userkey_generation guid:' + guid)
 
-        prc = subprocess.Popen(
-            pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
-            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        try:
+            generation_date = datetime.datetime.now()
+            generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
+            generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
+            generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
+                guid, generation_date_hash, api_settings.KEY_NAME_PRIVATE, api_settings.KEY_EXTENSION)
+            generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
+                guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
+            # private key generation
+            pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
+                os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
+            ).split(' ')
 
-        stdout_data, stderr_data = prc.communicate()
+            pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
+                os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
+                os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
+            ).split(' ')
 
-        prc = subprocess.Popen(
-            pub_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
-            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            prc = subprocess.Popen(
+                pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+                stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-        stdout_data, stderr_data = prc.communicate()
+            stdout_data, stderr_data = prc.communicate()
 
-        pvt_userkey_info = create_rdmuserkey_info(
-            Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pvt_key_name,
-            api_settings.PRIVATE_KEY_VALUE, generation_date)
+            prc = subprocess.Popen(
+                pub_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+                stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-        pub_userkey_info = create_rdmuserkey_info(
-            Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pub_key_name,
-            api_settings.PUBLIC_KEY_VALUE, generation_date)
+            stdout_data, stderr_data = prc.communicate()
 
-        pvt_userkey_info.save()
-        pub_userkey_info.save()
+            pvt_userkey_info = create_rdmuserkey_info(
+                Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pvt_key_name,
+                api_settings.PRIVATE_KEY_VALUE, generation_date)
 
-    except Exception as error:
-        logger.exception(error)
-        raise
+            pub_userkey_info = create_rdmuserkey_info(
+                Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pub_key_name,
+                api_settings.PUBLIC_KEY_VALUE, generation_date)
+
+            pvt_userkey_info.save()
+            pub_userkey_info.save()
+
+        except Exception as error:
+            logger.exception(error)
+            raise
 
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
@@ -535,34 +538,37 @@ class AddTimestamp:
         return res_content
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
-        user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
-        key_file_name = RdmUserKey.objects.get(
-            guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
-        ).key_name
+        if api_settings.USE_OPENSSL:
 
-        tsa_response = self.get_timestamp_response(
-            file_name, self.get_timestamp_request(file_name), key_file_name
-        )
+            user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
-        verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
-            file_id=file_info['file_id'])
-        if verify_data.exists():
-            verify_data = verify_data.get()
-        else:
-            verify_data = RdmFileTimestamptokenVerifyResult()
-            verify_data.file_id = file_info['file_id']
-            verify_data.project_id = project_id
-            verify_data.provider = file_info['provider']
-            verify_data.path = file_info['file_path']
-            verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
+            key_file_name = RdmUserKey.objects.get(
+                guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
+            ).key_name
 
-        verify_data.key_file_name = key_file_name
-        verify_data.timestamp_token = tsa_response
-        verify_data.save()
+            tsa_response = self.get_timestamp_response(
+                file_name, self.get_timestamp_request(file_name), key_file_name
+            )
 
-        return TimeStampTokenVerifyCheck().timestamp_check(
-            guid, file_info, project_id, file_name, tmp_dir)
+            verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+                file_id=file_info['file_id'])
+            if verify_data.exists():
+                verify_data = verify_data.get()
+            else:
+                verify_data = RdmFileTimestamptokenVerifyResult()
+                verify_data.file_id = file_info['file_id']
+                verify_data.project_id = project_id
+                verify_data.provider = file_info['provider']
+                verify_data.path = file_info['file_path']
+                verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
+
+            verify_data.key_file_name = key_file_name
+            verify_data.timestamp_token = tsa_response
+            verify_data.save()
+
+            return TimeStampTokenVerifyCheck().timestamp_check(
+                guid, file_info, project_id, file_name, tmp_dir)
 
 
 class TimeStampTokenVerifyCheck:
@@ -719,7 +725,7 @@ class TimeStampTokenVerifyCheck:
                     timestamptoken_file_path,
                     os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)
                 ).split(' ')
-                
+
                 prc = subprocess.Popen(
                     cmd, shell=False, stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE, stdout=subprocess.PIPE)
