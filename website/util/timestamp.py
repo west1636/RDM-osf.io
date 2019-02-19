@@ -499,6 +499,9 @@ def userkey_generation(guid):
         logger.exception(error)
         raise
 
+    else:
+        pass
+
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
     userkey_info.guid = user_id
@@ -576,6 +579,9 @@ class AddTimestamp:
 
             return TimeStampTokenVerifyCheck().timestamp_check(
                 guid, file_info, project_id, file_name, tmp_dir)
+
+        else:
+            pass
 
 
 class TimeStampTokenVerifyCheck:

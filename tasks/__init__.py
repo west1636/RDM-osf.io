@@ -731,6 +731,8 @@ def request_ssl_cert(ctx, domain):
         generate_key(ctx, domain)
         generate_key_nopass(ctx, domain)
         generate_csr(ctx, domain)
+    else:
+        pass
 
 
 @task
@@ -808,6 +810,8 @@ def generate_self_signed(ctx, domain):
     if api_settings.USE_OPENSSL:
         cmd = api_settings.SSL_GENERATE_SELF_SIGNED.format(domain)
         ctx.run(cmd)
+    else:
+        pass
 
 
 @task
