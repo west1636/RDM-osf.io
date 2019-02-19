@@ -454,20 +454,14 @@ def userkey_generation(guid):
         generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
             guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
         # private key generation
-        pvt_key_generation_cmd = [
-            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_GENRSA,
-            api_settings.OPENSSL_OPTION_OUT,
-            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
-            api_settings.KEY_BIT_VALUE
-        ]
+        pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
+        ).split(' ')
 
-        pub_key_generation_cmd = [
-            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_RSA,
-            api_settings.OPENSSL_OPTION_IN,
+        pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
-            api_settings.OPENSSL_OPTION_PUBOUT, api_settings.OPENSSL_OPTION_OUT,
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
-        ]
+        ).split(' ')
 
         prc = subprocess.Popen(
             pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
@@ -508,11 +502,7 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
 class AddTimestamp:
     #1 create tsq (timestamp request) from file, and keyinfo
     def get_timestamp_request(self, file_name):
-        cmd = [
-            api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
-            api_settings.OPENSSL_OPTION_QUERY, api_settings.OPENSSL_OPTION_DATA,
-            file_name, api_settings.OPENSSL_OPTION_CERT, api_settings.OPENSSL_OPTION_SHA512
-        ]
+        cmd = api_settings.SSL_CREATE_TIMESTAMP_REQUEST.format(file_name).split(' ')
         process = subprocess.Popen(
             cmd, shell=False, stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -724,13 +714,12 @@ class TimeStampTokenVerifyCheck:
                     raise err
 
                 # verify timestamptoken and rootCA
-                cmd = [
-                    api_settings.OPENSSL_MAIN_CMD, api_settings.OPENSSL_OPTION_TS,
-                    api_settings.OPENSSL_OPTION_VERIFY, api_settings.OPENSSL_OPTION_DATA,
-                    file_name, api_settings.OPENSSL_OPTION_IN, timestamptoken_file_path,
-                    api_settings.OPENSSL_OPTION_CAFILE,
+                cmd = api_settings.SSL_GET_TIMESTAMP_RESPONSE.format(
+                    file_name,
+                    timestamptoken_file_path,
                     os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)
-                ]
+                ).split(' ')
+                
                 prc = subprocess.Popen(
                     cmd, shell=False, stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE, stdout=subprocess.PIPE)

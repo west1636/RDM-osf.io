@@ -16,6 +16,7 @@ from invoke import Collection
 from website import settings
 from .utils import pip_install, bin_prefix
 
+from api.base import settings as api_settings
 logging.getLogger('invoke').setLevel(logging.CRITICAL)
 
 # gets the root path for all the scripts that rely on it
@@ -702,23 +703,19 @@ def latest_tag_info():
 
 @task
 def generate_key(ctx, domain, bits=2048):
-    cmd = 'openssl genrsa -des3 -out {0}.key {1}'.format(domain, bits)
+    cmd = api_settings.SSL_GENERATE_KEY.format(domain, bits)
     ctx.run(cmd)
 
 
 @task
 def generate_key_nopass(ctx, domain):
-    cmd = 'openssl rsa -in {domain}.key -out {domain}.key.nopass'.format(
-        domain=domain
-    )
+    cmd = api_settings.SSL_GENERATE_KEY_NOPASS.format(domain)
     ctx.run(cmd)
 
 
 @task
 def generate_csr(ctx, domain):
-    cmd = 'openssl req -new -key {domain}.key.nopass -out {domain}.csr'.format(
-        domain=domain
-    )
+    cmd = api_settings.SSL_GENERATE_CSR.format(domain)
     ctx.run(cmd)
 
 
@@ -807,10 +804,7 @@ def assets(ctx, dev=False, watch=False, colors=False):
 def generate_self_signed(ctx, domain):
     """Generate self-signed SSL key and certificate.
     """
-    cmd = (
-        'openssl req -x509 -nodes -days 365 -newkey rsa:2048'
-        ' -keyout {0}.key -out {0}.crt'
-    ).format(domain)
+    cmd = api_settings.SSL_GENERATE_SELF_SIGNED.format(domain)
     ctx.run(cmd)
 
 
