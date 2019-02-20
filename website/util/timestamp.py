@@ -344,6 +344,14 @@ def file_node_moved(project_id, provider, src_path, dest_path):
         moved_file.path = moved_file.path.replace(src_path, dest_path, 1)
         moved_file.save()
 
+def file_node_deleted(project_id, addon_name, src_path):
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+    RdmFileTimestamptokenVerifyResult.objects.filter(
+        project_id=project_id,
+        provider=addon_name,
+        path__startswith=src_path
+    ).update(inspection_result_status=api_settings.defaults.FILE_NOT_EXISTS)
+
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
     if provider == 'osfstorage':

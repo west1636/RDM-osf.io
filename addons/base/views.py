@@ -500,6 +500,11 @@ def create_waterbutler_log(payload, **kwargs):
             dest_path = payload['destination']['materialized']
             provider = payload['source']['provider']
             timestamp.file_node_moved(node._id, provider, src_path, dest_path)
+        # Update status of deleted timestamp records
+        elif action in (NodeLog.FILE_REMOVED):
+            src_path = metadata['materialized']
+            provider = payload['metadata']['provider']
+            timestamp.file_node_deleted(node._id, provider, src_path)
 
     with transaction.atomic():
         file_signals.file_updated.send(target=node, user=user, event_type=action, payload=payload)
