@@ -499,9 +499,6 @@ def userkey_generation(guid):
         logger.exception(error)
         raise
 
-    else:
-        pass
-
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
     userkey_info.guid = user_id
@@ -549,7 +546,7 @@ class AddTimestamp:
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
         user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
-        if api_settings.USE_OPENSSL:
+        if not api_settings.USE_UPKI:
 
             user_id = Guid.objects.get(_id=guid).object_id
 
