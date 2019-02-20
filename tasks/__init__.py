@@ -727,12 +727,9 @@ def request_ssl_cert(ctx, domain):
     Usage:
     > invoke request_ssl_cert pizza.osf.io
     """
-    if api_settings.USE_OPENSSL:
-        generate_key(ctx, domain)
-        generate_key_nopass(ctx, domain)
-        generate_csr(ctx, domain)
-    else:
-        pass
+    generate_key(ctx, domain)
+    generate_key_nopass(ctx, domain)
+    generate_csr(ctx, domain)
 
 @task
 def bundle_certs(ctx, domain, cert_path):
@@ -806,11 +803,8 @@ def assets(ctx, dev=False, watch=False, colors=False):
 def generate_self_signed(ctx, domain):
     """Generate self-signed SSL key and certificate.
     """
-    if api_settings.USE_OPENSSL:
-        cmd = api_settings.SSL_GENERATE_SELF_SIGNED.format(domain)
-        ctx.run(cmd)
-    else:
-        pass
+    cmd = api_settings.SSL_GENERATE_SELF_SIGNED.format(domain)
+    ctx.run(cmd)
 
 @task
 def update_citation_styles(ctx):
