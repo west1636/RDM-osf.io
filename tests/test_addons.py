@@ -661,7 +661,6 @@ class TestAddonLogs(OsfTestCase):
         renamed_file = files_query.get()
         assert_equal('/' + movedfolderpath + filename, renamed_file.path)
 
-    @pytest.mark.skip('Not yet implemented')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_action_file_remove_timestamp(self, mock_perform, mock_downloadfile):
@@ -711,7 +710,6 @@ class TestAddonLogs(OsfTestCase):
         removed_file = files_query.get()
         assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
 
-    @pytest.mark.skip('Not yet implemented')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_action_folder_remove_timestamp(self, mock_perform, mock_downloadfile):
@@ -764,7 +762,6 @@ class TestAddonLogs(OsfTestCase):
         removed_file = files_query.get()
         assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
 
-    @pytest.mark.skip('Not yet implemented')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     def test_disconnect_provider_timestamp(self, mock_perform, mock_downloadfile):
