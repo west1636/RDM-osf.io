@@ -311,7 +311,7 @@ OPENSSL_OPTION_RSA = 'rsa'
 OPENSSL_OPTION_PUBOUT = '-pubout'
 
 # test commands
-USE_OPENSSL = True
+USE_UPKI = False
 SSL_GENERATE_KEY = 'openssl genrsa -des3 -out {0}.key {1}'
 SSL_GENERATE_KEY_NOPASS = 'openssl rsa -in {0}.key -out {0}.key.nopass'
 SSL_GENERATE_CSR = 'openssl req -new -key {0}.key.nopass -out {0}.csr'

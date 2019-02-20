@@ -392,57 +392,52 @@ def userkey_generation_check(guid):
 
 def userkey_generation(guid):
 
-    if api_settings.USE_OPENSSL:
+    logger.info('userkey_generation guid:' + guid)
 
-        logger.info('userkey_generation guid:' + guid)
+    try:
+        generation_date = datetime.datetime.now()
+        generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
+        generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
+        generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
+            guid, generation_date_hash, api_settings.KEY_NAME_PRIVATE, api_settings.KEY_EXTENSION)
+        generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
+            guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
+        # private key generation
+        pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
+        ).split(' ')
 
-        try:
-            generation_date = datetime.datetime.now()
-            generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
-            generation_date_hash = hashlib.md5(generation_date_str).hexdigest()
-            generation_pvt_key_name = api_settings.KEY_NAME_FORMAT.format(
-                guid, generation_date_hash, api_settings.KEY_NAME_PRIVATE, api_settings.KEY_EXTENSION)
-            generation_pub_key_name = api_settings.KEY_NAME_FORMAT.format(
-                guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
-            # private key generation
-            pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
-                os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
-            ).split(' ')
+        pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
+        ).split(' ')
 
-            pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
-                os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
-                os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
-            ).split(' ')
+        prc = subprocess.Popen(
+            pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-            prc = subprocess.Popen(
-                pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
-                stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout_data, stderr_data = prc.communicate()
 
-            stdout_data, stderr_data = prc.communicate()
+        prc = subprocess.Popen(
+            pub_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-            prc = subprocess.Popen(
-                pub_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
-                stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout_data, stderr_data = prc.communicate()
 
-            stdout_data, stderr_data = prc.communicate()
+        pvt_userkey_info = create_rdmuserkey_info(
+            Guid.objects.get(_id=guid).object_id, generation_pvt_key_name,
+            api_settings.PRIVATE_KEY_VALUE, generation_date)
 
-            pvt_userkey_info = create_rdmuserkey_info(
-                Guid.objects.get(_id=guid).object_id, generation_pvt_key_name,
-                api_settings.PRIVATE_KEY_VALUE, generation_date)
+        pub_userkey_info = create_rdmuserkey_info(
+            Guid.objects.get(_id=guid).object_id, generation_pub_key_name,
+            api_settings.PUBLIC_KEY_VALUE, generation_date)
 
-            pub_userkey_info = create_rdmuserkey_info(
-                Guid.objects.get(_id=guid).object_id, generation_pub_key_name,
-                api_settings.PUBLIC_KEY_VALUE, generation_date)
+        pvt_userkey_info.save()
+        pub_userkey_info.save()
 
-            pvt_userkey_info.save()
-            pub_userkey_info.save()
-
-        except Exception as error:
-            logger.exception(error)
-            raise
-
-    else:
-        pass
+    except Exception as error:
+        logger.exception(error)
+        raise
 
 def create_rdmuserkey_info(user_id, key_name, key_kind, date):
     userkey_info = RdmUserKey()
@@ -490,7 +485,7 @@ class AddTimestamp:
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
 
-        if api_settings.USE_OPENSSL:
+        if not api_settings.USE_UPKI:
 
             user_id = Guid.objects.get(_id=guid).object_id
 
