@@ -21,6 +21,11 @@ except ImportError as error:
         'copy local-dist.py to local.py?', ImportWarning,
     )
 
+try:
+    from .timestamp import *  # noqa
+except ImportError as error:
+    warnings.warn('No api/base/settings/timestamp.py settings file found.', ImportWarning)
+
 if not DEV_MODE and os.environ.get('DJANGO_SETTINGS_MODULE') == 'api.base.settings':
     from . import local
     from . import defaults
