@@ -227,11 +227,13 @@ class TestAddonLogs(OsfTestCase):
             'signature': signature,
         }
 
+    @mock.patch('website.util.waterbutler.get_node_info')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
     @mock.patch('requests.get', {'code': 404, 'referrer': None, 'message_short': 'Page not found'})
-    def test_add_log_timestamptoken(self, mock_perform, mock_downloadfile):
+    def test_add_log_timestamptoken(self, mock_perform, mock_downloadfile, mock_nodeinfo):
         mock_downloadfile.return_value = '/testfile'
+        mock_nodeinfo.return_value = {}
 
         result_list1_count = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id).count()
         nodelog_count1 = NodeLog.objects.all().count()
@@ -419,10 +421,12 @@ class TestAddonLogs(OsfTestCase):
             'github_addon_file_renamed',
         )
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_file_rename_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_file_rename_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -477,10 +481,12 @@ class TestAddonLogs(OsfTestCase):
         renamed_file = files_query.get()
         assert_equal('/' + newfilename, renamed_file.path)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_folder_rename_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_folder_rename_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/folder_ver1/my_precious_file'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file inside folder
@@ -539,10 +545,12 @@ class TestAddonLogs(OsfTestCase):
         filepath = '/{}/{}'.format(newfoldername, filename)
         assert_equal(filepath, renamed_file.path)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_file_move_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_file_move_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -599,10 +607,12 @@ class TestAddonLogs(OsfTestCase):
         renamed_file = files_query.get()
         assert_equal('/' + movedfilepath, renamed_file.path)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_folder_move_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_folder_move_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -661,10 +671,12 @@ class TestAddonLogs(OsfTestCase):
         renamed_file = files_query.get()
         assert_equal('/' + movedfolderpath + filename, renamed_file.path)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_file_remove_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_file_remove_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -710,10 +722,12 @@ class TestAddonLogs(OsfTestCase):
         removed_file = files_query.get()
         assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_action_folder_remove_timestamp(self, mock_perform, mock_downloadfile):
+    def test_action_folder_remove_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -762,10 +776,12 @@ class TestAddonLogs(OsfTestCase):
         removed_file = files_query.get()
         assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
 
+    @mock.patch('requests.get')
     @mock.patch('website.util.waterbutler.download_file')
     @mock.patch('website.notifications.events.files.FileAdded.perform')
-    def test_disconnect_provider_timestamp(self, mock_perform, mock_downloadfile):
+    def test_disconnect_provider_timestamp(self, mock_perform, mock_downloadfile, mock_get):
         mock_downloadfile.return_value = '/file_ver1'
+        mock_get.return_value.status_code = 200
         wb_log_url = self.node.api_url_for('create_waterbutler_log')
 
         # Create file
@@ -798,7 +814,7 @@ class TestAddonLogs(OsfTestCase):
         files_query = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=self.node._id)
         assert_equal(1, files_query.count())
         removed_file = files_query.get()
-        assert_equal(api_settings.FILE_NOT_EXISTS, removed_file.inspection_result_status)
+        assert_equal(api_settings.TIME_STAMP_STORAGE_DISCONNECTED, removed_file.inspection_result_status)
 
     def test_action_downloads_contrib(self):
         url = self.node.api_url_for('create_waterbutler_log')

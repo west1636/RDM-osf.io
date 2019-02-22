@@ -306,8 +306,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
-        nt.assert_equal(ret['verify_result'], 2)
-        nt.assert_equal(ret['verify_result_title'], 'NG')
+        nt.assert_equal(ret['verify_result'], api_settings.TIME_STAMP_TOKEN_CHECK_NG)
+        nt.assert_equal(ret['verify_result_title'], api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG)
 
         ## check rdmfiletimestamptokenverifyresult record
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
@@ -359,8 +359,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
-        nt.assert_equal(ret['verify_result'], 3)
-        nt.assert_equal(ret['verify_result_title'], 'TST missing(Unverify)')
+        nt.assert_equal(ret['verify_result'], api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND)
+        nt.assert_equal(ret['verify_result_title'], api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG)
 
         ## check rdmfiletimestamptokenverifyresult record
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
@@ -412,8 +412,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
-        nt.assert_equal(ret['verify_result'], 4)
-        nt.assert_equal(ret['verify_result_title'], 'TST missing(Retrieving Failed)')
+        nt.assert_equal(ret['verify_result'], api_settings.TIME_STAMP_TOKEN_NO_DATA)
+        nt.assert_equal(ret['verify_result_title'], api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG)
 
         ## check rdmfiletimestamptokenverifyresult record
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
@@ -464,8 +464,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
-        nt.assert_equal(ret['verify_result'], 5)
-        nt.assert_equal(ret['verify_result_title'], 'FILE missing')
+        nt.assert_equal(ret['verify_result'], api_settings.FILE_NOT_EXISTS)
+        nt.assert_equal(ret['verify_result_title'], api_settings.FILE_NOT_EXISTS_MSG)
 
         ## check rdmfiletimestamptokenverifyresult record
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
@@ -518,8 +518,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
         shutil.rmtree(tmp_dir)
 
         ## check timestamp_check func response
-        nt.assert_equal(ret['verify_result'], 6)
-        nt.assert_equal(ret['verify_result_title'], 'FILE missing(Unverify)')
+        nt.assert_equal(ret['verify_result'], api_settings.FILE_NOT_FOUND)
+        nt.assert_equal(ret['verify_result_title'], api_settings.FILE_NOT_FOUND_MSG)
 
         ## check rdmfiletimestamptokenverifyresult record
         rdmfiletimestamptokenverifyresult = RdmFileTimestamptokenVerifyResult.objects.get(file_id=file_node._id)
