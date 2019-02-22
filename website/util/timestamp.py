@@ -28,6 +28,8 @@ from website import util
 from website import settings
 from website.util import waterbutler
 
+from django.contrib.contenttypes.models import ContentType
+import uuid
 
 from django.contrib.contenttypes.models import ContentType
 import uuid
@@ -566,7 +568,7 @@ class AddTimestamp:
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
         user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
-        user_id = Guid.objects.get(_id=guid).object_id
+        user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
         key_file_name = RdmUserKey.objects.get(
             guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
@@ -842,3 +844,4 @@ class TimeStampTokenVerifyCheck:
             'verify_result_title': verify_result_title,
             'filepath': filepath
         }
+
