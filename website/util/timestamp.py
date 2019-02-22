@@ -28,6 +28,8 @@ from website import util
 from website import settings
 from website.util import waterbutler
 
+from django.contrib.contenttypes.models import ContentType
+import uuid
 
 from django.contrib.contenttypes.models import ContentType
 import uuid
@@ -826,3 +828,4 @@ class TimeStampTokenVerifyCheck:
             'verify_result_title': verify_result_title,
             'filepath': filepath
         }
+
