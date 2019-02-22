@@ -302,6 +302,9 @@ SSL_GENERATE_SELF_SIGNED = 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 
 SSL_PRIVATE_KEY_GENERATION = 'openssl genrsa -out {0} {1}'
 SSL_PUBLIC_KEY_GENERATION = 'openssl rsa -in {0} -pubout -out {1}'
 
+# UPKI flag
+USE_UPKI = False
+
 # UserKey Placement destination
 KEY_NAME_PRIVATE = 'pvt'
 KEY_NAME_PUBLIC = 'pub'
