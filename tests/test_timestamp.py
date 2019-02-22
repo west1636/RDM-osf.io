@@ -480,8 +480,8 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
          RdmFileTimestamptokenVerifyResult : Exist & RdmFileTimestamptokenVerifyResult.timestamp_token = null
          provider = 'osfstorage'
         [OUT]
-         FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND = 6
-         FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG = 'FILE missing(Unverify)'
+         FILE_NOT_FOUND = 6
+         FILE_NOT_FOUND_MSG = 'FILE missing(Unverify)'
         """
         provider = 'osfstorage'
         self.node_settings = self.project.get_addon(provider)
