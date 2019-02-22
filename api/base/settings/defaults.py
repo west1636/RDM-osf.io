@@ -294,32 +294,13 @@ NPLUSONE_RAISE = False
 # salt used for generating hashids
 HASHIDS_SALT = 'pinkhimalayan'
 
-# Timestamp(API) Settings
-# openssl cmd const
-OPENSSL_MAIN_CMD = 'openssl'
-OPENSSL_OPTION_TS = 'ts'
-OPENSSL_OPTION_VERIFY = '-verify'
-OPENSSL_OPTION_QUERY = '-query'
-OPENSSL_OPTION_DATA = '-data'
-OPENSSL_OPTION_CERT = '-cert'
-OPENSSL_OPTION_IN = '-in'
-OPENSSL_OPTION_SHA512 = '-sha512'
-OPENSSL_OPTION_CAFILE = '-CAfile'
-OPENSSL_OPTION_GENRSA = 'genrsa'
-OPENSSL_OPTION_OUT = '-out'
-OPENSSL_OPTION_RSA = 'rsa'
-OPENSSL_OPTION_PUBOUT = '-pubout'
-
-# test commands
-USE_UPKI = False
+# RSA key generation settings
 SSL_GENERATE_KEY = 'openssl genrsa -des3 -out {0}.key {1}'
 SSL_GENERATE_KEY_NOPASS = 'openssl rsa -in {0}.key -out {0}.key.nopass'
 SSL_GENERATE_CSR = 'openssl req -new -key {0}.key.nopass -out {0}.csr'
 SSL_GENERATE_SELF_SIGNED = 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout {0}.key -out {0}.crt'
 SSL_PRIVATE_KEY_GENERATION = 'openssl genrsa -out {0} {1}'
 SSL_PUBLIC_KEY_GENERATION = 'openssl rsa -in {0} -pubout -out {1}'
-SSL_CREATE_TIMESTAMP_REQUEST = 'openssl ts -query -data {0} -cert --sha512'
-SSL_GET_TIMESTAMP_RESPONSE = 'openssl ts -verify -data {0} -in {1} -CAfile {2}'
 
 # UserKey Placement destination
 KEY_NAME_PRIVATE = 'pvt'
@@ -354,3 +335,4 @@ FILE_NOT_EXISTS = 5
 FILE_NOT_EXISTS_MSG = 'FILE missing'
 FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND = 6
 FILE_NOT_EXISTS_TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG = 'FILE missing(Unverify)'
+

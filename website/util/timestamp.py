@@ -16,7 +16,11 @@ from urllib3.util.retry import Retry
 import requests
 import pytz
 
-from api.base import settings as api_settings
+try:
+    from api.base import timestamp as api_settings
+except ImportError:
+    from api.base import settings as api_settings
+
 from api.base.utils import waterbutler_api_url_for
 from django.utils import timezone
 from osf.models import (
@@ -242,9 +246,13 @@ def check_file_timestamp(uid, node, data):
             userkey_generation(user._id)
 
         verify_check = TimeStampTokenVerifyCheck()
-        result = verify_check.timestamp_check(
-            user._id, data, node._id, download_file_path, tmp_dir
-        )
+
+        if not api_settings.USE_UPKI:
+            result = verify_check.timestamp_check(
+                user._id, data, node._id, download_file_path, tmp_dir
+            )
+        else:
+            result = verify_check.timestamp_check_upki(data, download_file_path, tmp_dir)
 
         shutil.rmtree(tmp_dir)
         return result
@@ -404,7 +412,8 @@ def userkey_generation(guid):
             guid, generation_date_hash, api_settings.KEY_NAME_PUBLIC, api_settings.KEY_EXTENSION)
         # private key generation
         pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
-            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name)
+            os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
+            api_settings.KEY_BIT_VALUE
         ).split(' ')
 
         pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
@@ -483,42 +492,56 @@ class AddTimestamp:
 
         return res_content
 
+    def get_timestamp_upki(self, file_name, tmp_dir):
+        cmd = api_settings.UPKI_CREATE_TIMESTAMP.format(
+            file_name,
+            os.path.join(tmp_dir, file_name + '.tst')
+        ).split(' ')
+        process = subprocess.Popen(
+            cmd, shell=False, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stdout_data, stderr_data = process.communicate()
+        return stdout_data
+
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
 
+        user_id = Guid.objects.get(_id=guid).object_id
+
+        key_file_name = RdmUserKey.objects.get(
+            guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
+        ).key_name
+
+
         if not api_settings.USE_UPKI:
-
-            user_id = Guid.objects.get(_id=guid).object_id
-
-            key_file_name = RdmUserKey.objects.get(
-                guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
-            ).key_name
-
             tsa_response = self.get_timestamp_response(
                 file_name, self.get_timestamp_request(file_name), key_file_name
             )
+        else:
+            tsa_response = self.get_timestamp_upki(file_name, tmp_dir)
 
-            verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
-                file_id=file_info['file_id'])
-            if verify_data.exists():
-                verify_data = verify_data.get()
-            else:
-                verify_data = RdmFileTimestamptokenVerifyResult()
-                verify_data.file_id = file_info['file_id']
-                verify_data.project_id = project_id
-                verify_data.provider = file_info['provider']
-                verify_data.path = file_info['file_path']
-                verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
 
-            verify_data.key_file_name = key_file_name
-            verify_data.timestamp_token = tsa_response
-            verify_data.save()
+        verify_data = RdmFileTimestamptokenVerifyResult.objects.filter(
+            file_id=file_info['file_id'])
+        if verify_data.exists():
+            verify_data = verify_data.get()
+        else:
+            verify_data = RdmFileTimestamptokenVerifyResult()
+            verify_data.file_id = file_info['file_id']
+            verify_data.project_id = project_id
+            verify_data.provider = file_info['provider']
+            verify_data.path = file_info['file_path']
+            verify_data.inspection_result_status = api_settings.TIME_STAMP_TOKEN_UNCHECKED
 
+        verify_data.key_file_name = key_file_name
+        verify_data.timestamp_token = tsa_response
+        verify_data.save()
+
+        if not api_settings.USE_UPKI:
             return TimeStampTokenVerifyCheck().timestamp_check(
                 guid, file_info, project_id, file_name, tmp_dir)
-
         else:
-            pass
-
+            return TimeStampTokenVerifyCheck().timestamp_check_upki(file_info, file_name, tmp_dir)
 
 class TimeStampTokenVerifyCheck:
     # get abstractNode
@@ -721,6 +744,39 @@ class TimeStampTokenVerifyCheck:
         else:
             filepath = provider + path
 
+        return {
+            'verify_result': ret,
+            'verify_result_title': verify_result_title,
+            'filepath': filepath
+        }
+
+    def timestamp_check_upki(self, file_info, file_name, tmp_dir):
+        provider = file_info['provider']
+        path = file_info['file_path']
+        filepath = provider + path
+
+        cmd = api_settings.UPKI_VERIFY_TIMESTAMP.format(
+            file_name, 
+            os.path.join(tmp_dir, file_name + '.tst')
+        ).split(' ')
+        process = subprocess.Popen(
+            cmd, shell=False, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stdout_data, stderr_data = process.communicate()
+
+        success_strings = [
+            'Timestamp sign verify valid',
+            'Timestamp data verify valid',
+            'Timestamp certificate verify Verified',
+        ]
+
+        if all(map(lambda s: s in stdout_data, success_strings)):
+            ret = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
+            verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS_MSG  # 'OK'
+        else:
+            ret = api_settings.TIME_STAMP_TOKEN_CHECK_NG
+            verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
         return {
             'verify_result': ret,
             'verify_result_title': verify_result_title,
