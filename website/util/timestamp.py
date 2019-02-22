@@ -172,10 +172,14 @@ def get_full_list(uid, pid, node):
         waterbutler_json_res = waterbutler.get_node_info(cookie, pid, provider, '/')
 
         if waterbutler_json_res is None:
-            RdmFileTimestamptokenVerifyResult.objects.filter(
+            provider_files = RdmFileTimestamptokenVerifyResult.objects.filter(
                 project_id=node._id,
                 provider=provider
-            ).update(inspection_result_status=api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE)
+            )
+            files_status = provider_files.first().inspection_result_status
+            if files_status != api_settings.TIME_STAMP_STORAGE_DISCONNECTED:
+                not_accessible_status = api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE
+                provider_files.update(inspection_result_status=not_accessible_status)
             continue
 
         file_list = []
