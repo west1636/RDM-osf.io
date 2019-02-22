@@ -28,6 +28,8 @@ from website import util
 from website import settings
 from website.util import waterbutler
 
+from django.contrib.contenttypes.models import ContentType
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -272,11 +274,7 @@ def add_token(uid, node, data):
         data['file_id'] = file_node._id
 
         # Request To Download File
-        tmp_dir = 'tmp_{}'.format(user._id)
-        count = 1
-        while os.path.exists(tmp_dir):
-            count += 1
-            tmp_dir = 'tmp_{}_{}'.format(user._id, count)
+        tmp_dir = 'tmp_{}'.format(uuid.uuid4())
         os.mkdir(tmp_dir)
         download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
@@ -393,7 +391,7 @@ def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     return file_list
 
 def userkey_generation_check(guid):
-    return RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid).object_id).exists()
+    return RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id).exists()
 
 def userkey_generation(guid):
 
@@ -431,11 +429,11 @@ def userkey_generation(guid):
         stdout_data, stderr_data = prc.communicate()
 
         pvt_userkey_info = create_rdmuserkey_info(
-            Guid.objects.get(_id=guid).object_id, generation_pvt_key_name,
+            Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pvt_key_name,
             api_settings.PRIVATE_KEY_VALUE, generation_date)
 
         pub_userkey_info = create_rdmuserkey_info(
-            Guid.objects.get(_id=guid).object_id, generation_pub_key_name,
+            Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id, generation_pub_key_name,
             api_settings.PUBLIC_KEY_VALUE, generation_date)
 
         pvt_userkey_info.save()
@@ -503,7 +501,7 @@ class AddTimestamp:
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
 
-        user_id = Guid.objects.get(_id=guid).object_id
+        user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
 
         key_file_name = RdmUserKey.objects.get(
             guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
@@ -605,7 +603,7 @@ class TimeStampTokenVerifyCheck:
 
     # timestamp token check
     def timestamp_check(self, guid, file_info, project_id, file_name, tmp_dir):
-        userid = Guid.objects.get(_id=guid).object_id
+        userid = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
         file_id = file_info['file_id']
         provider = file_info['provider']
         path = file_info['file_path']
@@ -779,3 +777,4 @@ class TimeStampTokenVerifyCheck:
             'verify_result_title': verify_result_title,
             'filepath': filepath
         }
+
