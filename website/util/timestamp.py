@@ -603,10 +603,6 @@ class AddTimestamp:
         else:
             return TimeStampTokenVerifyCheck().timestamp_check_upki(file_info, file_name, tmp_dir)
 
-        else:
-            pass
-
-
 class TimeStampTokenVerifyCheck:
     # get abstractNode
     def get_abstractNode(self, node_id):
@@ -845,4 +841,3 @@ class TimeStampTokenVerifyCheck:
             'verify_result_title': verify_result_title,
             'filepath': filepath
         }
-
