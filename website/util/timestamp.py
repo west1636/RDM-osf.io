@@ -16,10 +16,7 @@ from urllib3.util.retry import Retry
 import requests
 import pytz
 
-try:
-    from api.base import timestamp as api_settings
-except ImportError:
-    from api.base import settings as api_settings
+from api.base import settings as api_settings
 
 from api.base.utils import waterbutler_api_url_for
 from django.utils import timezone
