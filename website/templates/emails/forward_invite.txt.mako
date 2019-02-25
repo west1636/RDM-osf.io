@@ -32,4 +32,4 @@ National Institute of Informatics
 Privacy Policy: https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422
 
 
-Want more information? Visit https://rdm.nii.ac.jp/ or https://nii.ac.jp/ for information about the GakuNin RDM and its supporting organization, the National Institute of Informatics. Questions? Email contact@osf.io.
+Want more information? Visit https://rdm.nii.ac.jp/ or https://nii.ac.jp/ for information about the GakuNin RDM and its supporting organization, the National Institute of Informatics. Questions? Email rdm_support@nii.ac.jp.
