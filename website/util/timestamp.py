@@ -252,10 +252,6 @@ def check_file_timestamp(uid, node, data):
     current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
     tmp_dir = 'tmp_{}_{}_{}'.format(user._id, file_node._id, current_datetime_str)
 
-    if not os.path.exists(tmp_dir):
-        os.mkdir(tmp_dir)
-    download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
-
     if download_file_path is None:
         intentional_remove_status = [
             api_settings.FILE_NOT_EXISTS,
