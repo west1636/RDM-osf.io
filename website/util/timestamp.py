@@ -326,10 +326,12 @@ def add_token(uid, node, data):
         raise
 
 def file_created_or_updated(node, metadata, user_id, created_flag):
-    file_node = BaseFileNode.resolve_class(
-        metadata['provider'], BaseFileNode.FILE
-    ).get_or_create(node, metadata.get('materialized'))
-    file_node.save()
+    if metadata['provider'] != 'osfstorage':
+        file_node = BaseFileNode.resolve_class(
+            metadata['provider'], BaseFileNode.FILE
+        ).get_or_create(node, metadata.get('materialized'))
+        file_node.save()
+        metadata['path'] = file_node._id
     created_at = metadata.get('created_utc')
     modified_at = metadata.get('modified_utc')
     version = ''
@@ -340,7 +342,7 @@ def file_created_or_updated(node, metadata, user_id, created_flag):
     if metadata['provider'] == 'osf_storage':
         version = metadata['extra'].get('version')
     file_info = {
-        'file_id': file_node._id,
+        'file_id': metadata.get('path'),
         'file_name': metadata.get('name'),
         'file_path': metadata.get('materialized'),
         'size': metadata.get('size'),
