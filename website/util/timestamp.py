@@ -366,6 +366,8 @@ def file_node_moved(project_id, provider, src_path, dest_path):
         path__startswith=src_path,
         project_id=project_id,
         provider=provider
+    ).exclude(
+        inspection_result_status=api_settings.FILE_NOT_EXISTS
     ).all()
     for moved_file in moved_files:
         moved_file.path = moved_file.path.replace(src_path, dest_path, 1)
