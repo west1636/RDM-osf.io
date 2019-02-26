@@ -184,6 +184,12 @@ def get_full_list(uid, pid, node):
                 not_accessible_status = api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE
                 provider_files.update(inspection_result_status=not_accessible_status)
             continue
+        else:
+            RdmFileTimestamptokenVerifyResult.objects.filter(
+                project_id=node._id,
+                provider=provider,
+                inspection_result_status=api_settings.TIME_STAMP_STORAGE_DISCONNECTED
+            ).update(inspection_result_status=api_settings.FILE_NOT_FOUND)
 
         file_list = []
         child_file_list = []
