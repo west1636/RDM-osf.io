@@ -184,6 +184,12 @@ def get_full_list(uid, pid, node):
                 not_accessible_status = api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE
                 provider_files.update(inspection_result_status=not_accessible_status)
             continue
+        else:
+            RdmFileTimestamptokenVerifyResult.objects.filter(
+                project_id=node._id,
+                provider=provider,
+                inspection_result_status=api_settings.TIME_STAMP_STORAGE_DISCONNECTED
+            ).update(inspection_result_status=api_settings.FILE_NOT_FOUND)
 
         file_list = []
         child_file_list = []
@@ -249,6 +255,17 @@ def check_file_timestamp(uid, node, data):
 
         download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
 
+        if download_file_path is None:
+            intentional_remove_status = [
+	        api_settings.FILE_NOT_EXISTS,
+	        api_settings.TIME_STAMP_STORAGE_DISCONNECTED
+	    ]
+	    file_data = RdmFileTimestamptokenVerifyResult.objects.filter(file_id=data['file_id'])
+            if file_data.exists() and \
+	            file_data.get().inspection_result_status not in intentional_remove_status:
+		file_data.update(inspection_result_status=api_settings.FILE_NOT_FOUND)
+            return False
+
         if not userkey_generation_check(user._id):
             userkey_generation(user._id)
 
@@ -261,28 +278,15 @@ def check_file_timestamp(uid, node, data):
         else:
             result = verify_check.timestamp_check_upki(data, download_file_path, tmp_dir)
 
-    if not os.path.exists(tmp_dir):
-        os.mkdir(tmp_dir)
-    download_file_path = waterbutler.download_file(cookie, file_node, tmp_dir)
+        shutil.rmtree(tmp_dir)
+        return result
 
-    if download_file_path is None:
-        intentional_remove_status = [
-            api_settings.FILE_NOT_EXISTS,
-            api_settings.TIME_STAMP_STORAGE_DISCONNECTED
-        ]
-        file_data = RdmFileTimestamptokenVerifyResult.objects.filter(file_id=data['file_id'])
-        if file_data.exists() and \
-                file_data.get().inspection_result_status not in intentional_remove_status:
-            file_data.update(inspection_result_status=api_settings.FILE_NOT_FOUND)
-        return False
-    if not userkey_generation_check(user._id):
-        userkey_generation(user._id)
 
-    verify_check = TimeStampTokenVerifyCheck()
-    result = verify_check.timestamp_check(
-        user._id, data, node._id, download_file_path, tmp_dir)
-    shutil.rmtree(tmp_dir)
-    return result
+    except Exception as err:
+        if tmp_dir and os.path.exists(tmp_dir):
+            shutil.rmtree(tmp_dir)
+        logger.exception(err)
+        raise
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
