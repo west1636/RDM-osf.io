@@ -244,7 +244,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + path
         file_node.save()
         payload = self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': path,
             'materialized': '/' + path,
             'path': '/' + path,
