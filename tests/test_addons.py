@@ -435,7 +435,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': '/' + filename,
             'path': '/' + filename,
@@ -460,7 +460,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + newfilename,
             },
             source={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -468,7 +468,7 @@ class TestAddonLogs(OsfTestCase):
                 'kind': 'file',
             },
             destination={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': newfilename,
                 'materialized': '/' + newfilename,
                 'path': '/' + newfilename,
@@ -498,7 +498,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': filepath,
             'path': filepath,
@@ -523,7 +523,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + newfoldername,
             },
             source={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': foldername,
                 'materialized': '/' + foldername,
                 'path': '/' + foldername,
@@ -531,7 +531,7 @@ class TestAddonLogs(OsfTestCase):
                 'kind': 'folder',
             },
             destination={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': newfoldername,
                 'materialized': '/' + newfoldername,
                 'path': '/' + newfoldername,
@@ -559,7 +559,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': '/' + filename,
             'path': '/' + filename,
@@ -584,7 +584,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + movedfilepath,
             },
             source={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -593,7 +593,7 @@ class TestAddonLogs(OsfTestCase):
                 'nid': self.node._id,
             },
             destination={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': filename,
                 'materialized': '/' + movedfilepath,
                 'path': '/' + movedfilepath,
@@ -623,7 +623,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + folderpath + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': '/' + folderpath + filename,
             'path': '/' + folderpath + filename,
@@ -648,7 +648,7 @@ class TestAddonLogs(OsfTestCase):
                 'path': '/' + movedfolderpath,
             },
             source={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': foldername,
                 'materialized': '/' + folderpath,
                 'path': '/' + folderpath,
@@ -657,7 +657,7 @@ class TestAddonLogs(OsfTestCase):
                 'nid': self.node._id,
             },
             destination={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': foldername,
                 'materialized': '/' + movedfolderpath,
                 'path': '/' + movedfolderpath,
@@ -685,7 +685,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': '/' + filename,
             'path': '/' + filename,
@@ -706,7 +706,7 @@ class TestAddonLogs(OsfTestCase):
         self.app.put_json(wb_log_url, self.build_payload(
             action='delete',
             metadata={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': filename,
                 'materialized': '/' + filename,
                 'path': '/' + filename,
@@ -738,7 +738,7 @@ class TestAddonLogs(OsfTestCase):
         file_node._path = '/' + folderpath + filename
         file_node.save()
         self.app.put_json(wb_log_url, self.build_payload(metadata={
-            'provider': 'osfstorage',
+            'provider': 'github',
             'name': filename,
             'materialized': '/' + folderpath + filename,
             'path': '/' + folderpath + filename,
@@ -760,7 +760,7 @@ class TestAddonLogs(OsfTestCase):
         self.app.put_json(wb_log_url, self.build_payload(
             action='delete',
             metadata={
-                'provider': 'osfstorage',
+                'provider': 'github',
                 'name': foldername,
                 'materialized': '/' + folderpath,
                 'path': '/' + folderpath,
