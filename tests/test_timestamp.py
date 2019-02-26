@@ -253,6 +253,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         # Mock makes the request to WB throw an exception, meaning storage is unaccessible
         data = {
+            'file_id': tsresult_list.get().file_id,
             'provider': 'github',
             'file_path': '/githubfile.txt'
         }
@@ -282,6 +283,7 @@ class TestTimeStampTokenVerifyCheck(ApiTestCase):
 
         # Mock makes the request to WB throw an exception, meaning storage is unaccessible
         data = {
+            'file_id': tsresult.get().file_id,
             'provider': 'github',
             'file_path': '/githubfile.txt'
         }
