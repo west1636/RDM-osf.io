@@ -244,7 +244,7 @@ def check_file_timestamp(uid, node, data):
     tmp_dir = None
     result = None
 
-   try:
+    try:
         file_node = BaseFileNode.objects.get(_id=data['file_id'])
         current_datetime = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         current_datetime_str = current_datetime.strftime('%Y%m%d%H%M%S%f')
