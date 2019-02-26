@@ -322,7 +322,7 @@ def add_token(uid, node, data):
 def file_created_or_updated(node, metadata, user_id, created_flag):
     file_node = BaseFileNode.resolve_class(
         metadata['provider'], BaseFileNode.FILE
-    ).get_or_create(node, metadata.get('path'))
+    ).get_or_create(node, metadata.get('materialized'))
     file_node.save()
     created_at = metadata.get('created_utc')
     modified_at = metadata.get('modified_utc')
@@ -546,7 +546,7 @@ class AddTimestamp:
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
         user_id = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
- 
+
         key_file_name = RdmUserKey.objects.get(
             guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
         ).key_name
