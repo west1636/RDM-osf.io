@@ -118,6 +118,8 @@ COPY ./addons/twofactor/requirements.txt ./addons/twofactor/
 #COPY ./addons/wiki/requirements.txt ./addons/wiki/
 COPY ./addons/zotero/requirements.txt ./addons/zotero/
 
+COPY ./lePKI/ ./lePKI/
+
 RUN for reqs_file in \
         /code/requirements.txt \
         /code/requirements/release.txt \
