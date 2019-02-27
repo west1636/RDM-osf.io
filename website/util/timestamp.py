@@ -31,9 +31,6 @@ from website.util import waterbutler
 from django.contrib.contenttypes.models import ContentType
 import uuid
 
-from django.contrib.contenttypes.models import ContentType
-import uuid
-
 logger = logging.getLogger(__name__)
 
 RESULT_MESSAGE = {
@@ -285,8 +282,11 @@ def check_file_timestamp(uid, node, data):
         return result
 
 
-    shutil.rmtree(tmp_dir)
-    return result
+    except Exception as err:
+        if tmp_dir and os.path.exists(tmp_dir):
+            shutil.rmtree(tmp_dir)
+        logger.exception(err)
+        raise
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
@@ -579,7 +579,6 @@ class AddTimestamp:
         key_file_name = RdmUserKey.objects.get(
             guid=user_id, key_kind=api_settings.PUBLIC_KEY_VALUE
         ).key_name
-
 
         if not api_settings.USE_UPKI:
             tsa_response = self.get_timestamp_response(
