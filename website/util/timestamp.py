@@ -565,13 +565,24 @@ class AddTimestamp:
     def get_timestamp_upki(self, file_name, tmp_dir):
         cmd = api_settings.UPKI_CREATE_TIMESTAMP.format(
             file_name,
-            os.path.join(tmp_dir, file_name + '.tst')
+            '/dev/stdout'
         ).split(' ')
         process = subprocess.Popen(
             cmd, shell=False, stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         stdout_data, stderr_data = process.communicate()
+
+        print('**************************')
+        print()
+        print(cmd)
+        print()
+        print(stdout_data)
+        print()
+        print(stderr_data)
+        print()
+        print('**************************')
+
         return stdout_data
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
@@ -828,9 +839,15 @@ class TimeStampTokenVerifyCheck:
         # get verify result
         verify_result = self.get_verifyResult(file_id, project_id, provider, path)
 
+        try:
+            with open(file_name + '.tst', 'wb') as fout:
+                fout.write(verify_result.timestamp_token)
+        except Exception as err:
+            raise err
+
         cmd = api_settings.UPKI_VERIFY_TIMESTAMP.format(
             file_name, 
-            os.path.join(tmp_dir, file_name + '.tst')
+            file_name + '.tst'
         ).split(' ')
         process = subprocess.Popen(
             cmd, shell=False, stdin=subprocess.PIPE,
@@ -843,6 +860,18 @@ class TimeStampTokenVerifyCheck:
             'Timestamp data verify valid',
             'Timestamp certificate verify Verified',
         ]
+
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print()
+        print('file exists, ', os.path.exists(file_name + '.tst'))
+        print()
+        print(cmd)
+        print()
+        print(stdout_data)
+        print()
+        print(stderr_data)
+        print()
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
         if all(map(lambda s: s in stdout_data, success_strings)):
             ret = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
