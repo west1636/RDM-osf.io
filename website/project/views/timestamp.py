@@ -61,8 +61,6 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized = _view_project(node, auth, primary=True)
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
-    print('User ID is ',uid)
-    print(auth.user.id)
     pid = kwargs.get('pid')
     timestamp.do_verification(uid,pid,node)
     return {'message': 'OK'}

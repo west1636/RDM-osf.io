@@ -26,10 +26,8 @@ from osf.models import (
 from website import util
 from website import settings
 from website.util import waterbutler
-import sys
 
 logger = logging.getLogger(__name__)
-
 
 RESULT_MESSAGE = {
     api_settings.TIME_STAMP_TOKEN_CHECK_NG:
@@ -265,8 +263,9 @@ def do_verification(uid,pid,node):
         	for p_item in provider_dict['provider_file_list']:
 			p_item['provider']=provider_dict['provider']
 			print(check_file_timestamp(uid,node,p_item))
-    except:
- 	print("Unexpected error:", sys.exc_info()[0])
+    except Exception as err:
+	print(err)
+	logger.exception(err)
 	raise
 
 
