@@ -5,6 +5,7 @@ var Raven = require('raven-js');
 var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
+var nodeApiUrl = window.contextVars.node.urls.api;
 
 var dateString = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
@@ -143,6 +144,7 @@ function newLine() {
 var NEW_LINE = newLine();
 
 var verify = function (params) {
+
     $('#btn-verify').attr('disabled', true);
     $('#btn-addtimestamp').attr('disabled', true);
     $('#timestamp_errors_spinner').text('Storage files list gathering ...');
@@ -232,7 +234,8 @@ var verifyProviderFiles = function (params, providerInfo, count) {
     }
 };
 
-var add = function (params) {
+
+var add = function (param) {
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
         var checkbox = item.elm.querySelector('[type=checkbox]');
         if (checkbox) {
@@ -253,39 +256,51 @@ var add = function (params) {
     $('#timestamp_errors_spinner').show();
 
     var successCount = 0;
+    var new_postData = [];
+
     for (var i = 0; i < fileList.length; i++) {
+
         var post_data = {
+
             'provider': fileList[i].provider,
             'file_id': fileList[i].file_id,
             'file_path': fileList[i].file_path,
             'file_version': fileList[i].file_version
         };
-        $.ajax({
-            url: params.url,
-            data: post_data,
-            dataType: 'json',
-            method: params.method
-        }).done(function () {
-            successCount++;
-            $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCount + ' / ' + fileList.length + ' ...');
-            if (successCount === fileList.length) {
-                $('#timestamp_errors_spinner').text('Added Timestamp (100%) and Refreshing...');
-                window.location.reload();
+          new_postData.push(post_data);
+       }
+
+    $.ajax({
+        type:param.method,
+        url:param.url,
+        data:JSON.stringify(new_postData),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json'
+
+    }).done(function () {
+        successCount++;
+        $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCount + ' / ' + fileList.length + ' ...');
+        if (successCount === fileList.length) {
+            $('#timestamp_errors_spinner').text('Added Timestamp (100%) and Refreshing...');
+            window.location.reload();
+        }
+    }).fail(function (xhr, status, error) {
+        Raven.captureMessage('Timestamp Add Error: ', {
+            extra: {
+                url:param.url,
+                status: status,
+                error: error
             }
-        }).fail(function (xhr, status, error) {
-            Raven.captureMessage('Timestamp Add Error: ' + fileList[i].file_path, {
-                extra: {
-                    url: params.url,
-                    status: status,
-                    error: error
-                }
-            });
-            $('#btn-verify').removeAttr('disabled');
-            $('#btn-addtimestamp').removeAttr('disabled');
-            $('#timestamp_errors_spinner').text('Error : Timestamp Add Failed');
         });
-    }
+
+        $('#btn-verify').removeAttr('disabled');
+        $('#btn-addtimestamp').removeAttr('disabled');
+        $('#timestamp_errors_spinner').text('Error : Timestamp Add Failed');
+    });
 };
+
+
+
 
 var download = function () {
     var fileFormat = $('#fileFormat').val();

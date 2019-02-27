@@ -14,12 +14,12 @@ from osf.models import Guid
 
 logger = logging.getLogger(__name__)
 
+
 @must_be_contributor_or_public
 def get_init_timestamp_error_data_list(auth, node, **kwargs):
     """
      get timestamp error data list (OSF view)
     """
-
     ctx = _view_project(node, auth, primary=True)
     ctx.update(rubeus.collect_addon_assets(node))
     pid = kwargs.get('pid')
@@ -48,14 +48,15 @@ def add_timestamp_token(auth, node, **kwargs):
     Timestamptoken add method
     '''
     if request.method == 'POST':
-        request_data = request.json
+	request_data=request.json
         data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
+        index = 0
+        for index in range(len(request_data)):
+            for key in request_data[index].keys():
+                data.update({key: request_data[index][key]})
+                timestamp.add_token(auth.user.id, node, request_data[index])
     else:
         data = request.args.to_dict()
-
-    return timestamp.add_token(auth.user.id, node, data)
 
 @must_be_contributor_or_public
 def collect_timestamp_trees_to_json(auth, node, **kwargs):
@@ -65,3 +66,4 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
     return {'provider_list': timestamp.get_full_list(uid, pid, node)}
+
