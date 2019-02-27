@@ -11,7 +11,6 @@ from website.util import timestamp
 from website import settings
 from osf.models import Guid
 
-
 logger = logging.getLogger(__name__)
 
 @must_be_contributor_or_public
@@ -39,7 +38,6 @@ def get_timestamp_error_data(auth, node, **kwargs):
             data.update({key: request_data[key][0]})
     else:
         data = request.args.to_dict()
-
     return timestamp.check_file_timestamp(auth.user.id, node, data)
 
 @must_be_contributor_or_public
@@ -63,5 +61,8 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized = _view_project(node, auth, primary=True)
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
+    print('User ID is ',uid)
+    print(auth.user.id)
     pid = kwargs.get('pid')
-    return {'provider_list': timestamp.get_full_list(uid, pid, node)}
+    timestamp.do_verification(uid,pid,node)
+    return {'message': 'OK'}

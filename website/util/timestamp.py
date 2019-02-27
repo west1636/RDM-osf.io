@@ -26,9 +26,10 @@ from osf.models import (
 from website import util
 from website import settings
 from website.util import waterbutler
-
+import sys
 
 logger = logging.getLogger(__name__)
+
 
 RESULT_MESSAGE = {
     api_settings.TIME_STAMP_TOKEN_CHECK_NG:
@@ -254,6 +255,23 @@ def check_file_timestamp(uid, node, data):
             shutil.rmtree(tmp_dir)
         logger.exception(err)
         raise
+
+#@app.task(bind=True)
+def do_verification(uid,pid,node):
+ #   self.update_state(state="PROGRESS", meta={'progress':90})
+ #   self.update_state(state="PROGRESS", meta={'progress': 100})
+    try:
+        for provider_dict in  get_full_list(uid,pid,node):
+        	for p_item in provider_dict['provider_file_list']:
+			p_item['provider']=provider_dict['provider']
+			print(check_file_timestamp(uid,node,p_item))
+    except:
+ 	print("Unexpected error:", sys.exc_info()[0])
+	raise
+
+
+def on_raw_message(body):
+    print(body)
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
