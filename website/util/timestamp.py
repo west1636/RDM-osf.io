@@ -276,7 +276,9 @@ def check_file_timestamp(uid, node, data):
                 user._id, data, node._id, download_file_path, tmp_dir
             )
         else:
-            result = verify_check.timestamp_check_upki(data, download_file_path, tmp_dir)
+            result = verify_check.timestamp_check_upki(
+                user._id, data, node._id, download_file_path, tmp_dir
+            )
 
         shutil.rmtree(tmp_dir)
         return result
@@ -607,7 +609,8 @@ class AddTimestamp:
             return TimeStampTokenVerifyCheck().timestamp_check(
                 guid, file_info, project_id, file_name, tmp_dir)
         else:
-            return TimeStampTokenVerifyCheck().timestamp_check_upki(file_info, file_name, tmp_dir)
+            return TimeStampTokenVerifyCheck().timestamp_check_upki(
+                guid, file_info, project_id, file_name, tmp_dir)
 
 class TimeStampTokenVerifyCheck:
     # get abstractNode
@@ -815,10 +818,15 @@ class TimeStampTokenVerifyCheck:
             'filepath': filepath
         }
 
-    def timestamp_check_upki(self, file_info, file_name, tmp_dir):
+    def timestamp_check_upki(self, guid, file_info, project_id, file_name, tmp_dir):
+        userid = Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id
+        file_id = file_info['file_id']
         provider = file_info['provider']
         path = file_info['file_path']
         filepath = provider + path
+
+        # get verify result
+        verify_result = self.get_verifyResult(file_id, project_id, provider, path)
 
         cmd = api_settings.UPKI_VERIFY_TIMESTAMP.format(
             file_name, 
@@ -842,9 +850,29 @@ class TimeStampTokenVerifyCheck:
         else:
             ret = api_settings.TIME_STAMP_TOKEN_CHECK_NG
             verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
+
+        file_created_at = file_info.get('created')
+        file_modified_at = file_info.get('modified')
+        file_size = file_info.get('size')
+
+        if not file_created_at:
+            file_created_at = None
+        if not file_modified_at:
+            file_modified_at = None
+        if not file_size:
+            file_size = None
+
+        verify_result.verify_date = datetime.datetime.now()
+        verify_result.verify_user = userid
+        verify_result.verify_file_created_at = file_created_at
+        verify_result.verify_file_modified_at = file_modified_at
+        verify_result.verify_file_size = file_size
+        verify_result.save()
+
         return {
             'verify_result': ret,
             'verify_result_title': verify_result_title,
             'filepath': filepath
         }
+
 
