@@ -577,8 +577,6 @@ class AddTimestamp:
         print()
         print(cmd)
         print()
-        print(stdout_data)
-        print()
         print(stderr_data)
         print()
         print('**************************')
@@ -867,6 +865,9 @@ class TimeStampTokenVerifyCheck:
         print()
         print(cmd)
         print()
+        print(type(stdout_data))
+        print(all(map(lambda s: s in stdout_data, success_strings)))
+        print()
         print(stdout_data)
         print()
         print(stderr_data)
@@ -876,9 +877,11 @@ class TimeStampTokenVerifyCheck:
         if all(map(lambda s: s in stdout_data, success_strings)):
             ret = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
             verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS_MSG  # 'OK'
+            verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
         else:
             ret = api_settings.TIME_STAMP_TOKEN_CHECK_NG
             verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_NG_MSG  # 'NG'
+            verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_CHECK_NG
 
         file_created_at = file_info.get('created')
         file_modified_at = file_info.get('modified')
