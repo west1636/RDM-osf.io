@@ -74,7 +74,15 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="loading-row" style="display: none;">
+                <div class="col-xs-12">
+                    <div class="spinner-loading-wrapper">
+                        <p class="m-t-sm fg-load-message" id="loading-message">Verifying files, please wait...</p>
+                        <div class="logo-spin logo-lg"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="pagination-row">
                 <div class="col-sm-8">
                     <ul class="pagination-wrap" style="display: none;">
                         <li class="pagination-prev">
@@ -97,8 +105,7 @@
                     </select>
                 </div>
             </div>
-            <span id="configureNodeAnchor" class="anchor"></span>
-            <div class="row">
+            <div class="row" id="timestamp-table-row">
                 <div class="col-xs-12">
                     <table class="table table-bordered table-addon-terms">
                         <thead class="block-head">
@@ -143,12 +150,6 @@
                                 </th>
                             </tr>
                         </thead>
-                        <font color="red">
-                            <div id="timestamp_errors_spinner" class="spinner-loading-wrapper">
-                                <div class="logo-spin logo-lg"></div>
-                                <p class="m-t-sm fg-load-message"> Loading timestamp error list ...  </p>
-                            </div>
-                        </font>
                         <tbody class="list" id="timestamp_error_list">
                             % for provider_error_info in provider_list:
                                 % for error_info in provider_error_info['error_list']:
@@ -189,7 +190,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="download-row">
                 <div class="col-sm-3">
                     <span>
                         <select id="fileFormat" class="form-control">
