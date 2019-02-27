@@ -573,14 +573,6 @@ class AddTimestamp:
 
         stdout_data, stderr_data = process.communicate()
 
-        print('**************************')
-        print()
-        print(cmd)
-        print()
-        print(stderr_data)
-        print()
-        print('**************************')
-
         return stdout_data
 
     def add_timestamp(self, guid, file_info, project_id, file_name, tmp_dir):
@@ -858,21 +850,6 @@ class TimeStampTokenVerifyCheck:
             'Timestamp data verify valid',
             'Timestamp certificate verify Verified',
         ]
-
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print()
-        print('file exists, ', os.path.exists(file_name + '.tst'))
-        print()
-        print(cmd)
-        print()
-        print(type(stdout_data))
-        print(all(map(lambda s: s in stdout_data, success_strings)))
-        print()
-        print(stdout_data)
-        print()
-        print(stderr_data)
-        print()
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
         if all(map(lambda s: s in stdout_data, success_strings)):
             ret = api_settings.TIME_STAMP_TOKEN_CHECK_SUCCESS
