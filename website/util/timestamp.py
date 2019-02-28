@@ -31,6 +31,10 @@ from website.util import waterbutler
 from django.contrib.contenttypes.models import ContentType
 import uuid
 
+from celery.result import AsyncResult
+from celery.exceptions import SoftTimeLimitExceeded
+from framework.celery_tasks import app as celery_app
+
 logger = logging.getLogger(__name__)
 
 RESULT_MESSAGE = {
@@ -272,10 +276,11 @@ def check_file_timestamp(uid, node, data):
     shutil.rmtree(tmp_dir)
     return result
 
-#@app.task(bind=True)
-def do_verification(uid,pid,node):
- #   self.update_state(state="PROGRESS", meta={'progress':90})
- #   self.update_state(state="PROGRESS", meta={'progress': 100})
+@celery_app.task
+def do_verification(uid,pid,node_id):
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress':0})
+    node = AbstractNode.objects.get(id=node_id)
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress':50})
     try:
         for provider_dict in  get_full_list(uid,pid,node):
         	for p_item in provider_dict['provider_file_list']:
@@ -285,10 +290,7 @@ def do_verification(uid,pid,node):
 	print(err)
 	logger.exception(err)
 	raise
-
-
-def on_raw_message(body):
-    print(body)
+    celery_app.current_task.update_state(state="SUCCESS", meta={'progress': 100})
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
