@@ -285,7 +285,7 @@ def do_verification(uid,pid,node_id):
         for provider_dict in  get_full_list(uid,pid,node):
         	for p_item in provider_dict['provider_file_list']:
 			p_item['provider']=provider_dict['provider']
-			print(check_file_timestamp(uid,node,p_item))
+			check_file_timestamp(uid,node,p_item)
     except Exception as err:
 	print(err)
 	logger.exception(err)
