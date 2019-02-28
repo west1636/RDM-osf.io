@@ -18,10 +18,11 @@ import pytz
 
 from api.base import settings as api_settings
 from api.base.utils import waterbutler_api_url_for
+from celery.result import AsyncResult
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
-    OSFUser
+    OSFUser, TimestampTask
 )
 from website import util
 from website import settings
@@ -49,6 +50,18 @@ RESULT_MESSAGE = {
     api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE:
         api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE_MSG
 }
+
+def get_async_task_data(node):
+    task_data = {
+        'ready': True,
+        'requester': None
+    }
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AsyncResult(timestamp_task.task_id)
+        task_data['ready'] = task.ready()
+        task_data['requester'] = timestamp_task.requester.username
+    return task_data
 
 def get_error_list(pid):
     '''

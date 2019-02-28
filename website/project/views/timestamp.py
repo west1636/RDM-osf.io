@@ -27,6 +27,7 @@ def get_init_timestamp_error_data_list(auth, node, **kwargs):
     ctx['project_title'] = node.title
     ctx['guid'] = pid
     ctx['web_api_url'] = settings.DOMAIN + node.api_url
+    ctx['async_task'] = timestamp.get_async_task_data(node)
     return ctx
 
 @must_be_contributor_or_public
