@@ -9,7 +9,9 @@ from website.project.decorators import must_be_contributor_or_public
 from website.project.views.node import _view_project
 from website.util import timestamp
 from website import settings
-from osf.models import Guid
+from osf.models import (
+    Guid, TimestampTask, OSFUser
+)
 
 logger = logging.getLogger(__name__)
 
@@ -62,5 +64,10 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
-    r = timestamp.do_verification.delay(uid,pid,node.id)
+    async_task = timestamp.do_verification.delay(uid,pid,node.id)
+    user_info = OSFUser.objects.get(id=uid)
+    TimestampTask.objects.update_or_create(
+          node=node,
+          defaults={'task_id': async_task.id, 'requester': user_info}
+    )
     return {'message': 'OK'}
