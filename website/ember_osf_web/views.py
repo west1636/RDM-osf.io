@@ -18,8 +18,6 @@ routes = [
 ]
 
 def use_ember_app(**kwargs):
-    import inspect;print('----{}::{}({})from:{}::{}({})'.format(inspect.getframeinfo(inspect.currentframe())[0],inspect.getframeinfo(inspect.currentframe())[2],inspect.getframeinfo(inspect.currentframe())[1],inspect.stack()[1][1],inspect.stack()[1][3],inspect.stack()[1][2]))
-    print(PROXY_EMBER_APPS)
     if PROXY_EMBER_APPS:
         resp = requests.get(EXTERNAL_EMBER_APPS['ember_osf_web']['server'], stream=True, timeout=EXTERNAL_EMBER_SERVER_TIMEOUT)
         resp = Response(stream_with_context(resp.iter_content()), resp.status_code)

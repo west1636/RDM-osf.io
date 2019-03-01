@@ -400,7 +400,7 @@ var FileViewPage = {
             var state = {
                 scrollTop: $(window).scrollTop(),
             };
-            History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, url);
+            History.pushState(state, 'OSF | ' + window.contextVars.file.name, url);
         }
 
         function changeVersionHeader(){
@@ -480,7 +480,7 @@ var FileViewPage = {
                             state = {
                                 scrollTop: $(window).scrollTop(),
                             };
-                            History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, url);
+                            History.pushState(state, 'OSF | ' + window.contextVars.file.name, url);
                         }
                     }
                 }, ctrl.editor.title);
@@ -533,11 +533,11 @@ var FileViewPage = {
                         if (!ctrl.mfrIframeParent.is(':visible') || panelsShown > 1) {
                             ctrl.mfrIframeParent.toggle();
                             ctrl.revisions.selected = false;
-                            History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'view'));
+                            History.pushState(state, 'OSF | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'view'));
                         } else if (ctrl.mfrIframeParent.is(':visible') && !ctrl.editor){
                             ctrl.mfrIframeParent.toggle();
                             ctrl.revisions.selected = true;
-                            History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'revision'));
+                            History.pushState(state, 'OSF | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'revision'));
                         }
                     }
                 }, 'View'), editButton())
@@ -554,14 +554,14 @@ var FileViewPage = {
                             ctrl.editor.selected = false;
                         }
                         ctrl.revisions.selected = true;
-                        History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'revision'));
+                        History.pushState(state, 'OSF | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'revision'));
                     } else {
                         ctrl.mfrIframeParent.toggle();
                         if (ctrl.editor) {
                             ctrl.editor.selected = false;
                         }
                         ctrl.revisions.selected = false;
-                        History.pushState(state, 'GakuNin-RDM(c4) | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'view'));
+                        History.pushState(state, 'OSF | ' + window.contextVars.file.name, formatUrl(ctrl.urlParams, 'view'));
                     }
                 }}, 'Revisions')
             ])

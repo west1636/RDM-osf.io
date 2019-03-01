@@ -289,7 +289,7 @@ var ViewModel = function(params) {
         } else if (alias.name === 'preprint') {
             win = window.open(
                 window.location.origin + '/preprints/discover?' + $.param(
-                    {q: self.query(), provider: 'GakuNin-RDM(c4)'}
+                    {q: self.query(), provider: 'OSF'}
                 ), '_blank');
             win.opener = null;
             win.focus();
@@ -563,7 +563,7 @@ var ViewModel = function(params) {
         //Indicate that we've just pushed a state so the
         //Call back does not process this push as a state change
         self.stateJustPushed = true;
-        History.pushState(state, 'GakuNin-RDM(c4) | Search', url);
+        History.pushState(state, 'OSF | Search', url);
     };
 
     self.setCategory = function(cat) {
@@ -590,7 +590,7 @@ function Search(selector, url, appURL) {
         filter: $osf.urlParams().filter
     };
     //Ensure our state keeps its URL paramaters
-    History.replaceState(data, 'GakuNin-RDM(c4) | Search', location.search);
+    History.replaceState(data, 'OSF | Search', location.search);
     //Set out observables from the newly replaced state
     self.viewModel.loadState();
     //Preform search from url params

@@ -57,7 +57,6 @@ def get_error_list(pid):
     Retrieve from the database the list of all timestamps that has an error.
     '''
     data_list = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=pid).order_by('provider', 'path')
-
     provider_error_list = []
     provider = None
     error_list = []
@@ -281,11 +280,8 @@ def celery_add_timestamp_token(uid, node_id, request_data):
     Celery Timestamptoken add method
     '''
     node = AbstractNode.objects.get(id=node_id)
-    index = 0
-    for index in range(len(request_data)):
-        for key in request_data[index].keys():
-            add_token(uid, node, request_data[index])
-
+    for _, data in enumerate(request_data):
+        add_token(uid, node, data)
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)

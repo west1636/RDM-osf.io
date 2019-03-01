@@ -22,19 +22,15 @@ $(function () {
         });
     });
 
-
     $('#btn-addtimestamp').on('click', function () {
         if ($('#btn-verify').attr('disabled') !== undefined || $('#btn-addtimestamp').attr('disabled') !== undefined) {
             return false;
-       }
-
+        }
         timestampCommon.add({
             url: nodeApiUrl + 'timestamp/add_timestamp/',
             method: 'POST'
         });
-
     });
-
 
     $('#btn-download').on('click', function () {
         timestampCommon.download();

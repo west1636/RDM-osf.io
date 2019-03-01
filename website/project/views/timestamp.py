@@ -14,7 +14,6 @@ from osf.models import Guid
 
 logger = logging.getLogger(__name__)
 
-
 @must_be_contributor_or_public
 def get_init_timestamp_error_data_list(auth, node, **kwargs):
     """
@@ -48,12 +47,9 @@ def add_timestamp_token(auth, node, **kwargs):
     Timestamptoken add method
     '''
     if request.method == 'POST':
-	request_data=request.json
-        print(request_data)
-        data = {}
+        request_data = request.json
         timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request_data)
-    else:
-        data = request.args.to_dict()
+    return {'status': 'ok'}
 
 @must_be_contributor_or_public
 def collect_timestamp_trees_to_json(auth, node, **kwargs):
