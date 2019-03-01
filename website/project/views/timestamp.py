@@ -49,12 +49,9 @@ def add_timestamp_token(auth, node, **kwargs):
     '''
     if request.method == 'POST':
 	request_data=request.json
+        print(request_data)
         data = {}
-        index = 0
-        for index in range(len(request_data)):
-            for key in request_data[index].keys():
-                data.update({key: request_data[index][key]})
-                timestamp.add_token(auth.user.id, node, request_data[index])
+        timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request_data)
     else:
         data = request.args.to_dict()
 
