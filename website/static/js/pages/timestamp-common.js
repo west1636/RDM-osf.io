@@ -133,7 +133,7 @@ $('#addTimestampAllCheck').on('change', function () {
     });
 });
 
-function newLine() {
+function newLine () {
     if (window.navigator.userAgent.indexOf('Windows NT') !== -1) {
         return '\r\n';
     }
@@ -142,11 +142,17 @@ function newLine() {
 
 var NEW_LINE = newLine();
 
+function loadingAnimation (activated) {
+    $('#loading-row').toggle(activated);
+    $('#pagination-row').toggle(!activated);
+    $('#timestamp-table-row').toggle(!activated);
+    $('#download-row').toggle(!activated);
+}
+
 var verify = function (params) {
     $('#btn-verify').attr('disabled', true);
     $('#btn-addtimestamp').attr('disabled', true);
-    $('#timestamp_errors_spinner').text('Storage files list gathering ...');
-    $('#timestamp_errors_spinner').show();
+    loadingAnimation(true);
 
     var postData = {};
     var i;
@@ -249,8 +255,7 @@ var add = function (param) {
 
     $('#btn-verify').attr('disabled', true);
     $('#btn-addtimestamp').attr('disabled', true);
-    $('#timestamp_errors_spinner').text('Addtimestamp loading ...');
-    $('#timestamp_errors_spinner').show();
+    loadingAnimation(true);
 
     var successCount = 0;
     var new_postData = [];

@@ -44,3 +44,4 @@ from osf.models.action import NodeRequestAction, PreprintRequestAction, ReviewAc
 from osf.models.storage import ProviderAssetFile  # noqa
 from osf.models.rdm_file_timestamptoken_verify_result import RdmFileTimestamptokenVerifyResult  # noqa
 from osf.models.rdm_user_key import RdmUserKey  # noqa
+from osf.models.timestamp_task import TimestampTask  # noqa
