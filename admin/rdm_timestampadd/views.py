@@ -185,3 +185,16 @@ class AddTimestampData(RdmPermissionMixin, View):
             json.dumps({'result': result}),
             content_type='application/json'
         )
+
+class CancelTask(RdmPermissionMixin, View):
+
+    def test_func(self):
+        """validate user permissions"""
+        institution_id = int(self.kwargs.get('institution_id'))
+        return self.has_auth(institution_id)
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse(
+            json.dumps({'result': 'ok'}),
+            content_type='application/json'
+        )

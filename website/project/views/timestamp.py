@@ -66,3 +66,7 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
     return {'provider_list': timestamp.get_full_list(uid, pid, node)}
+
+@must_be_contributor_or_public
+def cancel_task(auth, node, **kwargs):
+    return {'status': 'ok'}

@@ -118,6 +118,9 @@ $(function () {
         timestampCommon.init();
         $('#btn-verify').on('click', btnVerify_onclick).focus();
         $('#btn-addtimestamp').on('click', btnAddtimestamp_onclick).focus();
+        $('#btn-cancel').on('click', function () {
+            timestampCommon.cancel(urls.cancel);
+        }).focus();
         $('#btn-download').on('click', function () {
             timestampCommon.download();
         });

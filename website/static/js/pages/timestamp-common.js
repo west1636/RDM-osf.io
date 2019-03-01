@@ -292,6 +292,17 @@ var add = function (params) {
     }
 };
 
+var cancel = function (url) {
+    $.ajax({
+        url: url,
+        method: 'POST'
+    }).done(function (data) {
+        console.log(data);
+    }).fail(function (xhr, textStatus, error) {
+        console.log('Fail');
+    });
+};
+
 var download = function () {
     var fileFormat = $('#fileFormat').val();
     var fileList = TIMESTAMP_LIST_OBJECT.items.filter(function (item) {
@@ -919,6 +930,7 @@ function init() {
 module.exports = {
     verify: verify,
     add: add,
+    cancel: cancel,
     init: init,
     download: download,
     setWebOrAdmin: setWebOrAdmin

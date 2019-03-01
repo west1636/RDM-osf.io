@@ -1765,6 +1765,15 @@ def make_url_map(app):
             ['get', 'post'],
             project_views.timestamp.add_timestamp_token,
             json_renderer,
+        ),
+        Rule(
+            [
+                '/project/<pid>/timestamp/cancel_task/',
+                '/project/<pid>/node/<nid>/timestamp/cancel_task/',
+            ],
+            ['post'],
+            project_views.timestamp.cancel_task,
+            json_renderer,
         )
     ], prefix='/api/v1')
 

@@ -68,6 +68,7 @@
                             <span>
                                 <button type="button" class="btn btn-success" id="btn-verify" ${ 'disabled=disabled' if not async_task['ready'] else '' }>Verify</button>
                                 <button type="button" class="btn btn-success" id="btn-addtimestamp" ${ 'disabled=disabled' if not async_task['ready'] else '' }>Request Trusted Timestamp</button>
+                                <button type="button" class="btn btn-default" id="btn-cancel" ${ 'disabled=disabled' if async_task['ready'] else '' }>Cancel</button>
                             </span>
                         </div>
                         <div class="col-sm-5"></div>
