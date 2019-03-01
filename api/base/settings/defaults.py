@@ -304,8 +304,16 @@ SSL_PUBLIC_KEY_GENERATION = 'openssl rsa -in {0} -pubout -out {1}'
 
 # UPKI flag
 USE_UPKI = False
+
+# FreeTSA openation commands
 SSL_CREATE_TIMESTAMP_REQUEST = 'openssl ts -query -data {0} -cert --sha512'
 SSL_GET_TIMESTAMP_RESPONSE = 'openssl ts -verify -data {0} -in {1} -CAfile {2}'
+
+#uPKI operation commands
+UPKI_TIMESTAMP_URL = ''
+UPKI_CREATE_TIMESTAMP = ''
+UPKI_VERIFY_TIMESTAMP = ''
+UPKI_VERIFY_INVALID_MSG = 'LPC_ERR_VERIFY_INVALID'
 
 # UserKey Placement destination
 KEY_NAME_PRIVATE = 'pvt'
@@ -346,4 +354,3 @@ TIME_STAMP_STORAGE_DISCONNECTED = 8
 TIME_STAMP_STORAGE_DISCONNECTED_MSG = 'Error: storage disconnected.'
 TIME_STAMP_STORAGE_NOT_ACCESSIBLE = 9
 TIME_STAMP_STORAGE_NOT_ACCESSIBLE_MSG = 'Error: storage service connection error occurred.'
-
