@@ -257,7 +257,6 @@ var add = function (param) {
     $('#btn-addtimestamp').attr('disabled', true);
     loadingAnimation(true);
 
-    var successCount = 0;
     var new_postData = [];
 
     for (var i = 0; i < fileList.length; i++) {
@@ -276,25 +275,10 @@ var add = function (param) {
         data:JSON.stringify(new_postData),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json'
-    }).done(function () {
-        successCount++;
-        $('#timestamp_errors_spinner').text('Adding Timestamp files : ' + successCount + ' / ' + fileList.length + ' ...');
-        if (successCount === fileList.length) {
-            $('#timestamp_errors_spinner').text('Added Timestamp (100%) and Refreshing...');
-            window.location.reload();
-        }
-    }).fail(function (xhr, status, error) {
-        Raven.captureMessage('Timestamp Add Error: ', {
-            extra: {
-                url:param.url,
-                status: status,
-                error: error
-            }
-        });
-
-        $('#btn-verify').removeAttr('disabled');
-        $('#btn-addtimestamp').removeAttr('disabled');
-        $('#timestamp_errors_spinner').text('Error : Timestamp Add Failed');
+    }).done(function (data) {
+        console.log(data);
+    }).fail(function () {
+        console.log('Fail');
     });
 };
 
