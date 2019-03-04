@@ -5150,16 +5150,16 @@ class TestTimestampView(OsfTestCase):
         api_url_add_timestamp = self.project.api_url + 'timestamp/add_timestamp/'
         self.app.post_json(
             api_url_add_timestamp,
-            {
-                'provider': [file_verify_result.provider],
-                'file_id': [file_verify_result.file_id],
-                'file_path': [file_node.path],
-                'file_name': [file_node.name],
-                'size': [2345],
-                'created': ['2018-12-17 00:00'],
-                'modified': ['2018-12-19 00:00'],
-                'version': [file_node.current_version_number]
-            },
+            [{
+                'provider': file_verify_result.provider,
+                'file_id': file_verify_result.file_id,
+                'file_path': file_node.path,
+                'file_name': file_node.name,
+                'size': 2345,
+                'created': '2018-12-17 00:00',
+                'modified': '2018-12-19 00:00',
+                'version': file_node.current_version_number
+            }],
             content_type='application/json',
             auth=self.user.auth
         )
