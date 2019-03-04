@@ -18,10 +18,11 @@ import pytz
 
 from api.base import settings as api_settings
 from api.base.utils import waterbutler_api_url_for
+from celery.result import AsyncResult
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
-    OSFUser
+    OSFUser, TimestampTask
 )
 from website import util
 from website import settings
@@ -30,6 +31,8 @@ from website.util import waterbutler
 
 from django.contrib.contenttypes.models import ContentType
 import uuid
+from framework.celery_tasks import app as celery_app
+
 
 from celery.result import AsyncResult
 from celery.exceptions import SoftTimeLimitExceeded
@@ -53,6 +56,18 @@ RESULT_MESSAGE = {
     api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE:
         api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE_MSG
 }
+
+def get_async_task_data(node):
+    task_data = {
+        'ready': True,
+        'requester': None
+    }
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AsyncResult(timestamp_task.task_id)
+        task_data['ready'] = task.ready()
+        task_data['requester'] = timestamp_task.requester.username
+    return task_data
 
 def get_error_list(pid):
     '''
@@ -277,20 +292,27 @@ def check_file_timestamp(uid, node, data):
     return result
 
 @celery_app.task
-def do_verification(uid,pid,node_id):
-    celery_app.current_task.update_state(state="PROGRESS", meta={'progress':0})
+def do_verification(uid, pid, node_id):
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 0})
     node = AbstractNode.objects.get(id=node_id)
-    celery_app.current_task.update_state(state="PROGRESS", meta={'progress':50})
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 50})
     try:
-        for provider_dict in  get_full_list(uid,pid,node):
-        	for p_item in provider_dict['provider_file_list']:
-			p_item['provider']=provider_dict['provider']
-			check_file_timestamp(uid,node,p_item)
+        for provider_dict in get_full_list(uid, pid, node):
+            for p_item in provider_dict['provider_file_list']:
+                p_item['provider'] = provider_dict['provider']
+                check_file_timestamp(uid, node, p_item)
     except Exception as err:
-	print(err)
-	logger.exception(err)
-	raise
+        logger.exception(err)
+        raise
     celery_app.current_task.update_state(state="SUCCESS", meta={'progress': 100})
+
+def celery_add_timestamp_token(uid, node_id, request_data):
+    '''
+    Celery Timestamptoken add method
+    '''
+    node = AbstractNode.objects.get(id=node_id)
+    for _, data in enumerate(request_data):
+        add_token(uid, node, data)
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)

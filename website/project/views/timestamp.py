@@ -20,7 +20,6 @@ def get_init_timestamp_error_data_list(auth, node, **kwargs):
     """
      get timestamp error data list (OSF view)
     """
-
     ctx = _view_project(node, auth, primary=True)
     ctx.update(rubeus.collect_addon_assets(node))
     pid = kwargs.get('pid')
@@ -28,6 +27,7 @@ def get_init_timestamp_error_data_list(auth, node, **kwargs):
     ctx['project_title'] = node.title
     ctx['guid'] = pid
     ctx['web_api_url'] = settings.DOMAIN + node.api_url
+    ctx['async_task'] = timestamp.get_async_task_data(node)
     return ctx
 
 @must_be_contributor_or_public
@@ -49,13 +49,8 @@ def add_timestamp_token(auth, node, **kwargs):
     '''
     if request.method == 'POST':
         request_data = request.json
-        data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
-    else:
-        data = request.args.to_dict()
-
-    return timestamp.add_token(auth.user.id, node, data)
+        timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request_data)
+    return {'status': 'ok'}
 
 @must_be_contributor_or_public
 def collect_timestamp_trees_to_json(auth, node, **kwargs):
@@ -64,10 +59,10 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
-    async_task = timestamp.do_verification.delay(uid,pid,node.id)
+    async_task = timestamp.do_verification.delay(uid, pid, node.id)
     user_info = OSFUser.objects.get(id=uid)
     TimestampTask.objects.update_or_create(
-          node=node,
-          defaults={'task_id': async_task.id, 'requester': user_info}
+        node=node,
+        defaults={'task_id': async_task.id, 'requester': user_info}
     )
     return {'message': 'OK'}

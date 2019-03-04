@@ -51,15 +51,15 @@
             <div class="row">
                 <div class="col-sm-7">
                     <span>
-                        <button type="button" class="btn btn-success" id="btn-verify">Verify</button>
-                        <button type="button" class="btn btn-success" id="btn-addtimestamp">Request Trusted Timestamp</button>
+                        <button type="button" class="btn btn-success" id="btn-verify" {% if not async_task.ready %}disabled="disabled"{% endif %}>Verify</button>
+                        <button type="button" class="btn btn-success" id="btn-addtimestamp" {% if not async_task.ready %}disabled="disabled"{% endif %}>Request Trusted Timestamp</button>
                     </span>
                 </div>
                 <div class="col-sm-5"></div>
             </div>
         </div>
     </div>
-    <div class="row" id="loading-row" style="display: none;">
+    <div class="row" id="loading-row" style="{% if async_task.ready %}display: none;{% endif %}">
         <div class="col-xs-12">
             <div class="spinner-loading-wrapper">
                 <p class="m-t-sm fg-load-message" id="loading-message">Verifying files, please wait...</p>
@@ -97,7 +97,7 @@
             </select>
         </div>
     </div>
-    <div class="row" id="pagination-row">
+    <div class="row" id="pagination-row" style="{% if not async_task.ready %}display: none;{% endif %}">
         <div class="col-sm-12">
             <div class="pagination pagination-lg">
                 <span>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="row" id="timestamp-table-row">
+    <div class="row" id="timestamp-table-row" style="{% if not async_task.ready %}display: none;{% endif %}">
         <table id="datatables" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -207,7 +207,7 @@
             </tbody>
         </table>
     </div>
-    <div class="row" id="download-row">
+    <div class="row" id="download-row" style="{% if not async_task.ready %}display: none;{% endif %}">
         <div class="col-sm-3">
             <span>
                 <select id="fileFormat" class="form-control">

@@ -94,6 +94,7 @@ class TimeStampAddList(RdmPermissionMixin, TemplateView):
         ctx['project_title'] = absNodeData.title
         ctx['guid'] = self.kwargs['guid']
         ctx['institution_id'] = self.kwargs['institution_id']
+        ctx['async_task'] = timestamp.get_async_task_data(absNodeData)
         return ctx
 
 class VerifyTimeStampAddList(RdmPermissionMixin, View):
