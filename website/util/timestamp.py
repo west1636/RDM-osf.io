@@ -292,7 +292,7 @@ def check_file_timestamp(uid, node, data):
     return result
 
 @celery_app.task
-def do_verification(uid, pid, node_id):
+def celery_verify_timestamp_token(uid, pid, node_id):
     celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 0})
     node = AbstractNode.objects.get(id=node_id)
     celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 50})

@@ -154,88 +154,17 @@ var verify = function (params) {
     $('#btn-addtimestamp').attr('disabled', true);
     loadingAnimation(true);
 
-    var postData = {};
-    var i;
-    var count = {
-        total: null,
-        success: 0,
-        fail: 0
-    };
-
     // Get files list
     $.ajax({
         url: params.urlVerify,
-        data: postData,
+        data: {},
         dataType: 'json',
         method: params.method
     }).done(function (data) {
-        var projectFileList = data.provider_list;
-
-        // Count the number of files
-        count.total = projectFileList.reduce(function (accumulator, current) {
-            return accumulator + current.provider_file_list.length;
-        }, 0);
-
-        // Verify files for each provider
-        for (i = 0; i < projectFileList.length; i++) {
-            verifyProviderFiles(params, projectFileList[i], count);
-        }
-    }).fail(function (xhr, textStatus, error) {
-        Raven.captureMessage('Timestamp Add Error', {
-            extra: {
-                url: params.urlVerify,
-                textStatus: textStatus,
-                error: error
-            }
-        });
-        $('#btn-verify').removeAttr('disabled');
-        $('#btn-addtimestamp').removeAttr('disabled');
-        $('#timestamp_errors_spinner').text('Error: Storage files list gathering failed');
+        console.log(data);
+    }).fail(function () {
+        console.log('Fail');
     });
-};
-
-var verifyProviderFiles = function (params, providerInfo, count) {
-    var i, fileList;
-
-    fileList = providerInfo.provider_file_list;
-    for (i = 0; i < fileList.length; i++) {
-        var postData = {
-            'provider': providerInfo.provider,
-            'file_id': fileList[i].file_id,
-            'file_path': fileList[i].file_path,
-            'size': fileList[i].size,
-            'created': fileList[i].created,
-            'modified': fileList[i].modified,
-            'file_version': fileList[i].file_version
-        };
-        $.ajax({
-            url:  params.urlVerifyData,
-            data: postData,
-            dataType: 'json',
-            method: params.method
-        }).done(function () {
-            count.success++;
-            $('#timestamp_errors_spinner').text('Verification files : ' + count.success + ' / ' + count.total + ' ...');
-            if (count.total === count.success) {
-                $('#timestamp_errors_spinner').text('Verification (100%) and Refreshing...');
-                window.location.reload();
-            }
-        }).fail(function (xhr, status, error) {
-            count.fail++;
-            if (count.success + count.fail === count.total) {
-                Raven.captureMessage('Timestamp Add Error: ' + fileList[i].file_path, {
-                    extra: {
-                        url: params.urlVerifyData,
-                        status: status,
-                        error: error
-                    }
-                });
-                $('#btn-verify').removeAttr('disabled');
-                $('#btn-addtimestamp').removeAttr('disabled');
-                $('#timestamp_errors_spinner').text('Error: ' + fileList[i].file_path);
-            }
-        });
-    }
 };
 
 var add = function (param) {
