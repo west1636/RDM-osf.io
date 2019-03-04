@@ -306,6 +306,7 @@ def celery_verify_timestamp_token(uid, pid, node_id):
         raise
     celery_app.current_task.update_state(state="SUCCESS", meta={'progress': 100})
 
+@celery_app.task
 def celery_add_timestamp_token(uid, node_id, request_data):
     '''
     Celery Timestamptoken add method
