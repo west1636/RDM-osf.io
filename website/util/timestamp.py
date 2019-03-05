@@ -338,6 +338,20 @@ def add_token(uid, node, data):
         logger.exception(err)
         raise
 
+def cancel_celery_requested_task(node):
+    task_data = {
+        'ready': True,
+        'requester': None
+    }
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AsyncResult(timestamp_task.task_id)
+        task.revoke(terminate=True, signal='SIGUSR1')
+        task_data['ready'] = task.ready()
+        task_data['requester'] = timestamp_task.requester.username
+
+    return task_data
+
 def file_created_or_updated(node, metadata, user_id, created_flag):
     if metadata['provider'] != 'osfstorage':
         file_node = BaseFileNode.resolve_class(

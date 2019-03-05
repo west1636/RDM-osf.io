@@ -69,4 +69,5 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
 
 @must_be_contributor_or_public
 def cancel_task(auth, node, **kwargs):
-    return {'status': 'ok'}
+    timestamp_task = timestamp.cancel_celery_requested_task(node)
+    return timestamp_task
