@@ -5215,6 +5215,32 @@ class TestTimestampView(OsfTestCase):
         assert_equal(mock_getfulllist.call_count, 1)
         assert_equal(mock_checkfilets.call_count, 4)  # 4 files, 3 on osfstorage and 1 on github
 
+    @mock.patch('website.util.timestamp.TimestampTask')
+    @mock.patch('website.util.timestamp.AbortableAsyncResult')
+    def test_cancel_success(self, mock_task, mock_tstaskmodel):
+        mock_task.return_value.ready.return_value = False
+
+        url_cancel = self.project.api_url + 'timestamp/cancel_task/'
+        cancel_res = self.app.post_json(
+            url_cancel, {}, content_type='application/json', auth=self.user.auth)
+
+        assert_equal(cancel_res.status_code, 200)
+        assert_true(cancel_res.json['success'])
+        assert_equal(mock_task.return_value.abort.call_count, 1)
+
+    @mock.patch('website.util.timestamp.TimestampTask')
+    @mock.patch('website.util.timestamp.AbortableAsyncResult')
+    def test_cancel_fail(self, mock_task, mock_tstaskmodel):
+        mock_task.return_value.ready.return_value = True
+
+        url_cancel = self.project.api_url + 'timestamp/cancel_task/'
+        cancel_res = self.app.post_json(
+            url_cancel, {}, content_type='application/json', auth=self.user.auth)
+
+        assert_equal(cancel_res.status_code, 200)
+        assert_false(cancel_res.json['success'])
+        assert_equal(mock_task.return_value.abort.call_count, 0)
+
 
 class TestAddonFileViewTimestampFunc(OsfTestCase):
     def setUp(self):
