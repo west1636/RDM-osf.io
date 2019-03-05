@@ -308,8 +308,9 @@ FCM_SETTINGS = {
 SHIB_EPPN_SCOPING_SEPARATOR = '@'
 
 # hide embededDS, login user form in Adoministrator login page
-ENABLE_SHB_LOGIN = True
-ENABLE_LOGIN_FORM = False
+ENABLE_LOGIN_FORM = True
+ENABLE_SHB_LOGIN = False
+EMBEDDED_DS_URL = osf_settings.EMBEDDED_DS_URL
 
 # Addon Controls
 ENABLE_FORCE_CHECK = False

@@ -70,6 +70,7 @@ def get_globals():
         request_login_url = request.url
     return {
         'embedded_ds': settings.to_bool('USE_EMBEDDED_DS', False),
+        'embedded_ds_url': settings.EMBEDDED_DS_URL,
         'nav_dropdown': settings.to_bool('NAV_DROPDOWN', True),
         'nav_support': settings.to_bool('NAV_SUPPORT', True),
         'home_simple': settings.to_bool('HOME_SIMPLE', False),
