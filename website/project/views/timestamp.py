@@ -9,9 +9,7 @@ from website.project.decorators import must_be_contributor_or_public
 from website.project.views.node import _view_project
 from website.util import timestamp
 from website import settings
-from osf.models import (
-    Guid, TimestampTask, OSFUser
-)
+from osf.models import TimestampTask
 
 logger = logging.getLogger(__name__)
 
@@ -31,42 +29,26 @@ def get_init_timestamp_error_data_list(auth, node, **kwargs):
     return ctx
 
 @must_be_contributor_or_public
-def get_timestamp_error_data(auth, node, **kwargs):
-    # timestamp error data to timestamp or admin view
-    if request.method == 'POST':
-        request_data = request.json
-        data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
-    else:
-        data = request.args.to_dict()
-    return timestamp.check_file_timestamp(auth.user.id, node, data)
+def verify_timestamp_token(auth, node, **kwargs):
+    async_task = timestamp.celery_verify_timestamp_token.delay(auth.user.id, node.id)
+    TimestampTask.objects.update_or_create(
+        node=node,
+        defaults={'task_id': async_task.id, 'requester': auth.user}
+    )
+    return {'status': 'OK'}
 
 @must_be_contributor_or_public
 def add_timestamp_token(auth, node, **kwargs):
     '''
     Timestamptoken add method
     '''
-    if request.method == 'POST':
-        request_data = request.json
-        timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request_data)
-    return {'status': 'ok'}
-
-@must_be_contributor_or_public
-def collect_timestamp_trees_to_json(auth, node, **kwargs):
-    # admin call project to provider file list
-    serialized = _view_project(node, auth, primary=True)
-    serialized.update(rubeus.collect_addon_assets(node))
-    uid = Guid.objects.get(_id=serialized['user']['id']).object_id
-    pid = kwargs.get('pid')
-    async_task = timestamp.celery_verify_timestamp_token.delay(uid, pid, node.id)
-    user_info = OSFUser.objects.get(id=uid)
+    async_task = timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request.json)
     TimestampTask.objects.update_or_create(
         node=node,
-        defaults={'task_id': async_task.id, 'requester': user_info}
+        defaults={'task_id': async_task.id, 'requester': auth.user}
     )
     return {'status': 'OK'}
 
 @must_be_contributor_or_public
 def cancel_task(auth, node, **kwargs):
-    return {'status': 'ok'}
+    return timestamp.cancel_celery_task(node)

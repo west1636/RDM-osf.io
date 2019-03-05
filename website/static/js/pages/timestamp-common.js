@@ -1,7 +1,6 @@
 'use strict';
 
 var $ = require('jquery');
-var Raven = require('raven-js');
 var List = require('list.js');
 var $osf = require('js/osfHelpers');
 var vkbeautify = require('vkbeautify');
@@ -147,11 +146,13 @@ function loadingAnimation (activated) {
     $('#pagination-row').toggle(!activated);
     $('#timestamp-table-row').toggle(!activated);
     $('#download-row').toggle(!activated);
+
+    $('#btn-verify').attr('disabled', activated);
+    $('#btn-addtimestamp').attr('disabled', activated);
+    $('#btn-cancel').attr('disabled', !activated);
 }
 
 var verify = function (params) {
-    $('#btn-verify').attr('disabled', true);
-    $('#btn-addtimestamp').attr('disabled', true);
     loadingAnimation(true);
 
     // Get files list
@@ -159,11 +160,11 @@ var verify = function (params) {
         url: params.urlVerify,
         data: {},
         dataType: 'json',
-        method: params.method
-    }).done(function (data) {
-        console.log(data);
+        method: 'POST'
+    }).done(function () {
+        $osf.growl('Timestamp', 'A verify request is being processed!', 'success');
     }).fail(function () {
-        console.log('Fail');
+        $osf.growl('Timestamp', 'Something went wrong with the Verify request.', 'danger');
     });
 };
 
@@ -179,13 +180,11 @@ var add = function (param) {
     });
 
     if (fileList.length === 0) {
+        $osf.growl('Timestamp', 'Using the checkbox, please select the files to request timestamp.', 'danger');
         return false;
     }
 
-    $('#btn-verify').attr('disabled', true);
-    $('#btn-addtimestamp').attr('disabled', true);
     loadingAnimation(true);
-
     var new_postData = [];
 
     for (var i = 0; i < fileList.length; i++) {
@@ -204,21 +203,27 @@ var add = function (param) {
         data:JSON.stringify(new_postData),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json'
-    }).done(function (data) {
-        console.log(data);
+    }).done(function () {
+        $osf.growl('Timestamp', 'Timestamp is being added to the selected files!', 'success');
     }).fail(function () {
-        console.log('Fail');
+        $osf.growl('Timestamp', 'Something went wrong with the Request Trusted Timestamp request.', 'danger');
     });
 };
 
 var cancel = function (url) {
+    $osf.growl('Timestamp', 'The task has been cancelled.', 'info');
+    $('#btn-cancel').attr('disabled', true);
     $.ajax({
         url: url,
         method: 'POST'
-    }).done(function (data) {
-        console.log(data);
-    }).fail(function (xhr, textStatus, error) {
-        console.log('Fail');
+    }).done(function (result) {
+        if (result.success === true) {
+            loadingAnimation(false);
+        } else {
+            $osf.growl('Timestamp', 'Something went wrong in the cancel request.', 'danger');
+        }
+    }).fail(function () {
+        $osf.growl('Timestamp', 'Something went wrong in the cancel request.', 'danger');
     });
 };
 

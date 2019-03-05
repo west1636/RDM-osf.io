@@ -18,6 +18,8 @@ import pytz
 
 from api.base import settings as api_settings
 from api.base.utils import waterbutler_api_url_for
+from celery.contrib.abortable import AbortableTask, AbortableAsyncResult
+from celery.exceptions import SoftTimeLimitExceeded
 from celery.result import AsyncResult
 from django.utils import timezone
 from osf.models import (
@@ -291,29 +293,51 @@ def check_file_timestamp(uid, node, data):
     shutil.rmtree(tmp_dir)
     return result
 
-@celery_app.task
-def celery_verify_timestamp_token(uid, pid, node_id):
-    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 0})
+@celery_app.task(bind=True, base=AbortableTask)
+def celery_verify_timestamp_token(self, uid, node_id):
+    celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 0})
     node = AbstractNode.objects.get(id=node_id)
-    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 50})
-    try:
-        for provider_dict in get_full_list(uid, pid, node):
-            for p_item in provider_dict['provider_file_list']:
-                p_item['provider'] = provider_dict['provider']
-                check_file_timestamp(uid, node, p_item)
-    except Exception as err:
-        logger.exception(err)
-        raise
-    celery_app.current_task.update_state(state="SUCCESS", meta={'progress': 100})
+    celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 50})
+    for provider_dict in get_full_list(uid, node._id, node):
+        if self.is_aborted():
+            break
+        for p_item in provider_dict['provider_file_list']:
+            if self.is_aborted():
+                break
+            p_item['provider'] = provider_dict['provider']
+            check_file_timestamp(uid, node, p_item)
+    if self.is_aborted():
+        logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
+    celery_app.current_task.update_state(state='SUCCESS', meta={'progress': 100})
 
-@celery_app.task
-def celery_add_timestamp_token(uid, node_id, request_data):
+@celery_app.task(bind=True, base=AbortableTask)
+def celery_add_timestamp_token(self, uid, node_id, request_data):
     '''
     Celery Timestamptoken add method
     '''
     node = AbstractNode.objects.get(id=node_id)
     for _, data in enumerate(request_data):
+        if self.is_aborted():
+            break
         add_token(uid, node, data)
+    if self.is_aborted():
+        logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
+
+def cancel_celery_task(node):
+    result = {
+        'success': False,
+    }
+    try:
+        timestamp_task = TimestampTask.objects.filter(node=node).first()
+        if timestamp_task is not None:
+            task = AbortableAsyncResult(timestamp_task.task_id)
+            if not task.ready():
+                task.abort()
+                result['success'] = True
+    except Exception as err:
+        logger.exception(err)
+
+    return result
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
