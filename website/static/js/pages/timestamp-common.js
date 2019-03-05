@@ -220,7 +220,7 @@ var cancel = function (url) {
         if (result.success === true) {
             loadingAnimation(false);
         } else {
-            $osf.growl('Timestamp', 'Something went wrong in the cancel request.', 'danger');
+            $osf.growl('Timestamp', 'The task already finished.', 'info');
         }
     }).fail(function () {
         $osf.growl('Timestamp', 'Something went wrong in the cancel request.', 'danger');

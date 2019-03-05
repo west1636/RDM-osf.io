@@ -320,16 +320,12 @@ def cancel_celery_task(node):
     result = {
         'success': False,
     }
-    try:
-        timestamp_task = TimestampTask.objects.filter(node=node).first()
-        if timestamp_task is not None:
-            task = AbortableAsyncResult(timestamp_task.task_id)
-            if not task.ready():
-                task.abort()
-                result['success'] = True
-    except Exception as err:
-        logger.exception(err)
-
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AbortableAsyncResult(timestamp_task.task_id)
+        if not task.ready():
+            task.abort()
+            result['success'] = True
     return result
 
 def add_token(uid, node, data):
