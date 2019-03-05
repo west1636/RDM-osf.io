@@ -5176,29 +5176,44 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file3.status_3' not in res
         assert 's3_test_file1.status_3' in res
 
+    @mock.patch('website.util.timestamp.check_file_timestamp')
+    @mock.patch('website.util.timestamp.get_full_list')
     @mock.patch('celery.contrib.abortable.AbortableTask.is_aborted')
     @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_get_timestamp_error_data(self, mock_get, mock_shutil, mock_aborted):
+    def test_verify_timestamp_token(self, mock_get, mock_shutil, mock_aborted, mock_getfulllist, mock_checkfilets):
         mock_get.return_value.content = ''
         mock_aborted.return_value = False
+        mock_getfulllist.return_value = [
+            {
+                'provider': 'osfstorage',
+                'provider_file_list': [
+                    { 'file_name': 'file1.txt' },
+                    { 'file_name': 'file2.txt' },
+                    { 'file_name': 'file3.txt' },
+                ]
+            },
+            {
+                'provider': 'github',
+                'provider_file_list': [
+                    { 'file_name': 'file1.txt' },
+                ]
+            },
+        ]
 
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
         api_url_get_timestamp_error_data = self.project.url + 'timestamp/json/'
         res = self.app.post_json(
             api_url_get_timestamp_error_data,
-            [{
-                'provider': file_node.provider,
-                'file_id': file_node._id,
-                'file_path': '/' + file_node.name,
-                'file_name': file_node.name,
-                'version': file_node.current_version_number
-            }],
+            {},
             content_type='application/json',
             auth=self.user.auth
         )
         self.project.reload()
         assert_equal(res.status_code, 200)
+
+        assert_equal(mock_getfulllist.call_count, 1)
+        assert_equal(mock_checkfilets.call_count, 4)  # 4 files, 3 on osfstorage and 1 on github
 
 
 class TestAddonFileViewTimestampFunc(OsfTestCase):
