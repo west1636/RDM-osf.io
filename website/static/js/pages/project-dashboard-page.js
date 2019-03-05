@@ -377,3 +377,35 @@ $(document).ready(function () {
         });
     }
 });
+
+
+window.get_array_of_widgets_position = function get_array_of_widgets_position(){
+    var an_array = []
+    var counter = 0;
+    $('#sortable1 li').each(function() {
+         var temp_dict = {
+            UL_ID: 1,
+            Widget_ID: $(this).attr('id'),
+            Widget_Position: ++counter
+         }
+     an_array.push(temp_dict)
+    });
+    counter = 0;
+    $('#sortable2 li').each(function() {
+        var temp_dict = {
+           UL_ID: 2,
+           Widget_ID: $(this).attr('id'),
+           Widget_Position: ++counter
+        }
+    an_array.push(temp_dict)
+    });
+    return an_array;
+}
+
+
+$( function() {
+ $( "#sortable1, #sortable2" ).sortable({
+      connectWith: ".connectedSortable"
+   }).disableSelection();
+});
+
