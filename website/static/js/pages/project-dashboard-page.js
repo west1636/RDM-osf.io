@@ -377,3 +377,15 @@ $(document).ready(function () {
         });
     }
 });
+
+var add_layout = function (param,layout_data) {
+
+$.ajax({
+        type:param.method,
+        url:param.url,
+        data:JSON.stringify(layout_data),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json'
+
+    });
+};
