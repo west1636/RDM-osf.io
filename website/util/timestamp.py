@@ -19,8 +19,6 @@ import pytz
 from api.base import settings as api_settings
 from api.base.utils import waterbutler_api_url_for
 from celery.contrib.abortable import AbortableTask, AbortableAsyncResult
-from celery.exceptions import SoftTimeLimitExceeded
-from celery.result import AsyncResult
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
@@ -30,15 +28,10 @@ from website import util
 from website import settings
 from website.util import waterbutler
 
-
 from django.contrib.contenttypes.models import ContentType
 import uuid
 from framework.celery_tasks import app as celery_app
 
-
-from celery.result import AsyncResult
-from celery.exceptions import SoftTimeLimitExceeded
-from framework.celery_tasks import app as celery_app
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +59,7 @@ def get_async_task_data(node):
     }
     timestamp_task = TimestampTask.objects.filter(node=node).first()
     if timestamp_task is not None:
-        task = AsyncResult(timestamp_task.task_id)
+        task = AbortableAsyncResult(timestamp_task.task_id)
         task_data['ready'] = task.ready()
         task_data['requester'] = timestamp_task.requester.username
     return task_data
