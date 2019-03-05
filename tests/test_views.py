@@ -5128,12 +5128,16 @@ class TestTimestampView(OsfTestCase):
         assert 'class="creator_name" value="Freddie Mercury' in res
         assert 'class="creator_email" value="freddiemercury' in res
 
+    @mock.patch('celery.contrib.abortable.AbortableAsyncResult.ready')
+    @mock.patch('celery.contrib.abortable.AbortableTask.is_aborted')
     @mock.patch('website.project.views.node.find_bookmark_collection')
     @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_add_timestamp_token(self, mock_get, mock_shutil, mock_collection):
+    def test_add_timestamp_token(self, mock_get, mock_shutil, mock_collection, mock_aborted, mock_ready):
         mock_get.return_value.content = ''
         mock_get.return_value.status_code = 200
+        mock_aborted.return_value = False
+        mock_ready.return_value = True
 
         url_timestamp = self.project.url + 'timestamp/'
         res = self.app.get(url_timestamp, auth=self.user.auth)
@@ -5172,22 +5176,24 @@ class TestTimestampView(OsfTestCase):
         assert 'osfstorage_test_file3.status_3' not in res
         assert 's3_test_file1.status_3' in res
 
+    @mock.patch('celery.contrib.abortable.AbortableTask.is_aborted')
     @mock.patch('website.util.waterbutler.shutil')
     @mock.patch('requests.get')
-    def test_get_timestamp_error_data(self, mock_get, mock_shutil):
+    def test_get_timestamp_error_data(self, mock_get, mock_shutil, mock_aborted):
         mock_get.return_value.content = ''
+        mock_aborted.return_value = False
 
         file_node = create_test_file(node=self.node, user=self.user, filename='test_get_timestamp_error_data')
-        api_url_get_timestamp_error_data = self.project.api_url + 'timestamp/timestamp_error_data/'
+        api_url_get_timestamp_error_data = self.project.url + 'timestamp/json/'
         res = self.app.post_json(
             api_url_get_timestamp_error_data,
-            {
-                'provider': [file_node.provider],
-                'file_id': [file_node._id],
-                'file_path': ['/' + file_node.name],
-                'file_name': [file_node.name],
-                'version': [file_node.current_version_number]
-            },
+            [{
+                'provider': file_node.provider,
+                'file_id': file_node._id,
+                'file_path': '/' + file_node.name,
+                'file_name': file_node.name,
+                'version': file_node.current_version_number
+            }],
             content_type='application/json',
             auth=self.user.auth
         )
