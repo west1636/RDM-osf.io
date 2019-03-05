@@ -23,14 +23,25 @@
         <i class="fa fa-times"></i>
       </button>
       <div data-bind="stopBinding: true">
+      <ul id="sortable2" class="connectedSortable" style="list-style: none;padding-left: 0px;">
       % for addon in ['sparql', 'restfulapi', 'ftp',]:
         % if displayInDrawer[addon] and addons_widget_data[addon]:
+          <li class="ui-state-default" id="li_${addon}">
           ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+          </li>
         % endif
       % endfor
+      </ul>
       </div>
     </div>
   </div>
   % endif
 
 </div>
+<script>
+  $( function() {
+    $( "#sortable1, #sortable2" ).sortable({
+      connectWith: ".connectedSortable"
+    }).disableSelection();
+  } );
+</script>

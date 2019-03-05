@@ -438,6 +438,11 @@
 
 
         </div>
+        <div> 
+            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 20px; border: 1px solid #eee;">
+             <!--             <li class="ui-state-default">Item 1</li> -->
+            </ul>
+        </div>
 
         % if addons:
             <!-- Show widgets in left column if present -->
