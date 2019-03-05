@@ -28,7 +28,7 @@ $(function () {
         }
         timestampCommon.add({
             url: nodeApiUrl + 'timestamp/add_timestamp/',
-            method: 'GET'
+            method: 'POST'
         });
     });
 

@@ -9,8 +9,9 @@ from website.project.decorators import must_be_contributor_or_public
 from website.project.views.node import _view_project
 from website.util import timestamp
 from website import settings
-from osf.models import Guid
-
+from osf.models import (
+    Guid, TimestampTask, OSFUser
+)
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,6 @@ def get_init_timestamp_error_data_list(auth, node, **kwargs):
     """
      get timestamp error data list (OSF view)
     """
-
     ctx = _view_project(node, auth, primary=True)
     ctx.update(rubeus.collect_addon_assets(node))
     pid = kwargs.get('pid')
@@ -40,7 +40,6 @@ def get_timestamp_error_data(auth, node, **kwargs):
             data.update({key: request_data[key][0]})
     else:
         data = request.args.to_dict()
-
     return timestamp.check_file_timestamp(auth.user.id, node, data)
 
 @must_be_contributor_or_public
@@ -50,13 +49,8 @@ def add_timestamp_token(auth, node, **kwargs):
     '''
     if request.method == 'POST':
         request_data = request.json
-        data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
-    else:
-        data = request.args.to_dict()
-
-    return timestamp.add_token(auth.user.id, node, data)
+        timestamp.celery_add_timestamp_token.delay(auth.user.id, node.id, request_data)
+    return {'status': 'ok'}
 
 @must_be_contributor_or_public
 def collect_timestamp_trees_to_json(auth, node, **kwargs):
@@ -65,9 +59,14 @@ def collect_timestamp_trees_to_json(auth, node, **kwargs):
     serialized.update(rubeus.collect_addon_assets(node))
     uid = Guid.objects.get(_id=serialized['user']['id']).object_id
     pid = kwargs.get('pid')
-    return {'provider_list': timestamp.get_full_list(uid, pid, node)}
+    async_task = timestamp.celery_verify_timestamp_token.delay(uid, pid, node.id)
+    user_info = OSFUser.objects.get(id=uid)
+    TimestampTask.objects.update_or_create(
+        node=node,
+        defaults={'task_id': async_task.id, 'requester': user_info}
+    )
+    return {'status': 'OK'}
 
 @must_be_contributor_or_public
 def cancel_task(auth, node, **kwargs):
-    timestamp_task = timestamp.cancel_celery_requested_task(node)
-    return timestamp_task
+    return timestamp.cancel_celery_task(node)
