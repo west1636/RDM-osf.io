@@ -31,6 +31,12 @@ from website.util import waterbutler
 
 from django.contrib.contenttypes.models import ContentType
 import uuid
+from framework.celery_tasks import app as celery_app
+
+
+from celery.result import AsyncResult
+from celery.exceptions import SoftTimeLimitExceeded
+from framework.celery_tasks import app as celery_app
 
 logger = logging.getLogger(__name__)
 
@@ -284,6 +290,30 @@ def check_file_timestamp(uid, node, data):
         user._id, data, node._id, download_file_path, tmp_dir)
     shutil.rmtree(tmp_dir)
     return result
+
+@celery_app.task
+def celery_verify_timestamp_token(uid, pid, node_id):
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 0})
+    node = AbstractNode.objects.get(id=node_id)
+    celery_app.current_task.update_state(state="PROGRESS", meta={'progress': 50})
+    try:
+        for provider_dict in get_full_list(uid, pid, node):
+            for p_item in provider_dict['provider_file_list']:
+                p_item['provider'] = provider_dict['provider']
+                check_file_timestamp(uid, node, p_item)
+    except Exception as err:
+        logger.exception(err)
+        raise
+    celery_app.current_task.update_state(state="SUCCESS", meta={'progress': 100})
+
+@celery_app.task
+def celery_add_timestamp_token(uid, node_id, request_data):
+    '''
+    Celery Timestamptoken add method
+    '''
+    node = AbstractNode.objects.get(id=node_id)
+    for _, data in enumerate(request_data):
+        add_token(uid, node, data)
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
