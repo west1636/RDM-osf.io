@@ -78,7 +78,7 @@
             <div class="row" id="loading-row" style="${ 'display: none;' if async_task['ready'] else '' }">
                 <div class="col-xs-12">
                     <div class="spinner-loading-wrapper">
-                        <p class="m-t-sm fg-load-message" id="loading-message">Verifying files, please wait...</p>
+                        <p class="m-t-sm fg-load-message" id="loading-message">Processing, please wait...</p>
                         <div class="logo-spin logo-lg"></div>
                     </div>
                 </div>
