@@ -1379,3 +1379,17 @@ def get_pointed(auth, node, **kwargs):
         serialize_pointer(each.parent, auth)
         for each in NodeRelation.objects.filter(child=node, is_node_link=True)
     ]}
+
+def view_add_layout():
+    '''
+    save layout  method
+    '''
+    data={}
+    if request.method == 'POST':
+        request_data=request.json
+        print(request_data)
+        print("layout data to save into database")
+    else:
+        data = request.args.to_dict()
+    return { 'status':'ok'}
+
