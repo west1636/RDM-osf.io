@@ -276,7 +276,7 @@ def check_file_timestamp(uid, node, data):
         if file_data.exists() and \
                 file_data.get().inspection_result_status not in intentional_remove_status:
             file_data.update(inspection_result_status=api_settings.FILE_NOT_FOUND)
-        return False
+        return None
     if not userkey_generation_check(user._id):
         userkey_generation(user._id)
 
@@ -288,6 +288,10 @@ def check_file_timestamp(uid, node, data):
 
 @celery_app.task(bind=True, base=AbortableTask)
 def celery_verify_timestamp_token(self, uid, node_id):
+    requests_per_minute = 20
+    secs_to_wait = 60.0 / requests_per_minute
+    last_run = None
+
     celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 0})
     node = AbstractNode.objects.get(id=node_id)
     celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 50})
@@ -298,7 +302,15 @@ def celery_verify_timestamp_token(self, uid, node_id):
             if self.is_aborted():
                 break
             p_item['provider'] = provider_dict['provider']
-            check_file_timestamp(uid, node, p_item)
+            last_run = time.time()
+            result = check_file_timestamp(uid, node, p_item)
+            if result is None:
+                continue
+            # Do not let the task run too many requests
+            # An sleep would stop the celery process (and all its tasks)
+            if provider_dict['provider'] != 'osfstorage':
+                while time.time() < last_run + secs_to_wait:
+                    pass
     if self.is_aborted():
         logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
     celery_app.current_task.update_state(state='SUCCESS', meta={'progress': 100})
@@ -308,11 +320,23 @@ def celery_add_timestamp_token(self, uid, node_id, request_data):
     '''
     Celery Timestamptoken add method
     '''
+    requests_per_minute = 20
+    secs_to_wait = 60.0 / requests_per_minute
+    last_run = None
+
     node = AbstractNode.objects.get(id=node_id)
     for _, data in enumerate(request_data):
         if self.is_aborted():
             break
-        add_token(uid, node, data)
+        last_run = time.time()
+        result = add_token(uid, node, data)
+        if result is None:
+            continue
+        # Do not let the task run too many requests
+        # An sleep would stop the celery process (and all its tasks)
+        if data['provider'] != 'osfstorage':
+            while time.time() < last_run + secs_to_wait:
+                pass
     if self.is_aborted():
         logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
 
