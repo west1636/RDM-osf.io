@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import ListView, View, TemplateView
-from osf.models import Institution, Node, AbstractNode, Guid
+from osf.models import Institution, Node, AbstractNode, Guid, TimestampTask
 from website.util import timestamp
 import json
 
@@ -97,26 +97,16 @@ class TimeStampAddList(RdmPermissionMixin, TemplateView):
         ctx['async_task'] = timestamp.get_async_task_data(absNodeData)
         return ctx
 
-class VerifyTimeStampAddList(RdmPermissionMixin, View):
+class VerifyTimestamp(RdmPermissionMixin, View):
 
     def post(self, request, *args, **kwargs):
-        json_data = dict(self.request.POST.iterlists())
-        ctx = {}
-        for key in json_data.keys():
-            ctx.update({key: json_data[key]})
+        async_task = timestamp.celery_verify_timestamp_token.delay(self.request.user.id, self.kwargs['guid'])
+        TimestampTask.objects.update_or_create(
+            node=AbstractNode.objects.get(id=self.kwargs['guid']),
+            defaults={'task_id': async_task.id, 'requester': self.request.user}
+        )
 
-        guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
-        absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-
-        # Node Admin
-        admin_osfuser_list = list(absNodeData.get_admin_contributors(absNodeData.contributors))
-        source_user = self.request.user
-        self.request.user = admin_osfuser_list[0]
-        uid = self.request.user.id
-
-        # Admin User
-        self.request.user = source_user
-        ctx['provider_list'] = timestamp.get_full_list(uid, guid._id, absNodeData)
+        ctx = {'status': 'OK'}
         return HttpResponse(json.dumps(ctx), content_type='application/json')
 
 class TimestampVerifyData(RdmPermissionMixin, View):
@@ -146,21 +136,7 @@ class TimestampVerifyData(RdmPermissionMixin, View):
         self.request.user = source_user
         return HttpResponse(json.dumps(response), content_type='application/json')
 
-class AddTimeStampResultList(RdmPermissionMixin, TemplateView):
-    template_name = 'rdm_timestampadd/timestampadd.html'
-
-    def test_func(self):
-        """validate user permissions"""
-        institution_id = int(self.kwargs.get('institution_id'))
-        return self.has_auth(institution_id)
-
-    def get_context_data(self, **kwargs):
-        ctx = super(AddTimeStampResultList, self).get_context_data(**kwargs)
-        guid = Guid.objects.get(object_id=self.kwargs['guid'], content_type_id=ContentType.objects.get_for_model(AbstractNode).id)
-        ctx['provider_file_list'] = timestamp.get_error_list(guid._id)
-        return ctx
-
-class AddTimestampData(RdmPermissionMixin, View):
+class AddTimestamp(RdmPermissionMixin, View):
 
     def test_func(self):
         """validate user permissions"""
@@ -168,21 +144,15 @@ class AddTimestampData(RdmPermissionMixin, View):
         return self.has_auth(institution_id)
 
     def post(self, request, *args, **kwargs):
-        absNodeData = AbstractNode.objects.get(id=self.kwargs['guid'])
-
-        request_data = dict(self.request.POST.iterlists())
-        data = {}
-        for key in request_data.keys():
-            data.update({key: request_data[key][0]})
-
-        # Change user Node-Admin
-        admin_osfuser_list = list(absNodeData.get_admin_contributors(absNodeData.contributors))
-        self.request.user = admin_osfuser_list[0]
-
-        result = timestamp.add_token(self.request.user.id, absNodeData, data)
-
+        data = json.loads(self.request.body)
+        async_task = timestamp.celery_add_timestamp_token.delay(
+            self.request.user.id, self.kwargs['guid'], data)
+        TimestampTask.objects.update_or_create(
+            node=AbstractNode.objects.get(id=self.kwargs['guid']),
+            defaults={'task_id': async_task.id, 'requester': self.request.user}
+        )
         return HttpResponse(
-            json.dumps({'result': result}),
+            json.dumps({'status': 'OK'}),
             content_type='application/json'
         )
 
@@ -194,7 +164,8 @@ class CancelTask(RdmPermissionMixin, View):
         return self.has_auth(institution_id)
 
     def post(self, request, *args, **kwargs):
+        result = timestamp.cancel_celery_task(AbstractNode.objects.get(id=self.kwargs['guid']))
         return HttpResponse(
-            json.dumps({'result': 'ok'}),
+            json.dumps(result),
             content_type='application/json'
         )

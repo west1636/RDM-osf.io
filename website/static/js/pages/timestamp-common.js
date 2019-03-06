@@ -198,9 +198,9 @@ var add = function (param) {
     }
 
     $.ajax({
-        type:param.method,
-        url:param.url,
-        data:JSON.stringify(new_postData),
+        type: 'POST',
+        url: param.url,
+        data: JSON.stringify(new_postData),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json'
     }).done(function () {

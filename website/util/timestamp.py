@@ -324,6 +324,7 @@ def cancel_celery_task(node):
     if timestamp_task is not None:
         task = AbortableAsyncResult(timestamp_task.task_id)
         if not task.ready():
+            task.revoke()
             task.abort()
             result['success'] = True
     return result

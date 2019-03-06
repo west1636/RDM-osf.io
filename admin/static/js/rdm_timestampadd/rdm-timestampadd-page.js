@@ -42,9 +42,7 @@ $(function () {
             return false;
         }
         timestampCommon.verify({
-            urlVerify: urls.verify,
-            urlVerifyData: urls.verifyData,
-            method: 'POST'
+            urlVerify: urls.verify
         });
     };
 
@@ -54,7 +52,6 @@ $(function () {
         }
         timestampCommon.add({
             url: urls.addTimestampData,
-            method: 'POST'
         });
     };
 
