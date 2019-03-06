@@ -428,7 +428,6 @@ function m_load_function(){
 
 function restore_drawer(some_array) {
   $.each(some_array, function(index, element) {
-    debugger;
     restore_drawer_item(element.Widget_ID, element.UL_ID, element.Widget_Position)
   })
 }
@@ -451,16 +450,17 @@ $(function() {
   $.when($("#sortable1, #sortable2").sortable({
     connectWith: ".connectedSortable",
     create: function(event, ui) {
-      console.log(event)
-      console.log(ui)
     },
     stop: function(e, ui) {
-      console.log(e)
-      console.log(ui)
+      var post_data = get_array_of_widgets_position()
+      console.log(post_data)
+      add_layout({
+                   url: nodeApiUrl + 'project/layout/',
+                   method: 'POST'
+                  }, post_data);
+
     }
     }).disableSelection()).done(function() {
-       var sarray = m_load_function()
-       restore_drawer(sarray)
     })
 });
 
@@ -469,7 +469,6 @@ module.exports = {
     get_array_of_widgets_position: get_array_of_widgets_position
 };
 var add_layout = function (param,layout_data) {
-
 $.ajax({
         type:param.method,
         url:param.url,
@@ -478,4 +477,5 @@ $.ajax({
         dataType: 'json'
 
     });
+}
 
