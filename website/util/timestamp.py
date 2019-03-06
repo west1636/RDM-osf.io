@@ -288,8 +288,7 @@ def check_file_timestamp(uid, node, data):
 
 @celery_app.task(bind=True, base=AbortableTask)
 def celery_verify_timestamp_token(self, uid, node_id):
-    requests_per_minute = 20
-    secs_to_wait = 60.0 / requests_per_minute
+    secs_to_wait = 60.0 / api_settings.TS_REQUESTS_PER_MIN
     last_run = None
 
     celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 0})
@@ -320,8 +319,7 @@ def celery_add_timestamp_token(self, uid, node_id, request_data):
     '''
     Celery Timestamptoken add method
     '''
-    requests_per_minute = 20
-    secs_to_wait = 60.0 / requests_per_minute
+    secs_to_wait = 60.0 / api_settings.TS_REQUESTS_PER_MIN
     last_run = None
 
     node = AbstractNode.objects.get(id=node_id)
