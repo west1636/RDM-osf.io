@@ -379,7 +379,7 @@ $(document).ready(function () {
 });
 
 
-window.get_array_of_widgets_position = function get_array_of_widgets_position(){
+var get_array_of_widgets_position = function get_array_of_widgets_position(){
     var an_array = []
     var counter = 0;
     $('#sortable1 li').each(function() {
@@ -403,9 +403,68 @@ window.get_array_of_widgets_position = function get_array_of_widgets_position(){
 }
 
 
-$( function() {
- $( "#sortable1, #sortable2" ).sortable({
-      connectWith: ".connectedSortable"
-   }).disableSelection();
+function m_load_function(){
+ var temp_dict_spa = {
+            "UL_ID": 1,
+            Widget_ID: "li_sparql",
+            Widget_Position: 3
+         }
+ var temp_dict_rapi = {
+            "UL_ID": 1,
+            Widget_ID: "li_restfulapi",
+            Widget_Position: 1
+         }
+ var temp_dict_ftp = {
+            "UL_ID": 2,
+            Widget_ID: "li_ftp",
+            Widget_Position: 2
+         }
+ var another_array =[]
+ another_array.push(temp_dict_spa)
+ another_array.push(temp_dict_rapi)
+ another_array.push(temp_dict_ftp)
+ return another_array 
+}
+
+function restore_drawer(some_array) {
+  $.each(some_array, function(index, element) {
+    debugger;
+    restore_drawer_item(element.Widget_ID, element.UL_ID, element.Widget_Position)
+  })
+}
+
+function restore_drawer_item(item_id, ul, widget_position) {
+  var id_of_ul = "#sortable" + ul
+  if ($(id_of_ul + " li").length == 0) {
+    $(id_of_ul).append($("#" + item_id))
+  } else {
+    if ($(id_of_ul + " li")[widget_position - 1] !== undefined) {
+      $(id_of_ul + " li:eq(" + (widget_position - 1) + ")").before($("#" + item_id))
+    } else {
+      $(id_of_ul + " li:eq(" + ($(id_of_ul + " li").length - 1) + ")").after($("#" + item_id))
+    }
+  }
+}
+
+
+$(function() {
+  $.when($("#sortable1, #sortable2").sortable({
+    connectWith: ".connectedSortable",
+    create: function(event, ui) {
+      console.log(event)
+      console.log(ui)
+    },
+    stop: function(e, ui) {
+      console.log(e)
+      console.log(ui)
+    }
+    }).disableSelection()).done(function() {
+       var sarray = m_load_function()
+       restore_drawer(sarray)
+    })
 });
 
+window.get_array_of_widgets_position = get_array_of_widgets_position
+module.exports = {
+    get_array_of_widgets_position: get_array_of_widgets_position
+};
