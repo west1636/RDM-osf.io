@@ -300,8 +300,25 @@
         'ftp': True,
         #'ftp': False,
     }
+
+    try:
+        addons_enabled.remove('sparql')
+        addons_enabled.remove('restfulapi') 
+        addons_enabled.remove('ftp')
+    except Exception:
+        pass
+    try:
+        if len(dict_widget_serial['right']) == 0:
+            dict_widget_serial['right'].add('sparql')
+            dict_widget_serial['right'].add('restfulapi')
+            dict_widget_serial['right'].add('ftp')
+    except Exception:
+        pass                        
+
     for listItem in dict_widget_position:
-       displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False
+        displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False
+        addons_enabled.append(listItem['id'].replace('li_',''))
+        
 %>
 
 <%include file="include/widget_pane_template.mako" args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
@@ -454,8 +471,9 @@
                     % endif
                 % endif
             % endfor
-            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 30px; border: 1px solid #eee;">
+            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 30px;">
             % for addon in addons_enabled:
+                <% print(type(addons_enable)) %>
                 % if addons[addon]['has_widget']:
                     % if addon in dict_widget_serial['left']:
                         % if not displayInDrawer[addon]:

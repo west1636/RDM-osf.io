@@ -9,7 +9,7 @@
 
 <div class="scripted widget-pane">
 
-  % if addons_count > 0:
+  % if addons_count > -1:
   <div class="widget-handle-div widget-handle pull-right pointer visible-lg visible-md"
     data-toggle="tooltip" data-placement="bottom" title="Addons">
     <i class="fa fa-cubes fa-2x widget-handle-icon"></i>
@@ -24,7 +24,7 @@
       </button>
       <div data-bind="stopBinding: true">
       <ul id="sortable2" class="connectedSortable" style="list-style: none;padding-left: 0px;min-height: 200px;">
-      % for addon in ['sparql', 'restfulapi', 'ftp',]:
+      % for addon in dict_widget_serial['right']: #['sparql', 'restfulapi', 'ftp',]:
         % if displayInDrawer[addon] and addons_widget_data[addon]:
           <li class="ui-state-default" id="li_${addon}">
           ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
