@@ -294,7 +294,7 @@
 <%
     displayInDrawer = {
         #'sparql': True,
-        'sparql': False,
+        'sparql': True,
         'restfulapi': True,
         #'restfulapi': False,
         'ftp': True,

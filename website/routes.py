@@ -1077,7 +1077,7 @@ def make_url_map(app):
         Rule(
 
             [
-                '/project/layout/',
+                '/project/<pid>/layout/',
             ],
             ['post'],
             project_views.node.view_add_layout,

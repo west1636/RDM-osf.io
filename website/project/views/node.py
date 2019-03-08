@@ -1406,12 +1406,15 @@ def view_add_layout(auth, node, **kwargs):
         request_data = request.json
         if len(request_data) > 0:
             try:
+                #For Mock only starts
+                WidgetPosition.objects.filter(node_id_id=node.id,user_id_id=auth.user.id).delete()
+                #For Mock only ends
                 for i in range(len(request_data)):
                     ul_id = request_data[i]['UL_ID']
                     widget_id = request_data[i]['Widget_ID']
                     widget_position = request_data[i]['Widget_Position']
-                    node_id = node._id
-                    user_id = auth.user
+                    node_id = node.id
+                    user_id = auth.user.id
                     WidgetPosition.objects.create(ul_id=ul_id,
                             widget_id=widget_id,
                             widget_position=widget_position,

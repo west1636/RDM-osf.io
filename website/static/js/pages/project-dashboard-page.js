@@ -454,8 +454,9 @@ $(function() {
     stop: function(e, ui) {
       var post_data = get_array_of_widgets_position()
       console.log(post_data)
+      console.log(nodeApiUrl)
       add_layout({
-                   url: nodeApiUrl + 'project/layout/',
+                   url: nodeApiUrl + 'layout/',
                    method: 'POST'
                   }, post_data);
 

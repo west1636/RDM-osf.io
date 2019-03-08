@@ -105,7 +105,7 @@ def activity():
 
 def get_drawer_widget_position(nid,uid):
     wiz_list = []
-    for x in WidgetPosition.objects.filter(node_id=nid, user_id =uid):
+    for x in WidgetPosition.objects.filter(node_id=nid, user_id =uid).order_by('widget_position'):
         wiz_list.append(
             { 'id': x.widget_id,
               'position': x.widget_position,
@@ -115,7 +115,6 @@ def get_drawer_widget_position(nid,uid):
     return wiz_list
 
 def get_widget_drawer_order(list_of_dict):
-    print('i am hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     left_list = []
     right_list = []
     for dict_item in list_of_dict:
