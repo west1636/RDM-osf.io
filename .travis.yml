@@ -119,11 +119,6 @@ install:
     - pip uninstall uritemplate.py --yes
     - pip install uritemplate.py==0.3.0
 
-    # timestamp Key assign
-    - mkdir -p ./user_key_info
-    - cp root_cert_verifycate.pem ./user_key_info
-    - netstat -an | grep tcp.*LISTEN
-
 # Run Python tests (core and addon) and JS tests
 script:
     - export COVERAGE=`if [ $(echo "$TRAVIS_BRANCH"|grep -e "feature/") ]; then echo "--coverage"; else echo ""; fi`
