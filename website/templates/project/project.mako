@@ -293,13 +293,15 @@
 
 <%
     displayInDrawer = {
-        'sparql': True,
-        #'sparql': False,
+        #'sparql': True,
+        'sparql': False,
         'restfulapi': True,
         #'restfulapi': False,
         'ftp': True,
         #'ftp': False,
     }
+    for listItem in dict_widget_position:
+       displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False
 %>
 
 <%include file="include/widget_pane_template.mako" args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
@@ -438,28 +440,33 @@
 
 
         </div>
-        <div> 
-            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 20px; border: 1px solid #eee;">
-             <!--             <li class="ui-state-default">Item 1</li> -->
-            </ul>
-        </div>
 
         % if addons:
             <!-- Show widgets in left column if present -->
+            <%print(dict_widget_position) %>
             % for addon in addons_enabled:
+                <% print(addons[addon]['has_widget']) %>
                 % if addons[addon]['has_widget']:
                     ## We already show the wiki widget at the top
                     ## sparql, restfulapi, and ftp are handled separately thanks to the drawer
                     % if addon not in ['wiki', 'sparql', 'restfulapi', 'ftp',]:
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     % endif
-                    % if addon in ['sparql', 'restfulapi', 'ftp',]:
+                % endif
+            % endfor
+            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 30px; border: 1px solid #eee;">
+            % for addon in addons_enabled:
+                % if addons[addon]['has_widget']:
+                    % if addon in dict_widget_serial['left']:
                         % if not displayInDrawer[addon]:
+                            <li class="ui-state-default"id=li_${addon}>
                             ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+                            </li>
                         % endif
                     % endif
                 % endif
             % endfor
+            </ul>
         % else:
             <!-- If no widgets, show components -->
             ${children()}

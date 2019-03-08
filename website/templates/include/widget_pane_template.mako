@@ -23,7 +23,7 @@
         <i class="fa fa-times"></i>
       </button>
       <div data-bind="stopBinding: true">
-      <ul id="sortable2" class="connectedSortable" style="list-style: none;padding-left: 0px;">
+      <ul id="sortable2" class="connectedSortable" style="list-style: none;padding-left: 0px;min-height: 200px;">
       % for addon in ['sparql', 'restfulapi', 'ftp',]:
         % if displayInDrawer[addon] and addons_widget_data[addon]:
           <li class="ui-state-default" id="li_${addon}">

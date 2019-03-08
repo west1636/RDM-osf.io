@@ -47,6 +47,7 @@ from website import settings
 from website.views import find_bookmark_collection, validate_page_num
 from website.views import serialize_node_summary, get_storage_region_list
 from website.profile import utils
+from website.project.utils import get_drawer_widget_position, get_widget_drawer_order
 from addons.mendeley.provider import MendeleyCitationsProvider
 from addons.zotero.provider import ZoteroCitationsProvider
 from addons.wiki.utils import serialize_wiki_widget
@@ -56,6 +57,7 @@ from addons.forward.utils import serialize_forward_widget
 from addons.sparql.utils import serialize_sparql_widget
 from addons.restfulapi.utils import serialize_restfulapi_widget
 from addons.ftp.utils import serialize_ftp_widget
+from osf.models.layout_info import WidgetPosition
 
 r_strip_html = lambda collection: rapply(collection, strip_html)
 logger = logging.getLogger(__name__)
@@ -692,6 +694,7 @@ def _view_project(node, auth, primary=False,
 
     try:
         contributor = node.contributor_set.get(user=user)
+        print(get_drawer_widget_position(2,1))
     except Contributor.DoesNotExist:
         contributor = None
 
@@ -844,7 +847,9 @@ def _view_project(node, auth, primary=False,
         'node_categories': [
             {'value': key, 'display_name': value}
             for key, value in settings.NODE_CATEGORY_MAP.iteritems()
-        ]
+        ],
+        'dict_widget_position': get_drawer_widget_position(2,1),
+        'dict_widget_serial': get_widget_drawer_order(get_drawer_widget_position(2,1))
     }
 
     # Default should be at top of list for UI and for the project overview page the default region
@@ -876,6 +881,17 @@ def _view_project(node, auth, primary=False,
             for each in node.forks.exclude(type='osf.registration').exclude(is_deleted=True).order_by('-forked_date')
         ]
     return data
+
+def default(self, obj):
+        if isinstance(obj, P):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
+
+def dumper(obj):
+    try:
+        return obj.toJSON()
+    except:
+        return obj.__dict__
 
 def get_affiliated_institutions(obj):
     ret = []
@@ -1380,16 +1396,28 @@ def get_pointed(auth, node, **kwargs):
         for each in NodeRelation.objects.filter(child=node, is_node_link=True)
     ]}
 
-def view_add_layout():
+@must_be_contributor_or_public
+def view_add_layout(auth, node, **kwargs):
     '''
-    save layout  method
+    save layout method
     '''
-    data={}
+    data = {}
     if request.method == 'POST':
-        request_data=request.json
-        print(request_data)
-        print("layout data to save into database")
+        request_data = request.json
+        if len(request_data) > 0:
+            try:
+                for i in range(len(request_data)):
+                    ul_id = request_data[i]['UL_ID']
+                    widget_id = request_data[i]['Widget_ID']
+                    widget_position = request_data[i]['Widget_Position']
+                    node_id = node._id
+                    user_id = auth.user
+                    WidgetPosition.objects.create(ul_id=ul_id,
+                            widget_id=widget_id,
+                            widget_position=widget_position,
+                            node_id_id=node_id, user_id_id=user_id)
+            except ValueError:
+                raise HTTPError(http.BAD_REQUEST)
     else:
         data = request.args.to_dict()
-    return { 'status':'ok'}
-
+    return {'status': 'ok'}
