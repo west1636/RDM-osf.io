@@ -12,7 +12,7 @@ from nose.tools import *  # noqa (PEP8 asserts)
 import blinker
 
 from tests.base import OsfTestCase, DbTestCase
-from osf_tests.factories import RegistrationFactory, UserFactory, fake_email
+from osf_tests.factories import RegistrationFactory, UserFactory, fake_email, ProjectFactory
 
 from framework.auth.utils import generate_csl_given_name
 from framework.routing import Rule, json_renderer
@@ -25,6 +25,8 @@ from website.util import paths
 from website.util import web_url_for, api_url_for, is_json_request, conjunct, api_v2_url
 from website.project import utils as project_utils
 from website.profile import utils as profile_utils
+from osf.models.layout_info import WidgetPosition
+from django.core.urlresolvers import reverse
 
 try:
     import magic  # noqa
@@ -453,3 +455,33 @@ class TestUserFactoryConflict:
         user_one_create = UserFactory()
         user_two_create = UserFactory()
         assert user_one_create.username != user_two_create.username
+
+
+# model test
+@pytest.mark.django_db
+class Test_WidgetPosition(OsfTestCase):
+
+    def create_layout_info(self):
+ 	self.user = UserFactory()
+   	self.node = ProjectFactory(creator = self.user )
+        WidgetPosition.objects.create(
+				ul_id = 1,
+                                widget_id = "li_sparql",
+                                widget_position = 1,
+                                node_id_id = self.node.id,
+                                user_id_id = self.user.id)
+
+    def test_layout_creation(self):
+        w = self.create_layout_info()
+        self.assertFalse(isinstance(w, WidgetPosition))
+
+
+    # views test
+
+    def test_view_add_layout(self):
+        w = self.create_layout_info()
+        full_url = api_v2_url('layout/',
+                              base_route='http://localhost:8000/',
+                              base_prefix='v1/')
+        self.assertEqual(full_url, 'http://localhost:8000/v1/layout/')
+
