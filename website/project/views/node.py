@@ -694,7 +694,6 @@ def _view_project(node, auth, primary=False,
 
     try:
         contributor = node.contributor_set.get(user=user)
-        print(get_drawer_widget_position(2,1))
     except Contributor.DoesNotExist:
         contributor = None
 

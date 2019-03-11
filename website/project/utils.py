@@ -126,6 +126,5 @@ def get_widget_drawer_order(list_of_dict):
         'left': left_list,
         'right': right_list
     }
-    print(final_order_dict)
     return final_order_dict
 
