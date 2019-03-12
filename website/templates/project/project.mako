@@ -300,25 +300,29 @@
         'ftp': True,
         #'ftp': False,
     }
-
+    
     try:
-        addons_enabled.remove('sparql')
-        addons_enabled.remove('restfulapi') 
-        addons_enabled.remove('ftp')
-    except Exception:
-        pass
-    try:
-        if len(dict_widget_serial['right']) == 0:
-            dict_widget_serial['right'].add('sparql')
-            dict_widget_serial['right'].add('restfulapi')
-            dict_widget_serial['right'].add('ftp')
-    except Exception:
+        temp_data_holder = []
+        if 'sparql' in addons_enabled:
+            temp_data_holder.append('sparql') 
+            addons_enabled.remove('sparql')
+        if 'restfulapi' in addons_enabled:
+            temp_data_holder.append('restfulapi')
+            addons_enabled.remove('restfulapi')
+        if 'ftp' in addons_enabled:
+            temp_data_holder.append('ftp')
+            addons_enabled.remove('ftp')
+    except Exception as e:
         pass                        
 
     for listItem in dict_widget_position:
         displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False
         addons_enabled.append(listItem['id'].replace('li_',''))
-        
+    for restore_item in temp_data_holder:
+        if restore_item not in addons_enabled:
+            addons_enabled.append(restore_item)
+        if restore_item not in dict_widget_serial['right'] and restore_item not in dict_widget_serial['left']:
+            dict_widget_serial['right'].append(restore_item)
 %>
 
 <%include file="include/widget_pane_template.mako" args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
