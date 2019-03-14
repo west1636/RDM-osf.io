@@ -1,3 +1,4 @@
+{% load institutions_extras %}
 {% include "util/pagination.html" with items=page status=status %}
 {% if form_action %}
 <form action={{form_action}} method="POST">
@@ -18,9 +19,28 @@
                 </script>
             </th>
             {% endif %}
-            <th>GUID</th>
-            <th>Username</th>
-            <th>Fullname</th>
+            <th>GUID
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.id  page=page.number %}"
+                   class="caret"></a>
+                <span class="dropup">
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.n_id page=page.number %}"
+                   class="caret"></a>
+            </th>
+            <th>Username
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.username  page=page.number %}"
+                   class="caret"></a>
+                <span class="dropup">
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.n_username page=page.number %}"
+                   class="caret"></a>
+            </th>
+            <th>Fullname
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.fullname  page=page.number %}"
+                   class="caret"></a>
+                <span class="dropup">
+                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.n_fullname page=page.number %}"
+                   class="caret"></a>
+                </span>
+            </th>
             <th>Ratio to quota</th>
             <th>Usage</th>
             <th>Limit value</th>

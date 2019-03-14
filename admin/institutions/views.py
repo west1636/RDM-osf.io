@@ -211,13 +211,33 @@ class CannotDeleteInstitution(TemplateView):
         context['institution'] = Institution.objects.get(id=self.kwargs['institution_id'])
         return context
 
-class UserListByInstitutionID(PermissionRequiredMixin, ListView):
+SORT_BY = {
+    'fullname': 'fullname',
+    'n_fullname': '-fullname',
+    'username': 'username',
+    'n_username': '-username',
+    'id': '_id',
+    'n_id':'-_id'
+}
+
+class UserListByInstitutionIDSort(PermissionRequiredMixin, ListView):
     template_name = 'institutions/list_institute.html'
     permission_required = 'osf.view_osfuser'
     raise_exception = True
     paginate_by = 10
+#    import pprint
+#    pp = pprint.PrettyPrinter(indent=4)
     def get_user_list_institute_id(self):
-        user_query_set = OSFUser.objects.filter(affiliated_institutions=self.kwargs['institution_id'])
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(self.kwargs)
+        pp.pprint(self.request.GET)
+        pp.pprint(self.request.GET.get('status', 'all'))
+        if 'institution_id'in self.kwargs:
+            self.institution_id = self.kwargs['institution_id']
+        else:
+            self.institution_id = self.request.GET.get('institution_id','0') 
+        user_query_set = OSFUser.objects.filter(affiliated_institutions=self.institution_id) #.order_by(self.get_ordering())
         dict_of_list = []
         for user in user_query_set:
             usage = quota.used_quota(user.guids.first()._id)
@@ -237,9 +257,85 @@ class UserListByInstitutionID(PermissionRequiredMixin, ListView):
         return self.get_user_list_institute_id()
 
     def get_context_data(self, **kwargs):
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(kwargs)
+        pp.pprint(self.request.GET)
+        pp.pprint(self.request.GET.get('status', 'all'))
         self.users = self.get_queryset()
         kwargs['users']= self.users
         self.page_size = self.get_paginate_by(self.users)
         self.paginator, self.page, self.query_set, self.is_paginated = self.paginate_queryset(self.users, self.page_size)
         kwargs['page'] = self.page
         return super(UserListByInstitutionID, self).get_context_data(**kwargs)
+
+#    def get_ordering(self):
+#        return self.request.GET.get('order_by', self.ordering)
+
+class UserListByInstitutionID(PermissionRequiredMixin, ListView):
+    template_name = 'institutions/list_institute.html'
+    permission_required = 'osf.view_osfuser'
+    raise_exception = True
+    paginate_by = 10
+    ordering = 'fullname'
+    context_object_name = 'users'
+#    import pprint
+#    pp = pprint.PrettyPrinter(indent=4)
+    def get_user_list_institute_id(self):
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(self.kwargs)
+        pp.pprint(self.request.GET)
+        pp.pprint(self.request.GET.get('status', 'all'))
+        if 'institution_id'in self.kwargs:
+            self.institution_id = self.kwargs['institution_id']
+        else:
+            self.institution_id = self.request.GET.get('institution_id','0')
+        user_query_set = OSFUser.objects.filter(affiliated_institutions=self.institution_id).order_by(self.get_ordering())
+        dict_of_list = []
+        for user in user_query_set:
+            usage = quota.used_quota(user.guids.first()._id)
+            limit_value = quota.get_max_limit_temp(user.guids.first()._id)
+            ratio_to_quota = quota.get_ratio_to_quota_temp(usage, limit_value)
+            dict_of_list.append({
+                'id': user.guids.first()._id,
+                'name': user.fullname,
+                'username': user.username,
+                'ratio_to_quota': ratio_to_quota,
+                'usage': str(usage)+ ' MB',
+                'limit_value': str(limit_value/1000)+ ' GB'
+        })
+        return dict_of_list
+
+    def get_queryset(self):
+        return self.get_user_list_institute_id()
+
+    def get_context_data(self, **kwargs):
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(kwargs)
+        pp.pprint(self.request.GET)
+        pp.pprint(self.request.GET.get('status', 'all'))
+        self.users = self.get_queryset()
+        kwargs['users']= self.users
+        self.page_size = self.get_paginate_by(self.users)
+        self.paginator, self.page, self.query_set, self.is_paginated = self.paginate_queryset(self.users, self.page_size)
+        kwargs['page'] = self.page
+        self.y = {
+            'users': self.users,
+            'page': self.page,
+            'p': self.get_paginate_by(self.users),
+            'SORT_BY': SORT_BY,
+            'order': self.get_ordering(),
+            'status': self.request.GET.get('status', 'all'),
+        }
+        kwargs['p'] =self.y['p']
+        kwargs['SORT_BY'] =self.y['SORT_BY']
+        kwargs['order'] =self.y['order']
+        kwargs['institution_id'] = self.institution_id
+        print('i am printing y..............................')
+        pp.pprint(self.y)
+        return super(UserListByInstitutionID, self).get_context_data(**kwargs)
+
+    def get_ordering(self):
+        return self.request.GET.get('order_by', self.ordering)
