@@ -465,7 +465,7 @@
         % if addons:
             <!-- Show widgets in left column if present -->
             % for addon in addons_enabled:
-                % if addons[addon]['has_widget']:
+                % if addon in addons and addons[addon]['has_widget']:
                     ## We already show the wiki widget at the top
                     ## sparql, restfulapi, and ftp are handled separately thanks to the drawer
                     % if addon not in ['wiki', 'sparql', 'restfulapi', 'ftp',]:
@@ -475,7 +475,7 @@
             % endfor
             <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 30px;">
             % for addon in addons_enabled:
-                % if addons[addon]['has_widget']:
+                % if addon in addons and addons[addon]['has_widget']:
                     % if addon in dict_widget_serial['left']:
                         % if not displayInDrawer[addon]:
                             <li class="ui-state-default"id=li_${addon}>
