@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""OSF mailing utilities.
+"""GakuNin RDM mailing utilities.
 
 Email templates go in website/templates/emails
 Templates must end in ``.txt.mako`` for plaintext emails or``.html.mako`` for html emails.
@@ -176,14 +176,14 @@ EXTERNAL_LOGIN_LINK_SUCCESS = Mail(
     subject='GakuNin RDM Account Verification Success'
 )
 
-# Sign up confirmation emails for OSF, native campaigns and branded campaigns
+# Sign up confirmation emails for GakuNin RDM, native campaigns and branded campaigns
 INITIAL_CONFIRM_EMAIL = Mail(
     'initial_confirm',
     subject='GakuNin RDM Account Verification'
 )
 CONFIRM_EMAIL = Mail(
     'confirm',
-    subject='Add a new email to your OSF account'
+    subject='Add a new email to your GakuNin RDM account'
 )
 CONFIRM_EMAIL_PREREG = Mail(
     'confirm_prereg',
@@ -199,19 +199,19 @@ CONFIRM_EMAIL_PREPRINTS = lambda name, provider: Mail(
 )
 CONFIRM_EMAIL_REGISTRIES_OSF = Mail(
     'confirm_registries_osf',
-    subject='GakuNin RDM Account Verification, OSF Registries'
+    subject='GakuNin RDM Account Verification, GakuNin RDM Registries'
 )
 
 # Merge account, add or remove email confirmation emails.
 CONFIRM_MERGE = Mail('confirm_merge', subject='Confirm account merge')
-REMOVED_EMAIL = Mail('email_removed', subject='Email address removed from your OSF account')
+REMOVED_EMAIL = Mail('email_removed', subject='Email address removed from your GakuNin RDM account')
 PRIMARY_EMAIL_CHANGED = Mail('primary_email_changed', subject='Primary email changed')
 
 
 # Contributor added confirmation emails
 INVITE_DEFAULT = Mail(
     'invite_default',
-    subject='You have been added as a contributor to an OSF project.'
+    subject='You have been added as a contributor to an GakuNin RDM project.'
 )
 INVITE_PREPRINT = lambda template, provider: Mail(
     'invite_preprints_{}'.format(template),
@@ -219,7 +219,7 @@ INVITE_PREPRINT = lambda template, provider: Mail(
 )
 CONTRIBUTOR_ADDED_DEFAULT = Mail(
     'contributor_added_default',
-    subject='You have been added as a contributor to an OSF project.'
+    subject='You have been added as a contributor to an GakuNin RDM project.'
 )
 CONTRIBUTOR_ADDED_PREPRINT = lambda template, provider: Mail(
     'contributor_added_preprints_{}'.format(template),
@@ -227,11 +227,11 @@ CONTRIBUTOR_ADDED_PREPRINT = lambda template, provider: Mail(
 )
 CONTRIBUTOR_ADDED_PREPRINT_NODE_FROM_OSF = Mail(
     'contributor_added_preprint_node_from_osf',
-    subject='You have been added as a contributor to an OSF project.'
+    subject='You have been added as a contributor to an GakuNin RDM project.'
 )
 PREPRINT_CONFIRMATION_DEFAULT = Mail(
     'preprint_confirmation_default',
-    subject="You've shared a preprint on OSF preprints"
+    subject="You've shared a preprint on GakuNin RDM preprints"
 )
 PREPRINT_CONFIRMATION_BRANDED = lambda provider: Mail(
     'preprint_confirmation_branded',
@@ -244,14 +244,14 @@ FORWARD_INVITE = Mail('forward_invite', subject='Please forward to ${fullname}')
 FORWARD_INVITE_REGISTERED = Mail('forward_invite_registered', subject='Please forward to ${fullname}')
 
 FORGOT_PASSWORD = Mail('forgot_password', subject='Reset Password')
-PASSWORD_RESET = Mail('password_reset', subject='Your OSF password has been reset')
+PASSWORD_RESET = Mail('password_reset', subject='Your GakuNin RDM password has been reset')
 PENDING_VERIFICATION = Mail('pending_invite', subject='Your account is almost ready!')
 PENDING_VERIFICATION_REGISTERED = Mail('pending_registered', subject='Received request to be a contributor')
 
-REQUEST_EXPORT = Mail('support_request', subject='[via OSF] Export Request')
-REQUEST_DEACTIVATION = Mail('support_request', subject='[via OSF] Deactivation Request')
+REQUEST_EXPORT = Mail('support_request', subject='[via GakuNin RDM] Export Request')
+REQUEST_DEACTIVATION = Mail('support_request', subject='[via GakuNin RDM] Deactivation Request')
 
-SPAM_USER_BANNED = Mail('spam_user_banned', subject='[OSF] Account flagged as spam')
+SPAM_USER_BANNED = Mail('spam_user_banned', subject='[GakuNin RDM] Account flagged as spam')
 
 CONFERENCE_SUBMITTED = Mail(
     'conference_submitted',
@@ -267,11 +267,11 @@ CONFERENCE_FAILED = Mail(
 )
 
 DIGEST = Mail(
-    'digest', subject='OSF Notifications',
+    'digest', subject='GakuNin RDM Notifications',
     categories=['notifications', 'notifications-digest']
 )
 TRANSACTIONAL = Mail(
-    'transactional', subject='OSF: ${subject}',
+    'transactional', subject='GakuNin RDM: ${subject}',
     categories=['notifications', 'notifications-transactional']
 )
 
