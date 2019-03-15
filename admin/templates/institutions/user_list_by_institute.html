@@ -41,13 +41,13 @@
                    class="caret"></a>
                 </span>
             </th>
-            <th>Ratio to quota</th>
-            <th>Usage</th>
-            <th>Limit value</th>
+            <th>Ratio to quota(&#37;)</th>
+            <th>Usage(Bytes)</th>
+            <th>Limit value(Bytes)</th>
         </tr>
     </thead>
     <tbody>
-        {% for user in users %}
+        {% for user in users_for_page %}
         <tr>
             {% if form_action %}
             <td>
