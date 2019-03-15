@@ -93,7 +93,7 @@ class ShibLoginView(RedirectView):
                 eppn_user.affiliated_institutions.remove(others)
 
             eppn_user.affiliated_institutions.add(institution)
-            if 'GakuninRDMAdmin' in request.environ['HTTP_AUTH_ENTITLEMENT']:
+            if 'GakuNinRDMAdmin' in request.environ['HTTP_AUTH_ENTITLEMENT']:
                 # login success
                 # code is below this if/else tree
                 eppn_user.is_staff = True
@@ -108,7 +108,7 @@ class ShibLoginView(RedirectView):
                 messages.error(self.request, message)
                 return redirect('auth:login')
         else:
-            if 'GakuninRDMAdmin' not in request.environ['HTTP_AUTH_ENTITLEMENT']:
+            if 'GakuNinRDMAdmin' not in request.environ['HTTP_AUTH_ENTITLEMENT']:
                 message = 'login failed: no user with matching eppn'
                 messages.error(self.request, message)
                 return redirect('auth:login')
