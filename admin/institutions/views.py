@@ -212,14 +212,19 @@ class CannotDeleteInstitution(TemplateView):
         return context
 
 class UserListByInstitutionID(PermissionRequiredMixin, ListView):
+
     template_name = 'institutions/list_institute.html'
-    permission_required = 'osf.view_osfuser'
+    permission_required = 'osf.view_institution'
     raise_exception = True
+    ordering = 'username'
+    model = OSFUser
     paginate_by = 10
-    def get_user_list_institute_id(self):
-        user_query_set = OSFUser.objects.filter(affiliated_institutions=self.kwargs['institution_id'])
+
+    def get_queryset(self):
+
+        query_set = OSFUser.objects.filter(affiliated_institutions=self.kwargs['institution_id'])
         dict_of_list = []
-        for user in user_query_set:
+        for user in query_set:
             usage = quota.used_quota(user.guids.first()._id)
             limit_value = quota.get_max_limit_temp(user.guids.first()._id)
             ratio_to_quota = quota.get_ratio_to_quota_temp(usage, limit_value)
@@ -233,13 +238,16 @@ class UserListByInstitutionID(PermissionRequiredMixin, ListView):
         })
         return dict_of_list
 
-    def get_queryset(self):
-        return self.get_user_list_institute_id()
 
     def get_context_data(self, **kwargs):
+
         self.users = self.get_queryset()
-        kwargs['users']= self.users
-        self.page_size = self.get_paginate_by(self.users)
-        self.paginator, self.page, self.query_set, self.is_paginated = self.paginate_queryset(self.users, self.page_size)
-        kwargs['page'] = self.page
+        query_set = kwargs.pop('object_list', self.object_list)
+        page_size = self.get_paginate_by(query_set)
+        paginator, page, query_set, is_paginated = self.paginate_queryset(query_set, page_size)
+        kwargs.setdefault('institutions', query_set)
+        kwargs.setdefault('page', page)
+        kwargs['users']=query_set
+        page_size = self.get_paginate_by(self.users)
+        kwargs['page'] = page
         return super(UserListByInstitutionID, self).get_context_data(**kwargs)
