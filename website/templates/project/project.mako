@@ -300,11 +300,10 @@
         'ftp': True,
         #'ftp': False,
     }
-    
     try:
         temp_data_holder = []
         if 'sparql' in addons_enabled:
-            temp_data_holder.append('sparql') 
+            temp_data_holder.append('sparql')
             addons_enabled.remove('sparql')
         if 'restfulapi' in addons_enabled:
             temp_data_holder.append('restfulapi')
@@ -313,7 +312,7 @@
             temp_data_holder.append('ftp')
             addons_enabled.remove('ftp')
     except Exception as e:
-        pass                        
+        pass
 
     for listItem in dict_widget_position:
         displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False

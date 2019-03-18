@@ -847,9 +847,16 @@ def _view_project(node, auth, primary=False,
             {'value': key, 'display_name': value}
             for key, value in settings.NODE_CATEGORY_MAP.iteritems()
         ],
-        'dict_widget_position': get_drawer_widget_position(node.id,auth.user.id),
-        'dict_widget_serial': get_widget_drawer_order(get_drawer_widget_position(node.id,auth.user.id))
+        'dict_widget_position': [],
+        'dict_widget_serial': {'left': [], 'right': []}
     }
+
+    if user is not None:
+        if hasattr(user, 'id'):
+            if user.id is not None:
+                data['dict_widget_position']= get_drawer_widget_position(node.id,user.id)
+                data['dict_widget_serial']= get_widget_drawer_order(get_drawer_widget_position(node.id,user.id))
+
 
     # Default should be at top of list for UI and for the project overview page the default region
     # for a component is that of the it's parent node.
