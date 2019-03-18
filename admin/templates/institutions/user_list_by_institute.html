@@ -20,11 +20,6 @@
             </th>
             {% endif %}
             <th>GUID
-                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.id  page=page.number %}"
-                   class="caret"></a>
-                <span class="dropup">
-                <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.n_id page=page.number %}"
-                   class="caret"></a>
             </th>
             <th>Username
                 <a href="{% reverse_list institution_id=institution_id p=p order_by=SORT_BY.username  page=page.number %}"
