@@ -1,13 +1,15 @@
+.widget-pane,
 .comment-pane {
     position: fixed;
     z-index: 999; /* Note: Must be lower than Bootstrap modals, BlockUI */
     width: 0;
-    top: 47px!important;
+    top: 95px!important;
     right: 0;
     height: 100%;
 }
 
 @media (max-width: 767px) {
+    .widget-pane,
     .comment-pane {
         top: 99px!important;
     }
@@ -42,23 +44,31 @@
     padding-right: 5px;
 }
 
+.widget-handle-div,
 .cp-handle-div {
     /* Handle starts under Bootstrap header */
-    width: 100px;
+    width: 80px;
     height: 48px;
     margin-left: -50px;
+    margin-top: -48px;
     text-align: center;
     border-bottom-left-radius: 15px;
     padding-top: 10px;
 }
 
-.comment-handle-icon {
+.widget-handle-div {
+    margin-right: 80px;
+}
+
+.comment-handle-icon,
+.widget-handle-icon {
     padding-top: 2px;
     color: #428bca;
     cursor: pointer;
     position: relative;
 }
 
+.widget-bar,
 .cp-bar {
     width: 1px;  /* Note: Should be the same as .cp-sidebar:margin-left */
     top: 88px;
@@ -68,6 +78,7 @@
     cursor: ew-resize;
 }
 
+.widget-sidebar,
 .cp-sidebar {
     height: 95%;
     margin-left: 1px;  /* Note: Should be the same as .cp-bar:width */
@@ -81,6 +92,7 @@
 * Note: Separate class needed because padding does not get applied to overflow elements in firefox:
 * http://stackoverflow.com/questions/13471910/css-applying-padding-to-box-with-scroll-bottom-padding-doesnt-work
 */
+.widget-sidebar-content,
 .cp-sidebar-content {
     padding-bottom: 70px!important;
 }
@@ -139,3 +151,4 @@
 .atwho-input[placeholder]:empty:focus:before {
     content: "";
 }
+

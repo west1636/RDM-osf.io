@@ -293,6 +293,42 @@
 
 <%include file="project/modal_add_pointer.mako"/>
 
+<%
+    displayInDrawer = {
+        #'sparql': True,
+        'sparql': True,
+        'restfulapi': True,
+        #'restfulapi': False,
+        'ftp': True,
+        #'ftp': False,
+    }
+    try:
+        temp_data_holder = []
+        if 'sparql' in addons_enabled:
+            temp_data_holder.append('sparql')
+            addons_enabled.remove('sparql')
+        if 'restfulapi' in addons_enabled:
+            temp_data_holder.append('restfulapi')
+            addons_enabled.remove('restfulapi')
+        if 'ftp' in addons_enabled:
+            temp_data_holder.append('ftp')
+            addons_enabled.remove('ftp')
+    except Exception as e:
+        pass
+
+    for listItem in dict_widget_position:
+        displayInDrawer[listItem['id'].replace('li_','')] = True if listItem['ul_id']==2 else False
+        addons_enabled.append(listItem['id'].replace('li_',''))
+    for restore_item in temp_data_holder:
+        if restore_item not in addons_enabled:
+            addons_enabled.append(restore_item)
+        if restore_item not in dict_widget_serial['right'] and restore_item not in dict_widget_serial['left']:
+            dict_widget_serial['right'].append(restore_item)
+%>
+
+<%include file="include/widget_pane_template.mako" args="displayInDrawer=displayInDrawer, render_addon_widget=render_addon_widget, addons_widget_data=addons_widget_data"/>
+
+
 % if (user['can_comment'] or node['has_comments']) and not node['anonymous']:
     <%include file="include/comment_pane_template.mako"/>
 % endif
@@ -430,12 +466,27 @@
         % if addons:
             <!-- Show widgets in left column if present -->
             % for addon in addons_enabled:
-                % if addons[addon]['has_widget']:
-                    %if addon != 'wiki': ## We already show the wiki widget at the top
+                % if addon in addons and addons[addon]['has_widget']:
+                    ## We already show the wiki widget at the top
+                    ## sparql, restfulapi, and ftp are handled separately thanks to the drawer
+                    % if addon not in ['wiki', 'sparql', 'restfulapi', 'ftp',]:
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
-                    %endif
+                    % endif
                 % endif
             % endfor
+            <ul id="sortable1" class="connectedSortable" style="list-style: none;padding-left: 0px; min-height: 30px;">
+            % for addon in addons_enabled:
+                % if addon in addons and addons[addon]['has_widget']:
+                    % if addon in dict_widget_serial['left']:
+                        % if not displayInDrawer[addon]:
+                            <li class="ui-state-default"id=li_${addon}>
+                            ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+                            </li>
+                        % endif
+                    % endif
+                % endif
+            % endfor
+            </ul>
         % else:
             <!-- If no widgets, show components -->
             ${children()}

@@ -12,7 +12,7 @@ from nose.tools import *  # noqa (PEP8 asserts)
 import blinker
 
 from tests.base import OsfTestCase, DbTestCase
-from osf_tests.factories import RegistrationFactory, UserFactory, fake_email
+from osf_tests.factories import RegistrationFactory, UserFactory, fake_email, ProjectFactory
 
 from framework.auth.utils import generate_csl_given_name
 from framework.routing import Rule, json_renderer
@@ -25,6 +25,7 @@ from website.util import paths
 from website.util import web_url_for, api_url_for, is_json_request, conjunct, api_v2_url
 from website.project import utils as project_utils
 from website.profile import utils as profile_utils
+from osf.models.layout_info import WidgetPosition
 
 try:
     import magic  # noqa
@@ -372,6 +373,38 @@ class TestProjectUtils(OsfTestCase):
         regs = [r for r in project_utils.recent_public_registrations(7)]
         assert_equal(len(regs), 7)
 
+    def drawerWidgetSetUP(self):
+        self.user = UserFactory()
+        self.node = ProjectFactory(creator=self.user)
+        self.temp_data = WidgetPosition(node_id_id=self.node.id, user_id_id=self.user.id, ul_id=1, widget_id='li_ftp', widget_position=1)
+        self.wiz_list = []
+        self.wiz_list.append(
+            { 'id': self.temp_data.widget_id,
+              'position': self.temp_data.widget_position,
+               'ul_id': self.temp_data.ul_id
+            }
+        )
+
+    def test_get_drawer_widget_position(self):
+       self.drawerWidgetSetUP()
+       self.temp_data.save()
+       assert_equal(project_utils.get_drawer_widget_position(self.node.id, self.user.id),self.wiz_list)
+
+    def test_get_widget_drawer_order(self):
+        self.drawerWidgetSetUP()
+        self.temp_data = WidgetPosition(node_id_id=self.node.id, user_id_id=self.user.id, ul_id=1, widget_id='ftp', widget_position=1)
+        self.temp_widgetPosition = WidgetPosition(node_id_id=self.node.id, user_id_id=self.user.id, ul_id=2, widget_id='restfulapi', widget_position=1)
+        final_order_dict = {
+            'left': [self.temp_data.widget_id],
+            'right': [self.temp_widgetPosition.widget_id]
+        }
+        self.wiz_list.append(
+            { 'id': self.temp_widgetPosition.widget_id,
+              'position': self.temp_widgetPosition.widget_position,
+               'ul_id': self.temp_widgetPosition.ul_id}
+        )
+        result = project_utils.get_widget_drawer_order(self.wiz_list)
+        assert_equal(result,final_order_dict)
 
 class TestProfileUtils(DbTestCase):
 
@@ -453,3 +486,30 @@ class TestUserFactoryConflict:
         user_one_create = UserFactory()
         user_two_create = UserFactory()
         assert user_one_create.username != user_two_create.username
+
+# model test
+@pytest.mark.django_db
+class Test_WidgetPosition(OsfTestCase):
+
+    def create_layout_info(self):
+        self.user = UserFactory()
+        self.node = ProjectFactory(creator = self.user)
+        WidgetPosition.objects.create(
+			        ul_id = 1,
+                                widget_id = "li_sparql",
+                                widget_position = 1,
+                                node_id_id = self.node.id,
+                                user_id_id = self.user.id)
+
+    def test_layout_creation(self):
+        w = self.create_layout_info()
+        self.assertFalse(isinstance(w, WidgetPosition))
+
+    # views test
+
+    def test_view_add_layout(self):
+        w = self.create_layout_info()
+        full_url = api_v2_url('layout/',
+                              base_route='http://localhost:8000/',
+                              base_prefix='v1/')
+        self.assertEqual(full_url, 'http://localhost:8000/v1/layout/')

@@ -1123,6 +1123,20 @@ def make_url_map(app):
         Rule('/institutions/<inst_id>/', 'get', institution_views.view_institution, OsfWebRenderer('institution.mako', trust=False))
     ])
 
+    #layout
+
+    process_rules(app, [
+        Rule(
+
+            [
+                '/project/<pid>/layout/',
+            ],
+            ['post'],
+            project_views.node.view_add_layout,
+            json_renderer,
+        ),
+    ], prefix='/api/v1')
+
     # Project
 
     # Web

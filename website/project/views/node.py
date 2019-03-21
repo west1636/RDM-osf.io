@@ -48,6 +48,7 @@ from website import settings
 from website.views import find_bookmark_collection, validate_page_num
 from website.views import serialize_node_summary, get_storage_region_list
 from website.profile import utils
+from website.project.utils import get_drawer_widget_position, get_widget_drawer_order
 from addons.mendeley.provider import MendeleyCitationsProvider
 from addons.zotero.provider import ZoteroCitationsProvider
 from addons.wiki.utils import serialize_wiki_widget
@@ -56,6 +57,10 @@ from addons.dataverse.utils import serialize_dataverse_widget
 from addons.forward.utils import serialize_forward_widget
 from addons.jupyterhub.utils import serialize_jupyterhub_widget
 from admin.rdm_addons.utils import validate_rdm_addons_allowed
+from addons.sparql.utils import serialize_sparql_widget
+from addons.restfulapi.utils import serialize_restfulapi_widget
+from addons.ftp.utils import serialize_ftp_widget
+from osf.models.layout_info import WidgetPosition
 
 r_strip_html = lambda collection: rapply(collection, strip_html)
 logger = logging.getLogger(__name__)
@@ -500,7 +505,10 @@ def view_project(auth, node, **kwargs):
         'zotero': None,
         'forward': None,
         'dataverse': None,
-        'jupyterhub': None
+        'jupyterhub': None,
+        'sparql': None,
+        'restfulapi': None,
+        'ftp': None
     }
 
     if 'wiki' in ret['addons']:
@@ -524,6 +532,15 @@ def view_project(auth, node, **kwargs):
 
     if 'jupyterhub' in ret['addons']:
         addons_widget_data['jupyterhub'] = serialize_jupyterhub_widget(node)
+
+    if 'sparql' in ret['addons']:
+        addons_widget_data['sparql'] = serialize_sparql_widget(node)
+
+    if 'restfulapi' in ret['addons']:
+        addons_widget_data['restfulapi'] = serialize_restfulapi_widget(node)
+
+    if 'ftp' in ret['addons']:
+        addons_widget_data['ftp'] = serialize_ftp_widget(node)
 
     ret.update({'addons_widget_data': addons_widget_data})
     return ret
@@ -892,8 +909,17 @@ def _view_project(node, auth, primary=False,
         'node_categories': [
             {'value': key, 'display_name': value}
             for key, value in settings.NODE_CATEGORY_MAP.iteritems()
-        ]
+        ],
+        'dict_widget_position': [],
+        'dict_widget_serial': {'left': [], 'right': []}
     }
+
+    if user is not None:
+        if hasattr(user, 'id'):
+            if user.id is not None:
+                data['dict_widget_position']= get_drawer_widget_position(node.id,user.id)
+                data['dict_widget_serial']= get_widget_drawer_order(get_drawer_widget_position(node.id,user.id))
+
 
     # Default should be at top of list for UI and for the project overview page the default region
     # for a component is that of the it's parent node.
@@ -924,6 +950,17 @@ def _view_project(node, auth, primary=False,
             for each in node.forks.exclude(type='osf.registration').exclude(is_deleted=True).order_by('-forked_date')
         ]
     return data
+
+def default(self, obj):
+        if isinstance(obj, P):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
+
+def dumper(obj):
+    try:
+        return obj.toJSON()
+    except:
+        return obj.__dict__
 
 def get_affiliated_institutions(obj):
     ret = []
@@ -1427,3 +1464,32 @@ def get_pointed(auth, node, **kwargs):
         serialize_pointer(each.parent, auth)
         for each in NodeRelation.objects.filter(child=node, is_node_link=True)
     ]}
+
+@must_be_contributor_or_public
+def view_add_layout(auth, node, **kwargs):
+    '''
+    save layout method
+    '''
+    data = {}
+    if request.method == 'POST':
+        request_data = request.json
+        if len(request_data) > 0:
+            try:
+                #For Mock only starts
+                WidgetPosition.objects.filter(node_id_id=node.id,user_id_id=auth.user.id).delete()
+                #For Mock only ends
+                for i in range(len(request_data)):
+                    ul_id = request_data[i]['UL_ID']
+                    widget_id = request_data[i]['Widget_ID']
+                    widget_position = request_data[i]['Widget_Position']
+                    node_id = node.id
+                    user_id = auth.user.id
+                    WidgetPosition.objects.create(ul_id=ul_id,
+                            widget_id=widget_id,
+                            widget_position=widget_position,
+                            node_id_id=node_id, user_id_id=user_id)
+            except ValueError:
+                raise HTTPError(http.BAD_REQUEST)
+    else:
+        data = request.args.to_dict()
+    return {'status': 'ok'}

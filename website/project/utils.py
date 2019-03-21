@@ -6,7 +6,7 @@ from django.db.models import Q
 from website import settings
 
 from keen import KeenClient
-
+from osf.models.layout_info import WidgetPosition
 
 # Alias the project serializer
 
@@ -102,3 +102,29 @@ def activity():
         'popular_public_projects': popular_public_projects,
         'popular_public_registrations': popular_public_registrations
     }
+
+def get_drawer_widget_position(nid,uid):
+    wiz_list = []
+    for x in WidgetPosition.objects.filter(node_id=nid, user_id =uid).order_by('widget_position'):
+        wiz_list.append(
+            { 'id': x.widget_id,
+              'position': x.widget_position,
+               'ul_id': x.ul_id
+            }
+        )
+    return wiz_list
+
+def get_widget_drawer_order(list_of_dict):
+    left_list = []
+    right_list = []
+    for dict_item in list_of_dict:
+        if dict_item['ul_id'] == 1:
+            left_list.append(dict_item['id'].replace('li_',''))
+        else:
+            right_list.append(dict_item['id'].replace('li_',''))
+    final_order_dict = {
+        'left': left_list,
+        'right': right_list
+    }
+    return final_order_dict
+

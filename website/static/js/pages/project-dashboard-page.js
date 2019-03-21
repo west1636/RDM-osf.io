@@ -15,6 +15,7 @@ var $osf = require('js/osfHelpers');
 var LogFeed = require('js/components/logFeed');
 var pointers = require('js/pointers');
 var Comment = require('js/comment'); //jshint ignore:line
+var Widget = require('js/widget');
 var NodeControl = require('js/nodeControl');
 var CitationList = require('js/citationList');
 var CitationWidget = require('js/citationWidget');
@@ -66,6 +67,10 @@ if ($comments.length) {
     };
     Comment.init('#commentsLink', '.comment-pane', options);
 }
+
+// Initialize widget pane
+Widget.init('.widget-pane');
+
 var institutionLogos = {
     controller: function(args){
         var self = this;
@@ -471,3 +476,106 @@ $(document).ready(function () {
         });
     }
 });
+
+
+var get_array_of_widgets_position = function get_array_of_widgets_position(){
+    var an_array = []
+    var counter = 0;
+    $('#sortable1 li').each(function() {
+         var temp_dict = {
+            UL_ID: 1,
+            Widget_ID: $(this).attr('id'),
+            Widget_Position: ++counter
+         }
+     an_array.push(temp_dict)
+    });
+    counter = 0;
+    $('#sortable2 li').each(function() {
+        var temp_dict = {
+           UL_ID: 2,
+           Widget_ID: $(this).attr('id'),
+           Widget_Position: ++counter
+        }
+    an_array.push(temp_dict)
+    });
+    return an_array;
+}
+
+
+function m_load_function(){
+ var temp_dict_spa = {
+            "UL_ID": 1,
+            Widget_ID: "li_sparql",
+            Widget_Position: 3
+         }
+ var temp_dict_rapi = {
+            "UL_ID": 1,
+            Widget_ID: "li_restfulapi",
+            Widget_Position: 1
+         }
+ var temp_dict_ftp = {
+            "UL_ID": 2,
+            Widget_ID: "li_ftp",
+            Widget_Position: 2
+         }
+ var another_array =[]
+ another_array.push(temp_dict_spa)
+ another_array.push(temp_dict_rapi)
+ another_array.push(temp_dict_ftp)
+ return another_array 
+}
+
+function restore_drawer(some_array) {
+  $.each(some_array, function(index, element) {
+    restore_drawer_item(element.Widget_ID, element.UL_ID, element.Widget_Position)
+  })
+}
+
+function restore_drawer_item(item_id, ul, widget_position) {
+  var id_of_ul = "#sortable" + ul
+  if ($(id_of_ul + " li").length == 0) {
+    $(id_of_ul).append($("#" + item_id))
+  } else {
+    if ($(id_of_ul + " li")[widget_position - 1] !== undefined) {
+      $(id_of_ul + " li:eq(" + (widget_position - 1) + ")").before($("#" + item_id))
+    } else {
+      $(id_of_ul + " li:eq(" + ($(id_of_ul + " li").length - 1) + ")").after($("#" + item_id))
+    }
+  }
+}
+
+
+$(function() {
+  $.when($("#sortable1, #sortable2").sortable({
+    connectWith: ".connectedSortable",
+    create: function(event, ui) {
+    },
+    stop: function(e, ui) {
+      var post_data = get_array_of_widgets_position()
+      console.log(post_data)
+      console.log(nodeApiUrl)
+      add_layout({
+                   url: nodeApiUrl + 'layout/',
+                   method: 'POST'
+                  }, post_data);
+
+    }
+    }).disableSelection()).done(function() {
+    })
+});
+
+window.get_array_of_widgets_position = get_array_of_widgets_position
+module.exports = {
+    get_array_of_widgets_position: get_array_of_widgets_position
+};
+var add_layout = function (param,layout_data) {
+$.ajax({
+        type:param.method,
+        url:param.url,
+        data:JSON.stringify(layout_data),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json'
+
+    });
+}
+

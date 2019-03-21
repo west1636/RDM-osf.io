@@ -116,6 +116,9 @@ INSTALLED_APPS = (
     'addons.azureblobstorage',
     'addons.weko',
     'addons.jupyterhub',
+    'addons.sparql',
+    'addons.restfulapi',
+    'addons.ftp',
 )
 
 # local development using https
