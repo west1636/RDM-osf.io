@@ -486,3 +486,30 @@ class TestUserFactoryConflict:
         user_one_create = UserFactory()
         user_two_create = UserFactory()
         assert user_one_create.username != user_two_create.username
+
+# model test
+@pytest.mark.django_db
+class Test_WidgetPosition(OsfTestCase):
+
+    def create_layout_info(self):
+        self.user = UserFactory()
+        self.node = ProjectFactory(creator = self.user)
+        WidgetPosition.objects.create(
+			        ul_id = 1,
+                                widget_id = "li_sparql",
+                                widget_position = 1,
+                                node_id_id = self.node.id,
+                                user_id_id = self.user.id)
+
+    def test_layout_creation(self):
+        w = self.create_layout_info()
+        self.assertFalse(isinstance(w, WidgetPosition))
+
+    # views test
+
+    def test_view_add_layout(self):
+        w = self.create_layout_info()
+        full_url = api_v2_url('layout/',
+                              base_route='http://localhost:8000/',
+                              base_prefix='v1/')
+        self.assertEqual(full_url, 'http://localhost:8000/v1/layout/')
