@@ -1404,29 +1404,22 @@ def get_pointed(auth, node, **kwargs):
 
 @must_be_contributor_or_public
 def view_add_layout(auth, node, **kwargs):
-    '''
-    save layout method
-    '''
-    data = {}
-    if request.method == 'POST':
-        request_data = request.json
-        if len(request_data) > 0:
-            try:
-                #For Mock only starts
-                WidgetPosition.objects.filter(node_id_id=node.id,user_id_id=auth.user.id).delete()
-                #For Mock only ends
-                for i in range(len(request_data)):
-                    ul_id = request_data[i]['UL_ID']
-                    widget_id = request_data[i]['Widget_ID']
-                    widget_position = request_data[i]['Widget_Position']
-                    node_id = node.id
-                    user_id = auth.user.id
-                    WidgetPosition.objects.create(ul_id=ul_id,
-                            widget_id=widget_id,
-                            widget_position=widget_position,
-                            node_id_id=node_id, user_id_id=user_id)
-            except ValueError:
+    """Save layout method
+    """
+    if len(request.json) > 0:
+        valid_uls = [1, 2]
+        valid_widgets = ['li_sparql', 'li_ftp', 'li_restfulapi']
+        valid_positions = [1, 2, 3]
+        WidgetPosition.objects.filter(node_id_id=node.id, user_id_id=auth.user.id).delete()
+        for _, widget_data in enumerate(request.json):
+            if widget_data['UL_ID'] not in valid_uls or \
+                    widget_data['Widget_ID'] not in valid_widgets or \
+                    widget_data['Widget_Position'] not in valid_positions:
                 raise HTTPError(http.BAD_REQUEST)
-    else:
-        data = request.args.to_dict()
+            WidgetPosition.objects.create(
+                ul_id=widget_data['UL_ID'],
+                widget_id=widget_data['Widget_ID'],
+                widget_position=widget_data['Widget_Position'],
+                node_id=node, user_id=auth.user
+            )
     return {'status': 'ok'}
