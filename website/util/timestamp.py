@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Common functions for timestamp.
-"""
+'''Common functions for timestamp.
+'''
 from __future__ import absolute_import
 import datetime
 import hashlib
 import logging
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -17,17 +18,19 @@ import requests
 
 from api.base import settings as api_settings
 from api.base.utils import waterbutler_api_url_for
+from celery.contrib.abortable import AbortableTask, AbortableAsyncResult
 from django.utils import timezone
 from osf.models import (
     AbstractNode, BaseFileNode, Guid, RdmFileTimestamptokenVerifyResult, RdmUserKey,
-    OSFUser
+    OSFUser, TimestampTask
 )
 from website import util
 from website import settings
 from website.util import waterbutler
 
-
 from django.contrib.contenttypes.models import ContentType
+from framework.celery_tasks import app as celery_app
+
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +45,36 @@ RESULT_MESSAGE = {
         api_settings.FILE_NOT_EXISTS_MSG,  # 'FILE missing'
     api_settings.TIME_STAMP_VERIFICATION_ERR:
         api_settings.TIME_STAMP_VERIFICATION_ERR_MSG,
+    api_settings.TIME_STAMP_STORAGE_DISCONNECTED:
+        api_settings.TIME_STAMP_STORAGE_DISCONNECTED_MSG,
+    api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE:
+        api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE_MSG,
 }
 
+STATUS_NOT_ACCESSIBLE = [
+    api_settings.FILE_NOT_EXISTS,
+    api_settings.FILE_NOT_FOUND,
+    api_settings.TIME_STAMP_VERIFICATION_ERR,
+    api_settings.TIME_STAMP_STORAGE_DISCONNECTED,
+    api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE
+]
+def get_async_task_data(node):
+    task_data = {
+        'ready': True,
+        'requester': None
+    }
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AbortableAsyncResult(timestamp_task.task_id)
+        task_data['ready'] = task.ready()
+        task_data['requester'] = timestamp_task.requester.username
+        if task_data['ready']:
+            TimestampTask.objects.filter(node=node).delete()
+    return task_data
+
 def get_error_list(pid):
-    """Retrieve from the database the list of all timestamps that has an error.
-    """
+    '''Retrieve from the database the list of all timestamps that has an error.
+    '''
     data_list = RdmFileTimestamptokenVerifyResult.objects.filter(project_id=pid).order_by('provider', 'path')
     provider_error_list = []
     provider = None
@@ -148,8 +176,8 @@ def get_error_list(pid):
     return provider_error_list
 
 def get_full_list(uid, pid, node):
-    """Get a full list of timestamps from all files uploaded to a storage.
-    """
+    '''Get a full list of timestamps from all files uploaded to a storage.
+    '''
     user_info = OSFUser.objects.get(id=uid)
     cookie = user_info.get_or_create_cookie()
 
@@ -171,6 +199,11 @@ def get_full_list(uid, pid, node):
                 project_id=node._id,
                 provider=provider
             )
+            files_status = provider_files.first().inspection_result_status
+            if files_status != api_settings.TIME_STAMP_STORAGE_DISCONNECTED:
+                not_accessible_status = api_settings.TIME_STAMP_STORAGE_NOT_ACCESSIBLE
+                provider_files.update(inspection_result_status=not_accessible_status)
+            continue
         else:
             RdmFileTimestamptokenVerifyResult.objects.filter(
                 project_id=node._id,
@@ -199,6 +232,8 @@ def get_full_list(uid, pid, node):
                     node,
                     file_data['attributes']['path']
                 )
+                basefile_node.materialized_path = file_data['attributes']['path']
+                basefile_node.name = os.path.basename(file_data['attributes']['path'])
                 basefile_node.save()
                 file_info = {
                     'file_id': basefile_node._id,
@@ -243,12 +278,13 @@ def check_file_timestamp(uid, node, data):
         if download_file_path is None:
             intentional_remove_status = [
                 api_settings.FILE_NOT_EXISTS,
+                api_settings.TIME_STAMP_STORAGE_DISCONNECTED
             ]
             file_data = RdmFileTimestamptokenVerifyResult.objects.filter(file_id=data['file_id'])
             if file_data.exists() and \
                     file_data.get().inspection_result_status not in intentional_remove_status:
                 file_data.update(inspection_result_status=api_settings.FILE_NOT_FOUND)
-            return False
+            return None
 
         if not userkey_generation_check(user._id):
             userkey_generation(user._id)
@@ -267,6 +303,85 @@ def check_file_timestamp(uid, node, data):
             shutil.rmtree(tmp_dir)
         logger.exception(err)
         raise
+
+@celery_app.task(bind=True, base=AbortableTask)
+def celery_verify_timestamp_token(self, uid, node_id):
+    secs_to_wait = 60.0 / api_settings.TS_REQUESTS_PER_MIN
+    last_run = None
+
+    celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 0})
+    node = AbstractNode.objects.get(id=node_id)
+    celery_app.current_task.update_state(state='PROGRESS', meta={'progress': 50})
+    for provider_dict in get_full_list(uid, node._id, node):
+        for p_item in provider_dict['provider_file_list']:
+            if self.is_aborted():
+                break
+            p_item['provider'] = provider_dict['provider']
+            last_run = time.time()
+            result = check_file_timestamp(uid, node, p_item)
+            if result is None:
+                continue
+            # Do not let the task run too many requests
+            # An sleep would stop the celery process (and all its tasks)
+            if provider_dict['provider'] != 'osfstorage':
+                while time.time() < last_run + secs_to_wait:
+                    pass
+    if self.is_aborted():
+        logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
+    celery_app.current_task.update_state(state='SUCCESS', meta={'progress': 100})
+
+@celery_app.task(bind=True, base=AbortableTask)
+def celery_add_timestamp_token(self, uid, node_id, request_data):
+    """Celery Timestamptoken add method
+    """
+    secs_to_wait = 60.0 / api_settings.TS_REQUESTS_PER_MIN
+    last_run = None
+
+    node = AbstractNode.objects.get(id=node_id)
+    for _, data in enumerate(request_data):
+        if self.is_aborted():
+            break
+        last_run = time.time()
+        result = add_token(uid, node, data)
+        if result is None:
+            continue
+        # Do not let the task run too many requests
+        # An sleep would stop the celery process (and all its tasks)
+        if data['provider'] != 'osfstorage':
+            while time.time() < last_run + secs_to_wait:
+                pass
+    if self.is_aborted():
+        logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
+
+def get_celery_task(node):
+    task = None
+    timestamp_task = TimestampTask.objects.filter(node=node).first()
+    if timestamp_task is not None:
+        task = AbortableAsyncResult(timestamp_task.task_id)
+    return task
+
+def get_celery_task_progress(node):
+    status = {
+        'ready': True
+    }
+    task = get_celery_task(node)
+    if task is not None:
+        status['ready'] = task.ready()
+        if status['ready']:
+            TimestampTask.objects.filter(node=node).delete()
+    return status
+
+def cancel_celery_task(node):
+    result = {
+        'success': False,
+    }
+    task = get_celery_task(node)
+    if task is not None and not task.ready():
+        task.revoke()
+        task.abort()
+        result['success'] = True
+    TimestampTask.objects.filter(node=node).delete()
+    return result
 
 def add_token(uid, node, data):
     user = OSFUser.objects.get(id=uid)
@@ -288,6 +403,7 @@ def add_token(uid, node, data):
         if download_file_path is None:
             intentional_remove_status = [
                 api_settings.FILE_NOT_EXISTS,
+                api_settings.TIME_STAMP_STORAGE_DISCONNECTED
             ]
             file_data = RdmFileTimestamptokenVerifyResult.objects.filter(file_id=data['file_id'])
             if file_data.exists() and \
@@ -376,6 +492,101 @@ def file_created_or_updated(node, metadata, user_id, created_flag):
         verify_data.upload_file_size = file_info['size']
         verify_data.save()
 
+def file_node_moved(project_id, provider, src_path, dest_path):
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+    dest_path = dest_path if dest_path[0] == '/' else '/' + dest_path
+    target_object_id = Guid.objects.get(_id=project_id,
+                                        content_type_id=ContentType.objects.get_for_model(AbstractNode).id).object_id
+    deleted_files = RdmFileTimestamptokenVerifyResult.objects.filter(
+        path__startswith=dest_path,
+        project_id=project_id,
+        provider=provider
+    ).exclude(
+        inspection_result_status=api_settings.FILE_NOT_EXISTS
+    ).all()
+    for deleted_file in deleted_files:
+        file_node_overwitten(project_id, target_object_id, provider, dest_path)
+
+    moved_files = RdmFileTimestamptokenVerifyResult.objects.filter(
+        path__startswith=src_path,
+        project_id=project_id,
+        provider=provider
+    ).exclude(
+        inspection_result_status__in=STATUS_NOT_ACCESSIBLE
+    ).all()
+    for moved_file in moved_files:
+        moved_file.path = moved_file.path.replace(src_path, dest_path, 1)
+        moved_file.save()
+
+    if provider != 'osfstorage' and src_path[-1:] == '/':
+        file_nodes = BaseFileNode.objects.filter(target_object_id=target_object_id,
+                                                 provider=provider,
+                                                 deleted_on__isnull=True,
+                                                 _path__startswith=src_path).all()
+        for file_node in file_nodes:
+            file_node._path = re.sub(r'^' + src_path, dest_path, file_node._path)
+            file_node._materialized_path = re.sub(r'^' + src_path, dest_path, file_node._path)
+            file_node.save()
+    else:
+        file_nodes = BaseFileNode.objects.filter(target_object_id=target_object_id,
+                                                 provider=provider,
+                                                 deleted_on__isnull=True,
+                                                 _path=src_path).all()
+        for file_node in file_nodes:
+            file_node._path = dest_path
+            file_node._materialized_path = dest_path
+            file_node.save()
+
+def file_node_overwitten(project_id, target_object_id, addon_name, src_path):
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+    RdmFileTimestamptokenVerifyResult.objects.filter(
+        project_id=project_id,
+        provider=addon_name,
+        path__startswith=src_path
+    ).delete()
+    if addon_name != 'osfstorage':
+        if src_path[-1:] == '/':
+            file_nodes = BaseFileNode.objects.filter(target_object_id=target_object_id,
+                                                     provider=addon_name,
+                                                     deleted_on__isnull=True,
+                                                     _path__startswith=src_path).all()
+        else:
+            file_nodes = BaseFileNode.objects.filter(target_object_id=target_object_id,
+                                                     provider=addon_name,
+                                                     deleted_on__isnull=True,
+                                                     _path=src_path).all()
+        for file_node in file_nodes:
+            file_node.delete()
+
+def file_node_deleted(project_id, addon_name, src_path):
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+
+    tst_status = api_settings.FILE_NOT_EXISTS
+    if src_path == '/':
+        tst_status = api_settings.TIME_STAMP_STORAGE_DISCONNECTED
+    RdmFileTimestamptokenVerifyResult.objects.filter(
+        project_id=project_id,
+        provider=addon_name,
+        path__startswith=src_path
+    ).exclude(
+        inspection_result_status=api_settings.FILE_NOT_EXISTS
+    ).update(inspection_result_status=tst_status)
+
+def file_node_gone(project_id, addon_name, src_path):
+    if project_id is None or addon_name is None or src_path is None:
+        return
+
+    src_path = src_path if src_path[0] == '/' else '/' + src_path
+
+    tst_status = api_settings.FILE_NOT_FOUND
+    RdmFileTimestamptokenVerifyResult.objects.filter(
+        project_id=project_id,
+        provider=addon_name,
+        path__startswith=src_path
+    ).exclude(
+        inspection_result_status=api_settings.FILE_NOT_EXISTS
+    ).update(inspection_result_status=tst_status)
+
 def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
     # get waterbutler folder file
     if provider == 'osfstorage':
@@ -409,6 +620,8 @@ def waterbutler_folder_file_info(pid, provider, path, node, cookies, headers):
                 node,
                 file_data['attributes']['path']
             )
+            basefile_node.materialized_path = file_data['attributes']['path']
+            basefile_node.name = os.path.basename(file_data['attributes']['path'])
             basefile_node.save()
             if provider == 'osfstorage':
                 file_info = {
@@ -449,12 +662,12 @@ def userkey_generation(guid):
         pvt_key_generation_cmd = api_settings.SSL_PRIVATE_KEY_GENERATION.format(
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
             api_settings.KEY_BIT_VALUE
-        ).split(' ')
+        ).split(api_settings.TST_COMMAND_DELIMITER)
 
         pub_key_generation_cmd = api_settings.SSL_PUBLIC_KEY_GENERATION.format(
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pvt_key_name),
             os.path.join(api_settings.KEY_SAVE_PATH, generation_pub_key_name)
-        ).split(' ')
+        ).split(api_settings.TST_COMMAND_DELIMITER)
 
         prc = subprocess.Popen(
             pvt_key_generation_cmd, shell=False, stdin=subprocess.PIPE,
@@ -495,7 +708,7 @@ def create_rdmuserkey_info(user_id, key_name, key_kind, date):
 class AddTimestamp:
     #1 create tsq (timestamp request) from file, and keyinfo
     def get_timestamp_request(self, file_name):
-        cmd = api_settings.SSL_CREATE_TIMESTAMP_REQUEST.format(file_name.encode('utf-8')).split(' ')
+        cmd = api_settings.SSL_CREATE_TIMESTAMP_REQUEST.format(file_name.encode('utf-8')).split(api_settings.TST_COMMAND_DELIMITER)
         process = subprocess.Popen(
             cmd, shell=False, stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -531,7 +744,7 @@ class AddTimestamp:
         cmd = api_settings.UPKI_CREATE_TIMESTAMP.format(
             file_name.encode('utf-8'),
             '/dev/stdout'
-        ).split(' ')
+        ).split(api_settings.TST_COMMAND_DELIMITER)
         try:
             process = subprocess.Popen(
                 cmd, shell=False, stdin=subprocess.PIPE,
@@ -715,9 +928,13 @@ class TimeStampTokenVerifyCheck:
                 elif not verify_result.timestamp_token:
                     # if timestamptoken does not exist:
                     # update verifyResult 'TST missing(Retrieving Failed)'
-                    verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
-                    verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
+                    if verify_result.inspection_result_status != api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND:
+                        verify_result.inspection_result_status = api_settings.TIME_STAMP_TOKEN_NO_DATA
+                        ret = api_settings.TIME_STAMP_TOKEN_NO_DATA
+                        verify_result_title = api_settings.TIME_STAMP_TOKEN_NO_DATA_MSG
+                    else:
+                        ret = verify_result.inspection_result_status
+                        verify_result_title = api_settings.TIME_STAMP_TOKEN_CHECK_FILE_NOT_FOUND_MSG
 
             if ret == 0:
 
@@ -742,7 +959,7 @@ class TimeStampTokenVerifyCheck:
                         file_name.encode('utf-8'),
                         timestamptoken_file_path,
                         os.path.join(api_settings.KEY_SAVE_PATH, api_settings.VERIFY_ROOT_CERTIFICATE)
-                    ).split(' ')
+                    ).split(api_settings.TST_COMMAND_DELIMITER)
                     prc = subprocess.Popen(
                         cmd, shell=False, stdin=subprocess.PIPE,
                         stderr=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -767,7 +984,7 @@ class TimeStampTokenVerifyCheck:
                     cmd = api_settings.UPKI_VERIFY_TIMESTAMP.format(
                         file_name.encode('utf-8'),
                         file_name.encode('utf-8') + '.tst'
-                    ).split(' ')
+                    ).split(api_settings.TST_COMMAND_DELIMITER)
                     try:
                         process = subprocess.Popen(
                             cmd, shell=False, stdin=subprocess.PIPE,
