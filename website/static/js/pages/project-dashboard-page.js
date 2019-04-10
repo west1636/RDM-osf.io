@@ -216,7 +216,7 @@ $(document).ready(function () {
                     var total = Number(data.links.meta.total);
                     document.getElementById('LogSearchKeyUser').value = '';
                     for (i in data.data){
-                        if (data.data[i].embeds.users.data.attributes.full_name.match(LogSearchName)){
+                        if (data.data[i].embeds.users.data.attributes.full_name === LogSearchName){
                             document.getElementById('LogSearchKeyUser').value = data.data[i].embeds.users.data.attributes.uid.toString();
                         }
                     }
