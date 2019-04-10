@@ -209,16 +209,15 @@ $(document).ready(function () {
             if (LogSearchName === '') {
                 document.getElementById('LogSearchKeyUser').value = '';
             }else{
-                var query = { 'filter[full_name][icontains]' : encodeURI(LogSearchName)};
-                var urlUsers = $osf.apiV2Url('/users/');
+                var urlUsers = $osf.apiV2Url('/nodes/' + node.id + '/contributors');
                 var promise = m.request({ method: 'GET', config: $osf.setXHRAuthorization, url: urlUsers});
                 promise.then(function (data) {
                     var i;
                     var total = Number(data.links.meta.total);
                     document.getElementById('LogSearchKeyUser').value = '';
                     for (i in data.data){
-                        if (data.data[i].attributes.full_name.match(LogSearchName)){
-                            document.getElementById('LogSearchKeyUser').value = (total -Number(i)).toString();
+                        if (data.data[i].embeds.users.data.attributes.full_name.match(LogSearchName)){
+                            document.getElementById('LogSearchKeyUser').value = data.data[i].embeds.users.data.attributes.uid.toString();
                         }
                     }
                     if(document.getElementById('LogSearchKeyUser').value === ''){$osf.growl('user not found','user:' + LogSearchName + ' is no activity','warning');}
@@ -231,6 +230,7 @@ $(document).ready(function () {
         $('#RefreshLog').on('click', RefreshLog);
         $('#LogSearchName,#LogSearchE,#LogSearchS').on('keypress', function(e){
             var key = e.which;
+            console.log(key);
             if (key === 13){
                 new RefreshLog();
                 return false;
