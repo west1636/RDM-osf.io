@@ -230,7 +230,6 @@ $(document).ready(function () {
         $('#RefreshLog').on('click', RefreshLog);
         $('#LogSearchName,#LogSearchE,#LogSearchS').on('keypress', function(e){
             var key = e.which;
-            console.log(key);
             if (key === 13){
                 new RefreshLog();
                 return false;
