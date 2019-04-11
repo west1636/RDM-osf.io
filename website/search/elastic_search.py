@@ -777,7 +777,7 @@ def search_contributor(query, page=0, size=10, exclude=None, current_user=None):
     items = re.split(r'[\s-]+', query)
     exclude = exclude or []
     normalized_items = []
-    logger.info("BEFORE")
+    logger.info('BEFORE')
     logger.info(items)
     for item in items:
         try:
@@ -787,17 +787,17 @@ def search_contributor(query, page=0, size=10, exclude=None, current_user=None):
         normalized_item = unicodedata.normalize('NFKD', normalized_item).encode('ascii', 'ignore')
         normalized_items.append(normalized_item)
     items = normalized_items
-    logger.info("AFTER")
+    logger.info('AFTER')
     logger.info(items)
 
     query = '  AND '.join('{}*~'.format(re.escape(item)) for item in items) + \
             ''.join(' NOT id:"{}"'.format(excluded._id) for excluded in exclude)
-    logger.info("QUERY")
+    logger.info('QUERY')
     logger.info(query)
 
     results = search(build_query(query, start=start, size=size), index=INDEX, doc_type='user')
     docs = results['results']
-    logger.info("RESULT")
+    logger.info('RESULT')
     logger.info(docs)
     pages = math.ceil(results['counts'].get('user', 0) / size)
     validate_page_num(page, pages)
