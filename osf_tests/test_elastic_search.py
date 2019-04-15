@@ -33,6 +33,8 @@ from tests.base import OsfTestCase
 from tests.test_features import requires_search
 from tests.utils import mock_archive, run_celery_tasks
 
+import logging
+logger = logging.getLogger(__name__)
 
 TEST_INDEX = 'test'
 
@@ -819,6 +821,7 @@ class TestAddContributor(OsfTestCase):
     def test_search_fullname_special_character(self):
         # Searching for a fullname with a special character yields
         # exactly one result.
+        logger.info(self.name3)
         contribs = search.search_contributor(self.name3)
         contribs = search.search_contributor(self.name5)
         assert_equal(len(contribs['users']), 1)
@@ -829,6 +832,7 @@ class TestAddContributor(OsfTestCase):
     def test_search_firstname_special_charcter(self):
         # Searching for a first name with a special character yields
         # exactly one result.
+        logger.info(self.name3)
         contribs = search.search_contributor(self.name3.split(' ')[0])
         contribs = search.search_contributor(self.name5.split(' ')[0])
         assert_equal(len(contribs['users']), 1)
@@ -839,6 +843,7 @@ class TestAddContributor(OsfTestCase):
     def test_search_partial_special_character(self):
         # Searching for a partial name with a special character yields
         # exctly one result.
+        logger.info(self.name3)
         contribs = search.search_contributor(self.name3.split(' ')[0][:-1])
         contribs = search.search_contributor(self.name5.split(' ')[0][:-1])
         assert_equal(len(contribs['users']), 1)
