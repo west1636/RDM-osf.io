@@ -787,12 +787,12 @@ def search_contributor(query, page=0, size=10, exclude=None, current_user=None):
         normalized_item = unicodedata.normalize('NFKD', normalized_item).encode('ascii', 'ignore')
         normalized_items.append(normalized_item)
     items = normalized_items
-    logger.info('AFTER')
+    logger.error('AFTER')
     logger.info(items)
 
     query = '  AND '.join('{}*~'.format(re.escape(item)) for item in items) + \
             ''.join(' NOT id:"{}"'.format(excluded._id) for excluded in exclude)
-    logger.info('QUERY')
+    logger.debug('QUERY')
     logger.info(query)
 
     results = search(build_query(query, start=start, size=size), index=INDEX, doc_type='user')
