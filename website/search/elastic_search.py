@@ -782,11 +782,11 @@ def search_contributor(query, page=0, size=10, exclude=None, current_user=None):
             normalized_item = six.u(item)
         except TypeError:
             normalized_item = item
-        normalized_item = unicodedata.normalize('NFKD', normalized_item).encode('ascii', 'ignore')
+        normalized_item = re.sub(r'(?P<ES>[+\-=&|><!(){}\[\]^"\'~*?:\\/])', r'\\\g<ES>', unicodedata.normalize('NFC', normalized_item)).encode('utf-8')
         normalized_items.append(normalized_item)
     items = normalized_items
 
-    query = '  AND '.join('{}*~'.format(re.escape(item)) for item in items) + \
+    query = '  AND '.join('{}*~'.format(item) for item in items) + \
             ''.join(' NOT id:"{}"'.format(excluded._id) for excluded in exclude)
 
     results = search(build_query(query, start=start, size=size), index=INDEX, doc_type='user')
