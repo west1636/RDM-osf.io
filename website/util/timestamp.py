@@ -70,7 +70,7 @@ def get_error_list(pid):
 
         # User and date of the verification
         verify_user = OSFUser.objects.get(id=data.verify_user)
-        verify_date = data.verify_date.strftime('%Y/%m/%d %H:%M:%S')
+        verify_date = '' if data.verify_date is None else data.verify_date.strftime('%Y/%m/%d %H:%M:%S')
 
         # Get file info
         base_file_data = BaseFileNode.objects.filter(_id=data.file_id)
