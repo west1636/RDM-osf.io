@@ -5,6 +5,7 @@ var nodeApiUrl = window.contextVars.node.urls.api;
 var projectFileList = window.contextVars.project_file_list;
 var timestampCommon = require('./timestamp-common.js');
 
+var $osf = require('../osfHelpers');
 
 $(document).ready(function () {
     var index = 0;
@@ -25,7 +26,7 @@ $(document).ready(function () {
                 '<input type="hidden" id="file_name" value="' + fileList[j].file_name + '" />' +
                 '</td>' +
                 '<td>' + fileList[j].operator_user + '</td>' +
-                '<td>' + fileList[j].operator_date + '</td>' +
+                '<td>' + new $osf.FormattableDate(new Date(fileList[j].operator_date + " UTC")).local + '</td>' +
                 '<td>' + fileList[j].verify_result_title + '</td>' +
                 '</tr>';
             $(errorTr).appendTo($('#timestamp_error_list'));
