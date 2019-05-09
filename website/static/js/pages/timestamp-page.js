@@ -26,7 +26,7 @@ $(document).ready(function () {
                 '<input type="hidden" id="file_name" value="' + fileList[j].file_name + '" />' +
                 '</td>' +
                 '<td>' + fileList[j].operator_user + '</td>' +
-                '<td>' + new $osf.FormattableDate(new Date(fileList[j].operator_date + " UTC")).local + '</td>' +
+                '<td>' + new $osf.FormattableDate(new Date(fileList[j].operator_date + ' UTC')).local + '</td>' +
                 '<td>' + fileList[j].verify_result_title + '</td>' +
                 '</tr>';
             $(errorTr).appendTo($('#timestamp_error_list'));
