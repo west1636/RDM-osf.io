@@ -427,6 +427,8 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
 
     @staticmethod
     def normalize_unicode(value):
+        if value is None:
+            return None
         if isinstance(value, str):
             value = value.decode('utf-8')
         return unicodedata.normalize('NFC', value)
