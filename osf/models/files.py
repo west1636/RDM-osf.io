@@ -190,7 +190,7 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
 
     @classmethod
     def get_or_create(cls, target, path):
-        path = unicodedata.normalize('NFC', path)
+        path = cls.normalize_unicode(path)
         content_type = ContentType.objects.get_for_model(target)
         try:
             obj = cls.objects.get(target_object_id=target.id, target_content_type=content_type, _path='/' + path.lstrip('/'))
@@ -425,6 +425,12 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
 
         return self
 
+    @staticmethod
+    def normalize_unicode(value):
+        if isinstance(value, str):
+            value = value.decode('utf-8')
+        return unicodedata.normalize('NFC', value)
+
     def _serialize(self, **kwargs):
         return {
             'id': self._id,
@@ -436,16 +442,8 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
     def save(self, *args, **kwargs):
         if hasattr(self._meta.model, '_provider') and self._meta.model._provider is not None:
             self.provider = self._meta.model._provider
-
-        # Normalize path and name's unicode
-        if isinstance(self._path, str):
-            self._path = self._path.decode('utf-8')
-        self._path = unicodedata.normalize('NFC', self._path)
-
-        if isinstance(self.name, str):
-            self.name = self.name.decode('utf-8')
-        self.name = unicodedata.normalize('NFC', self.name)
-
+        self._path = self.normalize_unicode(self._path)
+        self.name = self.normalize_unicode(self.name)
         super(BaseFileNode, self).save(*args, **kwargs)
 
     def __repr__(self):
