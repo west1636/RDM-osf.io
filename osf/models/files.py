@@ -438,9 +438,9 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
             self.provider = self._meta.model._provider
 
         # Normalize path and name's unicode
-        if isinstance(self.path, str):
-            self._path = self.path.decode('utf-8')
-        self._path = unicodedata.normalize('NFC', self.path)
+        if isinstance(self._path, str):
+            self._path = self._path.decode('utf-8')
+        self._path = unicodedata.normalize('NFC', self._path)
 
         if isinstance(self.name, str):
             self.name = self.name.decode('utf-8')
