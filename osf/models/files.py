@@ -436,8 +436,16 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
     def save(self, *args, **kwargs):
         if hasattr(self._meta.model, '_provider') and self._meta.model._provider is not None:
             self.provider = self._meta.model._provider
-        self.path = unicodedata.normalize('NFC', self.path)
+
+        # Normalize path and name's unicode
+        if isinstance(self.path, str):
+            self._path = self.path.decode('utf-8')
+        self._path = unicodedata.normalize('NFC', self.path)
+
+        if isinstance(self.name, str):
+            self.name = self.name.decode('utf-8')
         self.name = unicodedata.normalize('NFC', self.name)
+
         super(BaseFileNode, self).save(*args, **kwargs)
 
     def __repr__(self):
