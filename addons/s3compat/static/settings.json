@@ -12,7 +12,10 @@
                              "eu-central": {"name": "eu-central", "host": "s3.eu-central-1.wasabisys.com"},
                              "": {"name": "Virginia"}}},
                            {"name": "RDM Minio",
-                           "host": "minio.rdm.nii.ac.jp"}
+                           "host": "minio.rdm.nii.ac.jp"},
+                           {"name": "NII Active Scale P100",
+                           "host": "157.1.207.225:80",
+                           "bucketLocations": {"US": {"name": "Chiba"}}}
                            ],
     "encryptUploads": true
 }
