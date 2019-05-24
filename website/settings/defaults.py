@@ -470,7 +470,7 @@ class CeleryConfig:
             Queue(task_low_queue, Exchange(task_low_queue), routing_key=task_low_queue,
                 consumer_arguments={'x-priority': -1}),
             Queue(task_default_queue, Exchange(task_default_queue), routing_key=task_default_queue,
-                consumer_arguments={'x-priority': 0}),
+                consumer_arguments={'x-priority': 0}, queue_arguments={'x-max-length': 20}),
             Queue(task_med_queue, Exchange(task_med_queue), routing_key=task_med_queue,
                 consumer_arguments={'x-priority': 1}),
             Queue(task_high_queue, Exchange(task_high_queue), routing_key=task_high_queue,

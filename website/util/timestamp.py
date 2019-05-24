@@ -314,7 +314,7 @@ def check_file_timestamp(uid, node, data):
         logger.exception(err)
         raise
 
-@celery_app.task(bind=True, base=AbortableTask)
+@celery_app.task(bind=True, base=AbortableTask, time_limit=600)
 def celery_verify_timestamp_token(self, uid, node_id):
     secs_to_wait = 60.0 / api_settings.TS_REQUESTS_PER_MIN
     last_run = None
@@ -339,7 +339,7 @@ def celery_verify_timestamp_token(self, uid, node_id):
         logger.warning('Task from project ID {} was cancelled by user ID {}'.format(node_id, uid))
     celery_app.current_task.update_state(state='SUCCESS', meta={'progress': 100})
 
-@celery_app.task(bind=True, base=AbortableTask)
+@celery_app.task(bind=True, base=AbortableTask, time_limit=600)
 def celery_add_timestamp_token(self, uid, node_id, request_data):
     """Celery Timestamptoken add method
     """
