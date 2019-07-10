@@ -7,6 +7,8 @@ from framework import sentry
 from website import settings
 import sendgrid
 
+import datetime
+
 logger = logging.getLogger(__name__)
 
 
@@ -71,18 +73,24 @@ def _send_with_smtp(from_addr, to_addr, subject, message, mimetype='html', ttls=
     msg['From'] = from_addr
     msg['To'] = to_addr
 
+    logger.info('-- smtplib.SMTP: BGN: {}'.format(datetime.datetime.now()))
     s = smtplib.SMTP(settings.MAIL_SERVER)
+    logger.info('-- smtplib.SMTP: END: {}'.format(datetime.datetime.now()))
     s.ehlo()
     if ttls:
         s.starttls()
         s.ehlo()
     if login:
         s.login(username, password)
+    logger.info('-- sendmail: BGN: {}'.format(datetime.datetime.now()))
+    logger.info('-- sendmail: From: {}'.format(from_addr))
+    logger.info('-- sendmail: To: {}'.format(to_addr))
     s.sendmail(
         from_addr=from_addr,
         to_addrs=[to_addr],
         msg=msg.as_string()
     )
+    logger.info('-- sendmail: END: {}'.format(datetime.datetime.now()))
     s.quit()
     return True
 
