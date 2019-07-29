@@ -90,21 +90,20 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
             request.session.create()
         session_key = request.session.session_key
 
-        try:
-            session = self.get_session(addon_name)
-            institution_id = session.data['oauth_states'][addon_name]['institution_id']
+        session = self.get_session(addon_name)
+        institution_id = session.data['oauth_states'][addon_name]['institution_id']
 
-            flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
-            flask_ctx.request.args = ImmutableMultiDict(dict(self.request.GET.iterlists()))
-            provider = get_service(addon_name)
+        flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
+        flask_ctx.request.args = ImmutableMultiDict(dict(self.request.GET.iterlists()))
+        provider = get_service(addon_name)
 
-            rdm_addon_option = get_rdm_addon_option(institution_id, addon_name)
-            # Retrieve permanent credentials from provider
-            auth_callback_result = provider.auth_callback(user=rdm_addon_option)
-            if auth_callback_result:
-                if provider.account and not rdm_addon_option.external_accounts.filter(id=provider.account.id).exists():
-                    rdm_addon_option.external_accounts.add(provider.account)
-                    rdm_addon_option.save()
+        rdm_addon_option = get_rdm_addon_option(institution_id, addon_name)
+        # Retrieve permanent credentials from provider
+        auth_callback_result = provider.auth_callback(user=rdm_addon_option)
+        if auth_callback_result:
+            if provider.account and not rdm_addon_option.external_accounts.filter(id=provider.account.id).exists():
+                rdm_addon_option.external_accounts.add(provider.account)
+                rdm_addon_option.save()
 
         return redirect(complete_url)
 
