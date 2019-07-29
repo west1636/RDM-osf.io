@@ -79,20 +79,8 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
 
     def test_func(self):
         """check user permissions"""
-        institution_id = None
-        addon_name = self.kwargs.get('addon_name')
-        session_data = {}
-        try:
-            session = get_session()
-            session_data = session.data
-        except RuntimeError:
-            print('Unable to access session data')
+        return self.is_authenticated
 
-        if 'oauth_states' in session_data:
-            institution_id = int(session_data['oauth_states'][addon_name]['institution_id'])
-        elif 'institution_id' in self.kwargs:
-            institution_id = int(self.kwargs.get('institution_id'))
-        return self.has_auth(institution_id)
 
     def get(self, request, *args, **kwargs):
         addon_name = kwargs['addon_name']
