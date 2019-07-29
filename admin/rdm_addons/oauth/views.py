@@ -105,11 +105,6 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
                 if provider.account and not rdm_addon_option.external_accounts.filter(id=provider.account.id).exists():
                     rdm_addon_option.external_accounts.add(provider.account)
                     rdm_addon_option.save()
-        finally:
-            try:
-                flask_ctx.pop()
-            except IndexError:
-                pass
 
         return redirect(complete_url)
 
