@@ -92,18 +92,8 @@ def osfadmin_oauth_callback(service_name):
     from furl import furl
     import requests
     import flask
-    from website.settings import ADMIN_INTERNAL_DOCKER_URL, ADMIN_URL
-    f = furl(ADMIN_INTERNAL_DOCKER_URL)
+    from website.settings import ADMIN_URL
+    f = furl(ADMIN_URL)
     f.path = '/addons/oauth/callback/{}/'.format(service_name)
     f.args = flask.request.args.to_dict(flat=False)
-    try:
-        headers = dict(flask.request.headers)
-        headers['Content-Length'] = str(0)
-        r = requests.get(f.url, headers=headers)
-    except ConnectionError:
-        return None
-    if not r.ok:
-        return None
-    f = furl(ADMIN_URL)
-    f.path = '/addons/oauth/complete/{}/'.format(service_name)
     return f.url

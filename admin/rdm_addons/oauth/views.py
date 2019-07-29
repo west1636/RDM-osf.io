@@ -96,6 +96,7 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
 
     def get(self, request, *args, **kwargs):
         addon_name = kwargs['addon_name']
+        complete_url = '/addons/oauth/complete/{}'.format(addon_name)
 
         # Session
         if not request.session.session_key:
@@ -123,7 +124,7 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
             except IndexError:
                 pass
 
-        return HttpResponse('OK')
+        return redirect(complete_url)
 
 
 class CompleteView(RdmPermissionMixin, UserPassesTestMixin, TemplateView):
