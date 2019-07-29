@@ -81,7 +81,6 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
         """check user permissions"""
         return self.is_authenticated
 
-
     def get(self, request, *args, **kwargs):
         addon_name = kwargs['addon_name']
         complete_url = '/addons/oauth/complete/{}'.format(addon_name)
