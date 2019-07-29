@@ -83,9 +83,6 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
 
     def get(self, request, *args, **kwargs):
         addon_name = kwargs['addon_name']
-        print(addon_name)
-        addon_name = 'googledrive'
-        print(addon_name)
         complete_url = '/addons/oauth/complete/{}'.format(addon_name)
 
         # Session
@@ -94,6 +91,7 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
         session_key = request.session.session_key
 
         session = self.get_session(addon_name)
+        print(session.data)
         institution_id = session.data['oauth_states'][addon_name]['institution_id']
 
         flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
