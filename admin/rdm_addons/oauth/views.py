@@ -94,8 +94,8 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
         print(session.data)
         institution_id = session.data['oauth_states'][addon_name]['institution_id']
 
-        flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
-        flask_ctx.request.args = ImmutableMultiDict(dict(self.request.GET.iterlists()))
+        #flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
+        #flask_ctx.request.args = ImmutableMultiDict(dict(self.request.GET.iterlists()))
         provider = get_service(addon_name)
 
         rdm_addon_option = get_rdm_addon_option(institution_id, addon_name)
