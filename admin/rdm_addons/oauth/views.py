@@ -83,6 +83,9 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
 
     def get(self, request, *args, **kwargs):
         addon_name = kwargs['addon_name']
+        print(addon_name)
+        addon_name = 'googledrive'
+        print(addon_name)
         complete_url = '/addons/oauth/complete/{}'.format(addon_name)
 
         # Session
