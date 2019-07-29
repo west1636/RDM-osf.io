@@ -28,6 +28,9 @@ class RdmAddonRequestContextMixin(object):
     app.config['SECRET_KEY'] = str(uuid.uuid4())
     ctx_dict = defaultdict(app.test_request_context)
 
+    def flask_app(self):
+       return app
+
     def get_request_context(self, session_id, institution_id, addon_name):
         return self.ctx_dict[(session_id, institution_id, addon_name)]
 
@@ -91,12 +94,12 @@ class CallbackView(RdmPermissionMixin, RdmAddonRequestContextMixin, UserPassesTe
         session_key = request.session.session_key
 
         session = self.get_session(addon_name)
-        print(session.data)
         institution_id = session.data['oauth_states'][addon_name]['institution_id']
         print(institution_id)
         print('institution_id')
 
-        flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
+        flask_ctx = flask_app().test_request_context('/callback')        
+        #flask_ctx = self.get_request_context(session_key, institution_id, addon_name)
         flask_ctx.request.args = ImmutableMultiDict(dict(self.request.GET.iterlists()))
         print('get_service')
         provider = get_service(addon_name)
