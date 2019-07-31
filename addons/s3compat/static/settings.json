@@ -11,6 +11,8 @@
                              "us-west-1": {"name": "us-west-1", "host": "s3.us-west-1.wasabisys.com"},
                              "eu-central": {"name": "eu-central", "host": "s3.eu-central-1.wasabisys.com"},
                              "": {"name": "Virginia"}}},
+                           {"name": "HGC drive",
+                           "host": "sabura.hgc.jp:80"},
                            {"name": "RDM Minio",
                            "host": "minio.rdm.nii.ac.jp"}
                            ],
