@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from boxsdk import Client as BoxClient, OAuth2
 from furl import furl
 import httplib
 import requests
@@ -8,6 +9,7 @@ import owncloud
 
 from addons.googledrive.client import GoogleDriveClient
 from addons.osfstorage.models import Region
+from addons.box import settings as box_settings
 from addons.owncloud import settings as owncloud_settings
 from addons.nextcloud import settings as nextcloud_settings
 from addons.s3 import utils as s3_utils
@@ -192,6 +194,40 @@ def test_googledrive_connection(institution_id, folder_id):
         'message': 'Credentials are valid'
     }, httplib.OK)
 
+def test_box_connection(institution_id, folder_id):
+    if not folder_id:
+        return ({
+            'message': 'Folder ID is missing.'
+        }, httplib.BAD_REQUEST)
+
+    try:
+        access_token = ExternalAccountTemporary.objects.get(
+            _id=institution_id, provider='box'
+        ).oauth_key
+    except ExternalAccountTemporary.DoesNotExist:
+        return ({
+            'message': 'Oauth data was not found. Please reload the page and try again.'
+        }, httplib.BAD_REQUEST)
+
+    oauth = OAuth2(
+        client_id=box_settings.BOX_KEY,
+        client_secret=box_settings.BOX_SECRET,
+        access_token=access_token
+    )
+    client = BoxClient(oauth)
+
+    try:
+        client.folders(folder_id).get()
+    except HTTPError:
+        return ({
+            'message': 'Invalid folder ID.'
+        }, httplib.BAD_REQUEST)
+        raise
+
+    return ({
+        'message': 'Credentials are valid'
+    }, httplib.OK)
+
 def test_owncloud_connection(host_url, username, password, folder, provider):
     """ This method is valid for both ownCloud and Nextcloud """
     provider_name = None
@@ -332,18 +368,14 @@ def save_s3compat_credentials(institution_id, storage_name, host_url, access_key
         'message': 'Saved credentials successfully!!'
     }, httplib.OK)
 
-def save_box_credentials(user, storage_name, provider_short_name, box_folder):
-    if not storage_name:
-        return ({
-            'message': 'Storage name is missing.'
-        }, httplib.BAD_REQUEST)
-    elif not box_folder:
-        return ({
-            'message': 'Folder is missing.'
-        }, httplib.BAD_REQUEST)
-
+def save_box_credentials(user, storage_name, folder_id):
     institution_id = user.affiliated_institutions.first()._id
-    account = transfer_to_external_account(user, institution_id, provider_short_name)
+
+    test_connection_result = test_box_connection(institution_id, folder_id)
+    if test_connection_result[1] != httplib.OK:
+        return test_connection_result
+
+    account = transfer_to_external_account(user, institution_id, 'box')
     wb_credentials = {
         'storage': {
             'token': account.oauth_key,
@@ -352,7 +384,7 @@ def save_box_credentials(user, storage_name, provider_short_name, box_folder):
     wb_settings = {
         'storage': {
             'bucket': '',
-            'folder': box_folder,
+            'folder': folder_id,
             'provider': 'box',
         }
     }
