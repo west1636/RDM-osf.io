@@ -167,34 +167,6 @@ def test_s3compat_connection(host_url, access_key, secret_key):
         }
     }, httplib.OK)
 
-def test_googledrive_connection(institution_id, folder_id):
-    if not folder_id:
-        return ({
-            'message': 'Folder ID is missing.'
-        }, httplib.BAD_REQUEST)
-
-    try:
-        access_token = ExternalAccountTemporary.objects.get(
-            _id=institution_id, provider='googledrive'
-        ).oauth_key
-    except ExternalAccountTemporary.DoesNotExist:
-        return ({
-            'message': 'Oauth data was not found. Please reload the page and try again.'
-        }, httplib.BAD_REQUEST)
-
-    client = GoogleDriveClient(access_token)
-
-    try:
-        client.folders(folder_id)
-    except HTTPError:
-        return ({
-            'message': 'Invalid folder ID.'
-        }, httplib.BAD_REQUEST)
-
-    return ({
-        'message': 'Credentials are valid'
-    }, httplib.OK)
-
 def test_box_connection(institution_id, folder_id):
     if not folder_id:
         return ({
@@ -220,6 +192,34 @@ def test_box_connection(institution_id, folder_id):
     try:
         client.folder(folder_id).get()
     except BoxAPIException:
+        return ({
+            'message': 'Invalid folder ID.'
+        }, httplib.BAD_REQUEST)
+
+    return ({
+        'message': 'Credentials are valid'
+    }, httplib.OK)
+
+def test_googledrive_connection(institution_id, folder_id):
+    if not folder_id:
+        return ({
+            'message': 'Folder ID is missing.'
+        }, httplib.BAD_REQUEST)
+
+    try:
+        access_token = ExternalAccountTemporary.objects.get(
+            _id=institution_id, provider='googledrive'
+        ).oauth_key
+    except ExternalAccountTemporary.DoesNotExist:
+        return ({
+            'message': 'Oauth data was not found. Please reload the page and try again.'
+        }, httplib.BAD_REQUEST)
+
+    client = GoogleDriveClient(access_token)
+
+    try:
+        client.folders(folder_id)
+    except HTTPError:
         return ({
             'message': 'Invalid folder ID.'
         }, httplib.BAD_REQUEST)
