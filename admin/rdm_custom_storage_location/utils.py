@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from boxsdk import Client as BoxClient, OAuth2
+from boxsdk.exception import BoxAPIException
 from furl import furl
 import httplib
 import requests
@@ -217,12 +218,11 @@ def test_box_connection(institution_id, folder_id):
     client = BoxClient(oauth)
 
     try:
-        client.folders(folder_id).get()
-    except HTTPError:
+        client.folder(folder_id).get()
+    except BoxAPIException:
         return ({
             'message': 'Invalid folder ID.'
         }, httplib.BAD_REQUEST)
-        raise
 
     return ({
         'message': 'Credentials are valid'
