@@ -476,7 +476,7 @@ def save_nextcloud_credentials(institution_id, storage_name, host_url, username,
         'storage': {
             'bucket': '',
             'folder': '/{}/'.format(folder.strip('/')),
-            'verify_ssl': False,
+            'verify_ssl': True,
             'provider': provider
         },
     }
