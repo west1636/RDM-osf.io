@@ -1709,7 +1709,7 @@ function _loadTopLevelChildren() {
  * @this Treebeard.controller
  * @private
  */
-var NO_AUTO_EXPAND_PROJECTS = ['ezcuj', 'ecmz4', 'w4wvg', 'sn64d', 'pfdyw'];
+var NO_AUTO_EXPAND_PROJECTS = ['ezcuj', 'ecmz4', 'w4wvg', 'sn64d', 'pfdyw', '4jbx4'];
 function expandStateLoad(item) {
     var tb = this,
         icon = $('.tb-row[data-id="' + item.id + '"]').find('.tb-toggle-icon'),
