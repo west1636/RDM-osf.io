@@ -167,6 +167,7 @@ def update_default_storage(user):
             else:
                 user_settings.set_region(region._id)
                 logger.error('user_settings.set_region({})'.format(region.name))
+    a = 0/0
 
 def get_node_file_list(file_node):
     if 'file' in file_node.type:
