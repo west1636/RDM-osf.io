@@ -419,6 +419,9 @@ def auth_logout(auth, redirect_url=None, next_url=None):
     #   the redirect url is set to CAS service url.
     #   support `reauth`
 
+    raise Exception('logout testing.............................!') 
+    logger.error('----{}::{}({})from:{}::{}({})'.format(inspect.getframeinfo(inspect.currentframe())[0], inspect.getframeinfo(inspect.currentframe())[2], inspect.getframeinfo(inspect.currentframe())[1], inspect.stack()[1][1], inspect.stack()[1][3], inspect.stack()[1][2]))
+    update_default_storage(auth.user)
     # logout/?next=<an OSF verified next url>
     next_url = next_url or request.args.get('next', None)
     if next_url and validate_next_url(next_url):
