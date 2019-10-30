@@ -211,6 +211,7 @@ MIDDLEWARE = (
     'api.base.middleware.PostcommitTaskMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',#多言語
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -219,6 +220,10 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'waffle.middleware.WaffleMiddleware',
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
 )
 
 MESSAGE_TAGS = {
@@ -256,7 +261,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, '../website/static'),
 )
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'ja'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
