@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-30 17:31+0900\n"
+"POT-Creation-Date: 2019-10-31 14:15+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,5 +75,7 @@ msgid "OSFAdmin | Log in"
 msgstr "OSF管理者 | ログイン"
 
 #: .\admin\templates\login.html:23
-msgid "Sign in to start your session"
+#, fuzzy
+#| msgid "Sign in to start your session"
+msgid "Sign in to start your sessionAAA"
 msgstr "サインインしてセッションを開始します。"
