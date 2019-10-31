@@ -201,6 +201,10 @@ CORS_ORIGIN_WHITELIST = (urlparse(osf_settings.DOMAIN).netloc,
                          )
 CORS_ALLOW_CREDENTIALS = True
 
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
 MIDDLEWARE = (
     # TokuMX transaction support
     # Needs to go before CommonMiddleware, so that transactions are always started,
@@ -220,10 +224,6 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'waffle.middleware.WaffleMiddleware',
-)
-
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
 )
 
 MESSAGE_TAGS = {
