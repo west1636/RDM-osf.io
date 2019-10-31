@@ -201,10 +201,6 @@ CORS_ORIGIN_WHITELIST = (urlparse(osf_settings.DOMAIN).netloc,
                          )
 CORS_ALLOW_CREDENTIALS = True
 
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
-)
-
 MIDDLEWARE = (
     # TokuMX transaction support
     # Needs to go before CommonMiddleware, so that transactions are always started,
@@ -225,6 +221,19 @@ MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'waffle.middleware.WaffleMiddleware',
 )
+
+LANGUAGE_CODE = 'ja'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
+# set selectable language
+from django.utils.translation import ugettext_lazy as _
+LANGUAGES = [
+    ('en', _('English')),
+    ('ja', _('Japanese')),
+]
 
 MESSAGE_TAGS = {
     messages.SUCCESS: 'text-success',
@@ -260,8 +269,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, '../website/static'),
 )
-
-LANGUAGE_CODE = 'ja'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
