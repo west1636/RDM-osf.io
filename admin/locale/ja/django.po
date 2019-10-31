@@ -75,7 +75,6 @@ msgid "OSFAdmin | Log in"
 msgstr "OSF管理者 | ログイン"
 
 #: .\admin\templates\login.html:23
-#, fuzzy
-#| msgid "Sign in to start your session"
+#| msgid "Sign in to start your sessionAAA"
 msgid "Sign in to start your sessionAAA"
 msgstr "サインインしてセッションを開始します。"
