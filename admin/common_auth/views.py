@@ -25,6 +25,10 @@ from admin.base.settings import ENABLE_LOGIN_FORM, ENABLE_SHB_LOGIN, EMBEDDED_DS
 from django.views.generic.base import RedirectView
 from api.institutions.authentication import login_by_eppn
 from website.views import userkey_generation_check, userkey_generation
+
+#BASE_DIR
+from admin.base.settings import BASE_DIR
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -37,6 +41,9 @@ class LoginView(FormView):
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
+    
+    	logger.info("base_dir" + BASE_DIR)
+    
         return super(LoginView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
