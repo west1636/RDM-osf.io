@@ -1,3 +1,4 @@
+{% load i18n %}
 <%inherit file="base.mako"/>
 <%namespace name="render_nodes" file="util/render_nodes.mako" />
 <%def name="title()">${profile["fullname"]}</%def>
@@ -40,7 +41,7 @@
         </span>
         <span class="edit-profile-settings">
             % if user['is_profile']:
-                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i> Edit your profile</a>
+                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i>{% trans "Edit your profile" %}</a>
             % endif
         </span>
     </div>

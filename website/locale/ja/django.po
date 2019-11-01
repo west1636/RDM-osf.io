@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-01 14:46+0900\n"
+"POT-Creation-Date: 2019-11-01 16:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: .\website\templates\base.html:106
+#: .\templates\base.html:106
 msgid "Current branch: "
 msgstr "現在のブランチ"
 
-#: .\website\templates\footer.html:11
+#: .\templates\footer.html:11
 msgid "National Institute of Informatics"
 msgstr "国立情報学研究所"
+
+#: .\templates\profile.html:44
+msgid "Edit your profile"
+msgstr "プロフィールを編集"
