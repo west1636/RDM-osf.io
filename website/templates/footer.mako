@@ -8,7 +8,7 @@
                         Copyright &copy; 2017-${datetime.utcnow().year}
                     </span>
                     <a href="${footer_links['cos']}">
-                        {_('National Institute of Informatics')}
+                        ${_('National Institute of Informatics')}
                     </a>
                     <span>
                         |
