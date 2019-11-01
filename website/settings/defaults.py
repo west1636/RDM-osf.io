@@ -1974,11 +1974,4 @@ LOCALE_PATHS = (
 
 )
 
-# set selectable language
-from django.utils.translation import ugettext_lazy as _
-LANGUAGES = [
-    ('en', _('English')),
-    ('ja', _('Japanese')),
-]
-
 USE_I18N = True
