@@ -235,6 +235,8 @@ LANGUAGES = [
     ('ja', _('Japanese')),
 ]
 
+USE_I18N = True
+
 MESSAGE_TAGS = {
     messages.SUCCESS: 'text-success',
     messages.ERROR: 'text-danger',
