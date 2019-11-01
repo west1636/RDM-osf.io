@@ -1956,3 +1956,27 @@ MAPCORE_REFRESH_PATH = '/oauth/token.php'
 MAPCORE_AUTHCODE_MAGIC = 'GRDM_mAP_AuthCode'
 MAPCORE_CLIENTID = None
 MAPCORE_SECRET = None
+
+MIDDLEWARE = (
+
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
+)
+
+LANGUAGE_CODE = 'ja'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+
+)
+
+# set selectable language
+from django.utils.translation import ugettext_lazy as _
+LANGUAGES = [
+    ('en', _('English')),
+    ('ja', _('Japanese')),
+]
+
+USE_I18N = True
