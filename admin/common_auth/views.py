@@ -33,15 +33,11 @@ class LoginView(FormView):
     form_class = LoginForm
     redirect_field_name = REDIRECT_FIELD_NAME
     template_name = 'login.html'
-    
-    logging.info("base_dir::" + BASE_DIR);
-    logger.info("base_dir::" + BASE_DIR);
 
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
-    
-        logging.info("base_dir::" + BASE_DIR);
+
         logger.info("base_dir::" + BASE_DIR);
         
         return super(LoginView, self).dispatch(request, *args, **kwargs)
