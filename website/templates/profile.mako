@@ -41,7 +41,7 @@
         </span>
         <span class="edit-profile-settings">
             % if user['is_profile']:
-                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i>{% trans "Edit your profile" %}</a>
+                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i>{_('Edit your profile')}</a>
             % endif
         </span>
     </div>
