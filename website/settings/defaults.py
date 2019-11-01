@@ -1970,7 +1970,7 @@ MIDDLEWARE = (
 LANGUAGE_CODE = 'ja'
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale/templates'),
+    os.path.join(BASE_DIR, 'templates/locale'),
 
 )
 

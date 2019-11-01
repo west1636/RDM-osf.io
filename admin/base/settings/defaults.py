@@ -226,7 +226,7 @@ LANGUAGE_CODE = 'ja'
 
 LOCALE_PATHS = (
     #os.path.join(BASE_DIR, 'locale'),
-    "/code/admin/locale/templates",
+    "/code/admin/templates/locale",
 )
 
 # set selectable language
