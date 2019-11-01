@@ -37,9 +37,6 @@ class LoginView(FormView):
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
-
-        logger.info("base_dir::" + BASE_DIR);
-        
         return super(LoginView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
