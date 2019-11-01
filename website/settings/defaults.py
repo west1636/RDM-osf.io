@@ -12,6 +12,8 @@ import logging
 from datetime import timedelta
 from collections import OrderedDict
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 os_env = os.environ
 
 
