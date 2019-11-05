@@ -1,6 +1,6 @@
 <%inherit file="base.mako"/>
-<%namespace name="render_nodes" file="util/render_nodes.mako" />
 {% load i18n %}
+<%namespace name="render_nodes" file="util/render_nodes.mako" />
 <%def name="title()">${profile["fullname"]}</%def>
 <%def name="resource()"><%
     return 'user'
@@ -41,7 +41,7 @@
         </span>
         <span class="edit-profile-settings">
             % if user['is_profile']:
-                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i>${_('Edit your profile')}</a>
+                <a href="/settings/"><i class="fa fa-pencil m-r-xs"></i>{% trans "Edit your profile" %}</a>
             % endif
         </span>
     </div>
@@ -82,7 +82,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#social" data-toggle="tab">Social</a></li>
             <li><a href="#jobs" data-toggle="tab">Employment</a></li>
-            <li><a href="#schools" data-toggle="tab">Education</a></li>
+            <li><a href="#schools" data-toggle="tab">${_('Education')}</a></li>
         </ul>
 
         <div class="tab-content" id="containDrag">
