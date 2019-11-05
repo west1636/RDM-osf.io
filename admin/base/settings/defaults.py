@@ -225,7 +225,7 @@ MIDDLEWARE = (
 LANGUAGE_CODE = 'ja'
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'templates/locale'),
+    os.path.join(BASE_DIR, 'locale'),
     #"/code/admin/templates/locale",
 )
 
