@@ -12,7 +12,7 @@ import logging
 from datetime import timedelta
 from collections import OrderedDict
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 os_env = os.environ
 
@@ -1970,7 +1970,7 @@ MIDDLEWARE = (
 LANGUAGE_CODE = 'ja'
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'templates/locale'),
+    os.path.join(BASE_DIR, 'locale'),
 
 )
 
