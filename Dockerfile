@@ -92,8 +92,8 @@ RUN set -ex \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /code \
-    && pip install virtualenv \
-    && pip install Babel
+    && sudo pip install virtualenv \
+    && sudo pip install Babel
 
 WORKDIR /code
 
