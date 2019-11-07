@@ -93,7 +93,7 @@ RUN set -ex \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /code \
     && pip install virtualenv \
-    && pip install Babel \    
+    && pip install Babel
 
 WORKDIR /code
 
