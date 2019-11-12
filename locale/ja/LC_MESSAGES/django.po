@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-31 14:15+0900\n"
+"POT-Creation-Date: 2019-11-12 11:09+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,15 +28,15 @@ msgstr "ドキュメンテーション"
 
 #: .\admin\templates\emails\password_change_done.html:3
 msgid "Change password"
-msgstr "バスワード変更"
+msgstr "パスワード編区"
 
 #: .\admin\templates\emails\password_change_done.html:3
 msgid "'Log out'"
-msgstr "'ログアウト'"
+msgstr "ログアウト"
 
 #: .\admin\templates\emails\password_change_done.html:6
 msgid " Home "
-msgstr " ホーム "
+msgstr "ホーム"
 
 #: .\admin\templates\emails\password_change_done.html:14
 msgid "Your password has been changed."
@@ -50,31 +50,28 @@ msgstr "ホームへ戻る"
 msgid ""
 "You're receiving this email because you requested a password reset for your "
 "OSF Admin user account."
-msgstr ""
-"OSF管理者ユーザーアカウントのパスワードリセットをリクエストしたため、このメー"
-"ルを受信しています。"
+msgstr "OFS管理者"
 
 #: .\admin\templates\emails\password_reset_email.html:4
 msgid "Please go to this link to reset your password:"
-msgstr "パスワードをリセットするには、次のリンクにアクセスしてください。"
+msgstr ""
 
 #: .\admin\templates\emails\password_reset_email.html:9
 msgid "Your account email is:"
-msgstr "あなたのアカウントのメールアドレス:"
+msgstr ""
 
 #: .\admin\templates\emails\password_reset_email.html:11
 msgid "Thank you."
-msgstr "ありがとうございます。"
+msgstr ""
 
 #: .\admin\templates\emails\password_reset_email.html:13
 msgid "-OSF Admin"
-msgstr "-OSF管理者"
+msgstr ""
 
 #: .\admin\templates\login.html:6
 msgid "OSFAdmin | Log in"
 msgstr "OSF管理者 | ログイン"
 
 #: .\admin\templates\login.html:23
-#| msgid "Sign in to start your sessionAAA"
-msgid "Sign in to start your sessionAAA"
+msgid "Sign in to start your session"
 msgstr "サインインしてセッションを開始します。"
