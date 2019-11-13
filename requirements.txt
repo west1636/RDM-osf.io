@@ -122,9 +122,3 @@ datacite==1.0.1
 
 # Metrics
 django-elasticsearch-metrics==5.0.0
-
-#Babel
-Flask-Babel==0.11.2
-Jinja2==2.9.6
-MarkupSafe==1.0
-click==6.7
