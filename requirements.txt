@@ -124,7 +124,6 @@ datacite==1.0.1
 django-elasticsearch-metrics==5.0.0
 
 #Babel
-Babel==2.4.0
 Flask-Babel==0.11.2
 Jinja2==2.9.6
 MarkupSafe==1.0
