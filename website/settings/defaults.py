@@ -12,8 +12,6 @@ import logging
 from datetime import timedelta
 from collections import OrderedDict
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 os_env = os.environ
 
 
@@ -1959,6 +1957,9 @@ MAPCORE_AUTHCODE_MAGIC = 'GRDM_mAP_AuthCode'
 MAPCORE_CLIENTID = None
 MAPCORE_SECRET = None
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+LANGUAGE_CODE = 'ja'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -1971,11 +1972,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-LANGUAGE_CODE = 'ja'
-
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
-
 )
-
-USE_I18N = True
