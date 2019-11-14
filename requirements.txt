@@ -122,3 +122,6 @@ datacite==1.0.1
 
 # Metrics
 django-elasticsearch-metrics==5.0.0
+
+#django-babel
+django-babel==0.6.2
