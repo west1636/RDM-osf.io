@@ -125,3 +125,6 @@ django-elasticsearch-metrics==5.0.0
 
 #django-babel
 django-babel==0.6.2
+
+#FlaskBabel
+Flask-Babel==0.12.2
