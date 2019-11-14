@@ -83,7 +83,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#social" data-toggle="tab">Social</a></li>
             <li><a href="#jobs" data-toggle="tab">Employment</a></li>
-            <li><a href="#schools" data-toggle="tab">${_('Education')}</a></li>
+            <li><a href="#schools" data-toggle="tab">{{ 0.15|percentfmt }}</a></li>
         </ul>
 
         <div class="tab-content" id="containDrag">
