@@ -1,7 +1,6 @@
 <%inherit file="base.mako"/>
-{% load i18n babel %}
 {% load i18n %}
-{% babel %}
+{% load babel %}
 <%namespace name="render_nodes" file="util/render_nodes.mako" />
 <%def name="title()">${profile["fullname"]}</%def>
 <%def name="resource()"><%
