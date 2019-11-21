@@ -1,15 +1,16 @@
+{% load i18n %}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">x</button>
 </div>
 <div class="modal-body">
-    <h3>OSF user "{{ user_id }}" up to 50 most recent desk.com cases:</h3>
+    <h3>{% trans "OSF user "{{ user_id }}" up to 50 most recent desk.com cases:" %}</h3>
     <table class="table table-striped">
     <thead>
         <tr>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Subject</th>
-            <th>Links to Desk</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Subject" %}</th>
+            <th>{% trans "Links to Desk" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -24,7 +25,7 @@
         </tr>
     {% empty %}
         <tr>
-            <td>No cases</td>
+            <td>{% trans "No cases" %}</td>
         </tr>
     {% endfor %}
     </tbody>

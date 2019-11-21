@@ -5,7 +5,7 @@
             <form class="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="modal-title">Add new wiki page</h3>
+                    <h3 class="modal-title">${ _("Add new wiki page") }</h3>
                 </div><!-- end modal-header -->
                 <div class="modal-body">
                     <div class='form-group'>
@@ -14,8 +14,8 @@
                     <p id="alert" class="text-danger"> </p>
                 </div><!-- end modal-body -->
                 <div class="modal-footer">
-                    <a id="close" href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <button id="add-wiki-submit" type="submit" class="btn btn-success">Add</button>
+                    <a id="close" href="#" class="btn btn-default" data-dismiss="modal">${ _("Cancel") }</a>
+                    <button id="add-wiki-submit" type="submit" class="btn btn-success">${ _("Add") }</button>
                 </div><!-- end modal-footer -->
             </form>
         </div><!-- end modal- content -->
@@ -43,16 +43,16 @@
                     .removeAttr('disabled', 'disabled')
                     .text('Add');
             } else if ($data.val().length > 100) {
-                $alert.text('The new wiki page name cannot be more than 100 characters.');
+                $alert.text(${ _("The new wiki page name cannot be more than 100 characters.") });
                 $submitForm
                     .removeAttr('disabled', 'disabled')
                     .text('Add');
 
             } else if ($data.val().indexOf('/') != -1) {
-                $alert.text('The new wiki page name cannot contain forward slashes.');
+                $alert.text(${ _("The new wiki page name cannot contain forward slashes.") });
                 $submitForm
                     .removeAttr('disabled', 'disabled')
-                    .text('Add');
+                    .text(${ _("Add") });
             } else {
                 // TODO: helper to eliminate slashes in the url.
                 var wikiName = $data.val();
@@ -91,7 +91,7 @@
                     }
                     $submitForm
                         .removeAttr('disabled', 'disabled')
-                        .text('Add');
+                        .text(${ _("Add") });
                 });
             }
         });

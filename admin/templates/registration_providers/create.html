@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 {% load render_bundle from webpack_loader %}
 {% block top_includes %}
@@ -11,13 +12,13 @@
     </script>
 {% endblock %}
 {% block title %}
-    <title>Create Registration Provider</title>
+    <title>{% trans "Create Registration Provider" %}</title>
 {% endblock title %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h2>Create A Registration Provider</h2>
+                <h2>{% trans "Create A Registration Provider" %}</h2>
             </div>
 
         </div>

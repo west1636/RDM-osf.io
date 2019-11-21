@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load render_bundle from webpack_loader %}
 {% load static %}
 
@@ -12,11 +13,11 @@
 {% load spam_extras %}
 
 {% block title %}
-<title>Institutional Storage</title>
+<title>{% trans "Institutional Storage" %}</title>
 {% endblock title %}
 
 {% block content %}
-<h2>Institutional Storage <small>({{ institution.name }})</small></h2>
+<h2>{% trans "Institutional Storage <small>({{ institution.name }})</small>" %}</h2>
 
 <div id="content-main">
     <form role="form" id="institutional_storage_form">
@@ -31,7 +32,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title label-large">Configure Institutional Storage Accounts</h3>
+                            <h3 class="panel-title label-large">{% trans "Configure Institutional Storage Accounts" %}</h3>
                         </div>
                         <div class="panel-body">
 
@@ -58,8 +59,8 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-default" type="reset">Cancel</button>
-                        <button class="btn btn-success next-btn" type="submit">Save</button>
+                        <button class="btn btn-default" type="reset">{% trans "Cancel" %}</button>
+                        <button class="btn btn-success next-btn" type="submit">{% trans "Save" %}</button>
                     </div>
                 </div>
             </div>

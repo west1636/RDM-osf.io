@@ -23,12 +23,12 @@
                         <a
                                 class="text-danger pull-right"
                                 data-bind="click: $parent.removeContent.bind($parent)"
-                                >Remove</a>
+                                >${ _("Remove") }</a>
                         <a
                                 style="margin-right: 15px"
                                 class="btn-link pull-right"
                                 data-bind="click: $parent.setContentFromIdP.bind($parent)"
-                                >Read IdP Profile</a>
+                                >${ _("Read IdP Profile") }</a>
                     </div>
 
                     <div class="form-group">
@@ -41,17 +41,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Department</label>
+                        <label>${ _("Department") }</label>
                         <input class="form-control" data-bind="value: department" />
                     </div>
 
                     <div class="form-group">
-                        <label>Degree</label>
+                        <label>${ _("Degree") }</label>
                         <input class="form-control" data-bind="value: degree" />
                     </div>
 
                     <div class="form-group">
-                        <label>Start date</label>
+                        <label>${ _("Start date") }</label>
                         <div class="row">
                             <div class ="col-md-3">
                                 <select class="form-control" data-bind="options: months,
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="form-group" data-bind="ifnot: ongoing">
-                        <label>End date</label>
+                        <label>${ _("End date") }</label>
                             <div class="row">
                                 <div class ="col-md-3">
                                     <select class="form-control" data-bind="options: months,
@@ -82,7 +82,7 @@
 
 
                     <div class="form-group">
-                        <label>Ongoing</label>
+                        <label>${ _("Ongoing") }</label>
                         <input type="checkbox" data-bind="checked: ongoing, click: clearEnd"/>
                     </div>
 
@@ -101,7 +101,7 @@
 
             <div>
                 <a class="btn btn-default" data-bind="click: addContent">
-                    Add another
+                    ${ _("Add another") }
                 </a>
             </div>
 
@@ -111,13 +111,13 @@
                         type="button"
                         class="btn btn-default"
                         data-bind="click: cancel"
-                    >Discard changes</button>
+                    >${ _("Discard changes") }</button>
 
                 <button
                         data-bind="disable: saving(), text: saving() ? 'Saving' : 'Save'"
                         type="submit"
                         class="btn btn-success"
-                    >Save</button>
+                    >${ _("Save") }</button>
 
             </div>
 
@@ -133,7 +133,7 @@
     <div data-bind="if: mode() === 'view'">
 
         <div data-bind="ifnot: contents().length">
-            <div class="well well-sm">Not provided</div>
+            <div class="well well-sm">${ _("Not provided") }</div>
         </div>
 
         <div class="row" data-bind="if: contents().length">
@@ -152,9 +152,9 @@
                             </div>
                             <div data-bind="attr: {id: 'schoolCard' + $index(), 'aria-labelledby': 'schoolHeading' + $index()}" class="panel-collapse collapse">
                                 <div class="panel-body card-body">
-                                    <span data-bind="if: department().length"><h5>Department:</h5> <span data-bind="text: department"></span></span>
-                                    <span data-bind="if: degree().length"><h5>Degree:</h5> <span data-bind="text: degree"></span></span>
-                                    <span data-bind="if: startYear()"><h5>Dates:</h5>
+                                    <span data-bind="if: department().length"><h5>${ _("Department:") }</h5> <span data-bind="text: department"></span></span>
+                                    <span data-bind="if: degree().length"><h5>${ _("Degree:") }</h5> <span data-bind="text: degree"></span></span>
+                                    <span data-bind="if: startYear()"><h5>${ _("Dates:") }</h5>
                                         <span data-bind="text: startMonth"></span> <span data-bind="text: startYear"></span> - <span data-bind="text: endView"></span>
                                     </span>
                                 </div>
@@ -177,7 +177,7 @@
 
 
         <div data-bind="if: editable">
-            <a class="btn btn-default" data-bind="click: edit">Edit</a>
+            <a class="btn btn-default" data-bind="click: edit">${ _("Edit") }</a>
         </div>
 
     </div>

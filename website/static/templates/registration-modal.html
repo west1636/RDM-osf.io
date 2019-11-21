@@ -1,3 +1,4 @@
+{% load i18n %}
 <script type="text/html" id="registrationChoiceModal">
     <div class="modal-header">
         <h4 class="modal-title" data-bind="text:pageTitle" ></h4>
@@ -16,9 +17,9 @@
                 <div class="p-sm">
                     <div>
                         Select:&nbsp;
-                        <a class="text-bigger" data-bind="click:selectAll">Select All</a>
+                        <a class="text-bigger" data-bind="click:selectAll">{% trans "Select All" %}</a>
                         &nbsp;|&nbsp;
-                        <a class="text-bigger" data-bind="click:selectNone">Clear All</a>
+                        <a class="text-bigger" data-bind="click:selectNone">{% trans "Clear All" %}</a>
                     </div>
                     <div class="tb-row-titles">
                         <div style="width: 100%" data-tb-th-col="0" class="tb-th">
@@ -31,7 +32,7 @@
                                 <div class="ball-scale ball-scale-blue">
                                     <div></div>
                                 </div>
-                                <p class="m-t-sm fg-load-message"> Loading projects and components...  </p>
+                                <p class="m-t-sm fg-load-message"> {% trans "Loading projects and components..." %}  </p>
                             </div>
                         </div>
                     </div>
@@ -47,7 +48,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="m-b-md box p-sm">
-                    <span>The following projects and components will be registered:</span>
+                    <span>{% trans "The following projects and components will be registered:" %}</span>
                 </div>
             </div>
         </div>
@@ -72,7 +73,7 @@
                         <li data-bind="html: $data"></li>
                     </ul>
                     <div class="form-group">
-                        <label class="control-label">Registration choice</label>
+                        <label class="control-label">{% trans "Registration choice" %}</label>
                         <select class="form-control" data-bind="options: registrationOptions,
                                                                               value: registrationChoice,
                                                                               optionsText: 'message',
@@ -81,7 +82,7 @@
                     <span data-bind="visible: showEmbargoDatePicker">
                         <div class="form-group">
                             <label class="control-label">
-                                Embargo End Date
+                                {% trans "Embargo End Date" %}
                             </label>
                             <input type="text" class="form-control" data-bind="datePicker: {value: $root.pikaday, valid: $root.embargoEndDate.isValid}">
                         </div>
@@ -94,16 +95,16 @@
     <div class="modal-footer">
         <!--ordering puts back button before cancel -->
         <span data-bind="if: page() == SELECT">
-            <a href="#" class="btn btn-default" data-bind="click: clear" data-dismiss="modal">Cancel</a>
-            <button class="btn btn-primary" data-bind="click:confirmPage, disable:invalidSelection">Continue</button>
+            <a href="#" class="btn btn-default" data-bind="click: clear" data-dismiss="modal">{% trans "Cancel" %}</a>
+            <button class="btn btn-primary" data-bind="click:confirmPage, disable:invalidSelection">{% trans "Continue" %}</button>
         </span>
         <span data-bind="if: page() == CONFIRM">
-            <a href="#" class="btn btn-default" data-bind="click: back" data-dismiss="modal">Back</a>
-            <button class="btn btn-primary" data-bind="click:embargoPage, disable:invalidSelection">Continue</button>
+            <a href="#" class="btn btn-default" data-bind="click: back" data-dismiss="modal">{% trans "Back" %}</a>
+            <button class="btn btn-primary" data-bind="click:embargoPage, disable:invalidSelection">{% trans "Continue" %}</button>
         </span>
         <span data-bind="if: page() == EMBARGO">
-            <a href="#" class="btn btn-default" data-bind="click: confirmPage, visible: !requiresApproval && !noComponents()" data-dismiss="modal">Back</a>
-            <button class="btn btn-success" data-bind="click: register, enable: canRegister">Register</button>
+            <a href="#" class="btn btn-default" data-bind="click: confirmPage, visible: !requiresApproval && !noComponents()" data-dismiss="modal">{% trans "Back" %}</a>
+            <button class="btn btn-success" data-bind="click: register, enable: canRegister">{% trans "Register" %}</button>
         </span>
 
     </div><!-- end modal-footer -->

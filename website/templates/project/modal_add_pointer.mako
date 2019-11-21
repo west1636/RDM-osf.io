@@ -5,7 +5,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Link other GakuNin RDM projects</h3>
+                <h3>${ _("Link other GakuNin RDM projects") }</h3>
             </div>
 
             <div class="modal-body">
@@ -40,8 +40,8 @@
                 <br>
                 <div>
                   <ul class="nav nav-tabs">
-                    <li id="getLinksNodesTab" class="active"><a data-bind="click: nodeView">Projects</a></li>
-                    <li id="getLinksRegistrationsTab"><a data-bind="click: registrationView">Registrations</a></li>
+                    <li id="getLinksNodesTab" class="active"><a data-bind="click: nodeView">${ _("Projects") }</a></li>
+                    <li id="getLinksRegistrationsTab"><a data-bind="click: registrationView">${ _("Registrations") }</a></li>
                   </ul>
                 </div>
                 <br>
@@ -52,10 +52,10 @@
                     <div class="col-md-10">
                         <table class="table add-links table-striped table-condensed table-hover">
                             <caption>
-                                <span data-bind="if: (inputType() == 'nodes' && includePublic)" class="modal-subheader">Results: All Projects</span>
-                                <span data-bind="if: (inputType() == 'nodes' && !includePublic())" class="modal-subheader">Results: My Projects</span>
-                                <span data-bind="if: (inputType() != 'nodes' && includePublic)" class="modal-subheader">Results: All Registrations</span>
-                                <span data-bind="if: (inputType() != 'nodes' && !includePublic())" class="modal-subheader">Results: My Registrations</span>
+                                <span data-bind="if: (inputType() == 'nodes' && includePublic)" class="modal-subheader">${ _("Results: All Projects") }</span>
+                                <span data-bind="if: (inputType() == 'nodes' && !includePublic())" class="modal-subheader">${ _("Results: My Projects") }</span>
+                                <span data-bind="if: (inputType() != 'nodes' && includePublic)" class="modal-subheader">${ _("Results: All Registrations") }</span>
+                                <span data-bind="if: (inputType() != 'nodes' && !includePublic())" class="modal-subheader">${ _("Results: My Registrations") }</span>
                                 <p class="h5 error" data-bind="text:errorMsg"></p>
                             </caption>
                             <tbody data-bind="foreach:{data:results}">
@@ -93,7 +93,7 @@
 
             <div class="modal-footer">
 
-                <a class="btn btn-default" data-bind='click:done' data-dismiss="modal">Done</a>
+                <a class="btn btn-default" data-bind='click:done' data-dismiss="modal">${ _("Done") }</a>
                 <div class="help-block">
                     <span class="text-danger" data-bind="html: submitWarningMsg"></span>
                 </div>

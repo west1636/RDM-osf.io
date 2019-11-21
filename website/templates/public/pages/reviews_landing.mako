@@ -1,11 +1,11 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">GakuNin RDM Reviews</%def>
+<%def name="title()">${ _("GakuNin RDM Reviews") }</%def>
 
 <%def name="content()">
-<h2>Reviews service is not activated.</h2>
+<h2>${ _("Reviews service is not activated") }.</h2>
 <ul>
-<li>Set the following in local.py:</li>
+<li>${ _("Set the following in local.py:") }</li>
 <pre><code>USE_EXTERNAL_EMBER = True
 EXTERNAL_EMBER_APPS = {
   'reviews': {
@@ -14,6 +14,6 @@ EXTERNAL_EMBER_APPS = {
     'path': '/reviews/'
   }
 }</code></pre>
-<li>Start the reviews container with <code>docker-compose up -d reviews</code>.</li>
+<li>${ _("Start the reviews container with <code>docker-compose up -d reviews</code>.") }</li>
 </ul>
 </%def>

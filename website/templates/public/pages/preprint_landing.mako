@@ -3,9 +3,9 @@
 <%def name="title()">Preprints</%def>
 
 <%def name="content()">
-<h2>Preprints service is not activated.</h2>
+<h2>${ _("Preprints service is not activated.") }</h2>
 <ul>
-<li>Set the following in local.py:</li>
+<li>${ _("Set the following in local.py:") }</li>
 <pre><code>USE_EXTERNAL_EMBER = True
 EXTERNAL_EMBER_APPS = {
   'preprints': {
@@ -14,6 +14,6 @@ EXTERNAL_EMBER_APPS = {
     'path': '/preprints/'
   }
 }</code></pre>
-<li>Start the preprints container with <code>docker-compose up -d preprints</code>.</li>
+<li>${ _("Start the preprints container with <code>docker-compose up -d preprints</code>.") }</li>
 </ul>
 </%def>

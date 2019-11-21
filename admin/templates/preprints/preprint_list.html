@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load user_extras %}
 {% load node_extras %}
 {% include "util/pagination.html" with items=page status=status %}
@@ -21,14 +22,14 @@
             </th>
             {% endif %}
             <th>GUID</th>
-            <th>Title</th>
-            <th>Public</th>
-            <th>Provider</th>
-            <th>Date Published</th>
-            <th>Date Modified</th>
-            <th>Date Created</th>
-            <th>Creator</th>
-            <th>SPAM Status</th>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Public" %}</th>
+            <th>{% trans "Provider" %}</th>
+            <th>{% trans "Date Published" %}</th>
+            <th>{% trans "Date Modified" %}</th>
+            <th>{% trans "Date Created" %}</th>
+            <th>{% trans "Creator" %}</th>
+            <th>{% trans "SPAM Status" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -59,19 +60,19 @@
 </table>
 {% if form_action and perms.osf.mark_spam %}
 <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#confirmSpamListModal">
-    Confirm Spam
+    {% trans "Confirm Spam" %}
 </button>
 <div id="confirmSpamListModal" class="modal fade well" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">x</button>
-                <h3>Are you sure the selected preprint(s) are spam?</h3>
+                <h3>{% trans "Are you sure the selected preprint(s) are spam?" %}</h3>
             </div>
             <div class="modal-footer">
                 <input class="btn btn-danger" type="submit" value="Confirm" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                    Cancel
+                    {% trans "Cancel" %}
                 </button>
             </div>
         </div>

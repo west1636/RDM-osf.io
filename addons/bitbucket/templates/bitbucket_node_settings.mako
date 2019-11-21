@@ -3,7 +3,7 @@
     <div>
         <h4 class="addon-title">
             <img class="addon-icon" src="${addon_icon_url}">
-            Bitbucket
+            ${ _("Bitbucket
             <small class="authorized-by">
                 % if node_has_auth:
                         authorized by
@@ -12,17 +12,17 @@
                         </a>
                     % if not is_registration:
                         <a id="bitbucketRemoveToken" class="text-danger pull-right addon-auth" >
-                          Disconnect Account
+                          ${ _("Disconnect Account
                         </a>
                     % endif
                 % else:
                     % if user_has_auth:
                         <a id="bitbucketImportToken" class="text-primary pull-right addon-auth">
-                           Import Account from Profile
+                           ${ _("Import Account from Profile
                         </a>
                     % else:
                         <a id="bitbucketCreateToken" class="text-primary pull-right addon-auth">
-                           Connect Account
+                           ${ _("Connect Account
                         </a>
                     % endif
                 % endif
@@ -35,7 +35,7 @@
         <input type="hidden" id="bitbucketUser" name="bitbucket_user" value="${bitbucket_user}" />
         <input type="hidden" id="bitbucketRepo" name="bitbucket_repo" value="${bitbucket_repo}" />
 
-        <p><strong>Current Repo: </strong>
+        <p><strong>${ _("Current Repo: ") }</strong>
 
         % if is_owner and not is_registration:
         </p>
@@ -55,14 +55,14 @@
 
             <div class="col-md-6 m-b-sm">
                 <button class="btn btn-success addon-settings-submit">
-                    Save
+                    ${ _("Save") }
                 </button>
             </div>
         </div>
         % elif bitbucket_repo_full_name:
             <a href="${files_url}">${bitbucket_repo_full_name}</a></p>
         % else:
-            <span>None</span></p>
+            <span>${ _("None") }</span></p>
         % endif
     % endif
 
@@ -71,12 +71,12 @@
     % if node_has_auth and not valid_credentials:
         <div class="addon-settings-message text-danger p-t-sm">
             % if is_owner:
-                Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials
-                may no longer be valid. Try deauthorizing and reauthorizing Bitbucket on your
-                <a href="${addons_url}">account settings page</a>.
+                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials") }
+                ${ _("may no longer be valid. Try deauthorizing and reauthorizing Bitbucket on your") }
+                <a href="${addons_url}">${ _("account settings page") }</a>.
             % else:
-                Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials
-                may no longer be valid. Contact ${auth_osf_name} to verify.
+                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials") }
+                ${ _("may no longer be valid. Contact ${auth_osf_name} to verify.") }
             % endif
         </div>
     % else:

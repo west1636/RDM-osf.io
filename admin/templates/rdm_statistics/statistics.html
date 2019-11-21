@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block top_includes %}
@@ -31,12 +32,12 @@ div.image_box{
 <title>RDM Statistics</title>
 {% endblock title %}
 {% block content %}
-<h2>RDM Statistics</h2>
+<h2>{% trans "RDM Statistics" %}</h2>
 
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading clearfix"><div><h3 class="panel-title"> Institution </h3></div></div>
+            <div class="panel-heading clearfix"><div><h3 class="panel-title"> {% trans "Institution" %} </h3></div></div>
             <div class="panel-body">
                 <table cellspacing="0">
                     <tr><td>
@@ -96,8 +97,8 @@ div.image_box{
             <div class="panel panel-default">
                 <div class="panel-body">
                     <!-- <input type="button" value="send PDF"> -->
-                    <a role="button" href="{% url 'statistics:report' institution.id %}" class="btn btn-primary">download PDF</a>
-                    <a role="button" href="{% url 'statistics:csv' institution.id %}" class="btn btn-primary">download CSV</a>
+                    <a role="button" href="{% url 'statistics:report' institution.id %}" class="btn btn-primary">{% trans "download PDF" %}</a>
+                    <a role="button" href="{% url 'statistics:csv' institution.id %}" class="btn btn-primary">{% trans "download CSV" %}</a>
                 </div>
 
         </div>

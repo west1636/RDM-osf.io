@@ -63,8 +63,8 @@
                             <span class="fa fa-ellipsis-h"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <li><a tabindex="-1" href="${domain}${summary['id']}/contributors/">Manage Contributors</a></li>
-                            <li><a tabindex="-1" href="${domain}${summary['id']}/settings/">Settings</a></li>
+                            <li><a tabindex="-1" href="${domain}${summary['id']}/contributors/">${ _("Manage Contributors") }</a></li>
+                            <li><a tabindex="-1" href="${domain}${summary['id']}/settings/">${ _("Settings") }</a></li>
                             % if summary['is_admin']:
                             <li>
                                 <a tabindex="-1"
@@ -106,7 +106,7 @@
             </div>
         % endif
         % else:
-            <div>Anonymous Contributors</div>
+            <div>${ _("Anonymous Contributors") }</div>
         % endif
         % if summary['description']:
             <span class="text-muted">${summary['description']}</span>

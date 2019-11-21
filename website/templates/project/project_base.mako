@@ -21,7 +21,7 @@
     %if node['description']:
         ${sanitize.strip_html(node['description']) + ' '}
     %endif
-    Hosted on the GakuNin RDM
+    ${ _("Hosted on the GakuNin RDM") }
 </%def>
 
 <%def name="title_meta()">

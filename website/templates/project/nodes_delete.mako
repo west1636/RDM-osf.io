@@ -18,9 +18,9 @@
                             </div>
                         </div>
                         <div>
-                            Select:&nbsp;
-                            <a class="text-bigger" data-bind="click:selectAll">All components</a>
-                            <span class="pull-right"><b><sup>*</sup></b><small>contains supplemental materials for a preprint</small></span>
+                            ${ _("Select:") }&nbsp;
+                            <a class="text-bigger" data-bind="click:selectAll">${ _("All components") }</a>
+                            <span class="pull-right"><b><sup>*</sup></b><small>${ _("contains supplemental materials for a preprint") }</small></span>
                         </div>
                         <div class="tb-row-titles">
                             <div style="width: 100%" data-tb-th-col="0" class="tb-th">
@@ -33,7 +33,7 @@
                                     <div class="ball-scale ball-scale-blue">
                                         <div></div>
                                     </div>
-                                    <p class="m-t-sm fg-load-message"> Loading projects and components...  </p>
+                                    <p class="m-t-sm fg-load-message"> ${ _("Loading projects and components...") }  </p>
                                 </div>
                             </div>
                             <div class="help-block" style="padding-left: 15px">
@@ -63,7 +63,7 @@
                                 </div>
                                 <p data-bind="html:warning">
                                 <p data-bind="css: {'text-danger' : (!canDelete() && atMaxLength())}">
-                                    Type the following to continue: <strong data-bind="text: confirmationString"></strong>
+                                    ${ _("Type the following to continue:") } <strong data-bind="text: confirmationString"></strong>
                                 </p>
                                 <div contenteditable="true" data-bind="editableHTML: {observable: confirmInput, onUpdate: handleEditableUpdate}" class="form-control"></div>
                             </div>
@@ -74,7 +74,7 @@
                         <div>
                             <p data-bind="html: message"></p>
                             <p data-bind="css: {'text-danger' : (!canDelete() && atMaxLength())}">
-                                Type the following to continue: <strong data-bind="text: confirmationString"></strong>
+                                ${ _("Type the following to continue:") } <strong data-bind="text: confirmationString"></strong>
                             </p>
                         </div>
                         <div contenteditable="true" data-bind="editableHTML: {observable: confirmInput, onUpdate: handleEditableUpdate}" class="form-control"></div>
@@ -84,14 +84,14 @@
                 <div class="modal-footer">
                     <!--ordering puts back button before cancel -->
                     <span data-bind="if: page() == CONFIRM">
-                        <a href="#" class="btn btn-default" data-bind="click: back" data-dismiss="modal">Back</a>
+                        <a href="#" class="btn btn-default" data-bind="click: back" data-dismiss="modal">${ _("Back") }</a>
                     </span>
-                    <a href="#" class="btn btn-default" data-bind="click: clear" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-default" data-bind="click: clear" data-dismiss="modal">${ _("Cancel") }</a>
                     <span data-bind="if: (page() === QUICKDELETE || (page() == CONFIRM && (nodesChanged().length <= 100)))">
-                        <a href="#" class="btn btn-danger" data-bind="css: { disabled: !canDelete() }, click: confirmChanges, visible: nodesDeleted()" data-dismiss="modal">Delete</a>
+                        <a href="#" class="btn btn-danger" data-bind="css: { disabled: !canDelete() }, click: confirmChanges, visible: nodesDeleted()" data-dismiss="modal">${ _("Delete") }</a>
                     </span>
                     <span data-bind="if: page() == SELECT">
-                        <a class="btn btn-primary" data-bind="css: { disabled: !nodesDeleted() }, click:confirmWarning" >Continue</a>
+                        <a class="btn btn-primary" data-bind="css: { disabled: !nodesDeleted() }, click:confirmWarning" >${ _("Continue") }</a>
                     </span>
                 </div><!-- end modal-footer -->
             </div><!-- end modal-content -->

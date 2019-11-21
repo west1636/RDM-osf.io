@@ -1,6 +1,6 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">Forgot Password</%def>
+<%def name="title()">${ _("Forgot Password") }</%def>
 
 <%def name="content()">
 
@@ -17,14 +17,14 @@
                 data-bind="submit: submit"
             >
             <div class="panel panel-osf">
-                <div class="panel-heading">Password reset request</div>
+                <div class="panel-heading">${ _("Password reset request") }</div>
                     <div class="panel-body">
                         <input type="email" class="form-control" data-bind="value: username" name="forgot_password-email" placeholder="Enter your email address" autofocus/>
-                        <button type="submit" class="btn btn-primary pull-right m-t-md">Reset password</button>
+                        <button type="submit" class="btn btn-primary pull-right m-t-md">${ _("Reset password") }</button>
                     </div>
             </div>
             <hr class="m-t-lg m-b-sm"/>
-            <h6 class="text-center text-muted text-300"><a href="${ web_url_for('index') }">Back to GakuNin RDM</a></h6>
+            <h6 class="text-center text-muted text-300"><a href="${ web_url_for('index') }">${ _("Back to GakuNin RDM<") }/a></h6>
         </form>
     </div>
 

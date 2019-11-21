@@ -1,5 +1,5 @@
 <%inherit file="base.mako"/>
-<%def name="title()">Reset Password</%def>
+<%def name="title()">${ _("Reset Password") }</%def>
 <%def name="content()">
 <h1 class="page-header text-center">Reset Password</h1>
 <div>
@@ -23,7 +23,7 @@
                         'has-success': password() && password.isValid()
                     }"
             >
-                <label for="resetPassword" class="col-sm-4 control-label">New Password</label>
+                <label for="resetPassword" class="col-sm-4 control-label">${ _("New Password") }</label>
                 <div class="col-sm-8">
                     <input
                         type="password"
@@ -70,7 +70,7 @@
                         'has-success': passwordConfirmation() && passwordConfirmation.isValid()
                     }"
             >
-                <label for="resetPasswordConfirmation" class="col-sm-4 control-label">Verify New Password</label>
+                <label for="resetPasswordConfirmation" class="col-sm-4 control-label">${ _("Verify New Password") }</label>
                 <div class="col-sm-8">
                     <input
                         type="password"
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary pull-right m-t-md" data-bind="css: {disabled: !password.isValid()}">Reset password</button>
+        <button type="submit" class="btn btn-primary pull-right m-t-md" data-bind="css: {disabled: !password.isValid()}">${ _("Reset password") }</button>
         </form>
     </div>
 </div>

@@ -4,7 +4,7 @@
 <div id="draftRegistrationScope" class="scripted">
     <div class="row">
         <div class="col-md-9">
-          <h3>Edit draft registration</h3>
+          <h3>${ _("Edit draft registration") }</h3>
         </div>
     </div>
     <hr />
@@ -48,12 +48,12 @@
 
                 <div class="row" style="margin-bottom: 10px;">
                   <span>
-                    Last auto-saved: <span data-bind="text: lastSaveTime"></span>
+                    ${ _("Last auto-saved:") } <span data-bind="text: lastSaveTime"></span>
                   </span>
                   <!-- ko if: onLastPage -->
                   <span data-bind="if: onLastPage() && hasValidationInfo()" class="pull-right">
                     <span class="text text-warning">
-                      Responses to some questions are invalid or missing where required.
+                      ${ _("Responses to some questions are invalid or missing where required.") }
                     </span>
                   </span>
                   <!-- /ko -->
@@ -63,11 +63,11 @@
                   <!-- ko if: onLastPage -->
                   <a data-bind="css: {disabled: !canSubmit()},
                                 click: $root.toPreview"
-                     type="button" class="pull-right btn btn-success">Preview for submission
+                     type="button" class="pull-right btn btn-success">${ _("Preview for submission") }
                   </a>
                   <!-- /ko -->
                   <!-- ko ifnot: onLastPage -->
-                  <a data-bind="click: nextPage" class="btn btn-primary pull-right">Next Page</a>
+                  <a data-bind="click: nextPage" class="btn btn-primary pull-right">${ _("Next Page") }</a>
                   <!-- /ko -->
                 </div>
               </div>

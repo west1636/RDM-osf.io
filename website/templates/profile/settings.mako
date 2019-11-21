@@ -1,5 +1,5 @@
 <%inherit file="base.mako"/>
-<%def name="title()">Settings</%def>
+<%def name="title()">${ _("Settings</%def>
 <%def name="resource()"><%
     return 'user'
 %>
@@ -8,7 +8,7 @@
 <% from website import settings %>
 <h2 class="page-header">Settings
     <div class="pull-right">
-        <a href="/profile" class="btn btn-link"><i class="fa fa-user m-r-sm"></i>View your profile </a>
+        <a href="/profile" class="btn btn-link"><i class="fa fa-user m-r-sm"></i>${ _("View your profile </a>
     </div>
 </h2>
 
@@ -35,10 +35,10 @@
         <div id="userProfile">
 
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#names" data-toggle="tab">Name</a></li>
-                <li><a href="#social" data-toggle="tab">Social</a></li>
-                <li><a href="#jobs" data-toggle="tab">Employment</a></li>
-                <li><a href="#schools" data-toggle="tab">Education</a></li>
+                <li class="active"><a href="#names" data-toggle="tab">${ _("Name") }</a></li>
+                <li><a href="#social" data-toggle="tab">${ _("Social</a></li>
+                <li><a href="#jobs" data-toggle="tab">${ _("Employment") }</a></li>
+                <li><a href="#schools" data-toggle="tab">${ _("Education") }</a></li>
             </ul>
 
             <div class="tab-content" id="containDrag">

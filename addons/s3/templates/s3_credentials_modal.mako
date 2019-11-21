@@ -3,7 +3,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Connect an Amazon S3 Account</h3>
+                <h3>${ _("Connect an Amazon S3 Account") }</h3>
             </div>
 
             <form>
@@ -33,10 +33,10 @@
 
                 <div class="modal-footer">
 
-                    <a href="#" class="btn btn-default" data-bind="click: clearModal" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-default" data-bind="click: clearModal" data-dismiss="modal">${ _("Cancel") }</a>
 
                     <!-- Save Button -->
-                    <button data-bind="click: connectAccount" class="btn btn-success">Save</button>
+                    <button data-bind="click: connectAccount" class="btn btn-success">${ _("Save") }</button>
 
                 </div><!-- end modal-footer -->
 

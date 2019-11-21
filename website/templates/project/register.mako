@@ -1,9 +1,9 @@
 <%inherit file="project/project_base.mako"/>
 
-<legend class="text-center">Register</legend>
+<legend class="text-center">${ _("Register") }</legend>
 
 % if node.get('registered_schema'):
-<%def name="title()">Registration of ${node['title']}</%def>
+<%def name="title()">${ _("Registration of ") }${node['title']}</%def>
   <div id="registrationMetaDataScope" class="container scripted">
     <div class="row">
       <div class="col-md-2">
@@ -41,7 +41,7 @@
     </div>
   </div>
 % else:
-  <%def name="title()">Register ${node['title']}</%def>
+  <%def name="title()">${ _("Register ") }${node['title']}</%def>
 <script type="text/javascript">
   window.location.href = '${node['url']}' + 'registrations/';
 </script>

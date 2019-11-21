@@ -2,14 +2,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Links to this project</h3>
+                <h3>${ _("Links to this project") }</h3>
             </div>
 
             <div class="modal-body">
                 <table class="table table-striped">
                     <thead>
-                        <th>Title</th>
-                        <th>Authors</th>
+                        <th>${ _("Title") }</th>
+                        <th>${ _("Authors") }</th>
                     </thead>
                     <tbody data-bind="foreach: links">
                         <tr>
@@ -28,7 +28,7 @@
             </div><!-- end modal-body -->
 
             <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                <a href="#" class="btn btn-default" data-dismiss="modal">${ _("Close") }</a>
             </div><!-- end modal-footer -->
         </div><!-- end modal-content -->
     </div><!-- end modal-dialog -->

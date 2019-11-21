@@ -1,3 +1,4 @@
+{% load i18n %}
     <head>
         <script>
             var TINYMCE_BASE_CONFIG = {
@@ -96,9 +97,9 @@
     </div>
     <div class="col-md-3">
         <div>
-            <h4>Import from JSON</h4>
-            <p>Choose a JSON file that has been previously exported from another Preprint Provider detail page. This will
-                pre-populate the Preprint Provider change form with those details.</p>
+            <h4>{% trans "Import from JSON" %}</h4>
+            <p>{% trans "Choose a JSON file that has been previously exported from another Preprint Provider detail page. This will
+                pre-populate the Preprint Provider change form with those details." %}</p>
             {% if preprint_provider %}
                 <form action = {% url 'preprint_providers:import' preprint_provider_id=preprint_provider.id %} method="post" enctype="multipart/form-data" >
             {% else %}
