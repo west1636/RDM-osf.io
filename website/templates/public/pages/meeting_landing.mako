@@ -1,6 +1,6 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">Meetings</%def>
+<%def name="title()">${ _("Meetings") }</%def>
 
 <%def name="nav()">
     <%namespace name="nav_helper" file="nav.mako" />
@@ -28,26 +28,26 @@
             <div class="container ">
             <div class="text-center m-b-lg">
                 <h1><img src="/static/img/meeting-page/osf_meetings_white.png" alt="Logo for GakuNin RDM meeting" style="width: 80%"></h1>
-                <h3>A <strong>free poster and presentation sharing service</strong> for academic meetings and conferences</h3>
+                <h3>${ _("A <strong>free poster and presentation sharing service</strong> for academic meetings and conferences") }</h3>
             </div>
                 <div class="network-img"> </div>
             <div class="row">
                 <div class="col-md-6 col-lg-5 col-xl-4 text-center m-b-lg" >
                     <i class="fa fa-users m-v-sm"></i>
-                    <h3 class="f-w-xl"> For Conference Organizers </h3>
+                    <h3 class="f-w-xl"> ${ _("For Conference Organizers") } </h3>
                     <div class="text-left">
-                        <p class="osf-meeting-p">Register your event to broaden its impact.  Events get a dedicated page, an easy submission process, and persistent links.</p>
+                        <p class="osf-meeting-p">${ _("Register your event to broaden its impact.  Events get a dedicated page, an easy submission process, and persistent links.") }</p>
                     </div>
                     <div class="p-v-md">
                         <button class="btn btn-success btn-lg" type="button" data-toggle="collapse" data-target="#osf-meeting-register" aria-expanded="false" aria-controls="collapseExample">
-                            Register
+                            ${ _("Register") }
                         </button>
                     </div>
                     <div class="collapse" id="osf-meeting-register">
                         <div class="m-lg osf-box-lt p-md text-left">
-                            <p>GakuNin RDM Meetings is a product that we offer to academic conferences at no cost. To request poster and talk hosting for a conference:</p>
-                                <p class="text-center"><strong> Submit this <a href="https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform">set-up form</a> </strong></p>
-                             <p>We'll review and add your conference within one business day.</p>
+                            <p>${ _("GakuNin RDM Meetings is a product that we offer to academic conferences at no cost. To request poster and talk hosting for a conference:") }</p>
+                                <p class="text-center">${ _("<strong> Submit this <a href="https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform">set-up form") }</a> </strong></p>
+                             <p>${ _("We'll review and add your conference within one business day.") }</p>
                         </div>
                     </div>
                 </div>
@@ -58,20 +58,20 @@
                         <p class="osf-meeting-p">Share your posters and presentations along with any supporting data and materials. Get persistent links and usage analytics.</p></div>
                     <div class="p-v-md">
                         <button class="btn btn-success btn-lg" type="button" data-toggle="collapse" data-target="#osf-meeting-upload" aria-expanded="false" aria-controls="collapseExample">
-                            Upload
+                            ${ _("Upload") }
                         </button>
                     </div>
                     <div class="collapse" id="osf-meeting-upload">
                         <div class="m-lg osf-box-lt p-md text-left">
-                            <p>The GakuNin RDM can host posters and talks for scholarly meetings.
-                                Submitting a presentation is easy:</p>
+                            <p>${ _("The GakuNin RDM can host posters and talks for scholarly meetings.") }
+                                ${ _("Submitting a presentation is easy:") }</p>
 
                             <ul>
-                                <li>Find the email address for your conference by clicking on its name in the list below</li>
-                                <li>Send your materials to the GakuNin RDM Meetings email address for your conference</li>
+                                <li>${ _("Find the email address for your conference by clicking on its name in the list below") }</li>
+                                <li>${ _("Send your materials to the GakuNin RDM Meetings email address for your conference") }</li>
                             </ul>
 
-                            <p> We‚Äôll create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.</p>
+                            <p> ${ _("WeÅfll  create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.") }</p>
                         </div>
 
                     </div>
@@ -88,7 +88,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="meetings">
                             <p>
-                                <small>Only conferences with at least five submissions are displayed.</small>
+                                ${ _("<small>Only conferences with at least five submissions are displayed.") }</small>
                             </p>
                             <div id="meetings-grid"></div>
                         </div>
@@ -99,7 +99,7 @@
                                     <div class="ball-scale ball-scale-blue">
                                         <div></div>
                                     </div>
-                                    <p class="m-t-sm fg-load-message"> Loading submissions...</p>
+                                    <p class="m-t-sm fg-load-message"> ${ _("Loading submissions...") }</p>
                                 </div>
                             </div>
                         </div>
@@ -113,33 +113,33 @@
             <div class="col-md-4 col-sm-4 text-center ">
                 <div class="p-v-md m-t-xl m-h-md">
                     <i class="fa fa-eye fa-custom-7x icon-circle blue-icon"></i>
-                    <h3>Discover</h3>
+                    <h3>${ _("Discover") }</h3>
                     <div class="p-h-lg">
-                        <p class="osf-meeting-p">Explore posters and presentations from events long after they're over.</p></div>
+                        <p class="osf-meeting-p">${ _("Explore posters and presentations from events long after they're over.") }</p></div>
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 text-center">
                 <div class=" p-v-md  m-t-xl m-h-md">
                     <i class="fa fa-share-alt fa-custom-7x icon-circle  blue-icon"></i>
-                    <h3>Share</h3>
+                    <h3>${ _("Share") }</h3>
                     <div class="p-h-lg">
-                        <p class="osf-meeting-p">Get persistent links to your content and increase your impact.</p>
+                        <p class="osf-meeting-p">${ _("Get persistent links to your content and increase your impact.") }</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 text-center">
                 <div class="p-v-md  m-t-xl m-h-md">
                     <i class="fa fa-magic fa-custom-7x icon-circle blue-icon"></i>
-                    <h3>Enhance</h3>
+                    <h3>${ _("Enhance") }</h3>
                     <div class="p-h-lg">
-                        <p class="osf-meeting-p">Add supplementary data and materials to your submission to make your work more transparent.</p>
+                        <p class="osf-meeting-p">${ _("Add supplementary data and materials to your submission to make your work more transparent.") }</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row text-center m-b-md">
-            <h2> Who uses GakuNin RDM Meetings?</h2>
+            <h2> ${ _("Who uses GakuNin RDM Meetings?") }</h2>
         </div>
         <div class="row org-logo m-b-lg">
             <div class="col-sm-3 col-xs-6  text-center">

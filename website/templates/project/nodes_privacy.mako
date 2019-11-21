@@ -24,10 +24,10 @@
                             </div>
                         </div>
                         <div>
-                            Select:&nbsp;
-                            <a class="text-bigger" data-bind="click:selectAll">Make all public</a>
+                            ${ _("Select:") }&nbsp;
+                            <a class="text-bigger" data-bind="click:selectAll">${ _("Make all public") }</a>
                             &nbsp;|&nbsp;
-                            <a class="text-bigger" data-bind="click:selectNone">Make all private</a>
+                            <a class="text-bigger" data-bind="click:selectNone">${ _("Make all private") }</a>
                         </div>
                         <div class="tb-row-titles">
                             <div style="width: 100%" data-tb-th-col="0" class="tb-th">
@@ -40,7 +40,7 @@
                                     <div class="ball-scale ball-scale-blue">
                                         <div></div>
                                     </div>
-                                    <p class="m-t-sm fg-load-message"> Loading projects and components...  </p>
+                                    <p class="m-t-sm fg-load-message"> ${ _("Loading projects and components...") }  </p>
                                 </div>
                             </div>
                             <div class="help-block" style="padding-left: 15px">
@@ -105,20 +105,20 @@
 
                     <span data-bind="if: page() == WARNING">
                       <span data-bind="if: parentIsEmbargoed">
-                        <a class="btn btn-primary" data-bind="click: makeEmbargoPublic">Confirm</a>
+                        <a class="btn btn-primary" data-bind="click: makeEmbargoPublic">${ _("Confirm") }</a>
                       </span>
                       <span data-bind="ifnot: parentIsEmbargoed">
-                        <a class="btn btn-primary" data-bind="visible: hasChildren(), click:selectProjects">Continue</a>
-                        <a class="btn btn-primary" data-bind="visible: !hasChildren(), click:confirmChanges">Confirm</a>
+                        <a class="btn btn-primary" data-bind="visible: hasChildren(), click:selectProjects">${ _("Continue") }</a>
+                        <a class="btn btn-primary" data-bind="visible: !hasChildren(), click:confirmChanges">${ _("Confirm") }</a>
                       </span>
                     </span>
 
                     <span data-bind="if: page() == SELECT">
-                      <a class="btn btn-primary" data-bind="click:confirmWarning">Continue</a>
+                      <a class="btn btn-primary" data-bind="click:confirmWarning">${ _("Continue") }</a>
                     </span>
 
                     <span data-bind="if: page() == CONFIRM && (nodesChangedPublic().length + nodesChangedPrivate().length <= 100)">
-                      <a href="#" class="btn btn-primary" data-bind="click: confirmChanges, visible: nodesChanged()" data-dismiss="modal">Confirm</a>
+                      <a href="#" class="btn btn-primary" data-bind="click: confirmChanges, visible: nodesChanged()" data-dismiss="modal">${ _("Confirm") }</a>
                     </span>
                 </div><!-- end modal-footer -->
             </div><!-- end modal-content -->

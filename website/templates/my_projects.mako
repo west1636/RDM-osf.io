@@ -1,11 +1,11 @@
 <%inherit file="base.mako"/>
-<%def name="title()">My Projects</%def>
+<%def name="title()">${ _("My Projects") }</%def>
 
 <%def name="container_class()">container-xxl</%def>
 
 <%def name="content()">
 % if disk_saving_mode:
-    <div class="alert alert-info alert-flat"><strong>NOTICE: </strong>Forks, registrations, and uploads will be temporarily disabled while the GakuNin RDM undergoes a hardware upgrade. These features will return shortly. Thank you for your patience.</div>
+    <div class="alert alert-info alert-flat"><strong>${ _("NOTICE") }: </strong>${ _("Forks, registrations, and uploads will be temporarily disabled while the GakuNin RDM undergoes a hardware upgrade. These features will return shortly. Thank you for your patience.") }</div>
 % endif
 
 

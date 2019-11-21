@@ -142,13 +142,13 @@
 <!-- Commentable -->
 <script type="text/html" id="commentable">
   <div class="registration-editor-comments">
-    <h4> Comments </h4>
-    <p class="text-muted">(Comments are not included in your preregistration and are not made public)</p>
+    <h4> ${ _("Comments") } </h4>
+    <p class="text-muted">${ _("(Comments are not included in your preregistration and are not made public)") }</p>
     <ul class="list-group" id="commentList" data-bind="foreach: {data: comments, as: 'comment'}">
         <li class="list-group-item">
           <div class="row" data-bind="visible: comment.isDeleted">
             <div class="col-md-12">
-              <strong><span data-bind="text: comment.getAuthor"></span></strong> deleted this comment on <em data-bind="text: comment.lastModified"></em>
+              <strong><span data-bind="text: comment.getAuthor"></span></strong>${ _(" deleted this comment on ") }<em data-bind="text: comment.lastModified"></em>
             </div>
           </div>
           <span class="row" data-bind="visible: !comment.isDeleted()">
@@ -156,7 +156,7 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-sm-9">
-                    <strong><span data-bind="text: comment.getAuthor"></span></strong> said ...
+                    <strong><span data-bind="text: comment.getAuthor"></span></strong>${ _(" said ...") }
                   </div>
                   <div data-bind="if: comment.isOwner" class="col-sm-3">
                     <div style="text-align: right;" class="btn-group">

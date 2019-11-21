@@ -1,11 +1,11 @@
 <%inherit file="project/project_base.mako"/>
 
-<%def name="title()">Register ${node['title']}</%def>
+<%def name="title()">${ _("Register ") }${node['title']}</%def>
 
 <div id="draftRegistrationScope">
     <div class="row">
         <div class="col-md-12">
-            <h3>Register</h3>
+            <h3>${ _("Register") }</h3>
         </div>
     </div>
     <hr>
@@ -24,16 +24,16 @@
     </div>
     <div class="row-md-12 scripted">
         <span data-bind="ifnot: draft.isPendingApproval">
-          <a type="button" class="btn btn-default pull-left" href="${draft['urls']['edit']}">Continue editing</a>
+          <a type="button" class="btn btn-default pull-left" href="${draft['urls']['edit']}">${ _("Continue editing") }</a>
         </span>
         <span data-bind="if: draft.isPendingApproval">
-          <a type="button" class="btn btn-default pull-left" href="${web_url_for('node_registrations', pid=node['id'], tab='drafts', _guid=True)}"> Back </a>
+          <a type="button" class="btn btn-default pull-left" href="${web_url_for('node_registrations', pid=node['id'], tab='drafts', _guid=True)}">${ _(" Back ") }</a>
         </span>
 
         <button id="register-submit" type="button" class="btn btn-success pull-right"
                 style="margin-left: 5px;"
                 data-bind="disable: !draft.isComplete(), click: draft.beforeRegister.bind(draft, null)">
-                Register
+                ${ _("Register") }
         </button>
     </div>
 </div>

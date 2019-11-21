@@ -3,7 +3,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Connect an ownCloud Account</h3>
+                <h3>${ _("Connect an ownCloud Account") }</h3>
             </div>
 
             <form>
@@ -27,15 +27,15 @@
 
                             <!-- Custom input -->
                             <div data-bind="if: useCustomHost">
-                                <label>Host URL</label>
+                                <label>${ _("Host URL") }</label>
                                 <div class="input-group form-group">
                                     <div class="input-group-addon">https://</div>
                                     <input type="text" class="form-control" name="customHost" data-bind="value: customHost" placeholder="owncloud.example.org">
                                 </div>
                                 <div class="text-muted" style="text-align: center">
-                                    <em>Only ownCloud instances supporting <a href="https://doc.owncloud.org/server/9.1/user_manual/files/access_webdav.html" target="_blank">WebDAV</a> and <a href="https://www.freedesktop.org/wiki/Specifications/open-collaboration-services-1.7/" target="_blank">
+                                    ${ _("<em>Only ownCloud instances supporting <a href="https://doc.owncloud.org/server/9.1/user_manual/files/access_webdav.html" target="_blank">WebDAV</a> and <a href="https://www.freedesktop.org/wiki/Specifications/open-collaboration-services-1.7/" target="_blank">
                                         OCS v1.7</a> are supported.
-                                        </em>
+                                        </em>") }
                                 </div>
                             </div>
                         </div>
@@ -43,17 +43,17 @@
                             <!-- API Token Input-->
                             <div class="form-group" data-bind="if: showCredentialInput">
                                 <label for="username">
-                                    Username
+                                    ${ _("Username") }
                                 </label>
                                 <input class="form-control" name="username" data-bind="value: username" placeholder="username" />
                                 <label for="password">
-                                    Password
+                                    ${ _("Password") }
                                 </label>
                                 <input class="form-control" name="password" data-bind="value: password" type="password" placeholder="********" />
                             </div>
                             <div class="text-muted" style="text-align: center">
-                                <em> These credentials will be encrypted. However, we <strong>strongly encourage</strong> using a <a href="https://doc.owncloud.org/server/9.1/user_manual/session_management.html#managing-devices" target="_blank"> Device (or App) Password</a>.
-                                </em>
+                                ${ _("<em> These credentials will be encrypted. However, we <strong>strongly encourage</strong> using a <a href="https://doc.owncloud.org/server/9.1/user_manual/session_management.html#managing-devices" target="_blank"> Device (or App) Password</a>.
+                                </em>") }
                             </div>
                         </div>
 
@@ -68,10 +68,10 @@
 
                 <div class="modal-footer">
 
-                    <a href="#" class="btn btn-default" data-bind="click: clearModal" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-default" data-bind="click: clearModal" data-dismiss="modal">${ _("Cancel") }</a>
 
                     <!-- Save Button -->
-                    <button data-bind="click: connectAccount" class="btn btn-success">Save</button>
+                    <button data-bind="click: connectAccount" class="btn btn-success">${ _("Save") }</button>
 
                 </div><!-- end modal-footer -->
 

@@ -4,7 +4,7 @@
 </script>
 
 <script type="text/html" id="osf-upload-open">
-  <div id="selectedFile">File(s) selected for upload:
+  <div id="selectedFile">${ _("File(s) selected for upload:
     <br>
     <br>
         <div data-bind="foreach: selectedFiles">
@@ -19,7 +19,7 @@
       <div class="ball-scale ball-scale-blue">
           <div></div>
       </div>
-      <p class="m-t-sm fg-load-message"> Loading files...  </p>
+      <p class="m-t-sm fg-load-message"> ${ _("Loading files...") }  </p>
     </div>
   </div>
 </script>
@@ -28,7 +28,7 @@
   <span data-bind="text: UPLOAD_LANGUAGE"></span>
   <br>
   <br>
-    <div id="selectedFile">File(s) selected for upload:
+    <div id="selectedFile">${ _("File(s) selected for upload:") }
         <div data-bind="foreach: selectedFiles">
             <span data-bind="text: data.name"></span>
             <button data-bind="click: $parent.unselectFile"
@@ -36,12 +36,12 @@
                     class="btn btn-xs btn-danger fa fa-times"></button>
             <br />
             <div data-bind="visible: $parent.descriptionVisible">
-                <p>Description: (optional)</p>
+                <p>${ _("Description: (optional)") }</p>
                 <input data-bind="valueUpdate: 'keyup', value: data.descriptionValue" type="text" class="form-control">
             </div>
         </div>
   </div>
-  <a data-bind="click: toggleUploader">Attach File</a>
+  <a data-bind="click: toggleUploader">${ _("Attach File") }</a>
   <span data-bind="visible: showUploader">
     <div data-bind="attr: {id: $data.uid}, osfUploader">
       <div class="container">
@@ -50,7 +50,7 @@
               <div></div>
               <div></div>
               <div></div>
-          </span>  Loading files...
+          </span>  ${ _("Loading files...") }
         </p>
       </div>
     </div>
@@ -60,7 +60,7 @@
 <!--Author Import -->
 <script type="text/html" id="osf-author-import">
     <h3 data-bind="text: value"></h3>
-    <a href="#addContributors" data-toggle="modal" class="btn btn-success btn-md pull-right" >Add &plus;</a>
+    <a href="#addContributors" data-toggle="modal" class="btn btn-success btn-md pull-right" >${ _("Add ") }&plus;</a>
 </script>
 
 

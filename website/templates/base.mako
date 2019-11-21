@@ -102,13 +102,13 @@
     % if dev_mode:
         <div class="dev-mode-helper scripted" id="devModeControls">
         <div id="metaInfo" data-bind="visible: showMetaInfo">
-            <h2>Current branch: <span data-bind="text: branch"></span></h2>
+            <h2>${ _("Current branch") }: <span data-bind="text: branch"></span></h2>
             <table>
                 <thead>
                 <tr>
-                    <th>PR</th>
-                    <th>Title</th>
-                    <th>Date Merged</th>
+                    <th>${ _("PR") }</th>
+                    <th>${ _("Title") }</th>
+                    <th>${ _("Date Merged") }</th>
                 </tr>
                 </thead>
                 <tbody data-bind="foreach: pullRequests">
@@ -131,7 +131,7 @@
                 padding:.5em;
             }
         </style>
-        <div id='devmode' data-bind='click: showHideMetaInfo'><strong>WARNING</strong>: This site is running in development mode.</div>
+        <div id='devmode' data-bind='click: showHideMetaInfo'><strong>${ _("WARNING") }</strong>: ${ _("This site is running in development mode.") }</div>
     </div>
     % endif
 
@@ -142,10 +142,10 @@
 <div class="footBanners">
     <div id="IEDepreciationBanner"  class="alert warningBanner">
         <div class="warningBannerText">
-            OSF does not support the use of Internet Explorer. For optimal performance, please switch to another browser.
+            ${ _("OSF does not support the use of Internet Explorer. For optimal performance, please switch to another browser.") }
         </div>
         <div class="warningBannerAcceptBtn">
-            <div class="btn btn-default" data-dismiss="alert" data-bind="click: accept" aria-label="Accept">Accept</div>
+            <div class="btn btn-default" data-dismiss="alert" data-bind="click: accept" aria-label="Accept">${ _("Accept") }</div>
         </div>
     </div>
     % if not user_id:
@@ -167,13 +167,13 @@
                 </div>
                 <div class='col-sm-10 col-xs-12'>
                     <a data-bind="click: dismiss" class="close" href="#">&times;</a>
-                    <h1>Start managing your projects on the GakuNin RDM today.</h1>
-                    <p>Free and easy to use, the GakuNin RDM supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.</p>
+                    <h1>${ _("Start managing your projects on the GakuNin RDM today.") }</h1>
+                    <p>${ _("Free and easy to use, the GakuNin RDM supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.") }</p>
                     <div>
-                        <a data-bind="click: trackClick.bind($data, 'Create Account')" class="btn btn-primary" href="${web_url_for('index')}#signUp">Create an Account</a>
+                        <a data-bind="click: trackClick.bind($data, 'Create Account')" class="btn btn-primary" href="${web_url_for('index')}#signUp">${ _("Create an Account") }</a>
 
                         <a data-bind="click: trackClick.bind($data, 'Learn More')" class="btn btn-primary" href="https://meatwiki.nii.ac.jp/confluence/display/gakuninrdmusers" target="_blank" rel="noreferrer">Learn More</a>
-                        <a data-bind="click: dismiss">Hide this message</a>
+                        <a data-bind="click: dismiss">${ _("Hide this message") }</a>
                     </div>
                 </div>
             </div>

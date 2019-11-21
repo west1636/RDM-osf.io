@@ -7,7 +7,7 @@
 
         <form role="form" data-bind="submit: submit">
 
-            <label>Your websites</label>
+            <label>${ _("Your websites") }</label>
             <div data-bind="sortable: {
                         data: profileWebsites,
                         options: {
@@ -28,15 +28,15 @@
                     </div>
                 </div>
             </div>
-            <div data-bind="ifnot: hasValidWebsites" class="text-danger">Please enter a valid website</div>
+            <div data-bind="ifnot: hasValidWebsites" class="text-danger">${ _("Please enter a valid website</div>
             <div class="p-t-sm p-b-sm">
                 <a class="btn btn-default" data-bind="click: addWebsiteInput">
-                    Add website
+                    ${ _("Add website") }
                 </a>
             </div>
 
             <div class="form-group">
-                <label>ORCID</label>
+                <label>${ _("ORCID") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">http://orcid.org/</span>
                 <input class="form-control" data-bind="value: orcid" placeholder="xxxx-xxxx-xxxx-xxxx"/>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="form-group">
-                <label>Twitter</label>
+                <label>${ _("Twitter") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">@</span>
                 <input class="form-control" data-bind="value: twitter" placeholder="twitterhandle"/>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="form-group">
-                <label>GitHub</label>
+                <label>${ _("GitHub") }</label>
                 <div class="input-group">
                     <span class="input-group-addon">https://github.com/</span>
                     <input class="form-control" data-bind="value: github" placeholder="username"/>
@@ -68,13 +68,13 @@
                         <button
                                 class="btn btn-primary"
                                 data-bind="click: github.importAddon"
-                                >Import</button>
+                                >${ _("Import") }</button>
                      </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>LinkedIn</label>
+                <label>${ _("LinkedIn") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">https://www.linkedin.com/</span>
                 <input class="form-control" data-bind="value: linkedIn" placeholder="in/userID, profile/view?id=profileID, or pub/pubID"/>
@@ -82,7 +82,7 @@
             </div>
 
             <div class="form-group">
-                <label>ImpactStory</label>
+                <label>${ _("ImpactStory") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">https://impactstory.org/u/</span>
                 <input class="form-control" data-bind="value: impactStory" placeholder="profileID"/>
@@ -90,7 +90,7 @@
             </div>
 
             <div class="form-group">
-                <label>Google Scholar</label>
+                <label>${ _("Google Scholar") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">http://scholar.google.com/citations?user=</span>
                 <input class="form-control" data-bind="value: scholar" placeholder="profileID"/>
@@ -98,7 +98,7 @@
             </div>
 
             <div class="form-group">
-                <label>ResearchGate</label>
+                <label>${ _("ResearchGate") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">https://researchgate.net/profile/</span>
                 <input class="form-control" data-bind="value: researchGate" placeholder="profileID"/>
@@ -106,7 +106,7 @@
             </div>
 
             <div class="form-group">
-                <label>Academia</label>
+                <label>${ _("Academia") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">https://</span>
                 <input class="form-control" data-bind="value: academiaInstitution" placeholder="institution" size="5"/>
@@ -116,7 +116,7 @@
             </div>
 
             <div class="form-group">
-                <label>Baidu Scholar</label>
+                <label>${ _("Baidu Scholar") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">http://xueshu.baidu.com/scholarID/</span>
                 <input class="form-control" data-bind="value: baiduScholar" placeholder="profileID"/>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="form-group">
-                <label>SSRN</label>
+                <label>${ _("SSRN") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">http://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=</span>
                 <input class="form-control" data-bind="value: ssrn" placeholder="profileID"/>
@@ -137,13 +137,13 @@
                         type="button"
                         class="btn btn-default"
                         data-bind="click: cancel"
-                    >Discard changes</button>
+                    >${ _("Discard changes") }</button>
 
                 <button
                         data-bind="disable: saving(), text: saving() ? 'Saving' : 'Save'"
                         type="submit"
                         class="btn btn-success"
-                    >Save</button>
+                    >${ _("Save") }</button>
             </div>
 
             <!-- Flashed Messages -->
@@ -161,8 +161,8 @@
             <tbody>
                 <tr data-bind="if: hasProfileWebsites()">
                     <td><span><i class='fa fa-globe fa-2x'/></span></td>
-                    <td data-bind="visible: profileWebsites().length > 1">Personal websites</td>
-                    <td data-bind="visible: profileWebsites().length === 1">Personal website</td>
+                    <td data-bind="visible: profileWebsites().length > 1">${ _("Personal websites") }</td>
+                    <td data-bind="visible: profileWebsites().length === 1">${ _("Personal website") }</td>
                     <td data-bind="foreach: profileWebsites"><a data-bind="attr: {href: $data}, text: $data"></a><br></td>
                 </tr>
             </tbody>
@@ -177,11 +177,11 @@
         </table>
 
         <div data-bind="ifnot: hasValues()">
-            <div class="well well-sm">Not provided</div>
+            <div class="well well-sm">${ _("Not provided") }</div>
         </div>
 
         <div data-bind="if: editAllowed">
-            <a class="btn btn-primary" data-bind="click: edit">Edit</a>
+            <a class="btn btn-primary" data-bind="click: edit">${ _("Edit") }</a>
         </div>
 
     </div>

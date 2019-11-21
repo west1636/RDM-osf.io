@@ -1,13 +1,13 @@
 <%inherit file="base.mako"/>
-<%def name="title()">Claim Account</%def>
+<%def name="title()">${ _("Claim Account") }</%def>
 <%def name="content()">
 <h1 class="page-header text-center">Set Password</h1>
 
 <div class="row">
     ## Center the form
     <div class="col-md-6 col-md-offset-3">
-    <p>Hello ${ firstname }! Please set a password to claim your account.</p>
-    <p>E-mail: <strong>${ email }</strong></p>
+    <p>${ _("Hello") } ${ firstname }! ${ _("Please set a password to claim your account.") }</p>
+    <p>${ _("E-mail") }: <strong>${ email }</strong></p>
 
         <form class="form"
               id='setPasswordForm'
@@ -90,7 +90,7 @@
             <!-- Terms of Service and Privacy Policy agreement -->
             <div class="form-group">
                     <input type="checkbox" data-bind="checked: acceptedTermsOfService" name="accepted_terms_of_service">
-                    <label style="margin-right: 15px">I have read and agree to the <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">Terms of Use</a> and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Privacy Policy</a>.</label>
+                    <label style="margin-right: 15px">${ _("I have read and agree to the ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms of Use</a> ${ _("and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy</a>.</label>
                     <p class="help-block" data-bind="validationMessage: acceptedTermsOfService" style="display: none;"></p>
             </div>
 
@@ -102,7 +102,7 @@
                 </div>
             %endif
             <div class='help-block'>
-                <p>If you are not ${fullname}, or if you were erroneously added as a contributor to the project described in the email invitation, please email <a href="mailto:${osf_contact_email}">${osf_contact_email}</a>
+                <p>${ _("If you are not") } ${fullname}, ${ _("or if you were erroneously added as a contributor to the project described in the email invitation, please email") } <a href="mailto:${osf_contact_email}">${osf_contact_email}</a>
                 </p>
             </div>
             ${form.token | unicode, n }

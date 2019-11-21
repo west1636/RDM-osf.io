@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load render_bundle from webpack_loader %}
 {% load prereg_extras %}
 
 {% load static %}
 {% block title %}
-    <title>OSF Admin | Prereg</title>
+    <title>{% trans "OSF Admin | Prereg" %}</title>
 {% endblock %}
 
 {% block content %}
-    <h2>List of Preregistration Drafts</h2>
+    <h2>{% trans "List of Preregistration Drafts" %}</h2>
     {% if perms.osf.view_prereg %}
     <div>
         {# Add types here #}
@@ -16,7 +17,7 @@
             <a href="{% url 'pre_reg:checkout_checkup' %}"
                 data-toggle="modal" data-target="#confirmCheckoutCheckup"
                 class="btn btn-default">
-            Checkout Checkup
+            {% trans "Checkout Checkup" %}
             </a>
         </span>
         <div class="modal" id="confirmCheckoutCheckup">
@@ -50,7 +51,7 @@
                 </span>
             </th>
             <th>
-                Applicant
+                {% trans "Applicant" %}
                 <a href="{% reverse_list p=p order_by=SORT_BY.initiator status=status page=page.number %}"
                    class="caret"></a>
                 <span class="dropup">
@@ -59,7 +60,7 @@
                 </span>
             </th>
             <th>
-                Date submitted
+                {% trans "Date submitted" %}
                 <a href="{% reverse_list p=p order_by=SORT_BY.date status=status page=page.number %}"
                    class="caret"></a>
                 <span class="dropup">
@@ -103,7 +104,7 @@
             <a href="{% url 'pre_reg:update_draft' draft.pk %}"
                class="btn btn-success" data-toggle="modal"
                data-target="#form{{ draft.pk }}">
-                View details
+                {% trans "View details" %}
             </a>
             <div class="modal" id="form{{ draft.pk }}">
                 <div class="modal-dialog">
@@ -115,7 +116,7 @@
             {%  endif %}
             <a href="{% url 'pre_reg:view_draft' draft.pk %}" target="_blank"
                class="btn btn-primary">
-                View Draft
+                {% trans "View Draft" %}
             </a>
         </td>
     </tr>

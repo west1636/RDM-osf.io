@@ -1,26 +1,27 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 {% load user_extras %}
 {% load spam_extras %}
 {% block title %}
-    <title>Comment</title>
+    <title>{% trans "Comment" %}</title>
 {% endblock title %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <a href="{% reverse_spam_list page=page_number status=status %}"
                class="btn btn-primary">
-                Back to general list
+                {% trans "Back to general list" %}
             </a>
             <a href="{% reverse_spam_user comment.author_id page=page_number status=status %}"
                class="btn btn-primary">
-                Back to user's list
+                {% trans "Back to user's list" %}
             </a>
             {%  if perms.osf.mark_spam %}
             <a href="{% url 'spam:email' comment.id %}"
                data-toggle="modal" data-target="#email"
                class="btn btn-default">
-                Email
+                {% trans "Email" %}
             </a>
             {% endif %}
             <div class="modal" id="email">
@@ -61,18 +62,18 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>
-                    <strong>Author:</strong> {{ comment.author.fullname }}
+                    {% trans "<strong>Author:</strong> {{ comment.author.fullname }}" %}
                     <small>
                         (<a href="{{ comment.author_path }}">
-                            User's <b>osf</b> profile
+                            {% trans "User's <b>osf</b> profile" %}
                         </a>) (<a href="{{ comment.author_id | reverse_user }}">
-                            User's profile
+                            {% trans "User's profile" %}
                         </a>)
                     </small>
                 </h4>
             </div>
             <div class="col-md-6">
-                <h4><strong>Comment ID:</strong> {{ comment.id }}</h4>
+                <h4>{% trans "<strong>Comment ID:</strong> {{ comment.id }}" %}</h4>
             </div>
         </div>
 
@@ -80,7 +81,7 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>
-                    <strong>Status: </strong>
+                    {% trans "<strong>Status: </strong>" %}
                     {% if comment.spam_status == SPAM_STATUS.UNKNOWN %}
                         <span class="label label-default">Unknown</span>
                     {% elif comment.spam_status == SPAM_STATUS.FLAGGED %}
@@ -99,7 +100,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>
-                        <strong>Comment content</strong>
+                        {% trans "<strong>Comment content</strong>" %}
                         created on:
                         {{ comment.date_created }}
                     </h4>
@@ -127,12 +128,12 @@
                             <strong>Reporter:</strong>
                             {{ report.reporter.fullname }}
                             (<a href="{{ report.reporter.pk | reverse_user }}">
-                            User's profile
+                            {% trans "User's profile" %}
                             </a>)
                         </div>
                         <div class="col-md-6">
                             <strong>
-                                Reason:
+                               {% trans " Reason:" %}
                             </strong>
                             {{ report.reason|default:"--Nothing--" }}
                         </div>
@@ -140,7 +141,7 @@
                 </div>
             </div>
         {% empty %}
-            <div>No reports!</div>
+            <div>{% trans "No reports!" %}</div>
         {% endfor %}
     </div>
 

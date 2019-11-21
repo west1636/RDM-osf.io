@@ -1,14 +1,14 @@
 ## This page is rendered as a standalone template, outside of `OsfWebRenderer` defaults
 <%page expression_filter="h"/>
 
-<h3>${full_name} Add-on Terms</h3>
+<h3>${full_name} ${ _("Add-on Terms") }</h3>
 
 <table class="table table-bordered table-addon-terms">
 
     <thead>
         <tr>
-            <th>Function</th>
-            <th>Status</th>
+            <th>${ _("Function") }</th>
+            <th>${ _("Status") }</th>
         </tr>
     </thead>
 

@@ -1,3 +1,4 @@
+{% load i18n %}
 <head>
     <script>
         var TINYMCE_BASE_CONFIG = {
@@ -63,9 +64,9 @@
     </div>
     <div class="col-md-3">
         <div>
-            <h4>Import from JSON</h4>
-            <p>Choose a JSON file that has been previously exported from another Registration Provider detail page. This will
-                pre-populate the Registration Provider change form with those details.</p>
+            <h4>{% trans "Import from JSON" %}</h4>
+            <p>{% trans "Choose a JSON file that has been previously exported from another Registration Provider detail page. This will
+                pre-populate the Registration Provider change form with those details." %}</p>
             {% if registration_provider %}
                 <form action = {% url 'registration_providers:import' registration_provider_id=registration_provider.id %} method="post" enctype="multipart/form-data" >
             {% else %}

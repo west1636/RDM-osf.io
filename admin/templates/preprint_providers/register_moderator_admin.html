@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load render_bundle from webpack_loader %}
 {% load staticfiles %}
 
 {% block content %}
 <div class="register-box">
     <div class="register-box-body">
-        <h4>Add or Update Moderator/Admin for {{ provider_name }}</h4>
+        <h4>{% trans "Add or Update Moderator/Admin for {{ provider_name }}" %}</h4>
         <div>
             {% if messages %}
                 <ul class="login_page_messages">
@@ -26,7 +27,7 @@
             </ul>
             {% endif %}
             <div class="form-group">
-                <label for="email">OSF ID:</label>
+                <label for="email">{% trans "OSF ID:" %}</label>
                 <p>{{ form.user_id }}</p>
                 {% if form.user_id.errors %}<span class="text-danger"> {{ form.user_id.errors }}</span>{% endif %}
             </div>
@@ -36,7 +37,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{% trans "Register" %}</button>
                 </div><!-- /.col -->
             </div>
         </form>

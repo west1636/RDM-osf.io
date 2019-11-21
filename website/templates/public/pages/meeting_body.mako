@@ -32,40 +32,40 @@
     <div style="display: none" id="submit">
         <h3>${('Add your ' + meeting['field_names']['add_submission']) if meeting['poster'] and meeting['talk'] else ('Add your ' + meeting['field_names']['submission1_plural']) if meeting['poster'] else ('Add your ' + meeting['field_names']['submission2_plural'])}</h3>
         <p>
-            Send an email to the following address(es) from the email
-            account you would like used on the GakuNin RDM:
+            ${ _("Send an email to the following address(es) from the email") }
+            ${ _("account you would like used on the GakuNin RDM:") }
         </p>
         <ul>
             % if meeting['poster']:
-                <li>For ${meeting['field_names']['submission1_plural']}, email <a href="mailto:${ label }-${meeting['field_names']['submission1']}@osf.io">${ label }-${meeting['field_names']['submission1']}@osf.io</a></li>
+                <li>${ _("For ") }${meeting['field_names']['submission1_plural']}, ${ _("email") } <a href="mailto:${ label }-${meeting['field_names']['submission1']}@osf.io">${ label }-${meeting['field_names']['submission1']}@osf.io</a></li>
             % endif
             % if meeting['talk']:
-                <li>For ${meeting['field_names']['submission2_plural']}, email <a href="mailto:${ label }-${meeting['field_names']['submission2']}@osf.io">${ label }-${meeting['field_names']['submission2']}@osf.io</a></li>
+                <li>${ _("For ") }${meeting['field_names']['submission2_plural']}, ${ _("email <a href="mailto:${ label }-${meeting['field_names']['submission2']}@osf.io">${ label }-${meeting['field_names']['submission2']}@osf.io</a></li>
             % endif
         </ul>
-        <p>The format of the email should be as follows:</p>
+        <p>${ _("The format of the email should be as follows:") }</p>
         <div>
             <dl style="padding-left: 25px">
-                <dt>Subject</dt>
+                <dt>${ _("Subject") }</dt>
                 <dd>${meeting['field_names']['mail_subject']}</dd>
-                <dt>Message body</dt>
+                <dt${ _(">Message body") }</dt>
                 <dd>${meeting['field_names']['mail_message_body']}</dd>
-                <dt>Attachment</dt>
+                <dt>${ _("Attachment") }</dt>
                 <dd>${meeting['field_names']['mail_attachment']}</dd>
             </dl>
         </div>
         <p>
-            Once sent, we will follow-up by sending you the permanent identifier
-            that others can use to cite your work; you can also login and make changes,
-            such as uploading additional files, to your project at that URL. If you
-            didn't have a GakuNin RDM account, one will be created automatically and a link
-            to set your password will be emailed to you; if you do, we will simply create
-            a new project in your account. By creating an account you agree to our
-            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">Terms</a>
-            and that you have read our
-            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Privacy Policy</a>,
-            including our information on
-            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Cookie Use</a>.
+            ${ _("Once sent, we will follow-up by sending you the permanent identifier") }
+            ${ _("that others can use to cite your work; you can also login and make changes,") }
+            ${ _("such as uploading additional files, to your project at that URL. If you") }
+            ${ _("didn't have a GakuNin RDM account, one will be created automatically and a link") }
+            ${ _("to set your password will be emailed to you; if you do, we will simply create") }
+            ${ _("a new project in your account. By creating an account you agree to our") }
+            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms") }</a>
+            ${ _("and that you have read our") }
+            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy") }</a>,
+            ${ _("including our information on") }
+            <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Cookie Use") }</a>.
         </p>
     </div>
 % endif
@@ -75,6 +75,6 @@
        <div class="ball-scale ball-scale-blue">
            <div></div>
        </div>
-       <p class="m-t-sm fg-load-message"> Loading submissions... </p>
+       <p class="m-t-sm fg-load-message"> ${ _("Loading submissions...") } </p>
     </div>
 </div>

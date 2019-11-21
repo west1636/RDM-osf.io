@@ -1,8 +1,9 @@
+{% load i18n %}
 <form action="{% url 'pre_reg:update_draft' draft.pk %}"
       class="well" method="post">
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">x</button>
-    <h4>Draft info form for: <strong>{{ draft.title }}</strong></h4>
+    <h4>{% trans "Draft info form for: <strong>{{ draft.title }}</strong>" %}</h4>
 </div>
 <div class="modal-body">
 <div class="container">
@@ -19,17 +20,17 @@
     </div>
 
     <div class="row">
-        <span class="text-muted"> Applicant </span>
+        {% trans "<span class="text-muted"> Applicant </span>
         <strong> {{ draft.initiator.full_name }}</strong>
         submitted on <strong>{{ draft.submitted | date:"N dS" }}</strong>
-        at <strong>{{draft.submitted | date:"g:i a" }}</strong>
+        at <strong>{{draft.submitted | date:"g:i a" }}</strong>" %}
     </div>
 
     <div class="row">
     <a href="mailto:{{ draft.initiator.username }}">{{ draft.initiator.username }} </a>
     </div>
 
-    <div class="row">Embargo release:
+    <div class="row">{% trans "Embargo release:" %}
         {% if draft.embargo == IMMEDIATE %}
             <strong>{{ draft.embargo | capfirst }}</strong>
         {% else %}
@@ -44,7 +45,7 @@
                 {{ draft.registered_node }}
             </a>
         {% else %}
-            None
+            {% trans "None" %}
         {% endif %}
     </div>
     <br>
@@ -76,7 +77,7 @@
         </div>
     {% endfor %}
     <div class="row">
-        <strong><h4>Logs</h4></strong>
+        <strong><h4>{% trans "Logs" %}</h4></strong>
     </div>
     {% for log in draft.logs %}
         <div class="row">
@@ -84,7 +85,7 @@
         </div>
     {% empty %}
         <div class="row">
-            None: draft existed before logs.
+            {% trans "None: draft existed before logs." %}
         </div>
     {% endfor %}
 </div>
@@ -95,7 +96,7 @@
            onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"/>
     <button type="button" class="btn btn-default"
             data-dismiss="modal">
-        Cancel
+        {% trans "Cancel" %}
     </button>
 </div>
 </form>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block top_includes %}
@@ -15,7 +16,7 @@
 {% endblock top_includes %}
 
 {% block title %}
-    <title>OSF Sales Analytics</title>
+    <title>{% trans "OSF Sales Analytics" %}</title>
 {% endblock title %}
 
 
@@ -23,7 +24,7 @@
 
     {% block topmenu %}
         <a href="{% url 'sales_analytics:dashboard' %}" class="btn btn-primary">
-            Analytics Dashboard
+            {% trans "Analytics Dashboard" %}
         </a>
     {% endblock topmenu %}
 

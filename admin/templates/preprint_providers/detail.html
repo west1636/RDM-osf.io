@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 {% block top_includes %}
     <link rel="stylesheet" type="text/css" href="/static/css/institutions.css" />
@@ -8,20 +9,20 @@
 {% load user_extras %}
 {% load spam_extras %}
 {% block title %}
-    <title>Preprint Provider</title>
+    <title>{% trans "Preprint Provider" %}</title>
 {% endblock title %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-primary" href={% url 'preprint_providers:export' preprint_provider.id %}>Export preprint provider metadata</a>
+                <a class="btn btn-primary" href={% url 'preprint_providers:export' preprint_provider.id %}>{% trans "Export preprint provider metadata" %}</a>
                 {%  if perms.osf.delete_preprintprovider %}
                     {%  if preprint_provider.share_source or preprint_provider.access_token %}
-                    <a class="btn btn-primary disabled">Share source or token already exist</a>
+                    <a class="btn btn-primary disabled">{% trans "Share source or token already exist" %}</a>
                     {% else %}
-                    <a class="btn btn-primary" href={% url 'preprint_providers:share_source' preprint_provider.id %}>Setup Share Source</a>
+                    <a class="btn btn-primary" href={% url 'preprint_providers:share_source' preprint_provider.id %}>{% trans "Setup Share Source" %}</a>
                     {% endif %}
-                <a class="btn btn-danger" href={% url 'preprint_providers:delete' preprint_provider.id %}>Delete preprint provider</a>
+                <a class="btn btn-danger" href={% url 'preprint_providers:delete' preprint_provider.id %}>{% trans "Delete preprint provider" %}</a>
                 {% endif %}
             </div>
         </div>
@@ -35,11 +36,11 @@
         <div class="row">
             <div class="col-md-12">
                 <button id="show-modify-form" class="btn btn-link" type="button">
-                    Modify Preprint Provider
+                    {% trans "Modify Preprint Provider" %}
                 </button>
             </div>
             <div class="col-md-12">
-                <a class="btn btn-link" href={% url 'preprint_providers:register_moderator_admin' preprint_provider.id %}>Register Moderator/Admin</a>
+                <a class="btn btn-link" href={% url 'preprint_providers:register_moderator_admin' preprint_provider.id %}>{% trans "Register Moderator/Admin" %}</a>
             </div>
         </div>
         {% endif %}

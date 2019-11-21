@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 {% block top_includes %}
     <link rel="stylesheet" type="text/css" href="/static/css/institutions.css" />
@@ -8,13 +9,13 @@
 {% load user_extras %}
 {% load spam_extras %}
 {% block title %}
-    <title>Create Preprint Provider</title>
+    <title>{% trans "Create Preprint Provider" %}</title>
 {% endblock title %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h2>Create A Preprint Provider</h2>
+                <h2>{% trans "Create A Preprint Provider" %}</h2>
             </div>
         </div>
         {% include 'preprint_providers/update_preprint_provider_form.html' %}

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
-<title>Preprint Withdrawal Requests</title>
+<title>{% trans "Preprint Withdrawal Requests" %}</title>
 {% endblock title %}
 {% block content %}
 {% load user_extras %}
@@ -22,12 +23,12 @@
                     }
                 </script>
             </th>
-            <th>Preprint GUID</th>
-            <th>Preprint Title</th>
-            <th>Creator</th>
-            <th>Created</th>
-            <th>Comment</th>
-            <th>Status</th>
+            <th>{% trans "Preprint GUID" %}</th>
+            <th>{% trans "Preprint Title" %}</th>
+            <th>{% trans "Creator" %}</th>
+            <th>{% trans "Created" %}</th>
+            <th>{% trans "Comment" %}</th>
+            <th>{% trans "Status" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -68,22 +69,22 @@
 </table>
 {% if perms.osf.change_preprintrequest %}
 <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#approveWithdrawalModal">
-    Approve Request
+    {% trans "Approve Request" %}
 </button>&nbsp;&nbsp;
 <button class="btn btn-default" type="button" data-toggle="modal" data-target="#rejectWithdrawalModal">
-    Reject Request
+    {% trans "Reject Request" %}
 </button>
 <div id="approveWithdrawalModal" class="modal fade well" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">x</button>
-                <h3>Are you sure you want to approve the selected withdrawal request(s)?</h3>
+                <h3>{% trans "Are you sure you want to approve the selected withdrawal request(s)?" %}</h3>
             </div>
             <div class="modal-footer">
                 <input class="btn btn-danger" type="submit" name='approveRequest' value="Confirm" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                    Cancel
+                    {% trans "Cancel" %}
                 </button>
             </div>
         </div>
@@ -94,12 +95,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">x</button>
-                <h3>Are you sure you want to reject the selected withdrawal request(s)?</h3>
+                <h3>{% trans "Are you sure you want to reject the selected withdrawal request(s)?" %}</h3>
             </div>
             <div class="modal-footer">
                 <input class="btn btn-danger" type="submit" name='rejectRequest' value="Confirm" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                    Cancel
+                    {% trans "Cancel" %}
                 </button>
             </div>
         </div>

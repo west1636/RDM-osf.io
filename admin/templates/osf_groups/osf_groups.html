@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
 {% load node_extras %}
-<title>OSF Group</title>
+<title>{% trans "OSF Group" %}</title>
 {% endblock title %}
 {% block content %}
 <div class="container-fluid">
@@ -15,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3>OSF Group Detail</h3>
+            <h3>{% trans "OSF Group Detail" %}</h3>
         </div>
     </div>
     <div class="row">
@@ -23,8 +24,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Field</th>
-                        <th>Value</th>
+                        <th>{% trans "Field" %}</th>
+                        <th>{% trans "Value" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +50,7 @@
                         <td colspan="2"><a href="{{ group.creator.id | reverse_user }}">{{ group.creator.name }}</a></td>
                     </tr>
                     <tr>
-                        <td>Managers</td>
+                        <td>{% trans "Managers" %}</td>
                         <td>
                             <select class="form-control" id="manager-select">
                                 {% for manager in group.managers %}
@@ -62,7 +63,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Members</td>
+                        <td>{% trans "Members" %}</td>
                         <td>
                             <select class="form-control" id="member-select">
                                 {% for member in group.members %}
@@ -78,7 +79,7 @@
                     </tr>
                     {% if group.nodes %}
                         <tr>
-                            <td>Nodes</td>
+                            <td>{% trans "Nodes" %}</td>
                             <td>
                                 <select class="form-control" id="node-select">
                                     {% for node in group.nodes %}

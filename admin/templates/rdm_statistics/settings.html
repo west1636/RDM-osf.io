@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block title %}
-<title>RDM Announcements - Options</title>
+<title>{% trans "RDM Announcements - Options" %}</title>
 {% endblock title %}
 {% block content %}
-<h2>RDM Announcements - Options</h2>
+<h2>{% trans "RDM Announcements - Options" %}</h2>
 
 <div class="row">
     <form class="form-horizontal" action="{% url 'statistics:preview' %}">
         <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading clearfix"><h3 class="panel-title">Tiwwer</h3></div>
+                <div class="panel-heading clearfix"><h3 class="panel-title">{% trans "Tiwwer" %}</h3></div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="id_{{ form.twitter_apiKey.name }}" class="col-sm-2 control-label">{{ form.twitter_apiKey.label }}</label>
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading clearfix"><h3 class="panel-title">Facebook</h3></div>
+                <div class="panel-heading clearfix"><h3 class="panel-title">{% trans "Facebook" %}</h3></div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="id_{{ form.facebook_apiKey.name }}" class="col-sm-2 control-label">{{ form.facebook_apiKey.label }}</label>
@@ -57,7 +58,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading clearfix"><h3 class="panel-title">Redmine</h3></div>
+                <div class="panel-heading clearfix"><h3 class="panel-title">{% trans "Redmine" %}</h3></div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="id_{{ form.redmine_apiUrl.name }}" class="col-sm-2 control-label">{{ form.redmine_apiUrl.label }}</label>

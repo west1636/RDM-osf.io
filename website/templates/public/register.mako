@@ -1,34 +1,34 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">Sign Up</%def>
+<%def name="title()">${ _("Sign Up</%def>
 
 <%def name="content()">
 
     %if campaign == "prereg":
         <div class="text-center m-t-lg">
-            <h3>Preregistration Challenge</h3><hr>
-            <p>Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("Preregistration Challenge</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
         </div>
     %endif
 
     %if campaign == "erpc":
         <div class="text-center m-t-lg">
-            <h3>Election Research Preacceptance Competition</h3><hr>
-            <p>Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("Election Research Preacceptance Competition</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
         </div>
     %endif
 
     %if campaign == "osf-registries":
         <div class="text-center m-t-lg">
-            <h3>GakuNin RDM Registries</h3><hr>
-            <p>Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("GakuNin RDM Registries</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
         </div>
     %endif
 
     %if campaign == "osf-preprints":
         <div class="text-center m-t-lg">
-            <h3>GakuNin RDM Preprints</h3><hr>
-            <p>Please login to the GakuNin RDM or create a free account to contribute to GakuNin RDM Preprints.</p>
+            <h3>${ _("GakuNin RDM Preprints</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to contribute to GakuNin RDM Preprints.</p>
         </div>
     %endif
 
@@ -49,39 +49,39 @@
                      <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                         <tr>
                             <td><img src="/static/img/registries/osf-prereg-black.png" style="width: 200px; margin-top: 15px" /></td>
-                            <td><h3>Create a free GakuNin RDM account</h3></td>
+                            <td><h3>${ _("Create a free GakuNin RDM account") }</h3></td>
                         </tr>
                     </table>
                 %elif campaign == "osf-registries":
                      <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                         <tr>
                             <td><img src="/static/img/registries/osf-registries-black.png" style="width: 200px; margin-top: 15px" /></td>
-                            <td><h3>Create a free GakuNin RDM account</h3></td>
+                            <td><h3>${ _("Create a free GakuNin RDM account") }</h3></td>
                         </tr>
                     </table>
                 %elif campaign == "osf-registered-reports":
                      <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                         <tr>
                             <td><img src="/static/img/registries/osf-registries-black.png" style="width: 200px; margin-top: 15px" /></td>
-                            <td><h3>Create a free OSF account</h3></td>
+                            <td><h3>${ _("Create a free OSF account") }</h3></td>
                         </tr>
                     </table>
                 %elif campaign == "GakuNin RDM-preprints":
                      <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                         <tr>
                             <td><img src="/static/img/preprint_providers/osf-preprints-login.png" style="width: 200px; margin-top: 15px" /></td>
-                            <td><h3>Create a free GakuNin RDM account</h3></td>
+                            <td><h3>${ _("Create a free GakuNin RDM account") }</h3></td>
                         </tr>
                     </table>
                 %elif campaign not in preprint_campaigns.keys():
-                    <h3 class="m-b-lg"> Create a free account </h3>
+                    <h3 class="m-b-lg">${ _(" Create a free account ") }</h3>
                 %else:
                     %for provider in preprint_campaigns.keys():
                         %if campaign == provider:
                             <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                                 <tr>
                                     <td><img src="${preprint_campaigns[provider]['logo_path']}" style="width: 100px; height: 100px" /></td>
-                                    <td><h3>Create a free GakuNin RDM account to contribute to ${preprint_campaigns[provider]['name'] | n}</h3></td>
+                                    <td><h3>${ _("Create a free GakuNin RDM account to contribute to ") }${preprint_campaigns[provider]['name'] | n}</h3></td>
                                 </tr>
                             </table>
                         %endif
@@ -104,14 +104,14 @@
                     </div>
                 </div>
                 <div class="form-group" data-bind="css: { 'has-error': email2() && !email2.isValid(), 'has-success': email2() && email2.isValid() }">
-                    <label for="inputEmail2" class="col-sm-4 control-label">Confirm Email</label>
+                    <label for="inputEmail2" class="col-sm-4 control-label">${ _("Confirm Email") }</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="inputEmail2" placeholder="Re-enter email" data-bind=" value: email2, disable: submitted(), event: { blur: trim.bind($data, email2) }" maxlength="255">
                         <p class="help-block" data-bind="validationMessage: email2" style="display: none;"></p>
                     </div>
                 </div>
                 <div class="form-group" data-bind="css: { 'has-error': password() && !password.isValid(), 'has-success': password() && password.isValid() }">
-                    <label for="inputPassword3" class="col-sm-4 control-label">Password</label>
+                    <label for="inputPassword3" class="col-sm-4 control-label">${ _("Password") }</label>
                     <div class="col-sm-8">
                         <input type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bind="textInput: typedPassword, value: password, disable: submitted(), event: { blur: trim.bind($data, password) }" maxlength="256">
                         <div class="row" data-bind="visible: typedPassword().length > 0">
@@ -145,16 +145,16 @@
                 <div class="form-group">
                     <div class="pull-right">
                         <input type="checkbox" data-bind="checked: acceptedTermsOfService, disable: submitted()">
-                        <label style="margin-right: 15px">I have read and agree to the <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">Terms of Use</a> and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Privacy Policy</a>.</label>
+                        <label style="margin-right: 15px">${ _("I have read and agree to the ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms of Use") }</a>${ _(" and ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy") }</a>.</label>
                         <p class="help-block" data-bind="validationMessage: acceptedTermsOfService" style="display: none;"></p>
                     </div>
                 </div>
                 </br>
                 <div class="form-group m-t-md">
                     <div class="col-md-5 col-sm-12" style="padding-left: 25px">
-                        <a href="${non_institution_login_url}" >Already have an account?</a>
+                        <a href="${non_institution_login_url}" >${ _("Already have an account?") }</a>
                         <br>
-                        <a href="${institution_login_url}">Login through your institution  <i class="fa fa-arrow-right"></i></a>
+                        <a href="${institution_login_url}">${ _("Login through your institution  ") }<i class="fa fa-arrow-right"></i></a>
                     </div>
                     <div class="col-md-7 col-sm-12">
                         %if recaptcha_site_key:
@@ -163,7 +163,7 @@
                             </div>
                         %endif
                             <div class="col-xs-12">
-                                <span class="pull-right p-t-sm"><button type="submit" class="btn btn-success" data-bind="disable: submitted() || !acceptedTermsOfService()">Create account</button></span>
+                                <span class="pull-right p-t-sm"><button type="submit" class="btn btn-success" data-bind="disable: submitted() || !acceptedTermsOfService()">${ _("Create account") }</button></span>
                             </div>
                     </div>
                 </div>

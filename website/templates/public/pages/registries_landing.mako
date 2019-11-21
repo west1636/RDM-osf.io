@@ -1,11 +1,11 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">Registries</%def>
+<%def name="title()">${ _("Registries</%def>
 
 <%def name="content()">
-<h2>Registries service is not activated.</h2>
+<h2>${ _("Registries service is not activated.</h2>
 <ul>
-<li>Set the following in local.py:</li>
+<li>${ _("Set the following in local.py:</li>
 <pre><code>USE_EXTERNAL_EMBER = True
 EXTERNAL_EMBER_APPS = {
   'registries': {
@@ -14,6 +14,6 @@ EXTERNAL_EMBER_APPS = {
     'path': '/registries/'
   }
 }</code></pre>
-<li>Start the registries container with <code>docker-compose up -d registries</code>.</li>
+<li>${ _("Start the registries container with <code>docker-compose up -d registries</code>.") }</li>
 </ul>
 </%def>

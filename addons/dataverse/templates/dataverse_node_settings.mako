@@ -12,21 +12,21 @@
                 authorized by <a data-bind="attr: {href: urls().owner}, text: ownerName"></a>
                 % if not is_registration:
                     <a data-bind="click: deauthorize"
-                        class="text-danger pull-right addon-auth">Disconnect Account</a>
+                        class="text-danger pull-right addon-auth">${ _("Disconnect Account") }</a>
                 % endif
             </span>
 
              <!-- Import Access Token Button -->
             <span data-bind="if: showImport">
                 <a data-bind="click: importAuth" href="#" class="text-primary pull-right addon-auth">
-                    Import Account from Profile
+                    ${ _("Import Account from Profile") }
                 </a>
             </span>
 
             <!-- Oauth Start Button -->
             <span data-bind="if: showTokenCreateButton">
                 <a href="#dataverseInputCredentials" data-toggle="modal" class="pull-right text-primary addon-auth">
-                    Connect  Account
+                    ${ _("Connect  Account") }
                 </a>
             </span>
 
@@ -40,20 +40,20 @@
 
                 <!-- The linked Dataverse Host -->
                 <p class="break-word">
-                    <strong>Dataverse Repository:</strong>
+                    <strong>${ _("Dataverse Repository:") }</strong>
                     <a data-bind="attr: {href: savedHostUrl()}, text: savedHost"></a>
                 </p>
 
                 <!-- The linked dataset -->
                 <p>
-                    <strong>Current Dataset:</strong>
+                    <strong>${ _("Current Dataset:") }</strong>
                     <span data-bind="ifnot: submitting">
                         <span data-bind="if: showLinkedDataset">
                             <a data-bind="attr: {href: savedDatasetUrl()}, text: savedDatasetTitle"></a> on
                             <a data-bind="attr: {href: savedDataverseUrl()}, text: savedDataverseTitle || '' + Dataverse"></a>.
                         </span>
                         <span data-bind="ifnot: showLinkedDataset" class="text-muted">
-                            None
+                            ${ _("None") }
                         </span>
                     </span>
                     <span data-bind="if: submitting">
@@ -62,7 +62,7 @@
                 </p>
 
                 <div data-bind="if: showNotFound" class="text-danger">
-                    The current dataset was not found on Dataverse.
+                    ${ _("The current dataset was not found on Dataverse.") }
                 </div>
 
                 <div data-bind="if: userIsOwner">
@@ -94,20 +94,20 @@
                                 </div>
                                 <div data-bind="if: showNoDatasets">
                                     <div class="text-info" style="padding-top: 8px">
-                                        No datasets available.
+                                        ${ _("No datasets available.") }
                                     </div>
                                 </div>
                                 <div data-bind="ifnot: loadedDatasets">
                                     <i class="fa fa-spinner fa-lg fa-spin"
                                        style="padding-bottom: 8px; padding-top: 8px"></i>
-                                    <span class="text-info">Retrieving datasets...</span>
+                                    <span class="text-info">${ _("Retrieving datasets...") }</span>
                                 </div>
                             </div>
                         </div>
                     </span>
 
                     <span class="text-info" data-bind="ifnot: hasDataverses">
-                         There are no dataverses, datasets, or files associated with the connected account.
+                         ${ _("There are no dataverses, datasets, or files associated with the connected account.") }
                    </span>
 
                 <!-- Save button for set info -->
@@ -115,7 +115,7 @@
                         <br>
                         <button data-bind="enable: enableSubmitDataset, click: setInfo"
                                 class="btn btn-success pull-right">
-                            Save
+                            ${ _("Save") }
                         </button>
                     </span>
                 </div>
