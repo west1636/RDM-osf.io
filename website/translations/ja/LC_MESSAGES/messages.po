@@ -1,14 +1,14 @@
-# Japanese translations for PROJECT.
+# Japanese translations for .
 # Copyright (C) 2019 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the  project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version:  GakuNinRDM.0.5.2\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2019-11-25 16:23+0900\n"
-"PO-Revision-Date: 2019-11-25 16:37+0900\n"
+"PO-Revision-Date: 2019-11-25 16:39+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -794,7 +794,7 @@ msgstr ""
 #: templates/search_bar_help_modal.mako:10
 #, python-format
 msgid "Search uses the <a href=%s>Lucene search syntax</a>."
-msgstr ""
+msgstr "この検索では<a href=%s>Luceneの検索書式</a>を使用することができます。"
 
 #: templates/search_bar_help_modal.mako:10
 msgid ""
