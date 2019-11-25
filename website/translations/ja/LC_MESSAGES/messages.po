@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-21 15:02+0900\n"
-"PO-Revision-Date: 2019-11-21 15:02+0900\n"
+"POT-Creation-Date: 2019-11-25 18:19+0900\n"
+"PO-Revision-Date: 2019-11-25 18:20+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -20,5 +20,13 @@ msgstr ""
 
 #: templates/search.mako:96
 msgid "Type your search terms in the box above."
-msgstr "検索文字列を入力してください"
+msgstr "検索文字列を入力してください。"
+
+#: templates/search_bar_help_modal.mako:10
+#, python-format
+msgid ""
+"Search uses the <a %s>Lucene search syntax</a>.This gives you many "
+"options, but can be very simple as well. Examples of valid searches "
+"include:"
+msgstr "検索では<a %s>Lucene検索書式</a>が利用できます。様々なオプションが利用できますが、シンプルな記述も可能です。例えば以下のような:"
 
