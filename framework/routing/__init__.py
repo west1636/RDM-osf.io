@@ -13,7 +13,7 @@ from mako.template import Template
 import markupsafe
 from werkzeug.exceptions import NotFound
 import werkzeug.wrappers
-#from babel import support
+from babel import support
 
 from framework import sentry
 from framework.exceptions import HTTPError
@@ -245,9 +245,9 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     if not app.debug:
         mako_cache[tplname] = tpl
         
-#    catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
-#    request.babel_translations = catalog
-#    app.babel_translations = catalog
+    catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
+    request.babel_translations = catalog
+    app.babel_translations = catalog
 
     return tpl.render(**data)
 
