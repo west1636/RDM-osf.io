@@ -37,7 +37,7 @@
                             <tbody data-bind="foreach: profile().alternateEmails()">
                                 <tr>
                                     <td style="word-break: break-all;"><span data-bind="text: $data.address"></span></td>
-                                    <td style="width:150px;"><a data-bind="click: $parent.makeEmailPrimary.bind($parent)">${ _("make") }&nbsp;${ _("primary") }</a></td>
+                                    <td style="width:150px;"><a data-bind="click: $parent.makeEmailPrimary.bind($parent)">${ _("make&nbsp;primary") }</a></td>
                                     <td style="width:50px;"><a data-bind="click: $parent.removeEmail.bind($parent)"><i class="fa fa-times text-danger"></i></a></td>
                                 </tr>
                             </tbody>
@@ -52,7 +52,7 @@
                                 <!-- ko foreach: profile().unconfirmedEmails() -->
                                 <tr>
                                     <td style="word-break: break-all;"><span data-bind="text: $data.address"></span></td>
-                                    <td style="width:150px;"><a data-bind="click: $parent.resendConfirmation.bind($parent)">${ _("resend") }&nbsp;${ _("confirmation") }</a></td>
+                                    <td style="width:150px;"><a data-bind="click: $parent.resendConfirmation.bind($parent)">${ _("resend&nbsp;confirmation") }</a></td>
                                     <td style="width:50px;" ><a data-bind="click: $parent.removeEmail.bind($parent)"><i class="fa fa-times text-danger"></i></a></td>
                                 </tr>
                                 <!-- /ko -->
@@ -109,7 +109,7 @@
                     <div class="panel-heading clearfix"><h3 class="panel-title">${ _("Connected Identities") }</h3></div>
                     <div class="panel-body">
                         <p> ${ _("Connected identities allow you to log in to the GakuNin RDM via a third-party service.") } <br/>
-                        ${ _("You can revoke these authorizations here.</p>
+                        ${ _("You can revoke these authorizations here.") }</p>
                         <hr />
                         % if not external_identity:
                         <p >${ _("You have not authorized any external services to log in to the GakuNin RDM.") }</p>
@@ -235,13 +235,13 @@
                     <div class="panel-heading clearfix"><h3 class="panel-title">${ _("Export Account Data") }</h3></div>
                     <div class="panel-body">
                         <p>${ _("Exporting your account data allows you to keep a permanent copy of the current state of your account. Keeping a copy of your account data can provide peace of mind or assist in transferring your information to another provider.") }</p>
-                        <a class="btn btn-primary" data-bind="click: submit, css: success() === true ? 'disabled' : ''">${ _("Request export</a>
+                        <a class="btn btn-primary" data-bind="click: submit, css: success() === true ? 'disabled' : ''">${ _("Request export") }</a>
                     </div>
                 </div>
                 <div id="deactivateAccount" class="panel panel-default">
                     <div class="panel-heading clearfix"><h3 class="panel-title">${ _("Deactivate Account") }</h3></div>
                     <div class="panel-body">
-                        <p class="alert alert-warning"><strong>Warning:</strong> ${ _("Once your deactivation has been approved the effects are irreversible.</p>
+                        <p class="alert alert-warning"><strong>Warning:</strong> ${ _("Once your deactivation has been approved the effects are irreversible.") }</p>
                         <p>${ _("Deactivating your account will remove you from all public projects to which you are a contributor. Your account will no longer be associated with GakuNin RDM projects, and your work on the GakuNin RDM will be inaccessible.") }</p>
                         <p data-bind="click: cancel, visible: requestPending()"><b>${ _("Your account is currently pending deactivation.") }</b></p>
                         <a class="btn btn-danger" data-bind="click: submit, visible: !requestPending()">${ _("Request deactivation") }</a>

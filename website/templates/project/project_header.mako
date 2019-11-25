@@ -126,13 +126,15 @@
             % if not node['is_pending_registration']:
                 % if file_name and urls.get('archived_from'):
                         <div class="alert alert-info">This file is part of a registration and is being shown in its archived version (and cannot be altered).
-                            ${ _("The ") }<a class="link-solid" href="${urls['archived_from']}">${ _("active file") }</a>${ _(" is viewable from within the ") }<a class="link-solid" href="${node['registered_from_url']}">${ _("live ") }${node['node_type']}</a>.</div>
+                            ${ _("The <a %(active_file_url)s>active file</a> is viewable from within the <a %(registered_from_url)s>live %(node_type)</a>.", active_file_url="class=\"link-solid\" href=\"${urls['archived_from']}\"",
+                            registered_from_url="class=\"link-solid\" href=\""+node['registered_from_url']+"\"", node_type=node['node_type']) }</div>
                 % else:
-                    <div class="alert alert-info">${ _("This registration is a frozen, non-editable version of <a class="link-solid" href="${node['registered_from_url']}">${ _("this ") }${node['node_type']}</a></div>
+                    <div class="alert alert-info">${ _("This registration is a frozen, non-editable version of <a %(registered_from_url)s>this %(node_type)s</a>", registered_from_url="class=\"link-solid\" href=\""+node['registered_from_url']+"\"", node_type=node['node_type']) }</div>
                 % endif
             % else:
                 <div class="alert alert-info">
-                    <div>${ _("This is a pending registration of ") }<a class="link-solid" href="${node['registered_from_url']}">${ _("this ") }${node['node_type']}</a>${ _(", awaiting approval from project administrators. This registration will be final when all project administrators approve the registration or 48 hours pass, whichever comes first.") }</div>
+                    <div>${ _("This is a pending registration of <a %(registered_from_url)s>t his %(node_type)s</a>, awaiting approval from project administrators. This registration will be final when all project administrators approve the registration or 48 hours pass, whichever comes first.",
+                        registered_from_url="class=\"link-solid\" href=\""+node['registered_from_url']+"\"", node_type=node['node_type']) }</div>
 
                     % if 'permissions.ADMIN' in user['permissions']:
                         <div>
@@ -156,16 +158,17 @@
         % endif
 
         % if node['is_pending_retraction']:
-            <div class="alert alert-info">${ _("This ") }${node['node_type']}${ _(" is currently pending withdrawal.") }</div>
+            <div class="alert alert-info">${ _("This %(node_type)s is currently pending withdrawal.", node_type=node['node_type']) }</div>
         % endif
 
         % if node['is_retracted']:
-            <div class="alert alert-danger">${ _("This ") }${node['node_type']}${ _(" is a withdrawn registration of ") }<a class="link-solid" href="${node['registered_from_url']}">${ _("this ${node['node_type']}</a>${ _("; the content of the ${node['node_type']} has been taken down for the reason(s) stated below.") }</div>
+            <div class="alert alert-danger">${ _("This %(node_type)s is a withdrawn registration of <a %(registered_from_url)s>this %(node_type)s</a>; the content of the %(node_type)s has been taken down for the reason(s) stated below.",
+            node_type=node['node_type'], registered_from_url="class=\"link-solid\" href=\""+node['registered_from_url']+"\"") }</div>
         % endif
 
         % if node['is_pending_embargo']:
             <div
-                class="alert alert-info">${ _("This ${node['node_type']}${ _(" is currently pending registration, awaiting approval from project administrators. This registration will be final and enter the embargo period when all project administrators approve the registration or 48 hours pass, whichever comes first. The embargo will keep the registration private until the embargo period ends.") }
+                class="alert alert-info">${ _("This %(node_type)s is currently pending registration, awaiting approval from project administrators. This registration will be final and enter the embargo period when all project administrators approve the registration or 48 hours pass, whichever comes first. The embargo will keep the registration private until the embargo period ends.", node_type=node['node_type']) }
                 % if permissions.ADMIN in user['permissions']:
                         <div>
                             <br>
@@ -179,25 +182,25 @@
         % endif
 
         % if node['is_embargoed']:
-            <div class="alert alert-danger">${ _("This registration is currently embargoed. It will remain private until its embargo end date, ") }${ node['embargo_end_date'] }.</div>
+            <div class="alert alert-danger">${ _("This registration is currently embargoed. It will remain private until its embargo end date, %s.", node['embargo_end_date']) }</div>
         % endif
 
     % endif  ## End registration undismissable labels
 
     % if node['is_supplemental_project'] and user['is_contributor_or_group_member'] and not node['is_public']:
-        <div class="alert alert-info">${ _("This ") }${node['node_type']}${ _(" contains supplemental materials for a preprint, but has been made Private. Make your supplemental materials discoverable by making this ") }${node['node_type']} Public.</div>
+        <div class="alert alert-info">${ _("This %(node_type)s contains supplemental materials for a preprint, but has been made Private. Make your supplemental materials discoverable by making this %(node_type)s Public.", node_type=node['node_type']) }</div>
     % endif
 
     % if node['anonymous'] and user['is_contributor_or_group_member']:
-        <div class="alert alert-info">${ _("This ") }${node['node_type']}${ _(" is being viewed through an anonymized, view-only link. If you want to view it as a contributor, click ") }<a class="link-solid" href="${node['redirect_url']}">here</a>.</div>
+        <div class="alert alert-info">${ _("This %(node_type)s is being viewed through an anonymized, view-only link. If you want to view it as a contributor, click <a %(url)s>here</a>", node_type=node['node_type'], url="class=\"link-solid\" href=\"" + node['redirect_url'] + "\"") }></div>
     % endif
 
     % if node['link'] and not node['is_public'] and not user['is_contributor_or_group_member']:
-        <div class="alert alert-info">${ _("This ") }${node['node_type']}${ _(" is being viewed through a private, view-only link. Anyone with the link can view this project. Keep the link safe.") }</div>
+        <div class="alert alert-info">${ _("This %(node_type)s is being viewed through a private, view-only link. Anyone with the link can view this project. Keep the link safe.", node_type=node['node_type']) }</div>
     % endif
 
     % if disk_saving_mode:
-        <div class="alert alert-info"><strong>${ _("NOTICE:") } </strong>${ _("Forks, registrations, and uploads will be temporarily disabled while the GakuNin RDM undergoes a hardware upgrade. These features will return shortly. Thank you for your patience.") }</div>
+        <div class="alert alert-info">${ _("<strong>NOTICE:</strong>Forks, registrations, and uploads will be temporarily disabled while the GakuNin RDM undergoes a hardware upgrade. These features will return shortly. Thank you for your patience.") }</div>
     % endif
 
 </div>

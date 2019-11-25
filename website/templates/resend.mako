@@ -6,8 +6,7 @@
 <div class="row">
     ## Center the form
     <div class="col-md-6 col-md-offset-3">
-        <p class='help'>${ _("Enter your email address and we'll resend your
-        confirmation link.") } 
+        <p class='help'>${ _("Enter your email address and we'll resend your confirmation link.") } 
         </p>
 
         <form id='resendForm' method='POST' class='form' role='form'>

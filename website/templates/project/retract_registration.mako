@@ -7,9 +7,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 ${ _("Withdrawing a registration will remove its content from the GakuNin RDM, but leave basic metadata behind.") }
-                ${ _("The title of a withdrawn registration and its contributor list will remain, as will justification or") }
-                ${ _("explanation of the withdrawal, should you wish to provide it. Withdrawn registrations will be marked") }
-                ${ _("with a "withdrawn" tag. ") }<strong>${ _("This action is irreversible.") }</strong>
+                ${ _("The title of a withdrawn registration and its contributor list will remain, as will justification or explanation of the withdrawal, should you wish to provide it. Withdrawn registrations will be marked with a \"withdrawn\" tag. <strong>This action is irreversible.</strong>") }
             </div>
         </div>
         <form id="registrationRetractionForm" role="form">
@@ -29,7 +27,7 @@
 
             <div class="form-group">
                 <label style="font-weight:normal" class="control-label">
-                    ${ _("Type ") }<span data-bind="text: confirmationString" style="font-weight:bold"></span>${ _(" and click Withdraw Registration if you are sure you want to continue.") }
+                    ${ _("Type %(confirmationString)s and click Withdraw Registration if you are sure you want to continue.", confirmationString="<span data-bind=\"text: confirmationString\" style=\"font-weight:bold\"></span>") }
                 </label>
                 <input  type="text"
                         class="form-control"

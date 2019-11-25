@@ -46,16 +46,16 @@
                     <div class="collapse" id="osf-meeting-register">
                         <div class="m-lg osf-box-lt p-md text-left">
                             <p>${ _("GakuNin RDM Meetings is a product that we offer to academic conferences at no cost. To request poster and talk hosting for a conference:") }</p>
-                                <p class="text-center">${ _("<strong> Submit this <a href="https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform">set-up form") }</a> </strong></p>
+                                <p class="text-center"><strong>${ _("Submit this <a %s>set-up form</a>", "href=\"https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform\"")}</strong></p>
                              <p>${ _("We'll review and add your conference within one business day.") }</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-5 col-lg-offset-2 col-xl-4 col-xl-offset-4 text-center m-b-lg">
                     <i class="fa fa-cloud-upload m-v-sm"></i>
-                    <h3 class="f-w-xl"> For Conference Participants </h3>
+                    <h3 class="f-w-xl"> ${ _("For Conference Participants") } </h3>
                     <div class="text-left">
-                        <p class="osf-meeting-p">Share your posters and presentations along with any supporting data and materials. Get persistent links and usage analytics.</p></div>
+                        <p class="osf-meeting-p">${_("Share your posters and presentations along with any supporting data and materials. Get persistent links and usage analytics.") }</p></div>
                     <div class="p-v-md">
                         <button class="btn btn-success btn-lg" type="button" data-toggle="collapse" data-target="#osf-meeting-upload" aria-expanded="false" aria-controls="collapseExample">
                             ${ _("Upload") }
@@ -71,7 +71,7 @@
                                 <li>${ _("Send your materials to the GakuNin RDM Meetings email address for your conference") }</li>
                             </ul>
 
-                            <p> ${ _("WeÅfll  create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.") }</p>
+                            <p> ${ _("We'll  create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.") }</p>
                         </div>
 
                     </div>
@@ -88,7 +88,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="meetings">
                             <p>
-                                ${ _("<small>Only conferences with at least five submissions are displayed.") }</small>
+                                <small>${ _("Only conferences with at least five submissions are displayed.") }</small>
                             </p>
                             <div id="meetings-grid"></div>
                         </div>

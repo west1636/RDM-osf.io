@@ -12,21 +12,23 @@
                     <!-- remove page -->
                     <div data-bind='if:page() === REMOVE'>
                         <div class="form-group">
-                            <span>${ _("Do you want to remove ") }<b data-bind="text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']"></b>${ _(" from") }
-                                <b data-bind="text: title"></b>${ _(", or from ") }<b data-bind="text: title"></b>${ _(" and every component in it?") }</span>
+                           <span>${ _("Do you want to remove %(username)s></b> from %(project_title)s, or from %(projecttitle)s and every component in it?",
+                               username="<b data-bind=\"text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']\"></b>", title="<b data-bind=\"text: title\"></b>") }</span>
                         </div>
                         <div id="remove-page-radio-buttons" class="col-md-8" align="left">
                             <div class="radio">
                                 <label><input type="radio" name="radioBoxGroup" data-bind="checked:deleteAll, checkedValue: false" checked>
-                                    ${ _("Remove ") }<b data-bind="text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']"></b>${ _(" from") }
-                                    <span class="f-w-lg" data-bind="text: title"></span>.
+                                    ${ _("Remove %(username)s from %(title)s.", username="<b data-bind=\"text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']\"></b>",
+                                        title="<span class=\"f-w-lg\" data-bind=\"text: title\"></span>") }
                                 </label>
                             </div>
 
                             <div class="radio">
                                 <label><input  type="radio" name="radioBoxGroup" data-bind="checked: deleteAll, checkedValue: true" >
-                                    ${ _("Remove ") }<b data-bind="text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']"></b>${ _(" from") }
-                                    <span class="f-w-lg" data-bind="text: title"></span>${ _(" and every component in it.") }</label>
+                                    ${ _("Remove %(username)s from %(title)s and every component in it.", 
+                                        username="<b data-bind=\"text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']\"></b>",
+                                        title="<span class=\"f-w-lg\" data-bind=\"text: title\"></span>") }</label>
+                                    ${ _("Remove %(username)s from", username="<b data-bind=\"text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']\"></b>") }</label>
                             </div>
                         </div>
 
@@ -34,7 +36,7 @@
                     <!-- removeNoChildren page -->
                     <div data-bind='if:page() === REMOVE_NO_CHILDREN'>
                         <div class="form-group" data-bind="if:contributorToRemove">
-                            <span>${ _("Remove ") }<b data-bind="text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']"></b>${ _(" from ") }<span data-bind="text: title"></span>?</span>
+                            <span>${ _("Remove %(username)s from %(title)s?", username="<b data-bind=\"text:removeSelf() ? 'yourself' : contributorToRemove()['fullname']\"></b>", title="<span data-bind=\"text: title\"></span>") }</span>
                         </div>
 
                     </div><!-- end removeNoChildren page -->
@@ -78,11 +80,10 @@
                     </div><!-- end removeAll page -->
                 </div>
                 <div data-bind="if: !canRemoveNode() && !pageChanged()">
-                    <span><b data-bind="text:removeSelf() ? 'You' : contributorToRemove()['fullname']"></b>${ _(" cannot be
-                        removed as a contributor.  You need at least one administrator, bibliographic contributor, and registered user.") }</span>
-                </div>
-                <div data-bind="if: pageChanged()">
-                    <span>${ _("Please save or discard your existing changes before removing a contributor.") }</span>
+			    <span>${ _("%(username)s cannot be removed as a contributor.  You need at least one administrator, bibliographic contributor, and registered user.", username="<b data-bind=\"text:removeSelf() ? 'You' : contributorToRemove()['fullname']\"></b>") }</span>
+			</div>
+			<div data-bind="if: pageChanged()">
+			    <span>${ _("Please save or discard your existing changes before removing a contributor.") }</span>
                 </div>
             </div>
             <!-- end modal-body -->

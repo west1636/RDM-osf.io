@@ -108,9 +108,7 @@
       </div>
       <div class="modal-body">
         <p>
-          ${ _("This page is currently connected to collaborative file editing. All edits made will be visible to") }
-          ${ _("contributors with write permission in real time. Changes will be stored") }
-          ${ _("but not published until you click the "Save" button.") }
+          ${ _("This page is currently connected to collaborative file editing. All edits made will be visible to contributors with write permission in real time. Changes will be stored but not published until you click the \"Save\" button.") }
         </p>
       </div>
       <div class="modal-footer">
@@ -130,7 +128,7 @@
       <div class="modal-body">
         <p>
           ${ _("This page is currently attempting to connect to collaborative file editing. You may continue to make edits.") }
-          <strong>${ _("Changes will not be saved until you press the "Save" button.") }</strong>
+          <strong>${ _("Changes will not be saved until you press the \"Save\" button.") }</strong>
         </p>
       </div>
       <div class="modal-footer">
@@ -150,7 +148,7 @@
       <div class="modal-body">
         <p>
           Collaborative file editing is currently unavailable. You may continue to make edits.
-          <strong>${ _("Changes will not be saved until you press the "Save" button.") }</strong>
+          <strong>${ _("Changes will not be saved until you press the \"Save\" button.") }</strong>
         </p>
       </div>
       <div class="modal-footer">
@@ -170,7 +168,7 @@
       <div class="modal-body">
         <p>
           ${ _("Your browser does not support collaborative editing. You may continue to make edits.") }
-          <strong>${ _("Changes will not be saved until you press the "Save" button.") }</strong>
+          <strong>${ _("Changes will not be saved until you press the \"Save\" button.") }</strong>
         </p>
       </div>
       <div class="modal-footer">

@@ -23,7 +23,7 @@
 
 <%def name="existingDraft(size='')">
 <div id="existingDraft${size}" class="p-md osf-box box-round clearfix m-b-lg" style="display:none; width: 100%;">
-  <p class="reg-landing-page-text-left">${ _("Go to an existing registration") }:</p>
+  <p class="reg-landing-page-text-left">${ _("Go to an existing registration:") }</p>
     <input id="regDraftSearch${size}" class="form-control"></input>
     <div class="p-xs"><a href="#" class="regDraftButton btn btn-primary m-t-sm disabled pull-right">${ _("Continue") }</a></div>
 </div>
@@ -46,7 +46,7 @@
         <img class="reg-landing-page-logo m-b-lg" src="/static/img/registries/registered_reports.svg" alt="registered_reports_diagram">
     </div>
     <p>${ _("Registered Reports benefit science by improving rigor and reducing publication bias.") }</p>
-    <p>${ _("When to use this form") }:</p>
+    <p>${ _("When to use this form:") }</p>
     <p style="padding-left:1em;">${ _("Use this form <b>after</b> you have received \“in principle acceptance\” (IPA) by a journal following Stage 1 Peer Review, and <b>before</b> you have begun the study.") }</p>
 
     <div class="col-md-12 visible-xs">
@@ -144,7 +144,7 @@
       </table>
     </div>
     <div class="text-center">
-        ${ _("You can learn more about Registered Reports <a %s>here</a>.", "href=\"https://nii.ac.jp/rr\"") } ${ _("If you do not have IPA from a journal, you can still preregister your research. Learn more <a %s>here</a>."), "href=\"https://nii.ac.jp/prereg\")}
+        ${ _("You can learn more about Registered Reports <a %s>here</a>.", "href=\"https://nii.ac.jp/rr\"") } ${ _("If you do not have IPA from a journal, you can still preregister your research. Learn more <a %s>here</a>.", "href=\"https://nii.ac.jp/prereg\"") }
     </div>
 
 </div>

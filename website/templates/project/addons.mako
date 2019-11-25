@@ -125,13 +125,13 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <div>
-                                        <h4>${ _("DonÅft see your GitHub organization repositories?") }</h4>
+                                        <h4>${ _("Don't see your GitHub organization repositories?") }</h4>
                                         <p>
                                             ${ _("You may need to reauthorize your GitHub access token.") }
-                                            ${ _("Follow the steps in the ") }<a class="alert-link" href="http://help.osf.io/a/850865-reauthorize-github" target="_black">${ _("help guide</a> ${ _("to resolve the issue.") } <br>
+                                            ${ _("Follow the steps in the <a %s>help guide</a> to resolve the issue.", 'class="alert-link" href="http://help.osf.io/a/850865-reauthorize-github" target="_black"') } <br>
                                         </p>
                                         <p>
-                                            ${ _("Please contact") } <a class="alert-link" href="mailto:rdm_support@nii.ac.jp">rdm_support@nii.ac.jp</a> ${ _("if you have questions.") }
+                                            ${ _("Please contact <a %s>%s</a> if you have questions.", 'class="alert-link" href="mailto:rdm_support@nii.ac.jp"', 'rdm_support@nii.ac.jp') }
                                         </p>
                                     </div>
                                 </div>

@@ -17,7 +17,7 @@
                                 <div class="input-group m-b-sm">
                                     <input class='form-control'
                                             data-bind="value:query"
-                                            placeholder=${ _('Search by name or user profile information' autofocus/>
+                                            placeholder='${ _("Search by name or user profile information") }' autofocus/>
                                     <span class="input-group-btn">
                                         <input type="submit" value="Search" class="btn btn-default">
                                     </span>
@@ -60,10 +60,10 @@
                                                     class="btn btn-success contrib-button btn-mini"
                                                     data-bind="visible: !contributor.added,
                                                                click:$root.add.bind($root),
-                                                               tooltip: {title: ${ _('Add contributor") }}"
+                                                               tooltip: {title: '${ _("Add contributor") }'}"
                                                 ><i class="fa fa-plus"></i></a>
                                             <div data-bind="visible: contributor.added,
-                                                            tooltip: {title: ${ _("'Already added') }}"
+                                                            tooltip: {title: '${ _("Already added") }'}"
                                                 ><div
                                                     class="btn btn-default contrib-button btn-mini disabled"
                                                     ><i class="fa fa-check"></i></div></div>
@@ -178,7 +178,7 @@
                                     </ul>
                                     <p>
                                         <div data-bind='ifnot: emailSearch'>
-                                            <a href="#" data-bind="click:gotoInvite">${ _("Add ") }<strong><em data-bind="text: query"></em></strong>${ _(" as an unregistered contributor") }</a>.
+                                            <a href="#" data-bind="click:gotoInvite">${ _("Add %s as an unregistered contributor", "<strong><em data-bind=\"text: query\"></em></strong>") }</a>.
                                         </div>
                                     </p>
                                 </div>
@@ -193,7 +193,7 @@
                                       ${ _("No results found. Try a more specific search") }
                                     </div>
                                     <div data-bind="ifnot: emailSearch"> or
-                                        <a href="#" data-bind="click:gotoInvite">${ _("add ") }<strong><em data-bind="text: query"></em></strong>${ _(" as an unregistered contributor") }</a>.
+                                        <a href="#" data-bind="click:gotoInvite">${ _("add %s as an unregistered contributor", "<strong><em data-bind=\"text: query\"></em></strong>") }</a>.
                                     </div>
                                 </div>
                                 <div data-bind="if: emailSearch">
@@ -238,7 +238,7 @@
                                         <td class="p-r-sm" class="osf-icon-td">
                                             <a
                                                     class="btn btn-default contrib-button btn-mini"
-                                                    data-bind="click:$root.remove.bind($root), tooltip: {title: ${ _('Remove contributor') }}"
+                                                    data-bind="click:$root.remove.bind($root), tooltip: {title: '${ _("Remove contributor") }'}"
                                                 ><i class="fa fa-minus"></i></a>
                                         </td>
                                         <td>
@@ -290,7 +290,7 @@
                     </div>
 
                     <div>
-                        ${ _("Select:&nbsp;
+                        ${ _("Select:&nbsp;")}
                         <a class="text-bigger" data-bind="click:selectAllNodes">${ _("Select all") }</a>
                         &nbsp;|&nbsp;
                         <a class="text-bigger" data-bind="click:selectNoNodes">${ _("Select none") }</a>

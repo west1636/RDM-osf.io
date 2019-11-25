@@ -22,7 +22,7 @@
             <div id="app-keys" class="border-box text-right"
                  data-bind="visible: !$root.isCreateView()">
                 <p><strong>${ _("Client ID") }</strong>
-                   <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: ${ _('The unique identifier for the application. May be seen publicly by others.',
+                   <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: '${ _("The unique identifier for the application. May be seen publicly by others.") }',
                                                                       placement: 'bottom'}"></i>
                 </p>
                 <p><span class="text-muted" data-bind="text: clientId"></span></p>
