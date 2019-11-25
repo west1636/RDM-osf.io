@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-21 15:02+0900\n"
-"PO-Revision-Date: 2019-11-21 15:02+0900\n"
+"POT-Creation-Date: 2019-11-25 16:23+0900\n"
+"PO-Revision-Date: 2019-11-25 16:37+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -18,7 +18,3059 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.5.1\n"
 
+#: templates/base.mako:105
+msgid "Current branch"
+msgstr ""
+
+#: templates/base.mako:109
+msgid "PR"
+msgstr ""
+
+#: templates/base.mako:110 templates/project/modal_show_links.mako:11
+msgid "Title"
+msgstr ""
+
+#: templates/base.mako:111
+msgid "Date Merged"
+msgstr ""
+
+#: templates/base.mako:134
+msgid "WARNING"
+msgstr ""
+
+#: templates/base.mako:134
+msgid "This site is running in development mode."
+msgstr ""
+
+#: templates/base.mako:145
+msgid ""
+"OSF does not support the use of Internet Explorer. For optimal "
+"performance, please switch to another browser."
+msgstr ""
+
+#: templates/base.mako:148
+msgid "Accept"
+msgstr ""
+
+#: templates/base.mako:170
+msgid "Start managing your projects on the GakuNin RDM today."
+msgstr ""
+
+#: templates/base.mako:171
+msgid ""
+"Free and easy to use, the GakuNin RDM supports the entire research "
+"lifecycle: planning, execution, reporting, archiving, and discovery."
+msgstr ""
+
+#: templates/base.mako:173
+msgid "Create an Account"
+msgstr ""
+
+#: templates/base.mako:176
+msgid "Hide this message"
+msgstr ""
+
+#: templates/claim_account.mako:2
+msgid "Claim Account"
+msgstr ""
+
+#: templates/claim_account.mako:9
+#, python-format
+msgid "Hello %s !"
+msgstr ""
+
+#: templates/claim_account.mako:9
+msgid "Please set a password to claim your account."
+msgstr ""
+
+#: templates/claim_account.mako:10
+msgid "E-mail:"
+msgstr ""
+
+#: templates/claim_account.mako:93
+#, python-format
+msgid ""
+"I have read and agree to the <a %s>Terms of Use</a> and <a %s>Privacy "
+"Policy</a>."
+msgstr ""
+
+#: templates/claim_account.mako:105
+#, python-format
+msgid ""
+"If you are not %s or if you were erroneously added as a contributor to "
+"the project described in the email invitation, please email"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:2 templates/claim_account_eppn.mako:4
+#: templates/claim_account_registered.mako:2
+#: templates/claim_account_registered.mako:4
+msgid "Claim Contributor"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:9
+msgid "Please confirm to continue."
+msgstr ""
+
+#: templates/claim_account_eppn.mako:12
+msgid "Full name (can be changed later):"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:16
+msgid "Primary Email (Username) (can be changed later):"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:21
+msgid "Alternate Email (can be changed later):"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:27
+#: templates/claim_account_registered.mako:23
+msgid "I am "
+msgstr ""
+
+#: templates/claim_account_eppn.mako:27
+#: templates/claim_account_registered.mako:23
+msgid "not"
+msgstr ""
+
+#: templates/claim_account_eppn.mako:29
+#: templates/claim_account_registered.mako:25
+#: templates/prereg_landing_page.mako:24
+#: templates/project/modal_remove_contributor.mako:98
+#: templates/project/nodes_delete.mako:94
+#: templates/project/nodes_privacy.mako:111
+#: templates/project/nodes_privacy.mako:117
+#: templates/project/registration_utils.mako:17
+#: templates/registered_reports_landing.mako:28
+msgid "Continue"
+msgstr ""
+
+#: templates/claim_account_registered.mako:9
+msgid "Please enter your credentials to continue."
+msgstr ""
+
+#: templates/copyright.mako:7 templates/copyright.mako:12
+#: templates/footer.mako:11
+msgid "National Institute of Informatics"
+msgstr ""
+
+#: templates/copyright.mako:8
+msgid "Terms of Use"
+msgstr ""
+
+#: templates/copyright.mako:9 templates/public/pages/meeting_body.mako:66
+msgid "Privacy Policy"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:3
+msgid "GakuNin RDM Election Research Preacceptance Competition"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:12
+msgid "The Election Research Preacceptance Competition is Now Closed"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:13
+msgid "American National Election Studies"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:14
+msgid ""
+"2016 survey dataset, no additional preregistrations are being accepted "
+"for this competition."
+msgstr ""
+
+#: templates/erpc_landing_page.mako:15
+msgid "To read more about this competition and its current status, please visit "
+msgstr ""
+
+#: templates/erpc_landing_page.mako:17
+msgid ""
+"To see the publicly available preregistrations created as part of this "
+"initiative, please see"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:18 templates/public/register.mako:23
+msgid "GakuNin RDM Registries"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:19
+msgid ""
+"Please note that many studies created as part of this competition will "
+"remain private for up to four years from the date of creation."
+msgstr ""
+
+#: templates/erpc_landing_page.mako:22
+msgid ""
+"A blank version of the Election Research Preacceptance Competition form "
+"is available "
+msgstr ""
+
+#: templates/erpc_landing_page.mako:22 templates/project/settings.mako:437
+msgid "here"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:22 templates/external_login_email.mako:26
+#: templates/prereg_landing_page.mako:55
+msgid "."
+msgstr ""
+
+#: templates/erpc_landing_page.mako:24
+msgid ""
+"If you'd like to preregister another study, please see the "
+"Preregistration Challenge"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:25
+msgid "information page"
+msgstr ""
+
+#: templates/erpc_landing_page.mako:25
+msgid " or get started on your next preregistration"
+msgstr ""
+
+#: templates/external_login_email.mako:2
+msgid "Login"
+msgstr ""
+
+#: templates/external_login_email.mako:4
+msgid "Login | Register Email"
+msgstr ""
+
+#: templates/external_login_email.mako:10
+msgid "Please enter your email to finalize the login."
+msgstr ""
+
+#: templates/external_login_email.mako:11
+msgid "If you already have a GakuNin RDM account, this will link your "
+msgstr ""
+
+#: templates/external_login_email.mako:11
+msgid " profile with GakuNin RDM."
+msgstr ""
+
+#: templates/external_login_email.mako:12
+msgid "If not, this will create a new account for you with your "
+msgstr ""
+
+#: templates/external_login_email.mako:12
+msgid " profile."
+msgstr ""
+
+#: templates/external_login_email.mako:26
+msgid "I have read and agree to the ."
+msgstr ""
+
+#: templates/external_login_email.mako:26
+msgid "Terms of Use."
+msgstr ""
+
+#: templates/external_login_email.mako:26
+msgid " and "
+msgstr ""
+
+#: templates/external_login_email.mako:26
+msgid "Privacy Policy."
+msgstr ""
+
+#: templates/external_login_email.mako:28 templates/resend.mako:17
+msgid "Send"
+msgstr ""
+
+#: templates/external_login_email.mako:29
+#: templates/include/comment_pane_template.mako:32
+#: templates/include/comment_template.mako:141
+#: templates/include/comment_template.mako:148
+#: templates/include/comment_template.mako:170
+#: templates/profile/oauth_app_detail.mako:84
+#: templates/profile/personal_tokens_detail.mako:49
+#: templates/project/addon/node_settings_default.mako:72
+#: templates/project/modal_generate_private_link.mako:86
+#: templates/project/modal_remove_contributor.mako:96
+#: templates/project/modal_remove_contributor.mako:105
+#: templates/project/modal_remove_contributor.mako:114
+#: templates/project/modal_remove_contributor.mako:123
+#: templates/project/nodes_delete.mako:89 templates/project/project.mako:567
+#: templates/project/registration_utils.mako:21
+#: templates/project/timestamp.mako:71
+#: templates/util/render_addon_widget.mako:98
+msgid "Cancel"
+msgstr ""
+
+#: templates/footer.mako:8
+msgid "Copyright &copy; 2017-"
+msgstr ""
+
+#: templates/footer.mako:17
+msgid "Terms&nbsp;of&nbsp;Use"
+msgstr ""
+
+#: templates/footer.mako:23
+msgid "Privacy&nbsp;Policy"
+msgstr ""
+
+#: templates/footer.mako:30
+msgid "Status"
+msgstr ""
+
+#: templates/footer.mako:38
+msgid "API"
+msgstr ""
+
+#: templates/footer.mako:44
+msgid "TOP Guidelines"
+msgstr ""
+
+#: templates/footer.mako:52
+msgid "Reproducibility&nbsp;Project: Psychology"
+msgstr ""
+
+#: templates/footer.mako:60
+msgid "Reproducibility&nbsp;Project: Cancer Biology"
+msgstr ""
+
+#: templates/institution.mako:8 templates/my_projects.mako:8
+msgid "NOTICE"
+msgstr ""
+
+#: templates/institution.mako:8 templates/my_projects.mako:8
+msgid ""
+"Forks, registrations, and uploads will be temporarily disabled while the "
+"GakuNin RDM undergoes a hardware upgrade. These features will return "
+"shortly. Thank you for your patience."
+msgstr ""
+
+#: templates/mapcore_agree.mako:2
+msgid "mAP core API agreement"
+msgstr ""
+
+#: templates/mapcore_agree.mako:10
+msgid "学認RDMを利用するためにはmAP core(学認クラウドゲートウェイのグループ管理機能)とアカウントの同期を行う必要があります。"
+msgstr ""
+
+#: templates/mapcore_agree.mako:14
+msgid "アカウント連携"
+msgstr ""
+
+#: templates/mapcore_agree.mako:19
+msgid "学認クラウドゲートウェイサービスについて"
+msgstr ""
+
+#: templates/my_projects.mako:2 templates/nav.mako:51
+msgid "My Projects"
+msgstr ""
+
+#: templates/nav.mako:23
+msgid "HOME"
+msgstr ""
+
+#: templates/nav.mako:24
+msgid "PREPRINTS"
+msgstr ""
+
+#: templates/nav.mako:25
+msgid "REGISTRIES"
+msgstr ""
+
+#: templates/nav.mako:26
+msgid "MEETINGS"
+msgstr ""
+
+#: templates/nav.mako:34
+msgid "Toggle navigation"
+msgstr ""
+
+#: templates/nav.mako:49
+msgid "My Quick Files"
+msgstr ""
+
+#: templates/nav.mako:54 templates/search.mako:2
+msgid "Search"
+msgstr ""
+
+#: templates/nav.mako:59
+msgid "Support"
+msgstr ""
+
+#: templates/nav.mako:63
+msgid "Donate"
+msgstr ""
+
+#: templates/nav.mako:78
+msgid "My Profile"
+msgstr ""
+
+#: templates/nav.mako:80
+msgid "RDM Support"
+msgstr ""
+
+#: templates/nav.mako:82 templates/profile/account.mako:8
+#: templates/profile/add_email.mako:14 templates/profile/notifications.mako:6
+#: templates/profile/oauth_app_list.mako:4
+#: templates/profile/personal_tokens_detail.mako:5
+#: templates/profile/personal_tokens_list.mako:4
+#: templates/profile/settings.mako:2 templates/project/project_header.mako:80
+#: templates/project/settings.mako:2 templates/project/settings.mako:5
+#: templates/util/render_node.mako:67
+msgid "Settings"
+msgstr ""
+
+#: templates/nav.mako:83
+msgid "Log out"
+msgstr ""
+
+#: templates/nav.mako:140
+msgid "Notice"
+msgstr ""
+
+#: templates/nav.mako:144
+msgid "The site will undergo maintenance between "
+msgstr ""
+
+#: templates/nav.mako:145
+msgid "Thank you for your patience."
+msgstr ""
+
+#: templates/prereg_landing_page.mako:5
+msgid "GakuNin RDM Preregistration"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:7
+msgid "GakuNin RDM Prereg Challenge"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:22
+msgid "Please provide a title for your project"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:32 templates/prereg_landing_page.mako:41
+#: templates/prereg_landing_page.mako:71 templates/prereg_landing_page.mako:115
+msgid "Preregister"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:39
+msgid "Preregister an existing project"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:55
+msgid "Improve your research with "
+msgstr ""
+
+#: templates/prereg_landing_page.mako:55 templates/prereg_landing_page.mako:59
+msgid "preregistration"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:55
+msgid ""
+"By writing out specific details such as data collection methods, analysis"
+" plans, and rules for data exclusion, you can make important decisions "
+"early on and have a clear record of these choices. This can help reduce "
+"biases that occur once the data are in front of you."
+msgstr ""
+
+#: templates/prereg_landing_page.mako:58
+msgid "Articles must be published by an "
+msgstr ""
+
+#: templates/prereg_landing_page.mako:58
+msgid "approved"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:58
+msgid ""
+"journal by December 31, 2018, to be eligible for a prize. Please use this"
+" this helpful workflow to preregister, even if you are not seeking a "
+"prize. "
+msgstr ""
+
+#: templates/prereg_landing_page.mako:59
+msgid "Improve your research with preregistration. "
+msgstr ""
+
+#: templates/prereg_landing_page.mako:59
+msgid "The process of creating a "
+msgstr ""
+
+#: templates/prereg_landing_page.mako:59
+msgid ""
+" is beneficial to both the scientific field and to you, the scientist. By"
+" writing out detailed data collection methods, analysis plans, and rules "
+"for excluding or missing data, you can make important decisions that "
+"affect your workflow earlier, without the biases that occur once the data"
+" are in front of you."
+msgstr ""
+
+#: templates/prereg_landing_page.mako:64 templates/prereg_landing_page.mako:110
+msgid "Start a new preregistration"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:76 templates/prereg_landing_page.mako:121
+msgid "Continue working on an existing draft preregistration"
+msgstr ""
+
+#: templates/prereg_landing_page.mako:84 templates/prereg_landing_page.mako:126
+msgid "Preregister a project you already have on the GakuNin RDM"
+msgstr ""
+
+#: templates/profile.mako:23
+msgid "This account has been merged with "
+msgstr ""
+
+#: templates/profile.mako:43
+msgid "Edit your profile"
+msgstr ""
+
+#: templates/profile.mako:57
+msgid "Member&nbsp;Since"
+msgstr ""
+
+#: templates/profile.mako:69
+msgid "activity point"
+msgstr ""
+
+#: templates/profile.mako:70
+msgid "project"
+msgstr ""
+
+#: templates/profile.mako:73
+#, python-format
+msgid "Usage of % strage"
+msgstr ""
+
+#: templates/profile.mako:82 templates/profile/settings.mako:39
+msgid "Social"
+msgstr ""
+
+#: templates/profile.mako:83 templates/profile/settings.mako:40
+msgid "Employment"
+msgstr ""
+
+#: templates/profile.mako:84 templates/profile/settings.mako:41
+msgid "Education"
+msgstr ""
+
+#: templates/profile.mako:115
+msgid "Public projects"
+msgstr ""
+
+#: templates/profile.mako:135
+msgid "Public components"
+msgstr ""
+
+#: templates/profile.mako:152
+msgid "Quick files"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:4
+msgid "Registered Reports"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:18
+msgid "Please provide a title for your project:"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:86
+#: templates/profile/personal_tokens_detail.mako:51
+#: templates/registered_reports_landing.mako:20
+msgid "Create"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:26
+msgid "Go to an existing registration:"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:34
+msgid "Register an existing project"
+msgstr ""
+
+#: templates/project/register.mako:3 templates/project/register_draft.mako:8
+#: templates/project/register_draft.mako:36
+#: templates/public/pages/meeting_landing.mako:43
+#: templates/registered_reports_landing.mako:36
+#: templates/registered_reports_landing.mako:62
+msgid "Register"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:43
+msgid "Simple Registered Report Protocol Preregistration"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:48
+msgid ""
+"Registered Reports benefit science by improving rigor and reducing "
+"publication bias."
+msgstr ""
+
+#: templates/registered_reports_landing.mako:49
+msgid "When to use this form:"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:50
+msgid ""
+"Use this form <b>after</b> you have received \\“in principle "
+"acceptance\\” (IPA) by a journal following Stage 1 Peer Review, and "
+"<b>before</b> you have begun the study."
+msgstr ""
+
+#: templates/registered_reports_landing.mako:55
+#: templates/registered_reports_landing.mako:101
+msgid "Submit your approved Registered Report"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:67
+msgid "Continue working on an existing registration draft"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:75
+#: templates/registered_reports_landing.mako:117
+msgid "Preregister an analysis plan for an OSF Project"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:106
+msgid "Create a Registered Report"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:112
+msgid "Continue working on an existing draft of Registered Report"
+msgstr ""
+
+#: templates/registered_reports_landing.mako:147
+#, python-format
+msgid "You can learn more about Registered Reports <a %s>here</a>."
+msgstr ""
+
+#: templates/registered_reports_landing.mako:147
+#, python-format
+msgid ""
+"If you do not have IPA from a journal, you can still preregister your "
+"research. Learn more <a %s>here</a>."
+msgstr ""
+
+#: templates/request_access.mako:2
+msgid "Request Access"
+msgstr ""
+
+#: templates/request_access.mako:11
+msgid "You Need Permission"
+msgstr ""
+
+#: templates/request_access.mako:13
+msgid "Ask for access, or switch to an account with permission."
+msgstr ""
+
+#: templates/request_access.mako:14
+msgid ""
+"Your request for access has been sent. You will receive an email if and "
+"when your request is approved."
+msgstr ""
+
+#: templates/request_access.mako:23
+msgid "Switch account"
+msgstr ""
+
+#: templates/resend.mako:2 templates/resend.mako:4
+msgid "Resend Confirmation Email"
+msgstr ""
+
+#: templates/resend.mako:9
+msgid "Enter your email address and we'll resend your confirmation link."
+msgstr ""
+
+#: templates/search.mako:36
+msgid "Improve your search:"
+msgstr ""
+
+#: templates/search.mako:69
+msgid "Filter by license:"
+msgstr ""
+
+#: templates/search.mako:93
+msgid "No results found."
+msgstr ""
+
 #: templates/search.mako:96
 msgid "Type your search terms in the box above."
-msgstr "検索文字列を入力してください"
+msgstr ""
+
+#: templates/search.mako:123
+msgid "Registration "
+msgstr ""
+
+#: templates/search.mako:123
+msgid "File)"
+msgstr ""
+
+#: templates/search.mako:126
+msgid "(Preprint File)"
+msgstr ""
+
+#: templates/search.mako:130 templates/search.mako:131
+msgid "From:"
+msgstr ""
+
+#: templates/search.mako:145
+msgid "at"
+msgstr ""
+
+#: templates/search.mako:147
+msgid "from"
+msgstr ""
+
+#: templates/project/settings.mako:108 templates/search.mako:237
+#: templates/search.mako:292 templates/search.mako:348
+msgid "Description:"
+msgstr ""
+
+#: templates/project/project.mako:165
+#: templates/project/retracted_registration.mako:13 templates/search.mako:241
+#: templates/search.mako:352
+msgid "Contributors:"
+msgstr ""
+
+#: templates/search.mako:254
+msgid "Groups"
+msgstr ""
+
+#: templates/search.mako:263
+msgid "Affiliated institutions:"
+msgstr ""
+
+#: templates/search.mako:277 templates/search.mako:368
+msgid "Jump to:"
+msgstr ""
+
+#: templates/project/settings.mako:37 templates/project/settings.mako:258
+#: templates/search.mako:279 templates/search.mako:370
+msgid "Wiki"
+msgstr ""
+
+#: templates/project/files.mako:2 templates/project/files.mako:5
+#: templates/project/project_header.mako:40 templates/search.mako:281
+#: templates/search.mako:372
+msgid "Files"
+msgstr ""
+
+#: templates/search.mako:291
+msgid "(Preprint)"
+msgstr ""
+
+#: templates/search.mako:314
+msgid "Managers:"
+msgstr ""
+
+#: templates/search.mako:327
+msgid "Members:"
+msgstr ""
+
+#: templates/project/project.mako:398 templates/search.mako:341
+#: templates/search.mako:344
+msgid "Withdrawn"
+msgstr ""
+
+#: templates/search.mako:341
+msgid "Registration"
+msgstr ""
+
+#: templates/search.mako:344
+msgid "Registrationi"
+msgstr ""
+
+#: templates/search.mako:376
+msgid "Tags:"
+msgstr ""
+
+#: templates/search_bar.mako:8
+msgid "GakuNin RDM Search"
+msgstr ""
+
+#: templates/search_bar_help_modal.mako:6
+msgid "Search help"
+msgstr ""
+
+#: templates/search_bar_help_modal.mako:9
+msgid "Queries"
+msgstr ""
+
+#: templates/search_bar_help_modal.mako:10
+#, python-format
+msgid "Search uses the <a href=%s>Lucene search syntax</a>."
+msgstr ""
+
+#: templates/search_bar_help_modal.mako:10
+msgid ""
+"This gives you many options, but can be very simple as well. Examples of "
+"valid searches include:"
+msgstr ""
+
+#: templates/profile/modal_change_avatar.mako:16
+#: templates/project/modal_show_links.mako:31
+#: templates/project/view_file.mako:135 templates/project/view_file.mako:155
+#: templates/project/view_file.mako:175 templates/search_bar_help_modal.mako:18
+msgid "Close"
+msgstr ""
+
+#: templates/include/comment_pane_template.mako:18
+#: templates/include/comment_pane_template.mako:19
+msgid "Discussion"
+msgstr ""
+
+#: templates/include/comment_pane_template.mako:20
+msgid "| Discussion"
+msgstr ""
+
+#: templates/include/comment_template.mako:13
+msgid "Comment confirmed as spam."
+msgstr ""
+
+#: templates/include/comment_template.mako:23
+msgid "Comment deleted."
+msgstr ""
+
+#: templates/include/comment_template.mako:30
+msgid "Restore"
+msgstr ""
+
+#: templates/include/comment_template.mako:44
+msgid "Not abuse"
+msgstr ""
+
+#: templates/include/comment_template.mako:93
+#: templates/include/profile/jobs.mako:120
+#: templates/include/profile/names.mako:77
+#: templates/include/profile/schools.mako:120
+#: templates/include/profile/social.mako:146
+#: templates/profile/notifications.mako:42
+#: templates/profile/oauth_app_detail.mako:88
+#: templates/profile/personal_tokens_detail.mako:55
+#: templates/project/addon/user_settings.mako:13
+#: templates/project/project.mako:569 templates/project/settings.mako:339
+msgid "Save"
+msgstr ""
+
+#: templates/include/comment_template.mako:142
+msgid "Report"
+msgstr ""
+
+#: templates/include/comment_template.mako:149
+#: templates/profile/personal_tokens_detail.mako:53
+#: templates/project/nodes_delete.mako:91
+msgid "Delete"
+msgstr ""
+
+#: templates/include/comment_template.mako:186
+msgid "More replies"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:26
+#: templates/include/profile/schools.mako:26
+#: templates/project/contributors.mako:332
+#: templates/project/contributors.mako:387
+#: templates/project/modal_remove_contributor.mako:97
+#: templates/project/modal_remove_contributor.mako:106
+#: templates/project/modal_remove_contributor.mako:115
+#: templates/project/private_links_table.mako:50
+#: templates/project/project.mako:568
+msgid "Remove"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:31
+#: templates/include/profile/schools.mako:31
+msgid "Read IdP Profile"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:35
+msgid "Institution / Employer"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:44
+msgid "Department / Institute"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:49
+msgid "Job title"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:69
+#: templates/include/profile/schools.mako:69
+msgid "End date"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:85
+#: templates/include/profile/schools.mako:85
+msgid "Ongoing"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:104
+#: templates/include/profile/schools.mako:104
+msgid "Add another"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:114
+#: templates/include/profile/names.mako:71
+#: templates/include/profile/schools.mako:114
+#: templates/include/profile/social.mako:140
+msgid "Discard changes"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:136
+#: templates/include/profile/schools.mako:136
+#: templates/include/profile/social.mako:180
+msgid "Not provided"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:156
+msgid "Department / Institute:"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:158
+#: templates/include/profile/schools.mako:157
+msgid "Dates:"
+msgstr ""
+
+#: templates/include/profile/jobs.mako:179
+#: templates/include/profile/schools.mako:180
+#: templates/include/profile/social.mako:184 templates/project/project.mako:538
+msgid "Edit"
+msgstr ""
+
+#: templates/include/profile/names.mako:6
+msgid "Full name (e.g. Rosalind Elsie Franklin)"
+msgstr ""
+
+#: templates/include/profile/names.mako:15
+msgid "Your full name, above, is the name that will be displayed in your profile."
+msgstr ""
+
+#: templates/include/profile/names.mako:16
+msgid ""
+"To control the way your name will appear in citations, you can use the "
+"\"Auto-fill\" button to automatically infer your first name, last name, "
+"etc., or edit the fields directly below."
+msgstr ""
+
+#: templates/include/profile/names.mako:20
+msgid "Auto-fill"
+msgstr ""
+
+#: templates/include/profile/names.mako:24
+msgid "Given name (e.g. Rosalind)"
+msgstr ""
+
+#: templates/include/profile/names.mako:29
+msgid "Middle name(s) (e.g. Elsie)"
+msgstr ""
+
+#: templates/include/profile/names.mako:34
+msgid "Family name (e.g. Franklin)"
+msgstr ""
+
+#: templates/include/profile/names.mako:39
+msgid "Suffix"
+msgstr ""
+
+#: templates/include/profile/names.mako:45
+msgid "Citation preview"
+msgstr ""
+
+#: templates/include/profile/names.mako:49
+msgid "Style"
+msgstr ""
+
+#: templates/include/profile/names.mako:50
+msgid "Citation format"
+msgstr ""
+
+#: templates/include/profile/names.mako:55 templates/project/project.mako:522
+msgid "APA"
+msgstr ""
+
+#: templates/include/profile/names.mako:59 templates/project/project.mako:524
+msgid "MLA"
+msgstr ""
+
+#: templates/include/profile/schools.mako:44
+msgid "Department"
+msgstr ""
+
+#: templates/include/profile/schools.mako:49
+msgid "Degree"
+msgstr ""
+
+#: templates/include/profile/schools.mako:54
+msgid "Start date"
+msgstr ""
+
+#: templates/include/profile/schools.mako:155
+msgid "Department:"
+msgstr ""
+
+#: templates/include/profile/schools.mako:156
+msgid "Degree:"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:6
+msgid "Profile information"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:9
+msgid "Account settings"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:12
+msgid "Configure add-on accounts"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:15
+#: templates/profile/notifications.mako:2
+msgid "Notifications"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:18
+msgid "Developer apps"
+msgstr ""
+
+#: templates/include/profile/settings_navpanel.mako:21
+msgid "Personal access tokens"
+msgstr ""
+
+#: templates/include/profile/social.mako:10
+msgid "Your websites"
+msgstr ""
+
+#: templates/include/profile/social.mako:31
+msgid "Please enter a valid website"
+msgstr ""
+
+#: templates/include/profile/social.mako:34
+msgid "Add website"
+msgstr ""
+
+#: templates/include/profile/social.mako:39
+msgid "ORCID"
+msgstr ""
+
+#: templates/include/profile/social.mako:55
+msgid "Twitter"
+msgstr ""
+
+#: templates/include/profile/social.mako:63
+msgid "GitHub"
+msgstr ""
+
+#: templates/include/profile/social.mako:71
+msgid "Import"
+msgstr ""
+
+#: templates/include/profile/social.mako:77
+msgid "LinkedIn"
+msgstr ""
+
+#: templates/include/profile/social.mako:85
+msgid "ImpactStory"
+msgstr ""
+
+#: templates/include/profile/social.mako:93
+msgid "Google Scholar"
+msgstr ""
+
+#: templates/include/profile/social.mako:101
+msgid "ResearchGate"
+msgstr ""
+
+#: templates/include/profile/social.mako:109
+msgid "Academia"
+msgstr ""
+
+#: templates/include/profile/social.mako:119
+msgid "Baidu Scholar"
+msgstr ""
+
+#: templates/include/profile/social.mako:127
+msgid "SSRN"
+msgstr ""
+
+#: templates/include/profile/social.mako:164
+msgid "Personal websites"
+msgstr ""
+
+#: templates/include/profile/social.mako:165
+msgid "Personal website"
+msgstr ""
+
+#: templates/profile/account.mako:4 templates/profile/add_email.mako:4
+msgid "Account Settings"
+msgstr ""
+
+#: templates/profile/account.mako:15 templates/profile/add_email.mako:21
+msgid "Connected Emails"
+msgstr ""
+
+#: templates/profile/account.mako:20 templates/profile/add_email.mako:27
+msgid "Primary Email"
+msgstr ""
+
+#: templates/profile/account.mako:34 templates/profile/add_email.mako:57
+msgid "Alternate Emails"
+msgstr ""
+
+#: templates/profile/account.mako:40 templates/profile/add_email.mako:63
+msgid "make&nbsp;primary"
+msgstr ""
+
+#: templates/profile/account.mako:48 templates/profile/add_email.mako:72
+msgid "Unconfirmed Emails"
+msgstr ""
+
+#: templates/profile/account.mako:55 templates/profile/add_email.mako:79
+msgid "resend&nbsp;confirmation"
+msgstr ""
+
+#: templates/profile/account.mako:64 templates/profile/add_email.mako:88
+msgid ""
+"To merge an existing account with this one or to log in with multiple "
+"email addresses, add an alternate email address below."
+msgstr ""
+
+#: templates/profile/account.mako:68
+msgid ""
+"To log in with multiple email addresses, add an alternate email address "
+"below."
+msgstr ""
+
+#: templates/profile/account.mako:90
+msgid "Default Storage Location"
+msgstr ""
+
+#: templates/profile/account.mako:98
+msgid ""
+"This location will be applied to new projects and components. It will not"
+" affect existing projects and components."
+msgstr ""
+
+#: templates/profile/account.mako:103
+msgid "Update location"
+msgstr ""
+
+#: templates/profile/account.mako:109
+msgid "Connected Identities"
+msgstr ""
+
+#: templates/profile/account.mako:111 templates/profile/add_email.mako:119
+msgid ""
+"Connected identities allow you to log in to the GakuNin RDM via a third-"
+"party service."
+msgstr ""
+
+#: templates/profile/account.mako:112 templates/profile/add_email.mako:120
+msgid "You can revoke these authorizations here."
+msgstr ""
+
+#: templates/profile/account.mako:115 templates/profile/add_email.mako:123
+msgid ""
+"You have not authorized any external services to log in to the GakuNin "
+"RDM."
+msgstr ""
+
+#: templates/profile/account.mako:145 templates/profile/add_email.mako:155
+msgid "Change Password"
+msgstr ""
+
+#: templates/profile/account.mako:166 templates/profile/add_email.mako:176
+msgid "New password"
+msgstr ""
+
+#: templates/profile/account.mako:217 templates/profile/add_email.mako:227
+msgid "Update password"
+msgstr ""
+
+#: templates/profile/account.mako:223 templates/profile/add_email.mako:232
+msgid "Security Settings"
+msgstr ""
+
+#: templates/profile/account.mako:235 templates/profile/add_email.mako:245
+msgid "Export Account Data"
+msgstr ""
+
+#: templates/profile/account.mako:237 templates/profile/add_email.mako:247
+msgid ""
+"Exporting your account data allows you to keep a permanent copy of the "
+"current state of your account. Keeping a copy of your account data can "
+"provide peace of mind or assist in transferring your information to "
+"another provider."
+msgstr ""
+
+#: templates/profile/account.mako:238
+msgid "Request export"
+msgstr ""
+
+#: templates/profile/account.mako:242 templates/profile/add_email.mako:254
+msgid "Deactivate Account"
+msgstr ""
+
+#: templates/profile/account.mako:244
+msgid "Once your deactivation has been approved the effects are irreversible."
+msgstr ""
+
+#: templates/profile/account.mako:245 templates/profile/add_email.mako:259
+msgid ""
+"Deactivating your account will remove you from all public projects to "
+"which you are a contributor. Your account will no longer be associated "
+"with GakuNin RDM projects, and your work on the GakuNin RDM will be "
+"inaccessible."
+msgstr ""
+
+#: templates/profile/account.mako:246 templates/profile/add_email.mako:263
+msgid "Your account is currently pending deactivation."
+msgstr ""
+
+#: templates/profile/account.mako:247 templates/profile/add_email.mako:261
+msgid "Request deactivation"
+msgstr ""
+
+#: templates/profile/account.mako:248
+msgid "Cancel deactivation request"
+msgstr ""
+
+#: templates/profile/add_email.mako:42
+msgid "eduPersonPrincipalName (ePPN)"
+msgstr ""
+
+#: templates/profile/add_email.mako:89
+msgid ""
+"Merging accounts will move all projects and components associated with "
+"two emails into one account. All projects and components will be "
+"displayed under the email address listed as primary."
+msgstr ""
+
+#: templates/profile/add_email.mako:92
+msgid "Add an email address below."
+msgstr ""
+
+#: templates/profile/add_email.mako:159
+msgid "Old password"
+msgstr ""
+
+#: templates/profile/add_email.mako:211
+msgid "Confirm new password"
+msgstr ""
+
+#: templates/profile/add_email.mako:257
+msgid "This action is irreversible."
+msgstr ""
+
+#: templates/profile/addon_permissions.mako:4
+msgid "Authorized by "
+msgstr ""
+
+#: templates/profile/addons.mako:2 templates/profile/addons.mako:29
+msgid "Configure Add-on Accounts"
+msgstr ""
+
+#: templates/profile/modal_change_avatar.mako:6
+msgid "Change Avata"
+msgstr ""
+
+#: templates/profile/modal_change_avatar.mako:9
+msgid "Avatars on the GakuNin RDM use"
+msgstr ""
+
+#: templates/profile/modal_change_avatar.mako:10
+msgid ""
+", a free service that allows users to easily control their identity and "
+"profile on multiple service across the Internet."
+msgstr ""
+
+#: templates/profile/modal_change_avatar.mako:12
+#, python-format
+msgid ""
+"To change your avatar image, please login or register at <a "
+"href=%s>gravatar.org</a>, and add the email address you use on the "
+"GakuNin RDM to your Gravatar account."
+msgstr ""
+
+#: templates/profile/notifications.mako:16
+msgid "Configure Email Preferences"
+msgstr ""
+
+#: templates/profile/notifications.mako:18
+msgid "Emails"
+msgstr ""
+
+#: templates/profile/notifications.mako:26
+msgid "Receive general notifications about the GakuNin RDM every 2-3 weeks."
+msgstr ""
+
+#: templates/profile/notifications.mako:35
+msgid ""
+"Receive helpful tips on how to make the most of the GakuNin RDM, up to "
+"once per week."
+msgstr ""
+
+#: templates/profile/notifications.mako:53
+msgid "Configure Notification Preferences"
+msgstr ""
+
+#: templates/profile/notifications.mako:56
+msgid ""
+"NOTE: Regardless of your selected preferences, GakuNin RDM will continue "
+"to provide transactional and administrative service emails."
+msgstr ""
+
+#: templates/profile/notifications.mako:64
+msgid "Loading notification settings... "
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:2
+#: templates/profile/oauth_app_detail.mako:5
+msgid "Application Detail"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:16
+msgid "Return to list of registered applications"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:24
+msgid "Client ID"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:25
+msgid "The unique identifier for the application. May be seen publicly by others."
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:30
+msgid "Client secret"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:39
+msgid "Hide"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:40
+msgid "Show"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:42
+msgid "Reset Secret"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:48
+msgid "Deactivate application"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:54
+msgid "Application name"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:60
+msgid "Project homepage URL"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:66
+msgid "Application description"
+msgstr ""
+
+#: templates/profile/oauth_app_detail.mako:72
+msgid "Authorization callback URL"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:2
+#: templates/profile/oauth_app_list.mako:15
+msgid "Developer Applications"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:17
+msgid "New application"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:22
+msgid ""
+"The GakuNin RDM allows third-party web applications to connect to the "
+"GakuNin RDM on behalf of other users via the OAuth 2.0 web application "
+"flow."
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:24
+msgid ""
+"You have not registered any applications that can connect to the GakuNin "
+"RDM on behalf of other users."
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:26
+msgid ""
+"You have registered the following applications that can connect to the "
+"GakuNin RDM on behalf of other users:"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:31
+msgid "Application"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:34
+#: templates/profile/personal_tokens_list.mako:34
+msgid "Deactivate"
+msgstr ""
+
+#: templates/profile/oauth_app_list.mako:43
+msgid "Client ID:"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:2
+msgid "Personal Token Detail"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:16
+msgid "Return to list of registered tokens"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:25
+msgid "Token name:"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:31
+msgid "Scopes:"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:65
+msgid "This is the only time your token will be displayed."
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:66
+msgid "Token ID"
+msgstr ""
+
+#: templates/profile/personal_tokens_detail.mako:70
+msgid "Copy to clipboard"
+msgstr ""
+
+#: templates/profile/personal_tokens_list.mako:2
+#: templates/profile/personal_tokens_list.mako:15
+#: templates/profile/personal_tokens_list.mako:31
+msgid "Personal Access Tokens"
+msgstr ""
+
+#: templates/profile/personal_tokens_list.mako:22
+msgid ""
+"Personal access tokens function like ordinary OAuth access tokens. They "
+"can be used to authenticate to the API."
+msgstr ""
+
+#: templates/profile/personal_tokens_list.mako:24
+msgid ""
+"You have not created any access tokens that can connect to the GakuNin "
+"RDM."
+msgstr ""
+
+#: templates/profile/personal_tokens_list.mako:26
+msgid "You have generated the following personal access tokens:"
+msgstr ""
+
+#: templates/profile/settings.mako:11
+msgid "View your profile"
+msgstr ""
+
+#: templates/profile/settings.mako:38 templates/project/contributors.mako:182
+#: templates/project/modal_add_contributor.mako:216
+msgid "Name"
+msgstr ""
+
+#: templates/profile/user_settings_default.mako:9
+msgid "Connect or Reauthorize Account"
+msgstr ""
+
+#: templates/profile/user_settings_default.mako:14
+#: templates/project/addon/node_settings_default.mako:10
+msgid "Disconnect Account"
+msgstr ""
+
+#: templates/profile/user_settings_default.mako:20
+msgid "Authorized by"
+msgstr ""
+
+#: templates/project/addons.mako:2 templates/project/project_header.mako:76
+msgid "Add-ons"
+msgstr ""
+
+#: templates/project/addons.mako:14 templates/project/addons.mako:33
+msgid "Select Add-ons"
+msgstr ""
+
+#: templates/project/addons.mako:15
+msgid "Configure Add-ons"
+msgstr ""
+
+#: templates/project/addons.mako:38
+msgid ""
+"Sync your projects with external services to help stay connected and "
+"organized. Select a category and browse the options."
+msgstr ""
+
+#: templates/project/addons.mako:86
+msgid "Enable"
+msgstr ""
+
+#: templates/project/addons.mako:128
+msgid "Don't see your GitHub organization repositories?"
+msgstr ""
+
+#: templates/project/addons.mako:130
+msgid "You may need to reauthorize your GitHub access token."
+msgstr ""
+
+#: templates/project/addons.mako:131
+#, python-format
+msgid "Follow the steps in the <a %s>help guide</a> to resolve the issue."
+msgstr ""
+
+#: templates/project/addons.mako:134
+#, python-format
+msgid "Please contact <a %s>%s</a> if you have questions."
+msgstr ""
+
+#: templates/project/contributors.mako:2 templates/project/contributors.mako:8
+#: templates/project/project.mako:163 templates/project/project_header.mako:72
+msgid "Contributors"
+msgstr ""
+
+#: templates/project/contributors.mako:14
+#: templates/project/contributors.mako:186
+#: templates/project/contributors.mako:232
+#: templates/project/modal_add_contributor.mako:227
+msgid "Permissions"
+msgstr ""
+
+#: templates/project/contributors.mako:24
+msgid "Administrator"
+msgstr ""
+
+#: templates/project/contributors.mako:27
+msgid "Read + Write"
+msgstr ""
+
+#: templates/project/contributors.mako:30
+msgid "Read"
+msgstr ""
+
+#: templates/project/contributors.mako:33
+#: templates/project/contributors.mako:196
+#: templates/project/contributors.mako:242
+#: templates/project/modal_add_contributor.mako:218
+msgid "Bibliographic Contributor"
+msgstr ""
+
+#: templates/project/contributors.mako:43
+msgid "Bibliographic"
+msgstr ""
+
+#: templates/project/contributors.mako:46
+msgid "Non-Bibliographic"
+msgstr ""
+
+#: templates/project/contributors.mako:57
+#: templates/project/contributors.mako:337
+#: templates/project/contributors.mako:385
+#: templates/project/modal_add_contributor.mako:346
+#: templates/project/modal_add_contributor.mako:350
+#: templates/project/modal_add_contributor.mako:356
+#: templates/project/settings.mako:210 templates/project/settings.mako:523
+msgid "Add"
+msgstr ""
+
+#: templates/project/contributors.mako:63
+msgid "Drag and drop contributors to change listing order."
+msgstr ""
+
+#: templates/project/contributors.mako:106
+msgid "No contributors found"
+msgstr ""
+
+#: templates/project/contributors.mako:111
+msgid "Admins on Parent Projects"
+msgstr ""
+
+#: templates/project/contributors.mako:135
+msgid "No administrators from parent project found."
+msgstr ""
+
+#: templates/project/contributors.mako:143
+msgid "Requests for Access"
+msgstr ""
+
+#: templates/project/contributors.mako:144
+msgid "The following users have requested access to this project."
+msgstr ""
+
+#: templates/project/contributors.mako:167
+msgid "Create a link to share this project so those who have the link can view"
+msgstr ""
+
+#: templates/project/contributors.mako:167
+msgid "but not edit&mdash;the project."
+msgstr ""
+
+#: templates/project/contributors.mako:396
+msgid "Discard Changes"
+msgstr ""
+
+#: templates/project/contributors.mako:397
+msgid "Save Changes"
+msgstr ""
+
+#: templates/project/edit_draft_registration.mako:7
+msgid "Edit draft registration"
+msgstr ""
+
+#: templates/project/edit_draft_registration.mako:51
+msgid "Last auto-saved:"
+msgstr ""
+
+#: templates/project/edit_draft_registration.mako:56
+msgid "Responses to some questions are invalid or missing where required."
+msgstr ""
+
+#: templates/project/edit_draft_registration.mako:66
+msgid "Preview for submission"
+msgstr ""
+
+#: templates/project/edit_draft_registration.mako:70
+msgid "Next Page"
+msgstr ""
+
+#: templates/project/files.mako:8
+msgid "Click on a storage provider or drag and drop to upload"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:20
+msgid "Search by name or user profile information"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:25
+msgid "Invite new contributor by e-mail"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:63
+msgid "Add contributor"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:66
+msgid "Already added"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:181
+#, python-format
+msgid "Add %s as an unregistered contributor"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:186
+msgid "Searching contributors..."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:190
+msgid "No results found. Try a more specific search."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:193
+msgid "No results found. Try a more specific search"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:196
+#, python-format
+msgid "add %s as an unregistered contributor"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:200
+msgid ""
+"It looks like you are trying to search by email address. Please try your "
+"search again using your collaborator's name. You will be able to add "
+"users without GakuNin RDM accounts as unregistered contributors."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:207
+msgid "Adding"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:208
+msgid "Remove all"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:241
+msgid "Remove contributor"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:281
+msgid "Adding contributor(s)"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:283
+msgid "to "
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:289
+msgid ""
+"You can also add the contributor(s) to any components on which you are an"
+" admin."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:293
+msgid "Select:&nbsp;"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:294
+#: templates/project/modal_generate_private_link.mako:71
+msgid "Select all"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:296
+msgid "Select none"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:309
+#: templates/project/nodes_delete.mako:36
+#: templates/project/nodes_privacy.mako:43
+msgid "Loading projects and components..."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:320
+msgid "Full Name"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:322
+msgid "Full name"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:327
+msgid "Email"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:330
+msgid "We will notify the user that they have been added to your project."
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:343
+#: templates/project/modal_add_contributor.mako:355
+#: templates/project/modal_remove_contributor.mako:113
+#: templates/project/nodes_delete.mako:87
+msgid "Back"
+msgstr ""
+
+#: templates/project/modal_add_contributor.mako:351
+msgid "Next"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:8
+msgid "Link other GakuNin RDM projects"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:43
+msgid "Projects"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:44
+#: templates/project/project_header.mako:67
+msgid "Registrations"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:55
+msgid "Results: All Projects"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:56
+msgid "Results: My Projects"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:57
+msgid "Results: All Registrations"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:58
+msgid "Results: My Registrations"
+msgstr ""
+
+#: templates/project/modal_add_pointer.mako:96
+msgid "Done"
+msgstr ""
+
+#: templates/project/modal_confirm_cancel_registration.mako:6
+msgid "Are you sure you want to cancel this registration?"
+msgstr ""
+
+#: templates/project/modal_confirm_cancel_registration.mako:9
+#: templates/project/project_header.mako:143
+#: templates/project/project_header.mako:176
+msgid "Cancel registration"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:5
+msgid "Create a new link to share your project"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:30
+msgid ""
+"<strong>Anonymize</strong> contributor list for this link (e.g., for "
+"blind peer review)."
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:32
+msgid ""
+"Ensure the wiki pages, files, registration forms and add-ons do not "
+"contain identifying information."
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:39
+msgid ""
+"<strong>Which components would you like to associate with this "
+"link?</strong>"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:40
+msgid "Anyone with the private link can view&mdash;but not edit&mdash;the"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:41
+msgid "components associated with the link."
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:51
+msgid "(current component"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:51
+msgid ", public"
+msgstr ""
+
+#: templates/project/modal_generate_private_link.mako:74
+msgid "De-select all"
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:15
+#, python-format
+msgid ""
+"Do you want to remove %(username)s></b> from %(project_title)s, or from "
+"%(projecttitle)s and every component in it?"
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:21
+#, python-format
+msgid "Remove %(username)s from %(title)s."
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:28
+#, python-format
+msgid "Remove %(username)s from %(title)s and every component in it."
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:31
+#, python-format
+msgid "Remove %(username)s from"
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:39
+#, python-format
+msgid "Remove %(username)s from %(title)s?"
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:51
+msgid " will be removed from the following projects and/or components."
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:68
+msgid " cannot be removed from the following projects and/or components."
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:83
+#, python-format
+msgid ""
+"%(username)s cannot be removed as a contributor.  You need at least one "
+"administrator, bibliographic contributor, and registered user."
+msgstr ""
+
+#: templates/project/modal_remove_contributor.mako:86
+msgid ""
+"Please save or discard your existing changes before removing a "
+"contributor."
+msgstr ""
+
+#: templates/project/modal_show_links.mako:5
+msgid "Links to this project"
+msgstr ""
+
+#: templates/project/modal_show_links.mako:12
+msgid "Authors"
+msgstr ""
+
+#: templates/project/nodes_delete.mako:21
+#: templates/project/nodes_privacy.mako:27
+msgid "Select:"
+msgstr ""
+
+#: templates/project/nodes_delete.mako:22
+msgid "All components"
+msgstr ""
+
+#: templates/project/nodes_delete.mako:23
+msgid "contains supplemental materials for a preprint"
+msgstr ""
+
+#: templates/project/nodes_delete.mako:66
+#: templates/project/nodes_delete.mako:77
+msgid "Type the following to continue:"
+msgstr ""
+
+#: templates/project/nodes_privacy.mako:28
+msgid "Make all public"
+msgstr ""
+
+#: templates/project/nodes_privacy.mako:30
+msgid "Make all private"
+msgstr ""
+
+#: templates/project/nodes_privacy.mako:108
+#: templates/project/nodes_privacy.mako:112
+#: templates/project/nodes_privacy.mako:121
+msgid "Confirm"
+msgstr ""
+
+#: templates/project/project.mako:22
+msgid "Private Project"
+msgstr ""
+
+#: templates/project/project.mako:45
+msgid "Private"
+msgstr ""
+
+#: templates/project/project.mako:49
+msgid "Make Public"
+msgstr ""
+
+#: templates/project/project.mako:58
+msgid "Make Private"
+msgstr ""
+
+#: templates/project/project.mako:100
+msgid "View Forks "
+msgstr ""
+
+#: templates/project/project.mako:115
+msgid "Bookmark"
+msgstr ""
+
+#: templates/project/project.mako:118
+msgid "Remove from bookmarks"
+msgstr ""
+
+#: templates/project/project.mako:127
+msgid "Create view-only link"
+msgstr ""
+
+#: templates/project/project.mako:137
+#: templates/public/pages/meeting_landing.mako:124
+msgid "Share"
+msgstr ""
+
+#: templates/project/project.mako:150
+msgid "Log in to request access"
+msgstr ""
+
+#: templates/project/project.mako:169
+#: templates/project/retracted_registration.mako:15
+#: templates/util/render_node.mako:109
+msgid "Anonymous Contributors"
+msgstr ""
+
+#: templates/project/project.mako:202
+msgid "None "
+msgstr ""
+
+#: templates/project/project.mako:218
+#: templates/project/retracted_registration.mako:22
+msgid "Forked from "
+msgstr ""
+
+#: templates/project/project.mako:218
+#: templates/project/retracted_registration.mako:22
+msgid " on"
+msgstr ""
+
+#: templates/project/project.mako:229
+msgid "Date created:"
+msgstr ""
+
+#: templates/project/project.mako:232
+msgid "| Last Updated:"
+msgstr ""
+
+#: templates/project/project.mako:258
+#: templates/project/retracted_registration.mako:56
+msgid "Category: "
+msgstr ""
+
+#: templates/project/project.mako:290
+msgid "View Registration Form"
+msgstr ""
+
+#: templates/project/project.mako:295
+msgid "View Registration Forms"
+msgstr ""
+
+#: templates/project/project.mako:300
+msgid "register/"
+msgstr ""
+
+#: templates/project/project.mako:395
+msgid "Status:"
+msgstr ""
+
+#: templates/project/addon/citations_widget.mako:16
+#: templates/project/project.mako:513
+#: templates/util/render_addon_widget.mako:136
+msgid "Loading citations..."
+msgstr ""
+
+#: templates/project/project.mako:518
+msgid "Customize"
+msgstr ""
+
+#: templates/project/project.mako:526
+msgid "Chicago"
+msgstr ""
+
+#: templates/project/project.mako:600
+msgid "Recent Activity"
+msgstr ""
+
+#: templates/project/project.mako:601
+msgid "Refresh"
+msgstr ""
+
+#: templates/project/project.mako:623
+msgid "Loading logs..."
+msgstr ""
+
+#: templates/project/project.mako:629
+msgid "Download as file"
+msgstr ""
+
+#: templates/project/project.mako:630 templates/project/timestamp.mako:206
+msgid "Download"
+msgstr ""
+
+#: templates/project/project.mako:643
+msgid "Components "
+msgstr ""
+
+#: templates/project/project.mako:647
+msgid "Add Component"
+msgstr ""
+
+#: templates/project/project.mako:649
+msgid "Link Projects"
+msgstr ""
+
+#: templates/project/project.mako:659
+msgid "Add components to organize your project."
+msgstr ""
+
+#: templates/project/project_base.mako:24
+msgid "Hosted on the GakuNin RDM"
+msgstr ""
+
+#: templates/project/project_header.mako:16
+msgid " Navigation"
+msgstr ""
+
+#: templates/project/project_header.mako:61
+msgid "Analytics"
+msgstr ""
+
+#: templates/project/project_header.mako:96 templates/project/timestamp.mako:2
+#: templates/project/timestamp.mako:5
+msgid "Timestamp"
+msgstr ""
+
+#: templates/project/project_header.mako:129
+#, python-format
+msgid ""
+"The <a %(active_file_url)s>active file</a> is viewable from within the <a"
+" %(registered_from_url)s>live %(node_type)</a>."
+msgstr ""
+
+#: templates/project/project_header.mako:132
+#, python-format
+msgid ""
+"This registration is a frozen, non-editable version of <a "
+"%(registered_from_url)s>this %(node_type)s</a>"
+msgstr ""
+
+#: templates/project/project_header.mako:136
+#, python-format
+msgid ""
+"This is a pending registration of <a %(registered_from_url)s>t his "
+"%(node_type)s</a>, awaiting approval from project administrators. This "
+"registration will be final when all project administrators approve the "
+"registration or 48 hours pass, whichever comes first."
+msgstr ""
+
+#: templates/project/project_header.mako:161
+#, python-format
+msgid "This %(node_type)s is currently pending withdrawal."
+msgstr ""
+
+#: templates/project/project_header.mako:165
+#, python-format
+msgid ""
+"This %(node_type)s is a withdrawn registration of <a "
+"%(registered_from_url)s>this %(node_type)s</a>; the content of the "
+"%(node_type)s has been taken down for the reason(s) stated below."
+msgstr ""
+
+#: templates/project/project_header.mako:171
+#, python-format
+msgid ""
+"This %(node_type)s is currently pending registration, awaiting approval "
+"from project administrators. This registration will be final and enter "
+"the embargo period when all project administrators approve the "
+"registration or 48 hours pass, whichever comes first. The embargo will "
+"keep the registration private until the embargo period ends."
+msgstr ""
+
+#: templates/project/project_header.mako:185
+#, python-format
+msgid ""
+"This registration is currently embargoed. It will remain private until "
+"its embargo end date, %s."
+msgstr ""
+
+#: templates/project/project_header.mako:191
+#, python-format
+msgid ""
+"This %(node_type)s contains supplemental materials for a preprint, but "
+"has been made Private. Make your supplemental materials discoverable by "
+"making this %(node_type)s Public."
+msgstr ""
+
+#: templates/project/project_header.mako:195
+#, python-format
+msgid ""
+"This %(node_type)s is being viewed through an anonymized, view-only link."
+" If you want to view it as a contributor, click <a %(url)s>here</a>"
+msgstr ""
+
+#: templates/project/project_header.mako:199
+#, python-format
+msgid ""
+"This %(node_type)s is being viewed through a private, view-only link. "
+"Anyone with the link can view this project. Keep the link safe."
+msgstr ""
+
+#: templates/project/project_header.mako:203
+msgid ""
+"<strong>NOTICE:</strong>Forks, registrations, and uploads will be "
+"temporarily disabled while the GakuNin RDM undergoes a hardware upgrade. "
+"These features will return shortly. Thank you for your patience."
+msgstr ""
+
+#: templates/project/register.mako:6
+msgid "Registration of "
+msgstr ""
+
+#: templates/project/register.mako:44 templates/project/register_draft.mako:3
+msgid "Register "
+msgstr ""
+
+#: templates/project/register_draft.mako:27
+msgid "Continue editing"
+msgstr ""
+
+#: templates/project/register_draft.mako:30
+msgid " Back "
+msgstr ""
+
+#: templates/project/registration_editor_extensions.mako:7
+#: templates/project/registration_editor_extensions.mako:31
+msgid "File(s) selected for upload:"
+msgstr ""
+
+#: templates/project/registration_editor_extensions.mako:22
+#: templates/project/registration_editor_extensions.mako:53
+#: templates/project/view_file.mako:57
+msgid "Loading files..."
+msgstr ""
+
+#: templates/project/registration_editor_extensions.mako:39
+msgid "Description: (optional)"
+msgstr ""
+
+#: templates/project/registration_editor_extensions.mako:44
+msgid "Attach File"
+msgstr ""
+
+#: templates/project/registration_editor_extensions.mako:63
+msgid "Add "
+msgstr ""
+
+#: templates/project/registration_editor_templates.mako:145
+msgid "Comments"
+msgstr ""
+
+#: templates/project/registration_editor_templates.mako:146
+msgid ""
+"(Comments are not included in your preregistration and are not made "
+"public)"
+msgstr ""
+
+#: templates/project/registration_editor_templates.mako:151
+msgid " deleted this comment on "
+msgstr ""
+
+#: templates/project/registration_editor_templates.mako:159
+msgid " said ..."
+msgstr ""
+
+#: templates/project/registration_utils.mako:9
+msgid ""
+"I agree. I understand that articles must be published by December 31, "
+"2018, in order to be eligible for a prize."
+msgstr ""
+
+#: templates/project/registration_utils.mako:12
+msgid ""
+"I have read these terms. I understand that articles must be published by "
+"December 31, 2018, in order to be eligible for a prize."
+msgstr ""
+
+#: templates/project/retract_registration.mako:2
+msgid "Withdraw Registration of Component"
+msgstr ""
+
+#: templates/project/retract_registration.mako:4
+#: templates/project/retract_registration.mako:38
+#: templates/project/settings.mako:428 templates/project/settings.mako:450
+msgid "Withdraw Registration"
+msgstr ""
+
+#: templates/project/retract_registration.mako:9
+msgid ""
+"Withdrawing a registration will remove its content from the GakuNin RDM, "
+"but leave basic metadata behind."
+msgstr ""
+
+#: templates/project/retract_registration.mako:10
+msgid ""
+"The title of a withdrawn registration and its contributor list will "
+"remain, as will justification or explanation of the withdrawal, should "
+"you wish to provide it. Withdrawn registrations will be marked with a "
+"\"withdrawn\" tag. <strong>This action is irreversible.</strong>"
+msgstr ""
+
+#: templates/project/retract_registration.mako:16
+msgid "Please provide your justification for withdrawing this registration."
+msgstr ""
+
+#: templates/project/retract_registration.mako:30
+#, python-format
+msgid ""
+"Type %(confirmationString)s and click Withdraw Registration if you are "
+"sure you want to continue."
+msgstr ""
+
+#: templates/project/retracted_registration.mako:35
+msgid "Date Created:"
+msgstr ""
+
+#: templates/project/retracted_registration.mako:38
+msgid "Date Registered:"
+msgstr ""
+
+#: templates/project/retracted_registration.mako:41
+msgid "Date Withdrawn:"
+msgstr ""
+
+#: templates/project/retracted_registration.mako:45
+msgid "Not available"
+msgstr ""
+
+#: templates/project/retracted_registration.mako:68
+msgid "Justification for Withdrawal"
+msgstr ""
+
+#: templates/project/retracted_registration.mako:72
+msgid "No justification provided during withdrawal."
+msgstr ""
+
+#: templates/project/settings.mako:22 templates/project/settings.mako:179
+msgid "Storage Location"
+msgstr ""
+
+#: templates/project/settings.mako:30 templates/project/settings.mako:203
+msgid "View-only Links"
+msgstr ""
+
+#: templates/project/settings.mako:34 templates/project/settings.mako:226
+msgid "Access Requests"
+msgstr ""
+
+#: templates/project/settings.mako:40 templates/project/settings.mako:319
+msgid "Commenting"
+msgstr ""
+
+#: templates/project/settings.mako:43 templates/project/settings.mako:360
+msgid "Email Notifications"
+msgstr ""
+
+#: templates/project/settings.mako:45
+msgid "Redirect Link"
+msgstr ""
+
+#: templates/project/settings.mako:52
+msgid "Withdraw Public Registration"
+msgstr ""
+
+#: templates/project/settings.mako:58 templates/project/settings.mako:470
+msgid "Project Affiliation / Branding"
+msgstr ""
+
+#: templates/project/settings.mako:82
+msgid "Category:"
+msgstr ""
+
+#: templates/project/settings.mako:88
+msgid "Uncategorized"
+msgstr ""
+
+#: templates/project/settings.mako:102
+msgid "Title:"
+msgstr ""
+
+#: templates/project/settings.mako:115
+msgid "Select Timestamp Function:"
+msgstr ""
+
+#: templates/project/settings.mako:123
+msgid "Timestamp only"
+msgstr ""
+
+#: templates/project/settings.mako:142
+msgid "A project cannot be deleted if it has any components within it."
+msgstr ""
+
+#: templates/project/settings.mako:143
+msgid "To delete a parent project, you must first delete all child components"
+msgstr ""
+
+#: templates/project/settings.mako:144
+msgid "by visiting their settings pages."
+msgstr ""
+
+#: templates/project/settings.mako:157
+msgid ""
+"A project which is related to a external group (${group}) cannot be "
+"deleted."
+msgstr ""
+
+#: templates/project/settings.mako:183
+msgid "Storage location:"
+msgstr ""
+
+#: templates/project/settings.mako:186
+msgid "Storage location cannot be changed after project is created."
+msgstr ""
+
+#: templates/project/settings.mako:207
+msgid ""
+"Create a link to share this project so those who have the link can "
+"view&mdash;but not edit"
+msgstr ""
+
+#: templates/project/settings.mako:207
+msgid "the project."
+msgstr ""
+
+#: templates/project/settings.mako:238
+msgid "Allow users to request access to this project."
+msgstr ""
+
+#: templates/project/settings.mako:271
+msgid "Enable the wiki in "
+msgstr ""
+
+#: templates/project/settings.mako:284
+msgid "Configure"
+msgstr ""
+
+#: templates/project/settings.mako:289
+msgid ""
+"Control who can edit your wiki. To allow all GakuNin RDM users to edit "
+"the wiki, <b>${node['title']}</b> must be public."
+msgstr ""
+
+#: templates/project/settings.mako:299
+msgid "Loading wiki settings..."
+msgstr ""
+
+#: templates/project/settings.mako:329
+msgid "Only contributors can post comments"
+msgstr ""
+
+#: templates/project/settings.mako:335
+msgid ""
+"When the ${node['node_type']} is public, any GakuNin RDM user can post "
+"comments"
+msgstr ""
+
+#: templates/project/settings.mako:364
+msgid ""
+"These notification settings only apply to you. They do NOT affect any "
+"other contributor on this project."
+msgstr ""
+
+#: templates/project/settings.mako:372
+msgid "Loading notification settings..."
+msgstr ""
+
+#: templates/project/settings.mako:403
+msgid "Redirect visitors from your project page to an external webpage"
+msgstr ""
+
+#: templates/project/settings.mako:436
+msgid ""
+"Withdrawing children components of a registration is not allowed. Should "
+"you wish to"
+msgstr ""
+
+#: templates/project/settings.mako:437
+msgid "withdraw this component, please withdraw its parent registration "
+msgstr ""
+
+#: templates/project/settings.mako:443
+msgid ""
+"Withdrawing a registration will remove its content from the GakuNin RDM, "
+"but leave basic metadata"
+msgstr ""
+
+#: templates/project/settings.mako:444
+msgid ""
+"behind. The title of a withdrawn registration and its contributor list "
+"will remain, as will"
+msgstr ""
+
+#: templates/project/settings.mako:445
+msgid ""
+"justification or explanation of the withdrawal, should you wish to "
+"provide it. Withdrawn"
+msgstr ""
+
+#: templates/project/settings.mako:446
+msgid "registrations will be marked with a <strong>withdrawn</strong> tag."
+msgstr ""
+
+#: templates/project/settings.mako:452
+msgid "This registration is already pending withdrawal."
+msgstr ""
+
+#: templates/project/settings.mako:475
+msgid ""
+"Contributors with read-only permissions to this project cannot add or "
+"remove institutional affiliations."
+msgstr ""
+
+#: templates/project/settings.mako:478
+msgid ""
+"Projects can be affiliated with institutions that have created GakuNin "
+"RDM for Institutions accounts."
+msgstr ""
+
+#: templates/project/settings.mako:479
+msgid "This allows:"
+msgstr ""
+
+#: templates/project/settings.mako:481
+msgid "institutional logos to be displayed on public projects"
+msgstr ""
+
+#: templates/project/settings.mako:482
+msgid "public projects to be discoverable on specific institutional landing pages"
+msgstr ""
+
+#: templates/project/settings.mako:483
+msgid "single sign-on to the GakuNin RDM with institutional credentials"
+msgstr ""
+
+#: templates/project/settings.mako:484
+msgid "FAQ"
+msgstr ""
+
+#: templates/project/settings.mako:489
+msgid "Affiliated Institutions:"
+msgstr ""
+
+#: templates/project/settings.mako:512
+msgid "Available Institutions:"
+msgstr ""
+
+#: templates/project/timestamp.mako:10
+msgid "Timestamp Control"
+msgstr ""
+
+#: templates/project/timestamp.mako:27
+msgid "Timestamp Error"
+msgstr ""
+
+#: templates/project/timestamp.mako:41
+msgid "Start Date"
+msgstr ""
+
+#: templates/project/timestamp.mako:47
+msgid "End Date"
+msgstr ""
+
+#: templates/project/timestamp.mako:53
+msgid "User"
+msgstr ""
+
+#: templates/project/timestamp.mako:60
+msgid "Apply"
+msgstr ""
+
+#: templates/project/timestamp.mako:69
+msgid "Verify"
+msgstr ""
+
+#: templates/project/timestamp.mako:70
+msgid "Request Trusted Timestamp"
+msgstr ""
+
+#: templates/project/timestamp.mako:81
+msgid "Processing, please wait..."
+msgstr ""
+
+#: templates/project/timestamp.mako:122
+msgid "Provider"
+msgstr ""
+
+#: templates/project/timestamp.mako:136
+msgid "Timestamp by"
+msgstr ""
+
+#: templates/project/timestamp.mako:143
+msgid "Updated at"
+msgstr ""
+
+#: templates/project/timestamp.mako:150
+msgid "Timestamp Verification"
+msgstr ""
+
+#: templates/project/view_file.mako:52
+msgid "No files"
+msgstr ""
+
+#: templates/project/view_file.mako:76
+msgid "Tags"
+msgstr ""
+
+#: templates/project/view_file.mako:107
+msgid "Connected to collaborative file editing"
+msgstr ""
+
+#: templates/project/view_file.mako:111
+msgid ""
+"This page is currently connected to collaborative file editing. All edits"
+" made will be visible to contributors with write permission in real time."
+" Changes will be stored but not published until you click the \"Save\" "
+"button."
+msgstr ""
+
+#: templates/project/view_file.mako:126
+msgid "Connecting to collaborative file editing"
+msgstr ""
+
+#: templates/project/view_file.mako:130
+msgid ""
+"This page is currently attempting to connect to collaborative file "
+"editing. You may continue to make edits."
+msgstr ""
+
+#: templates/project/view_file.mako:131 templates/project/view_file.mako:151
+#: templates/project/view_file.mako:171
+msgid "Changes will not be saved until you press the \"Save\" button."
+msgstr ""
+
+#: templates/project/view_file.mako:146
+msgid "Collaborative file editing is unavailable"
+msgstr ""
+
+#: templates/project/view_file.mako:166
+msgid "Browser unsupported"
+msgstr ""
+
+#: templates/project/view_file.mako:170
+msgid ""
+"Your browser does not support collaborative editing. You may continue to "
+"make edits."
+msgstr ""
+
+#: templates/project/addon/node_settings.mako:15
+msgid "Submit"
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:17
+msgid "Import Account from Profile"
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:24
+msgid "Loading ..."
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:31
+msgid "Connect Account"
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:46
+msgid "None"
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:58
+msgid "Loading folders..."
+msgstr ""
+
+#: templates/project/addon/node_settings_default.mako:67
+#, python-format
+msgid "Connect <b>&ldquo;%(folder_name)s&rdquo;</b>?"
+msgstr ""
+
+#: templates/project/addon/page.mako:4
+msgid "Add-on"
+msgstr ""
+
+#: templates/project/addon/page.mako:23 templates/project/addon/widget.mako:19
+msgid "Configure this add-on on the "
+msgstr ""
+
+#: templates/project/addon/page.mako:23 templates/project/addon/widget.mako:19
+#: templates/util/render_addon_widget.mako:240
+msgid "add-ons"
+msgstr ""
+
+#: templates/project/addon/page.mako:23 templates/project/addon/widget.mako:19
+#: templates/util/render_addon_widget.mako:240
+msgid " page."
+msgstr ""
+
+#: templates/public/comingsoon.mako:2
+msgid "Coming soon"
+msgstr ""
+
+#: templates/public/comingsoon.mako:4
+msgid "This page is under development"
+msgstr ""
+
+#: templates/public/forgot_password.mako:3
+msgid "Forgot Password"
+msgstr ""
+
+#: templates/public/forgot_password.mako:20
+msgid "Password reset request"
+msgstr ""
+
+#: templates/public/forgot_password.mako:23
+#: templates/public/resetpassword.mako:91
+msgid "Reset password"
+msgstr ""
+
+#: templates/public/forgot_password.mako:27
+msgid "Back to GakuNin RDM<"
+msgstr ""
+
+#: templates/public/register.mako:3
+msgid "Sign Up"
+msgstr ""
+
+#: templates/public/register.mako:9
+msgid "Preregistration Challenge"
+msgstr ""
+
+#: templates/public/register.mako:10 templates/public/register.mako:17
+#: templates/public/register.mako:24
+msgid "Please login to the GakuNin RDM or create a free account to continue."
+msgstr ""
+
+#: templates/public/register.mako:16
+msgid "Election Research Preacceptance Competition"
+msgstr ""
+
+#: templates/public/register.mako:30
+msgid "GakuNin RDM Preprints"
+msgstr ""
+
+#: templates/public/register.mako:31
+msgid ""
+"Please login to the GakuNin RDM or create a free account to contribute to"
+" GakuNin RDM Preprints."
+msgstr ""
+
+#: templates/public/register.mako:52 templates/public/register.mako:59
+#: templates/public/register.mako:73
+msgid "Create a free GakuNin RDM account"
+msgstr ""
+
+#: templates/public/register.mako:66
+msgid "Create a free OSF account"
+msgstr ""
+
+#: templates/public/register.mako:77
+msgid " Create a free account "
+msgstr ""
+
+#: templates/public/register.mako:84
+msgid "Create a free GakuNin RDM account to contribute to "
+msgstr ""
+
+#: templates/public/register.mako:107
+msgid "Confirm Email"
+msgstr ""
+
+#: templates/public/register.mako:114
+msgid "Password"
+msgstr ""
+
+#: templates/public/register.mako:148
+#, python-format
+msgid ""
+"I have read and agree to the <a %(term_of_use)s>Terms of Use</a> and <a "
+"%(privacy_policy)s>Privacy Policy</a>."
+msgstr ""
+
+#: templates/public/register.mako:155
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/public/register.mako:157
+msgid "Login through your institution  "
+msgstr ""
+
+#: templates/public/register.mako:166
+msgid "Create account"
+msgstr ""
+
+#: templates/public/resetpassword.mako:2
+msgid "Reset Password"
+msgstr ""
+
+#: templates/public/resetpassword.mako:26
+msgid "New Password"
+msgstr ""
+
+#: templates/public/resetpassword.mako:73
+msgid "Verify New Password"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:35
+msgid ""
+"Send an email to the following address(es) from the emailaccount you "
+"would like used on the GakuNin RDM:"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:40
+#: templates/public/pages/meeting_body.mako:43
+#, python-format
+msgid "For %s, email"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:46
+msgid "The format of the email should be as follows:"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:49
+msgid "Subject"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:51
+msgid "Message body"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:53
+msgid "Attachment"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:58
+msgid ""
+"Once sent, we will follow-up by sending you the permanent identifierthat "
+"others can use to cite your work; you can also login and make "
+"changes,such as uploading additional files, to your project at that URL. "
+"If youdidn't have a GakuNin RDM account, one will be created "
+"automatically and a linkto set your password will be emailed to you; if "
+"you do, we will simply createa new project in your account. By creating "
+"an account you agree to our"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:64
+msgid "Terms"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:65
+msgid "and that you have read our"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:67
+msgid "including our information on"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:68
+msgid "Cookie Use"
+msgstr ""
+
+#: templates/public/pages/meeting_body.mako:78
+#: templates/public/pages/meeting_landing.mako:102
+msgid "Loading submissions..."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:3
+msgid "Meetings"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:31
+msgid ""
+"A <strong>free poster and presentation sharing service</strong> for "
+"academic meetings and conferences"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:37
+msgid "For Conference Organizers"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:39
+msgid ""
+"Register your event to broaden its impact.  Events get a dedicated page, "
+"an easy submission process, and persistent links."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:48
+msgid ""
+"GakuNin RDM Meetings is a product that we offer to academic conferences "
+"at no cost. To request poster and talk hosting for a conference:"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:49
+#, python-format
+msgid "Submit this <a %s>set-up form</a>"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:50
+msgid "We'll review and add your conference within one business day."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:56
+msgid "For Conference Participants"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:58
+msgid ""
+"Share your posters and presentations along with any supporting data and "
+"materials. Get persistent links and usage analytics."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:61
+msgid "Upload"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:66
+msgid "The GakuNin RDM can host posters and talks for scholarly meetings."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:67
+msgid "Submitting a presentation is easy:"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:70
+msgid ""
+"Find the email address for your conference by clicking on its name in the"
+" list below"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:71
+msgid ""
+"Send your materials to the GakuNin RDM Meetings email address for your "
+"conference"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:74
+msgid ""
+"We'll  create a GakuNin RDM project for you. You'll get a permanent link "
+"to your presentation, plus analytics about who has viewed and downloaded "
+"your work."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:91
+msgid "Only conferences with at least five submissions are displayed."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:116
+msgid "Discover"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:118
+msgid "Explore posters and presentations from events long after they're over."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:126
+msgid "Get persistent links to your content and increase your impact."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:133
+msgid "Enhance"
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:135
+msgid ""
+"Add supplementary data and materials to your submission to make your work"
+" more transparent."
+msgstr ""
+
+#: templates/public/pages/meeting_landing.mako:142
+msgid "Who uses GakuNin RDM Meetings?"
+msgstr ""
+
+#: templates/public/pages/preprint_landing.mako:6
+msgid "Preprints service is not activated."
+msgstr ""
+
+#: templates/public/pages/preprint_landing.mako:8
+#: templates/public/pages/registries_landing.mako:8
+#: templates/public/pages/reviews_landing.mako:8
+msgid "Set the following in local.py:"
+msgstr ""
+
+#: templates/public/pages/preprint_landing.mako:17
+msgid ""
+"Start the preprints container with <code>docker-compose up -d "
+"preprints</code>."
+msgstr ""
+
+#: templates/public/pages/registries_landing.mako:3
+msgid "Registries"
+msgstr ""
+
+#: templates/public/pages/registries_landing.mako:6
+msgid "Registries service is not activated."
+msgstr ""
+
+#: templates/public/pages/registries_landing.mako:17
+msgid ""
+"Start the registries container with <code>docker-compose up -d "
+"registries</code>."
+msgstr ""
+
+#: templates/public/pages/reviews_landing.mako:3
+msgid "GakuNin RDM Reviews"
+msgstr ""
+
+#: templates/public/pages/reviews_landing.mako:6
+msgid "Reviews service is not activated"
+msgstr ""
+
+#: templates/public/pages/reviews_landing.mako:17
+msgid ""
+"Start the reviews container with <code>docker-compose up -d "
+"reviews</code>."
+msgstr ""
+
+#: templates/util/oauth_complete.mako:9
+msgid "OAuth Complete"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:24
+msgid "Add important information, links, or images here to describe your project."
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:30
+msgid "Read More"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:61
+msgid "Dataset"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:64
+msgid "Global ID"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:67
+#: templates/util/render_addon_widget.mako:68
+msgid "Dataverse"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:70
+msgid "Citation"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:93
+msgid "This project contains a forward to"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:99
+#: templates/util/render_addon_widget.mako:112
+msgid "Redirect"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:144
+#: templates/util/render_addon_widget.mako:175
+msgid "Loading"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:147
+#: templates/util/render_addon_widget.mako:178
+msgid "Error occurred"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:151
+msgid "Linked JupyterHubs"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:158
+msgid "Launch"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:166
+msgid "No Linked JupyterHubs"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:182
+msgid "Management Project"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:184
+msgid "Flowable Task Service"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:192
+#: templates/util/render_addon_widget.mako:219
+msgid "Deposit Manuscript & Data"
+msgstr ""
+
+#: templates/util/render_addon_widget.mako:200
+#: templates/util/render_addon_widget.mako:225
+msgid "Image Scan Service"
+msgstr ""
+
+#: templates/util/render_node.mako:66
+msgid "Manage Contributors"
+msgstr ""
+
+#: templates/util/render_nodes.mako:36
+msgid "You have no public "
+msgstr ""
+
+#: templates/util/render_nodes.mako:38
+msgid "Find out how to make your "
+msgstr ""
+
+#: templates/util/render_nodes.mako:43
+msgid "This user has no public "
+msgstr ""
+
+#: templates/util/render_nodes.mako:45
+msgid "No "
+msgstr ""
+
+#: templates/util/render_nodes.mako:45
+msgid " to display."
+msgstr ""
 
