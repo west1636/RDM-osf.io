@@ -83,12 +83,12 @@
                         -->
                         <div data-bind="template: {if: editing, afterRender: autosizeText.bind($data)}">
                             <div class="form-group" style="padding-top: 10px">
-                                <div class="form-control atwho-input comment-box" placeholder="Edit comment" data-bind="editableHTML: {observable: content, onUpdate: handleEditableUpdate}, attr: {maxlength: $root.MAXLENGTH}" contenteditable="true"></div>
+                                <div class="form-control atwho-input comment-box" placeholder="${ _('Edit comment') }" data-bind="editableHTML: {observable: content, onUpdate: handleEditableUpdate}, attr: {maxlength: $root.MAXLENGTH}" contenteditable="true"></div>
                                 <span data-bind="visible: editNotEmpty, text: counter, css: counterColor" class="pull-right label counter-comment"></span>
                             </div>
                             <div class="clearfix">
                                 <div class="form-inline pull-right">
-                                    <a class="btn btn-default btn-sm" data-bind="click: cancelEdit">Cancel</a>
+                                    <a class="btn btn-default btn-sm" data-bind="click: cancelEdit">${ _("Cancel") }</a>
                                     <span data-bind="tooltip: {title: errorMessage(), placement: 'bottom', disabled: !validateEdit()}">
                                         <a class="btn btn-success btn-sm" data-bind="click: submitEdit, css: {disabled: !validateEdit()}">${ _("Save") }</a>
                                     </span>
@@ -167,7 +167,7 @@
                     </div>
                     <div class="clearfix">
                         <div class="pull-right">
-                            <a class="btn btn-default btn-sm" data-bind="click: cancelReply, css: {disabled: submittingReply}"> ${ _("Cancel</a>
+                            <a class="btn btn-default btn-sm" data-bind="click: cancelReply, css: {disabled: submittingReply}"> ${ _("Cancel") }</a>
                             <span data-bind="tooltip: {title: errorMessage(), placement: 'bottom', disabled: !validateReply()}">
                                 <a class="btn btn-success btn-sm" data-bind="click: submitReply, css: {disabled: !validateReply() || submittingReply()}, text: commentButtonText"></a>
                             </span>

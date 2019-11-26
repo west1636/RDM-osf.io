@@ -41,10 +41,10 @@
                                 <thead>
                                     <tr>
                                         <td style="padding: 10px">
-                                            <b>Categories</b>
+                                            <b>${ _("Categories") }</b>
                                         </td>
                                         <td>
-                                            <input id="filter-addons" class="" placeholder="Search..." type="text">
+                                            <input id="filter-addons" class="" placeholder="${ _('Search...') }" type="text">
                                         </td>
                                     </tr>
                                 </thead>
@@ -125,13 +125,13 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <div>
-                                        <h4>${ _("DonÅft see your GitHub organization repositories?") }</h4>
+                                        <h4>${ _("Don‚Äôt see your GitHub organization repositories?") }</h4>
                                         <p>
                                             ${ _("You may need to reauthorize your GitHub access token.") }
-                                            ${ _("Follow the steps in the ") }<a class="alert-link" href="http://help.osf.io/a/850865-reauthorize-github" target="_black">${ _("help guide</a> ${ _("to resolve the issue.") } <br>
+                                            ${ _("Follow the steps in the <a class=\"alert-link\" href=\"http://help.osf.io/a/850865-reauthorize-github\" target=\"_black\">help guide</a> to resolve the issue.") } <br>
                                         </p>
                                         <p>
-                                            ${ _("Please contact") } <a class="alert-link" href="mailto:rdm_support@nii.ac.jp">rdm_support@nii.ac.jp</a> ${ _("if you have questions.") }
+                                            ${ _("Please contact <a class=\"alert-link\" href=\"mailto:rdm_support@nii.ac.jp\">rdm_support@nii.ac.jp</a> if you have questions.") }
                                         </p>
                                     </div>
                                 </div>

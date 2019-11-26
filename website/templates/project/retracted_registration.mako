@@ -19,8 +19,8 @@
                     </ol>
                 % endif
                 % if node['is_fork']:
-                    <br />${ _("Forked from ") }<a class="node-forked-from" href="/${node['forked_from_id']}/">${node['forked_from_display_absolute_url']}</a>${ _(" on") }
-                    <span data-bind="text: dateForked.local, tooltip: {title: dateForked.utc}"></span>
+                    <br />${ _('Forked from <a class="node-forked-from" href="%(forkedfromid)s">%(forkedfromdiplay)s</a> on\
+                    <span data-bind="text: dateForked.local, tooltip: {title: dateForked.utc}"></span>',forkedfromid=node['forked_from_id'],forkedfromdiplay=node['forked_from_display_absolute_url']) }
                 % endif
                 <p>
                   Registration Form:

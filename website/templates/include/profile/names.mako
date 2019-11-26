@@ -12,10 +12,10 @@
         </div>
 
         <span class="help-block">
-            ${ _("Your full name, above, is the name that will be displayed in your profile.") }
-            ${ _("To control the way your name will appear in citations, you can use the") }
-            ${ _(""Auto-fill" button to automatically infer your first name, last") }
-            ${ _("name, etc., or edit the fields directly below.") }
+            ${ _('Your full name, above, is the name that will be displayed in your profile.\
+            To control the way your name will appear in citations, you can use the\
+            "Auto-fill" button to automatically infer your first name, last\
+            name, etc., or edit the fields directly below.') }
         </span>
 
         <div style="margin-bottom: 10px;">

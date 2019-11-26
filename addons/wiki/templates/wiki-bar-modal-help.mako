@@ -7,7 +7,7 @@
                 </div>
                 <div class="modal-body">
                   <p>
-                    ${ _("The wiki uses the <a href="https://daringfireball.net/projects/markdown/">Markdown</a> syntax. For more information and examples, go to our <a href="https://openscience.zendesk.com/hc/en-us/sections/360003569274">Guides.") }</a>
+                    ${ _("The wiki uses the <a href=\"https://daringfireball.net/projects/markdown/\">Markdown</a> syntax. For more information and examples, go to our <a href=\"https://openscience.zendesk.com/hc/en-us/sections/360003569274\">Guides.") }</a>
                   </p>
                 </div>
                 <div class="modal-footer">

@@ -23,7 +23,7 @@
             <div data-bind="if: canComment" style="margin-top: 20px">
                 <form class="form">
                     <div class="form-group">
-                        <div class="form-control atwho-input comment-box" placeholder="Add a comment" data-bind="editableHTML: {observable: replyContent, onUpdate: handleEditableUpdate}, attr: {maxlength: $root.MAXLENGTH}" contenteditable="true"></div>
+                        <div class="form-control atwho-input comment-box" placeholder="${ _('Add a comment') }" data-bind="editableHTML: {observable: replyContent, onUpdate: handleEditableUpdate}, attr: {maxlength: $root.MAXLENGTH}" contenteditable="true"></div>
                         <div data-bind="visible: replyNotEmpty, text: counter, css: counterColor" class="pull-right label counter-comment"></div>
                     </div>
                     <div data-bind="if: replyNotEmpty" class="form-group">
@@ -46,7 +46,7 @@
                 <div class="comment-body osf-box">
                     <div class="comment-info">
                         <img src="https://secure.gravatar.com/avatar/placeholder?d=identicon&s=20" alt="default">
-                        <span class="comment-author">Loading...</span>
+                        <span class="comment-author">${ _("Loading...") }</span>
                     </div>
                     <div class="comment-content">
                         <span class="component-overflow"></span>

@@ -42,11 +42,11 @@
                     % endif
                     <div class="btn-group">
                     % if not node["is_public"]:
-                        <button class="btn btn-default disabled">${ _("Private") }</button>
+                        <button class="btn btn-default disabled">Private</button>
                         % if project_makepublic:
                         % if permissions.ADMIN in user['permissions'] and not (node['is_pending_registration'] or node['is_pending_embargo']) and not (node['is_embargoed'] and parent_node['exists']):
                         <a disabled data-bind="attr: {'disabled': false}, css: {'disabled': nodeIsPendingEmbargoTermination}" class="btn btn-default" href="#nodesPrivacy" data-toggle="modal">
-                          ${ _("Make Public") }
+                          Make Public
                           <!-- ko if: nodeIsPendingEmbargoTermination -->
                           <span class="fa fa-info-circle hidden" data-bind="css: {'hidden': false}, tooltip: {title: makePublicTooltip, placement: 'bottom', disabled: true}"></span>
                           <!-- /ko -->
@@ -62,7 +62,7 @@
                     </div>
                     <div class="btn-group"
                         % if not user_name:
-                            data-bind="tooltip: {title: 'Log in or create an account to duplicate this project', placement: 'top'}"
+                            data-bind="tooltip: {title: '${ _("Log in or create an account to duplicate this project") }', placement: 'top'}"
                         % endif
                         >
                             <div class="dropdown">
@@ -97,7 +97,7 @@
                                     % if not disk_saving_mode:
                                     <li class="p-h-md">
                                         <span class="btn btn-primary btn-block m-v-sm" onclick="NodeActions.redirectForkPage();">
-                                            ${ _("View Forks ") }(${ node['fork_count']})
+                                            ${ _("View Forks (%(forkcount)s)",forkcount=node['fork_count']) }
                                         </span>
                                     </li>
                                     %endif
@@ -147,7 +147,7 @@
                                                         css: {'disabled': requestAccess.accessRequestPendingOrDenied()},
                                                         tooltip: {title: requestAccess.accessRequestTooltip(),'disabled': true, 'placement': 'left'}">
                                         </a>
-                                        <a data-bind="visible: !user.username" role="button" class="btn btn-block" href="${login_url}" >${ _("Log in to request access") }</a>
+                                        <a data-bind="visible: !user.username" role="button" class="btn btn-block" href="${login_url}" >Log in to request access</a>
                                     </li>
                                 % endif
                             </ul>
@@ -189,7 +189,7 @@
                 % endif
                 % if enable_institutions and not node['anonymous']:
                     % if (permissions.ADMIN in user['permissions'] and not node['is_registration']) and (len(node['institutions']) != 0 or len(user['institutions']) != 0):
-                        <a class="link-dashed" href="${node['url']}settings/#configureInstitutionAnchor" id="institution">Affiliated Institutions:</a>
+                        <a class="link-dashed" href="${node['url']}settings/#configureInstitutionAnchor" id="institution">${ _("Affiliated Institutions:") }</a>
                         % if node['institutions'] != []:
                             % for inst in node['institutions']:
                                 % if inst != node['institutions'][-1]:
@@ -199,7 +199,7 @@
                                 % endif
                             % endfor
                         % else:
-                            <span> ${ _("None ") }</span>
+                            <span> ${ _("None") } </span>
                         % endif
                     % endif
                     % if not (permissions.ADMIN in user['permissions'] and not node['is_registration']) and node['institutions'] != []:
@@ -215,7 +215,7 @@
                 % endif
                 % if node['is_fork']:
                     <p>
-                    ${ _("Forked from ") }<a class="node-forked-from" href="/${node['forked_from_id']}/">${node['forked_from_display_absolute_url']}</a>${ _(" on") }
+                    Forked from <a class="node-forked-from" href="/${node['forked_from_id']}/">${node['forked_from_display_absolute_url']}</a> on
                     <span data-bind="text: dateForked.local, tooltip: {title: dateForked.utc}"></span>
                     </p>
                 % endif
@@ -226,10 +226,10 @@
                     </p>
                 % endif
                     <p>
-                    ${ _("Date created:") }
+                    Date created:
                     <span data-bind="text: dateCreated.local, tooltip: {title: dateCreated.utc}" class="date node-date-created"></span>
                     % if not node['is_registration']:
-                        ${ _("| Last Updated:") }
+                        | Last Updated:
                         <span data-bind="text: dateModified.local, tooltip: {title: dateModified.utc}" class="date node-last-modified-date"></span>
                     % endif
                     </p>
@@ -244,7 +244,7 @@
                   <!-- ko if: idCreationInProgress() -->
                     <p>
                       <i class="fa fa-spinner fa-lg fa-spin"></i>
-                        <span class="text-info">Creating DOI. Please wait...</span>
+                        <span class="text-info">${ _("Creating DOI. Please wait...") }</span>
                     </p>
                   <!-- /ko -->
 
@@ -255,7 +255,7 @@
                   <!-- /ko -->
                 </span>
                 <p>
-                    ${ _("Category: ") }<span data-bind="css: icon"></span>
+                    Category: <span data-bind="css: icon"></span>
                     <span id="nodeCategoryEditable">${node['category']}</span>
                 </p>
 
@@ -292,12 +292,12 @@
                                     ## This is a special case that is right now only possible on 12 Nodes in production
                                     <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle pull-right" type="button" id="RegFormMenu" data-toggle="dropdown">
-                                            ${ _("View Registration Forms") }
+                                            View Registration Forms
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right">
                                             % for meta_schema in node['registered_schemas']:
-                                                <li><a href="${node['url']}${ _("register/") }${meta_schema['id']}">${meta_schema['schema_name']}</a></li>
+                                                <li><a href="${node['url']}register/${meta_schema['id']}">${meta_schema['schema_name']}</a></li>
                                             % endfor
                                         </ul>
                                     </div>
@@ -392,10 +392,10 @@
            <div id="metadatapreprint${i}" class="collection-details collapse">
                <ul style="margin-left: 30px; padding: 0; margin-bottom: 5;" class="list-unstyled">
                     <li>
-                        ${ _("Status:") }&nbsp;&nbsp;
+                        Status:&nbsp;&nbsp;
                             <b>
                                 % if preprint['is_withdrawn']:
-                                    ${ _("Withdrawn") }
+                                    Withdrawn
                                 % else:
                                     ${preprint['state'].capitalize()}
                                 % endif
@@ -445,7 +445,7 @@
             % if not node['is_registration'] and not node['anonymous'] and permissions.WRITE in user['permissions']:
                 <div class="row">
                     <div class="col-sm-12 m-t-sm m-l-md">
-                        <span class="f-w-xl">Click on a storage provider or drag and drop to upload</span>
+                        <span class="f-w-xl">${ _("Click on a storage provider or drag and drop to upload") }</span>
                     </div>
                 </div>
                <div class="panel-body panel-body-with-instructions">
@@ -535,7 +535,7 @@
                      </div>
                      <div data-bind="visible: page() == 'custom'" style="display: none;">
                          % if not node['anonymous'] and permissions.ADMIN in user['permissions']:
-                            <a data-bind="click: showEditBox" class="pull-right"><i class="glyphicon glyphicon-pencil"></i> ${ _("Edit") }</a>
+                            <a data-bind="click: showEditBox" class="pull-right"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
                          % endif
 
                          <div class="m-b-md">
@@ -597,16 +597,16 @@
         <!-- Recent Activity (Logs) -->
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <h3 class="panel-title">${ _("Recent Activity") }</h3>
-                <div id="RefreshLog" class="btn btn-sm btn-default pull-right">${ _("Refresh") }</div>
+                <h3 class="panel-title">Recent Activity</h3>
+                <div id="RefreshLog" class="btn btn-sm btn-default pull-right">Refresh</div>
             </div>
             <div class="panel-body">
                 <div class="db-poFilter m-r-xs row">
                      <div class="db-buttonRow col-xs-10 col-sm-6 col-lg-4">
                          <form>
-                             <input type="text" id="LogSearchName" placeholder="Parts of User's Fullname">
+                             <input type="text" id="LogSearchName" placeholder="[optional] UserName">
                          </form>
-                         <input type="hidden" id="LogSearchUserKeys">
+                         <input type="hidden" id="LogSearchKeyUser">
                      </div>
                      <div class="db-buttonRow col-xs-10 col-sm-6 col-lg-4">
                          <input type="text" id="LogSearchS" placeholder="Start Date[yyyy-mm-dd]">
@@ -626,7 +626,7 @@
             </div>
             % if 'admin' in user['permissions']:
             <div class="panel-heading clearfix">
-                <h4 class="panel-title">${ _("Download as file") }</h4>
+                <h4 class="panel-title">Download as file</h4>
                 <div id="DownloadLog" class="btn btn-sm btn-default pull-right">${ _("Download") }</div>
             </div>
             % endif
@@ -640,7 +640,7 @@
 % if (permissions.WRITE in user['permissions'] and not node['is_registration']) or node['children']:
     <div class="components panel panel-default">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title" style="padding-bottom: 5px; padding-top: 5px;">${ _("Components ") }</h3>
+            <h3 class="panel-title" style="padding-bottom: 5px; padding-top: 5px;">${ _("Components") } </h3>
             <div class="pull-right">
                 % if permissions.WRITE in user['permissions'] and not node['is_registration']:
                     <span id="newComponent">

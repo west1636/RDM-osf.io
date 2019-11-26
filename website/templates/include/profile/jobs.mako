@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label>${ _("Institution / Employer") }</label>
                         <input class="form-control" data-bind="value: institution"
-                            placeholder="Required"/>
+                            placeholder="${ _('Required') }"/>
                         <div data-bind="visible: $parent.showMessages, css:'text-danger'">
                             <p data-bind="validationMessage: institution"></p>
                         </div>
@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Start date</label>
+                        <label>${ _("Start date") }</label>
                         <div class="row">
                             <div class ="col-md-3">
                                 <select class="form-control" data-bind="options: months,
@@ -60,7 +60,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input class="form-control" placeholder="Year" data-bind="value: startYear" />
+                                <input class="form-control" placeholder="${ _('Year') }" data-bind="value: startYear" />
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control" placeholder="Year" data-bind="value: endYear" />
+                                    <input class="form-control" placeholder="${ _('Year') }" data-bind="value: endYear" />
                                 </div>
                             </div>
                     </div>
@@ -154,7 +154,7 @@
                             <div data-bind="attr: {id: 'jobCard' + $index(), 'aria-labelledby': 'jobHeading' + $index()}" class="panel-collapse collapse">
                                 <div class="panel-body card-body">
                                     <span data-bind="if: department().length"><h5>${ _("Department / Institute:") }</h5> <span data-bind="text: department"></span></span>
-                                    <span data-bind="if: title().length"><h5>Title:</h5> <span data-bind="text: title"></span></span>
+                                    <span data-bind="if: title().length"><h5>${ _("Title:") }</h5> <span data-bind="text: title"></span></span>
                                     <span data-bind="if: startYear()"><h5>${ _("Dates:") }</h5>
                                         <span data-bind="text: startMonth"></span> <span data-bind="text: startYear"></span> - <span data-bind="text: endView"></span>
                                     </span>

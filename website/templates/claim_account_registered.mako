@@ -13,14 +13,14 @@
                 <input type="text" class='form-control' value="${user.username}" disabled/>
             </div>
             <div class='form-group'>
-                ${form.password(placeholder='Password', autofocus=True) | unicode, n }
+                ${form.password(placeholder='${ _(Password") }', autofocus=True) | unicode, n }
             </div>
 
             %if next_url:
                 <input type='hidden' name='next_url' value='${next_url}'>
             %endif
             <span class='help-text'>
-                <a id="signOutLink" href='${signOutUrl}'>${ _("I am ") }<strong>${ _("not") }</strong> <em>${user.fullname}</em>.</a>
+                <a id="signOutLink" href='${signOutUrl}'>${ _("I am <strong>not</strong> <em>%(user.fullname)s</em>.",userfullname=user.fullname) }</a>
             </span>
             <button type='submit' class="btn btn-submit btn-primary pull-right">${ _("Continue") }</button>
         </form>

@@ -100,13 +100,13 @@
                         </div>
                         <div class="form-group">
                             <label for="title">${ _("Title:") }</label>
-                            <input class="form-control" type="text" maxlength="200" placeholder="Required" data-bind="value: title,
+                            <input class="form-control" type="text" maxlength="200" placeholder="${ _('Required') }" data-bind="value: title,
                                                                                                       valueUpdate: 'afterkeydown'">
                             <span class="text-danger" data-bind="validationMessage: title"></span>
                         </div>
                         <div class="form-group">
                             <label for="description">${ _("Description:") }</label>
-                            <textarea placeholder="Optional" data-bind="value: description,
+                            <textarea placeholder="${ _('Optional') }" data-bind="value: description,
                                              valueUpdate: 'afterkeydown'",
                             class="form-control resize-vertical" style="max-width: 100%"></textarea>
                         </div>
@@ -139,9 +139,9 @@
                         <hr />
                         % if can_delete:
                             <div class="help-block">
-                                ${ _("A project cannot be deleted if it has any components within it.") }
-                                ${ _("To delete a parent project, you must first delete all child components") }
-                                ${ _("by visiting their settings pages.") }
+                                ${ _("A project cannot be deleted if it has any components within it.\
+                                To delete a parent project, you must first delete all child components\
+                                by visiting their settings pages.") }
                             </div>
                             <span data-bind="stopBinding: true">
                                 <span id="deleteNode">
@@ -154,7 +154,7 @@
                             </span>
                         % else:
                             <div class="help-block">
-                                ${ _("A project which is related to a external group (${group}) cannot be deleted.") }
+                                ${ _("A project which is related to a external group %(group)s cannot be deleted.",group=group) }
                             </div>
                             <span data-bind="stopBinding: true">
                                 <span id="deleteNode">
@@ -204,7 +204,7 @@
                     </div>
                     <div class="panel-body">
                         <p>
-                            ${ _("Create a link to share this project so those who have the link can view&mdash;but not edit") }&mdash;${ _("the project.") }
+                            ${ _("Create a link to share this project so those who have the link can view&mdash;but not edit&mdash;the project.") }
                         </p>
                         <a href="#addPrivateLink" data-toggle="modal" class="btn btn-success btn-sm">
                           <i class="fa fa-plus"></i> ${ _("Add") }
@@ -286,7 +286,7 @@
                                 %if node['is_public']:
                                     <p class="text">Control who can edit the wiki of <b>${node['title']}</b></p>
                                 %else:
-                                    <p class="text">${ _("Control who can edit your wiki. To allow all GakuNin RDM users to edit the wiki, <b>${node['title']}</b> must be public.") }</p>
+                                    <p class="text">${ _("Control who can edit your wiki. To allow all GakuNin RDM users to edit the wiki, <b>%(title)s</b> must be public.",title=node['title']) }</p>
                                 %endif
                             </div>
 
@@ -332,7 +332,7 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="commentLevel" value="public" ${'checked' if comments['level'] == 'public' else ''}>
-                                    ${ _("When the ${node['node_type']} is public, any GakuNin RDM user can post comments") }
+                                    ${ _("When the %(nodetype)s is public, any GakuNin RDM user can post comments",nodetype=node['node_type']) }
                                 </label>
                             </div>
 
@@ -433,17 +433,17 @@
                             % if parent_node['exists']:
 
                                 <div class="help-block">
-                                  ${ _("Withdrawing children components of a registration is not allowed. Should you wish to") }
-                                  ${ _("withdraw this component, please withdraw its parent registration ") }<a href="${web_url_for('node_setting', pid=node['root_id'])}">${ _("here") }</a>.
+                                  ${ _('Withdrawing children components of a registration is not allowed. Should you wish to\
+                                  withdraw this component, please withdraw its parent registration <a href="%(weburlfor)s">here</a>.',weburlfor=web_url_for('node_setting', pid=node['root_id'])) }
                                 </div>
 
                             % else:
 
                                 <div class="help-block">
-                                    ${ _("Withdrawing a registration will remove its content from the GakuNin RDM, but leave basic metadata") }
-                                    ${ _("behind. The title of a withdrawn registration and its contributor list will remain, as will") }
-                                    ${ _("justification or explanation of the withdrawal, should you wish to provide it. Withdrawn") }
-                                    ${ _("registrations will be marked with a <strong>withdrawn</strong> tag.") }
+                                    ${ _("Withdrawing a registration will remove its content from the GakuNin RDM, but leave basic metadata\
+                                    behind. The title of a withdrawn registration and its contributor list will remain, as will\
+                                    justification or explanation of the withdrawal, should you wish to provide it. Withdrawn\
+                                    registrations will be marked with a <strong>withdrawn</strong> tag.") }
                                 </div>
 
                                 %if not node['is_pending_retraction']:

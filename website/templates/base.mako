@@ -131,7 +131,7 @@
                 padding:.5em;
             }
         </style>
-        <div id='devmode' data-bind='click: showHideMetaInfo'><strong>${ _("WARNING") }</strong>: ${ _("This site is running in development mode.") }</div>
+        <div id='devmode' data-bind='click: showHideMetaInfo'>${ _("<strong>WARNING</strong>: This site is running in development mode.") }</div>
     </div>
     % endif
 
@@ -151,12 +151,12 @@
     % if not user_id:
     <div id="cookieBanner" class="alert warningBanner">
         <div id="cookieText" class="warningBannerText">
-            This website relies on cookies to help provide a better user experience. By clicking Accept or continuing to use the site, you agree. For more information,
-            see our <a href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'>Privacy Policy</a>
-            and information on <a href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'>cookie use</a>.
+            ${ _("This website relies on cookies to help provide a better user experience. By clicking Accept or continuing to use the site, you agree. For more information,\
+            see our <a href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'>Privacy Policy</a>\
+            and information on <a href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'>cookie use</a>.") }
         </div>
         <div class="warningBannerAcceptBtn">
-            <div class="btn btn-default" data-dismiss="alert" data-bind="click: accept" aria-label="Accept">Accept</div>
+            <div class="btn btn-default" data-dismiss="alert" data-bind="click: accept" aria-label="Accept">${ _("Accept") }</div>
         </div>
     </div>
     <div id="footerSlideIn">
@@ -172,7 +172,7 @@
                     <div>
                         <a data-bind="click: trackClick.bind($data, 'Create Account')" class="btn btn-primary" href="${web_url_for('index')}#signUp">${ _("Create an Account") }</a>
 
-                        <a data-bind="click: trackClick.bind($data, 'Learn More')" class="btn btn-primary" href="https://meatwiki.nii.ac.jp/confluence/display/gakuninrdmusers" target="_blank" rel="noreferrer">Learn More</a>
+                        <a data-bind="click: trackClick.bind($data, 'Learn More')" class="btn btn-primary" href="https://meatwiki.nii.ac.jp/confluence/display/gakuninrdmusers" target="_blank" rel="noreferrer">${ _("Learn More") }</a>
                         <a data-bind="click: dismiss">${ _("Hide this message") }</a>
                     </div>
                 </div>

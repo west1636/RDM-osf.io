@@ -30,7 +30,7 @@
                         class="form-control"
                         id="resetPassword"
                         name="password"
-                        placeholder="Password"
+                        placeholder="${ _('Password') }"
                         data-bind="
                             textInput: typedPassword,
                             value: password,

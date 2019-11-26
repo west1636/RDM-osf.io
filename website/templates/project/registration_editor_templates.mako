@@ -156,7 +156,7 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-sm-9">
-                    <strong><span data-bind="text: comment.getAuthor"></span></strong>${ _(" said ...") }
+                    ${ _("<strong><span data-bind=\"text: comment.getAuthor\"></span></strong> said ...") }
                   </div>
                   <div data-bind="if: comment.isOwner" class="col-sm-3">
                     <div style="text-align: right;" class="btn-group">

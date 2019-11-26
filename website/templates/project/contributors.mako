@@ -10,7 +10,7 @@
 
 <div class="col-md-3 col-xs-12">
     <div class="filters">
-        <input type="text" class="form-control searchable" id="nameSearch" placeholder="Filter by name"/>
+        <input type="text" class="form-control searchable" id="nameSearch" placeholder="${ _('Filter by name') }"/>
         <h5 class="m-t-md">${ _("Permissions") }
                 <i class="fa fa-question-circle permission-info"
                     data-toggle="popover"
@@ -164,7 +164,7 @@
               <i class="fa fa-plus"></i> Add
             </a>
         </h3>
-        <p>${ _("Create a link to share this project so those who have the link can view") }&mdash;${ _("but not edit&mdash;the project.") }</p>
+        <p>${ _("Create a link to share this project so those who have the link can view&mdash;but not edit&mdash;the project.") }</p>
         <%include file="project/private_links.mako"/>
       % if not use_viewonlylinks:
         </div>

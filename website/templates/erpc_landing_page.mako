@@ -19,11 +19,11 @@
         ${ _("Please note that many studies created as part of this competition will remain private for up to four years from the date of creation.") }
     </p>
     <br>
-    <p>${ _("A blank version of the Election Research Preacceptance Competition form is available ") }<a href="https://rdm.nii.ac.jp/pu4xc/">${ _("here") }</a>${ _(".") } </p>
+    <p>${ _('A blank version of the Election Research Preacceptance Competition form is available <a href="https://rdm.nii.ac.jp/pu4xc/">here</a>.') } </p>
     <br>
     <p>${ _("If you'd like to preregister another study, please see the Preregistration Challenge") }
-        <a href="https://nii.ac.jp/prereg/">${ _("information page") }</a>${ _(" or get started on your next preregistration") }
-        <a href="https://rdm.nii.ac.jp/prereg/">now</a>.
+        <a href="https://nii.ac.jp/prereg/">${ _("information page") }</a> or get started on your next preregistration") }
+        <a href="https://rdm.nii.ac.jp/prereg/">${ _("now") }</a>.
     </p>
 
 </div>

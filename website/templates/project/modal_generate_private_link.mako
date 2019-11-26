@@ -15,7 +15,7 @@
                                 id="privateLinkName"
                                 type="text"
                                 class="form-control private-link-name"
-                                placeholder='Optional link name (e.g., For peer review, Sharing data, Share project)' />
+                                placeholder='${ _("Optional link name (e.g., For peer review, Sharing data, Share project)") }' />
                         </div>
                         <div class="help-block">
                             <p data-bind="html: message, attr: {class: messageClass}"></p>
@@ -36,9 +36,9 @@
                     <hr />
 
                     <div style="margin-bottom:10px;">
-                        ${ _("<strong>Which components would you like to associate with this link?</strong>") }
-                        ${ _("Anyone with the private link can view&mdash;but not edit&mdash;the") }
-                        ${ _("components associated with the link.") }
+                        ${ _("<strong>Which components would you like to associate with this link?</strong>\
+                        Anyone with the private link can view&mdash;but not edit&mdash;the\
+                        components associated with the link.") }
                     </div>
 
 
@@ -48,7 +48,7 @@
                             <div class="list-overflow">
                             <input type="checkbox" checked disabled />
 
-                            <span data-bind="text:title"></span> ${ _("(current component") }<span data-bind="if: isPublic">${ _(", public") }</span>)
+                            <span data-bind="text:title"></span> ${ _("(current component<span data-bind=\"if: isPublic\">, public") }</span>)
 
                             <div data-bind="foreach:nodes">
                                 <div data-bind="style:{'marginLeft': margin}">
@@ -56,7 +56,7 @@
                                     <input type="checkbox" data-bind="checked:$parent.nodesToChange, value:id" />
                                     <!-- /ko -->
                                     <!-- ko ifnot: $root.isChildVisible($data) -->
-                                        <i class="fa fa-question-circle" data-bind="tooltip: {title: 'Parent needs to be checked'}"></i>
+                                        <i class="fa fa-question-circle" data-bind="tooltip: {title: '${ _("Parent needs to be checked") }'}"></i>
                                     <!-- /ko -->
                                     <span data-bind="text:$data.title"></span>
                                     <span data-bind="if: $data.is_public">(public)</span>

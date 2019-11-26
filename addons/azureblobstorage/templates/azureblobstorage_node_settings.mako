@@ -8,7 +8,7 @@
         ${addon_full_name}
         <small class="authorized-by">
             <span data-bind="if: nodeHasAuth">
-                ${ _("authorized by ") }<a data-bind="attr: {href: urls().owner}, text: ownerName"></a>
+                ${ _("authorized by <a data-bind=\"attr: {href: urls().owner}, text: ownerName\"></a>") }
                 % if not is_registration:
                     <a data-bind="click: deauthorize, visible: validCredentials"
                         class="text-danger pull-right addon-auth">${ _("Disconnect Account") }</a>
@@ -69,7 +69,7 @@
                         <form data-bind="submit: submitSettings">
                             <div class="break-word">
                                 <div data-bind="if: selected" class="alert alert-info ${addon_short_name}-confirm-dlg">
-                                    ${ _("Connect ") }<b>&ldquo;<span data-bind="text: selectedFolderName"></span>&rdquo;</b>?
+                                    ${ _("Connect <b>&ldquo;<span data-bind=\"text: selectedFolderName\"></span>&rdquo;</b>?") }
                                 </div>
                             </div>
                             <div class="pull-right">

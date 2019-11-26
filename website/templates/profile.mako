@@ -20,7 +20,7 @@
 
 <%def name="content()">
 % if profile['is_merged']:
-<div class="alert alert-info">${ _("This account has been merged with ") }<a class="alert-link" href="${profile['merged_by']['url']}">${profile['merged_by']['absolute_url']}</a>
+<div class="alert alert-info">${ _('This account has been merged with <a class="alert-link" href="%s">%s</a>', profile['merged_by']['url'], profile['merged_by']['url']) }
 </div>
 % endif
 
@@ -60,7 +60,7 @@
             % endif
             % if profile.get('url') and profile.get('display_absolute_url'):
                 <tr>
-                    <td>Public&nbsp;Profile</td>
+                    <td>${ _("Public&nbsp;Profile") }</td>
                     <td><a href="${profile['url']}">${profile['display_absolute_url']}</a></td>
                 </tr>
             % endif
@@ -70,7 +70,7 @@
            ${profile["number_projects"]} ${ _("project") }${'s' if profile["number_projects"] != 1  else ''}<!-- , ${profile["number_public_projects"]} public -->
         </h2>
         <h2>
-            ${ _("Usage of ${ 'NII' if profile['quota']['is_nii_storage'] else 'Institutional' } ${ _("storage") }<br />
+            Usage of ${ 'NII' if profile['quota']['is_nii_storage'] else 'Institutional' } storage<br />
             <img width="35" height="40" src="${profile['quota']['icon_url']}" style="margin: 5px 10px;">${profile['quota']['rate']}%, ${profile['quota']['used']} / ${profile['quota']['max']}[GB]
         </h2>
     </div>

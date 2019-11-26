@@ -16,7 +16,7 @@
 <%def name="newReg(size='')">
 <div id="newReg${size}" class="p-md osf-box box-round clearfix m-b-lg" style="display:none">
   <p class="reg-landing-page-text-left">${ _("Please provide a title for your project") }: </p>
-  <input type="text" class="new-project-title form-control" placeholder="Title">
+  <input type="text" class="new-project-title form-control" placeholder="${ _('Title') }">
   <button type="submit" id="newProject${size}" class="btn btn-primary pull-right m-t-md">${ _("Create") }</button>
 </div>
 </%def>
@@ -47,7 +47,7 @@
     </div>
     <p>${ _("Registered Reports benefit science by improving rigor and reducing publication bias.") }</p>
     <p>${ _("When to use this form") }:</p>
-    <p style="padding-left:1em;">${ _("Use this form ") }<b>${ _("after") }</b>${ _(" you have received “in principle acceptance” (IPA) by a journal following Stage 1 Peer Review, and <b>before</b> you have begun the study.") }</p>
+    <p style="padding-left:1em;">${ _("Use this form ") }<b>after</b> you have received “in principle acceptance” (IPA) by a journal following Stage 1 Peer Review, and <b>before</b> you have begun the study.") }</p>
 
     <div class="col-md-12 visible-xs">
       %if is_logged_in:
@@ -72,7 +72,7 @@
       %endif
       %if has_projects:
       <div class="row">
-        <div class="reg-landing-page-button-xs reg-landing-page-button reg-button-qtoggle m-b-md p-md osf-box-lt p-md box-round" data-qtoggle-group="reg" data-qtoggle-target="#existingProjectXS">${ _("Preregister an analysis plan for an OSF Project
+        <div class="reg-landing-page-button-xs reg-landing-page-button reg-button-qtoggle m-b-md p-md osf-box-lt p-md box-round" data-qtoggle-group="reg" data-qtoggle-target="#existingProjectXS">${ _("Preregister an analysis plan for an OSF Project") }
         </div>
         <div class="reg-landing-page-button-content-xs">
           ${existingProject('XS')}
@@ -144,7 +144,7 @@
       </table>
     </div>
     <div class="text-center">
-        ${ _("You can learn more about Registered Reports ") }<a href="https://nii.ac.jp/rr">${ _(" here") }</a>${ _(".") } ${ _("If you do not have IPA from a journal, you can still preregister your research. Learn more ") }<a href="https://nii.ac.jp/prereg">${ _(" here") }</a>${ _(".") }
+        ${ _('You can learn more about Registered Reports <a href="https://nii.ac.jp/rr">here</a>. If you do not have IPA from a journal, you can still preregister your research. Learn more <a href="https://nii.ac.jp/prereg">here</a>.') }
     </div>
 
 </div>

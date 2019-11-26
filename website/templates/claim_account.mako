@@ -7,7 +7,7 @@
     ## Center the form
     <div class="col-md-6 col-md-offset-3">
     <p>${ _("Hello") } ${ firstname }! ${ _("Please set a password to claim your account.") }</p>
-    <p>${ _("E-mail") }: <strong>${ email }</strong></p>
+    <p>${ _("E-mail: <strong>${ email }</strong>") }</p>
 
         <form class="form"
               id='setPasswordForm'
@@ -28,7 +28,7 @@
                         type="password"
                         class="form-control"
                         id="setPassword"
-                        placeholder="Password"
+                        placeholder="${ _('Password') }"
                         name="password"
                         data-bind="
                             textInput: typedPassword,
@@ -75,7 +75,7 @@
                         type="password"
                         class="form-control"
                         id="setPasswordConfirmation"
-                        placeholder="Verify Password"
+                        placeholder="${ _('Verify Password') }"
                         name="password2"
                         data-bind="
                             value: passwordConfirmation,
@@ -90,7 +90,7 @@
             <!-- Terms of Service and Privacy Policy agreement -->
             <div class="form-group">
                     <input type="checkbox" data-bind="checked: acceptedTermsOfService" name="accepted_terms_of_service">
-                    <label style="margin-right: 15px">${ _("I have read and agree to the ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms of Use</a> ${ _("and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy</a>.</label>
+                    <label style="margin-right: 15px">${ _('I have read and agree to the <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">Terms of Use</a> and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Privacy Policy</a>.') }</label>
                     <p class="help-block" data-bind="validationMessage: acceptedTermsOfService" style="display: none;"></p>
             </div>
 
@@ -102,14 +102,14 @@
                 </div>
             %endif
             <div class='help-block'>
-                <p>${ _("If you are not") } ${fullname}, ${ _("or if you were erroneously added as a contributor to the project described in the email invitation, please email") } <a href="mailto:${osf_contact_email}">${osf_contact_email}</a>
+                <p>${ _("If you are not") } %(fullname)s, or if you were erroneously added as a contributor to the project described in the email invitation, please email",fullname=${fullname}) } <a href="mailto:${osf_contact_email}">${osf_contact_email}</a>
                 </p>
             </div>
             ${form.token | unicode, n }
             %if next_url:
                 <input type='hidden' name='next_url' value='${next_url}'>
             %endif
-            <button type='submit' class="btn btn-success pull-right" data-bind="disable: !acceptedTermsOfService()">Save</button>
+            <button type='submit' class="btn btn-success pull-right" data-bind="disable: !acceptedTermsOfService()">${ _("Save") }</button>
         </form>
     </div>
 </div>

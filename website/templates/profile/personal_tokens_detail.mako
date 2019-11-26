@@ -22,14 +22,14 @@
             <div id="token-fields">
                 <form novalidate class="form-inline" role="form" data-bind="submit: $root.submit.bind($root), validationOptions: {insertMessages: false, messagesOnModified: false}">
                     <div class="form-group">
-                        <label>${ _("Token name:") } </label> <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: 'What this token is for.', placement: 'bottom'}"></i>
-                        <input class="form-control" type="text" data-bind="value: name" required="required" placeholder="Required">
+                        <label>${ _("Token name:") } </label> <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: '${ _("What this token is for.', placement: 'bottom") }'}"></i>
+                        <input class="form-control" type="text" data-bind="value: name" required="required" placeholder="${ _('Required') }">
                         <p data-bind="validationMessage: name, visible: $root.showMessages()" class="text-danger"></p>
                     </div>
 
                     <div>
                         <label>${ _("Scopes:") } </label> <i class="fa fa-info-circle text-muted"
-                       data-bind="tooltip: {title:'Scopes limit access for personal access tokens.',
+                       data-bind="tooltip: {title:'${ _("Scopes limit access for personal access tokens.") }',
                                             placement: 'bottom'}"></i>
                         <br/>
                         <div class="form-group" style="{margin-left: 5px}">
@@ -37,7 +37,7 @@
                             % for scope in scope_options:
                                 <input type="checkbox" id="${scope[0]}" value="${scope[0]}" data-bind="checked: scopes">
                                 <label for="${scope[0]}">${scope[0]} </label>
-                                <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: '${scope[1] | entity}', placement: 'bottom'}"></i>
+                                <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: '${ _("%(scope)s | entity}",scope=scope[1]) }', placement: 'bottom'}"></i>
                                 <br>
                             % endfor
                          </div>
@@ -64,7 +64,7 @@
                          data-bind="visible: $root.showToken()">
                         <div class="bg-danger f-w-xl token-warning">${ _("This is the only time your token will be displayed.") }</div>
                         <label class="f-w-xl">${ _("Token ID") }</label>
-                        <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title:'ID used to authenticate with this token. This will be shown only once.'},        placement: 'bottom'}"></i>
+                        <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title:'${ _("ID used to authenticate with this token. This will be shown only once.") }'},        placement: 'bottom'}"></i>
                         <samp data-bind="text: token_id"></samp>
                         <div>
                             <button type="button" class="btn btn-default" data-bind="clipboard: token_id()" id="copy-button"><i class="fa fa-copy"></i> ${ _("Copy to clipboard") }</button>

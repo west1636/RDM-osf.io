@@ -8,22 +8,22 @@
     <div class="col-md-6 col-md-offset-3">
         <p class='help'>
             ${ _("Please enter your email to finalize the login.") } 
-            ${ _("If you already have a GakuNin RDM account, this will link your ") }${external_id_provider}${ _(" profile with GakuNin RDM.") }
-            ${ _("If not, this will create a new account for you with your ") }${external_id_provider}${ _(" profile.") }
+            ${ _("If you already have a GakuNin RDM account, this will link your %(external_id_provider)s profile with GakuNin RDM.",external_id_provider=external_id_provider) }
+            ${ _("If not, this will create a new account for you with your %(external_id_provider)s profile.",external_id_provider=external_id_provider) }
         </p>
 
         <form id='resendForm' method='POST' class='form' role='form'>
             <div class='form-group'>
-                ${form.email(placeholder='Email address', autofocus=True, required=True) | unicode, n }
+                ${form.email(placeholder='${ _("Email address") }', autofocus=True, required=True) | unicode, n }
             </div>
             % if not auth_user_fullname:
                 <div class='form-group'>
-                    ${form.name(placeholder='Full name', autofocus=True, required='required') | unicode, n }
+                    ${form.name(placeholder='${ _("Full name") }', autofocus=True, required='required') | unicode, n }
                 </div>
             % endif
             <div class='form-group'>
                 ${form.accepted_terms_of_service(required='required') | unicode, n }
-                <label>${ _("I have read and agree to the .") }<a target="_blank" href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419'>${ _("Terms of Use.") }</a>${ _(" and ") }<a target="_blank" href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'>${ _("Privacy Policy.") }</a>${ _(".") }</label>
+                <label>${ _('I have read and agree to the .<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">Terms of Use.</a> and <a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">Privacy Policy.</a>.') }</label>
             </div>
             <button type='submit' class='btn btn-primary'>${ _("Send") }</button>
             <a href='/logout' class='btn btn-danger'>${ _("Cancel") }</a>

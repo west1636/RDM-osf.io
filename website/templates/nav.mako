@@ -89,7 +89,7 @@
                     <div class="btn-group">
                         <a href="${domain}login/?campaign=institution&next=${redirect_url}">
                             <button type="button" class="btn btn-info btn-top-login">
-                            Sign in <span class="hidden-xs"><i class="fa fa-arrow-right"></i></span>
+                            ${ _("Sign in ") }<span class="hidden-xs"><i class="fa fa-arrow-right"></i></span>
                             </button>
                         </a>
                     </div>
@@ -99,9 +99,9 @@
                     <div class="col-sm-12">
 		        %if not embedded_ds:
                         %if nav_signup:
-                        <a data-bind="click: trackClick.bind($data, 'SignUp')" href="${sign_up_url}" class="btn btn-success btn-top-signup m-r-xs">Sign Up</a>
+                        <a data-bind="click: trackClick.bind($data, 'SignUp')" href="${sign_up_url}" class="btn btn-success btn-top-signup m-r-xs">${ _("Sign Up") }</a>
                         % endif:
-                        <a data-bind="click: trackClick.bind($data, 'SignIn')" href="${login_url}" class="btn btn-info btn-top-login p-sm">Sign In</a>
+                        <a data-bind="click: trackClick.bind($data, 'SignIn')" href="${login_url}" class="btn btn-info btn-top-login p-sm">${ _("Sign In") }</a>
 		        %else :
 <!-- embedded DS -->
 <script type="text/javascript" charset="UTF-8"><!--
@@ -141,8 +141,8 @@
                     % if maintenance['message']:
                         ${maintenance['message']}
                     % else:
-                        ${ _("The site will undergo maintenance between ") }<span id="maintenanceTime"></span>.
-                        ${ _("Thank you for your patience.") }
+                        ${ _('The site will undergo maintenance between <span id="maintenanceTime"></span>.\
+                        Thank you for your patience.') }
                     % endif
                 </div>
                 % endif

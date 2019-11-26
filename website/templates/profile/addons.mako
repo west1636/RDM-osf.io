@@ -16,7 +16,7 @@
 </style>
 
 <% from website import settings %>
-<h2 class="page-header">Settings</h2>
+<h2 class="page-header">${ _("Settings") }</h2>
 
 
 <div id="addonSettings" class="row">

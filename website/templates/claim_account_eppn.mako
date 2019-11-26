@@ -24,7 +24,7 @@
             </div>
 	    % endif
             <span class='help-text'>
-                <a id="signOutLink" href='${signOutUrl}'>${ _("I am ") }<strong>${ _("not") }</strong> <em>${username}</em>.</a>
+                <a id="signOutLink" href='${signOutUrl}'>${ _("I am <strong>not</strong> <em>%(username)s</em>.", username=username) }</a>
             </span>
             <button type='submit' class="btn btn-submit btn-primary pull-right">${ _("Continue") }</button>
         </form>

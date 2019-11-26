@@ -5,11 +5,11 @@
             data-bind="visible: visible">
         <thead>
             <tr>
-                <th class="responsive-table-hide">Link Name</th>
-                <th class="shared-comp">Shared Components</th>
-                <th>Created Date</th>
-                <th>Created By</th>
-                <th class="min-width">Anonymous</th>
+                <th class="responsive-table-hide">${ _("Link Name") }</th>
+                <th class="shared-comp">${ _("Shared Components") }</th>
+                <th>${ _("Created Date") }</th>
+                <th>${ _("Created By") }</th>
+                <th class="min-width">${ _("Anonymous") }</th>
                 <th class="min-width"></th>
             </tr>
         </thead>

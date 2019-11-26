@@ -1,34 +1,34 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">${ _("Sign Up</%def>
+<%def name="title()">${ _("Sign Up") }</%def>
 
 <%def name="content()">
 
     %if campaign == "prereg":
         <div class="text-center m-t-lg">
-            <h3>${ _("Preregistration Challenge</h3><hr>
-            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("Preregistration Challenge") }</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.") }</p>
         </div>
     %endif
 
     %if campaign == "erpc":
         <div class="text-center m-t-lg">
-            <h3>${ _("Election Research Preacceptance Competition</h3><hr>
-            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("Election Research Preacceptance Competition") }</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.") }</p>
         </div>
     %endif
 
     %if campaign == "osf-registries":
         <div class="text-center m-t-lg">
-            <h3>${ _("GakuNin RDM Registries</h3><hr>
-            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.</p>
+            <h3>${ _("GakuNin RDM Registries") }</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to continue.") }</p>
         </div>
     %endif
 
     %if campaign == "osf-preprints":
         <div class="text-center m-t-lg">
-            <h3>${ _("GakuNin RDM Preprints</h3><hr>
-            <p>${ _("Please login to the GakuNin RDM or create a free account to contribute to GakuNin RDM Preprints.</p>
+            <h3>${ _("GakuNin RDM Preprints") }</h3><hr>
+            <p>${ _("Please login to the GakuNin RDM or create a free account to contribute to GakuNin RDM Preprints.") }</p>
         </div>
     %endif
 
@@ -81,7 +81,7 @@
                             <table style="border-collapse: separate; border-spacing: 30px 0; margin-top: 20px;  margin-bottom: 10px;">
                                 <tr>
                                     <td><img src="${preprint_campaigns[provider]['logo_path']}" style="width: 100px; height: 100px" /></td>
-                                    <td><h3>${ _("Create a free GakuNin RDM account to contribute to ") }${preprint_campaigns[provider]['name'] | n}</h3></td>
+                                    <td><h3>${ _("Create a free GakuNin RDM account to contribute to %(preprintcampaigns)s | n",preprintcampaigns=preprint_campaigns[provider]['name']) }</h3></td>
                                 </tr>
                             </table>
                         %endif
@@ -145,7 +145,7 @@
                 <div class="form-group">
                     <div class="pull-right">
                         <input type="checkbox" data-bind="checked: acceptedTermsOfService, disable: submitted()">
-                        <label style="margin-right: 15px">${ _("I have read and agree to the ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms of Use") }</a>${ _(" and ") }<a target="_blank" href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy") }</a>.</label>
+                        <label style="margin-right: 15px">${ _("I have read and agree to the <a target=\"_blank\" href=\"https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419\">Terms of Use\") }</a> and \") }<a target=\"_blank\" href=\"https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422\">Privacy Policy</a>.") }</label>
                         <p class="help-block" data-bind="validationMessage: acceptedTermsOfService" style="display: none;"></p>
                     </div>
                 </div>

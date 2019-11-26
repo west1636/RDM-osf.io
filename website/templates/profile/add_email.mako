@@ -86,7 +86,7 @@
                                             <p>
                                             % if user_merge:
                                             ${ _("To merge an existing account with this one or to log in with multiple email addresses, add an alternate email address below.") }
-                                            <span class="fa fa-info-circle" data-bind="tooltip: {title: ${ _('Merging accounts will move all projects and components associated with two emails into one account. All projects and components will be displayed under the email address listed as primary.',
+                                            <span class="fa fa-info-circle" data-bind="tooltip: {title: '${ _("Merging accounts will move all projects and components associated with two emails into one account. All projects and components will be displayed under the email address listed as primary.") }',
                                              placement: 'bottom', container : 'body'}"></span>
                                             % else:
                                             ${ _("Add an email address below.") }
@@ -116,11 +116,11 @@
                 <div id="externalIdentity" class="panel panel-default">
                     <div class="panel-heading clearfix"><h3 class="panel-title">Connected Identities</h3></div>
                     <div class="panel-body">
-                        <p> ${ _("Connected identities allow you to log in to the GakuNin RDM via a third-party service.") } <br/>
-                        ${ _("You can revoke these authorizations here.") }</p>
-                        <hr />
-                        % if not external_identity:
-                        <p >${ _("You have not authorized any external services to log in to the GakuNin RDM.") }</p>
+                        <p> ${ _("Connected identities allow you to log in to the GakuNin RDM via a third-party service.<br/>\
+						You can revoke these authorizations here.</p>") }
+						<hr />
+						% if not external_identity:
+                        ${ _("You have not authorized any external services to log in to the GakuNin RDM.") }</p>
                         % endif
                         <tbody>
                         % for identity in external_identity:
@@ -161,7 +161,7 @@
                                     type="password"
                                     class="form-control"
                                     id="changePassword"
-                                    placeholder="Old Password"
+                                    placeholder="${ _('Old Password') }"
                                     name="old_password"
                                     data-bind="
                                         textInput: oldPassword,
@@ -178,7 +178,7 @@
                                     type="password"
                                     class="form-control"
                                     id="resetPassword"
-                                    placeholder="New Password"
+                                    placeholder="${ _('New Password') }"
                                     name="new_password"
                                     data-bind="
                                         textInput: typedPassword,
@@ -213,7 +213,7 @@
                                     type="password"
                                     class="form-control"
                                     id="resetPasswordConfirmation"
-                                    placeholder="Verify Password"
+                                    placeholder="${ _('Verify Password') }"
                                     name="confirm_password"
                                     data-bind="
                                         value: passwordConfirmation,
@@ -245,7 +245,7 @@
                     <div class="panel-heading clearfix"><h3 class="panel-title">${ _("Export Account Data") }</h3></div>
                     <div class="panel-body">
                         <p>${ _("Exporting your account data allows you to keep a permanent copy of the current state of your account. Keeping a copy of your account data can provide peace of mind or assist in transferring your information to another provider.") }</p>
-                        <a class="btn btn-primary" data-bind="click: submit, css: success() === true ? 'disabled' : ''">Request export</a>
+                        <a class="btn btn-primary" data-bind="click: submit, css: success() === true ? 'disabled' : ''">${ _("Request export") }</a>
                     </div>
                 </div>
                 </div>  <!-- hidden -->

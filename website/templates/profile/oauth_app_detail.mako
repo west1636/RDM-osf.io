@@ -22,14 +22,14 @@
             <div id="app-keys" class="border-box text-right"
                  data-bind="visible: !$root.isCreateView()">
                 <p><strong>${ _("Client ID") }</strong>
-                   <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: ${ _('The unique identifier for the application. May be seen publicly by others.',
+                   <i class="fa fa-info-circle text-muted" data-bind="tooltip: {title: '${ _("The unique identifier for the application. May be seen publicly by others.") }',
                                                                       placement: 'bottom'}"></i>
                 </p>
                 <p><span class="text-muted" data-bind="text: clientId"></span></p>
 
                 <p><strong class="m-b-sm">${ _("Client secret") }</strong>
                     <i class="fa fa-info-circle text-muted"
-                       data-bind="tooltip: {title:'The client secret is known only to you and the GakuNin RDM. Do not display or expose this information.',
+                       data-bind="tooltip: {title:'${ _("The client secret is known only to you and the GakuNin RDM. Do not display or expose this information.") }',
                                             placement: 'bottom'}"></i>
                 </p>
                 <p>
@@ -41,7 +41,7 @@
                     </a>
                     <a class="btn btn-danger btn-xs m-l-sm" data-bind="click: $root.resetSecret.bind($root)">${ _("Reset Secret") }</a>
                     <i class="fa fa-info-circle text-muted"
-                        data-bind="tooltip: {title:'Resetting the client secret will render your application unusable until it is updated with the new client secret, and all users must reauthorize access. Previously issued access tokens will no longer work.',
+                        data-bind="tooltip: {title:'${ _("Resetting the client secret will render your application unusable until it is updated with the new client secret, and all users must reauthorize access. Previously issued access tokens will no longer work.") }',
                                              placement: 'bottom'}"></i>
                 </p>
                 <p data-bind="visible: !$root.isCreateView()">
@@ -52,25 +52,25 @@
                 <form novalidate role="form" data-bind="submit: $root.submit.bind($root), validationOptions: {insertMessages: false, messagesOnModified: false}">
                     <div class="form-group">
                         <label>${ _("Application name") }</label>
-                        <input class="form-control" type="text" data-bind="value: name" required="required" placeholder="Required">
+                        <input class="form-control" type="text" data-bind="value: name" required="required" placeholder="${ _('Required') }">
                         <p data-bind="validationMessage: name, visible: $root.showMessages()" class="text-danger"></p>
                     </div>
 
                     <div class="form-group">
                         <label>${ _("Project homepage URL") }</label>
-                        <input class="form-control" type="url" data-bind="value: homeUrl" required="required" placeholder="Required">
+                        <input class="form-control" type="url" data-bind="value: homeUrl" required="required" placeholder="${ _('Required') }">
                         <p data-bind="validationMessage: homeUrl, visible: $root.showMessages()" class="text-danger"></p>
                     </div>
 
                     <div class="form-group">
                         <label>${ _("Application description") }</label>
-                        <textarea class="form-control" placeholder="Optional" data-bind="value: description"></textarea>
+                        <textarea class="form-control" placeholder="${ _('Optional" data-bind="value: description') }"></textarea>
                         <p data-bind="validationMessage: description, visible: $root.showMessages()" class="text-danger"></p>
                     </div>
 
                     <div class="form-group">
                         <label>${ _("Authorization callback URL") }</label>
-                        <input type="url" class="form-control" data-bind="value: callbackUrl" required="required" placeholder="Required">
+                        <input type="url" class="form-control" data-bind="value: callbackUrl" required="required" placeholder="${ _('Required') }">
                         <p data-bind="validationMessage: callbackUrl, visible: $root.showMessages()" class="text-danger"></p>
                     </div>
 

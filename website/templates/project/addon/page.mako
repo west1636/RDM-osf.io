@@ -20,7 +20,7 @@
     <div class='addon-config-error p-sm'>
         ${full_name} add-on is not configured properly.
         % if user['is_contributor_or_group_member']:
-            ${ _("Configure this add-on on the ") }<a href="${node['url']}addons/">${ _("add-ons") }</a>${ _(" page.") }
+            ${ _('Configure this add-on on the <a href="%(url)saddons">add-ons</a> page.',url=node['url']) }
         % endif
     </div>
 

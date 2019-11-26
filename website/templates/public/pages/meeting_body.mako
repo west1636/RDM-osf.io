@@ -37,10 +37,10 @@
         </p>
         <ul>
             % if meeting['poster']:
-                <li>${ _("For ") }${meeting['field_names']['submission1_plural']}, ${ _("email") } <a href="mailto:${ label }-${meeting['field_names']['submission1']}@osf.io">${ label }-${meeting['field_names']['submission1']}@osf.io</a></li>
+                <li>${ _("For %(meeting)s",meeting=meeting['field_names']['submission1_plural']) }, ${ _("email") } <a href="mailto:${ label }-${meeting['field_names']['submission1']}@osf.io">${ label }-${meeting['field_names']['submission1']}@osf.io</a></li>
             % endif
             % if meeting['talk']:
-                <li>${ _("For ") }${meeting['field_names']['submission2_plural']}, ${ _("email <a href="mailto:${ label }-${meeting['field_names']['submission2']}@osf.io">${ label }-${meeting['field_names']['submission2']}@osf.io</a></li>
+                <li>${ _("For %(meeting)s",meeting=meeting['field_names']['submission1_plural']) }, ${ _("email") } <a href="mailto:${ label }-${meeting['field_names']['submission2']}@osf.io">${ label }-${meeting['field_names']['submission2']}@osf.io</a></li>
             % endif
         </ul>
         <p>${ _("The format of the email should be as follows:") }</p>
@@ -55,14 +55,14 @@
             </dl>
         </div>
         <p>
-            ${ _("Once sent, we will follow-up by sending you the permanent identifier") }
-            ${ _("that others can use to cite your work; you can also login and make changes,") }
-            ${ _("such as uploading additional files, to your project at that URL. If you") }
-            ${ _("didn't have a GakuNin RDM account, one will be created automatically and a link") }
-            ${ _("to set your password will be emailed to you; if you do, we will simply create") }
-            ${ _("a new project in your account. By creating an account you agree to our") }
+            ${ _("Once sent, we will follow-up by sending you the permanent identifier\
+            that others can use to cite your work; you can also login and make changes,\
+            such as uploading additional files, to your project at that URL. If you\
+            didn't have a GakuNin RDM account, one will be created automatically and a link\
+            to set your password will be emailed to you; if you do, we will simply create\
+            a new project in your account. By creating an account you agree to our") }
             <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676419">${ _("Terms") }</a>
-            ${ _("and that you have read our") }
+            and that you have read our") }
             <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Privacy Policy") }</a>,
             ${ _("including our information on") }
             <a href="https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422">${ _("Cookie Use") }</a>.

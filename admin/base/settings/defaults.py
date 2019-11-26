@@ -211,6 +211,7 @@ MIDDLEWARE = (
     'api.base.middleware.PostcommitTaskMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -326,3 +327,9 @@ ANNOUNCEMENT_EMAIL_FROM = 'noreply@rdm.rcos.nii.ac.jp'
 
 # Addon Controls
 ENABLE_FORCE_CHECK = False
+
+LANGUAGE_CODE = 'ja'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)

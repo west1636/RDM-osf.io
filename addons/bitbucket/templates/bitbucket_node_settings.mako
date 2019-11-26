@@ -3,7 +3,7 @@
     <div>
         <h4 class="addon-title">
             <img class="addon-icon" src="${addon_icon_url}">
-            ${ _("Bitbucket
+            ${ _("Bitbucket") }
             <small class="authorized-by">
                 % if node_has_auth:
                         authorized by
@@ -12,17 +12,17 @@
                         </a>
                     % if not is_registration:
                         <a id="bitbucketRemoveToken" class="text-danger pull-right addon-auth" >
-                          ${ _("Disconnect Account
+                          ${ _("Disconnect Account") }
                         </a>
                     % endif
                 % else:
                     % if user_has_auth:
                         <a id="bitbucketImportToken" class="text-primary pull-right addon-auth">
-                           ${ _("Import Account from Profile
+                           ${ _("Import Account from Profile") }
                         </a>
                     % else:
                         <a id="bitbucketCreateToken" class="text-primary pull-right addon-auth">
-                           ${ _("Connect Account
+                           ${ _("Connect Account") }
                         </a>
                     % endif
                 % endif
@@ -71,12 +71,12 @@
     % if node_has_auth and not valid_credentials:
         <div class="addon-settings-message text-danger p-t-sm">
             % if is_owner:
-                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials") }
-                ${ _("may no longer be valid. Try deauthorizing and reauthorizing Bitbucket on your") }
-                <a href="${addons_url}">${ _("account settings page") }</a>.
+                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials
+                may no longer be valid. Try deauthorizing and reauthorizing Bitbucket on your
+                <a href="%(addonsurl)s">account settings page",addonsurl=${addons_url}) }</a>.
             % else:
-                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials") }
-                ${ _("may no longer be valid. Contact ${auth_osf_name} to verify.") }
+                ${ _("Could not retrieve Bitbucket settings at this time. The Bitbucket addon credentials
+                may no longer be valid. Contact %(authosfname)s to verify.",authosfname=${auth_osf_name}) }
             % endif
         </div>
     % else:

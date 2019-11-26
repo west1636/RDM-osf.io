@@ -1,11 +1,11 @@
 <%inherit file="base.mako"/>
 
-<%def name="title()">${ _("Registries</%def>
+<%def name="title()">${ _("Registries") }</%def>
 
 <%def name="content()">
-<h2>${ _("Registries service is not activated.</h2>
+<h2>${ _("Registries service is not activated.") }</h2>
 <ul>
-<li>${ _("Set the following in local.py:</li>
+<li>${ _("Set the following in local.py:") }</li>
 <pre><code>USE_EXTERNAL_EMBER = True
 EXTERNAL_EMBER_APPS = {
   'registries': {

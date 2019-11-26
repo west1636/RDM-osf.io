@@ -17,12 +17,12 @@
                                 <div class="input-group m-b-sm">
                                     <input class='form-control'
                                             data-bind="value:query"
-                                            placeholder=${ _('Search by name or user profile information' autofocus/>
+                                            placeholder='Search by name or user profile information' autofocus/>
                                     <span class="input-group-btn">
                                         <input type="submit" value="Search" class="btn btn-default">
                                     </span>
                                 </div>
-                                <a href="#" data-bind="click: gotoInviteFromExplicitLink">${ _("Invite new contributor by e-mail") }</a>
+                                <a href="#" data-bind="click: gotoInviteFromExplicitLink">${ _("Invite new contributor by e-mail</a>
                                 <div class="row search-contributor-links">
                                     <div class="col-md-12">
                                         <div style='margin-left: 5px'>
@@ -43,8 +43,8 @@
 
                         <div class="col-md-4">
                             <div>
-                                <span class="modal-subheader">Results</span>
-                                <a data-bind="visible: addAllVisible, click:addAll">Add all</a>
+                                <span class="modal-subheader">${ _("Results</span>
+                                <a data-bind="visible: addAllVisible, click:addAll">${ _("Add all</a>
                             </div>
                             <!-- ko if: notification -->
                             <div data-bind="html: notification().message, css: 'alert alert-' + notification().level"></div>
@@ -60,10 +60,10 @@
                                                     class="btn btn-success contrib-button btn-mini"
                                                     data-bind="visible: !contributor.added,
                                                                click:$root.add.bind($root),
-                                                               tooltip: {title: ${ _('Add contributor") }}"
+                                                               tooltip: {title: 'Add contributor'}"
                                                 ><i class="fa fa-plus"></i></a>
                                             <div data-bind="visible: contributor.added,
-                                                            tooltip: {title: ${ _("'Already added') }}"
+                                                            tooltip: {title: 'Already added'}"
                                                 ><div
                                                     class="btn btn-default contrib-button btn-mini disabled"
                                                     ><i class="fa fa-check"></i></div></div>
@@ -178,34 +178,34 @@
                                     </ul>
                                     <p>
                                         <div data-bind='ifnot: emailSearch'>
-                                            <a href="#" data-bind="click:gotoInvite">${ _("Add ") }<strong><em data-bind="text: query"></em></strong>${ _(" as an unregistered contributor") }</a>.
+                                            <a href="#" data-bind="click:gotoInvite">Add <strong><em data-bind="text: query"></em></strong> as an unregistered contributor</a>.
                                         </div>
                                     </p>
                                 </div>
                                 <div data-bind="if: showLoading">
-                                    <p class="text-muted">${ _("Searching contributors...") }</p>
+                                    <p class="text-muted">Searching contributors...</p>
                                 </div>
                                 <div data-bind="if: noResults">
                                     <div data-bind='if: emailSearch'>
-                                      ${ _("No results found. Try a more specific search.") }
+                                      No results found. Try a more specific search.
                                     </div>
                                     <div data-bind='ifnot: emailSearch'>
-                                      ${ _("No results found. Try a more specific search") }
+                                      No results found. Try a more specific search
                                     </div>
                                     <div data-bind="ifnot: emailSearch"> or
-                                        <a href="#" data-bind="click:gotoInvite">${ _("add ") }<strong><em data-bind="text: query"></em></strong>${ _(" as an unregistered contributor") }</a>.
+                                        <a href="#" data-bind="click:gotoInvite">add <strong><em data-bind="text: query"></em></strong> as an unregistered contributor</a>.
                                     </div>
                                 </div>
                                 <div data-bind="if: emailSearch">
-                                    <p>${ _("It looks like you are trying to search by email address. Please try your search again using your collaborator's name. You will be able to add users without GakuNin RDM accounts as unregistered contributors.") }</p>
+                                    <p>It looks like you are trying to search by email address. Please try your search again using your collaborator's name. You will be able to add users without GakuNin RDM accounts as unregistered contributors.</p>
                                 </div>
                             </div>
                         </div><!-- ./col-md -->
 
                         <div class="col-md-8">
                             <div>
-                                <span class="modal-subheader">${ _("Adding") }</span>
-                                <a data-bind="visible: removeAllVisible, click:removeAll">${ _("Remove all") }</a>
+                                <span class="modal-subheader">Adding</span>
+                                <a data-bind="visible: removeAllVisible, click:removeAll">Remove all</a>
                             </div>
 
                             <!-- TODO: Duplication here: Put this in a KO template -->
@@ -213,9 +213,9 @@
                                 <thead class="keep-all" data-bind="visible: selection().length">
                                     <th width="10%"></th>
                                     <th width="10%"></th>
-                                    <th width="30%">${ _("Name") }</th>
+                                    <th width="30%">Name</th>
                                     <th>
-                                        ${ _("Bibliographic Contributor") }
+                                        Bibliographic Contributor
                                         <i class="fa fa-question-circle visibility-info"
                                            data-toggle="popover"
                                            data-title="Bibliographic Contributor Information"
@@ -224,7 +224,7 @@
                                            data-html="true">
                                         </i>
                                     <th>
-                                        ${ _("Permissions") }
+                                        Permissions
                                         <i class="fa fa-question-circle permission-info"
                                                 data-toggle="popover"
                                                 data-title="Permission Information"
@@ -238,7 +238,7 @@
                                         <td class="p-r-sm" class="osf-icon-td">
                                             <a
                                                     class="btn btn-default contrib-button btn-mini"
-                                                    data-bind="click:$root.remove.bind($root), tooltip: {title: ${ _('Remove contributor') }}"
+                                                    data-bind="click:$root.remove.bind($root), tooltip: {title: 'Remove contributor'}"
                                                 ><i class="fa fa-minus"></i></a>
                                         </td>
                                         <td>
@@ -278,22 +278,22 @@
                 <div data-bind="visible:page()=='which'">
 
                     <div>
-                        ${ _("Adding contributor(s)") }
+                        Adding contributor(s)
                         <span data-bind="text:addingSummary()"></span>
-                        ${ _("to ") }<span data-bind="text:title"></span>.
+                        to <span data-bind="text:title"></span>.
                     </div>
 
                     <hr />
 
                     <div style="margin-bottom:10px;">
-                        ${ _("You can also add the contributor(s) to any components on which you are an admin.") }
+                        You can also add the contributor(s) to any components on which you are an admin.
                     </div>
 
                     <div>
-                        ${ _("Select:&nbsp;
-                        <a class="text-bigger" data-bind="click:selectAllNodes">${ _("Select all") }</a>
+                        Select:&nbsp;
+                        <a class="text-bigger" data-bind="click:selectAllNodes">Select all</a>
                         &nbsp;|&nbsp;
-                        <a class="text-bigger" data-bind="click:selectNoNodes">${ _("Select none") }</a>
+                        <a class="text-bigger" data-bind="click:selectNoNodes">Select none</a>
                     </div>
                     <div class="tb-row-titles">
                         <div style="width: 100%" data-tb-th-col="0" class="tb-th">
@@ -306,7 +306,7 @@
                                 <div class="ball-scale ball-scale-blue">
                                     <div></div>
                                 </div>
-                                <p class="m-t-sm fg-load-message"> ${ _("Loading projects and components...") }  </p>
+                                <p class="m-t-sm fg-load-message"> Loading projects and components...  </p>
                             </div>
                         </div>
                     </div>
@@ -317,17 +317,17 @@
                 <div data-bind='if:page() === "invite"'>
                     <form class='form'>
                         <div class="form-group">
-                            <label for="inviteUserName">${ _("Full Name") }</label>
+                            <label for="inviteUserName">Full Name</label>
                             <input type="text" class='form-control' id="inviteName"
-                                placeholder=${ _("Full name") } data-bind='value: inviteName, valueUpdate: "input"'/>
+                                placeholder="Full name" data-bind='value: inviteName, valueUpdate: "input"'/>
                         </div>
                         <div class="form-group">
                             <label for="inviteUserEmail">Email</label>
                             <input type="email" class='form-control' id="inviteUserEmail"
-                                    placeholder=${ _("Email") } data-bind='value: inviteEmail' autofocus/>
+                                    placeholder="Email" data-bind='value: inviteEmail' autofocus/>
                         </div>
                          <div class="help-block">
-                            <p>${ _("We will notify the user that they have been added to your project.") }</p>
+                            <p>We will notify the user that they have been added to your project.</p>
                             <p class='text-danger' data-bind='text: inviteError'></p>
                         </div>
                     </form>
@@ -340,20 +340,20 @@
                 <a href="#" class="btn btn-default" data-bind="click: clear" data-dismiss="modal">Cancel</a>
 
                 <span data-bind="if: page() === 'invite'">
-                    <button class="btn btn-primary" data-bind='click:selectWhom'>${ _("Back") }</button>
+                    <button class="btn btn-primary" data-bind='click:selectWhom'>Back</button>
                     <button class='btn btn-success'
                          data-bind='click: postInvite, enable:canSubmit'
-                                    type="submit">${ _("Add") }</button>
+                                    type="submit">Add</button>
                 </span>
 
                 <span data-bind="if:selection().length && page() == 'whom'">
-                    <a class="btn btn-success" data-bind="visible:!hasChildren(), click:submit">${ _("Add") }</a>
-                    <a class="btn btn-primary" data-bind="visible: hasChildren(), click:selectWhich">${ _("Next") }</a>
+                    <a class="btn btn-success" data-bind="visible:!hasChildren(), click:submit">Add</a>
+                    <a class="btn btn-primary" data-bind="visible: hasChildren(), click:selectWhich">Next</a>
                 </span>
 
                 <span data-bind="if: page() == 'which'">
-                    <a class="btn btn-primary" data-bind="click:selectWhom">${ _("Back") }</a>
-                    <a class="btn btn-success" data-bind="click:submit">${ _("Add") }</a>
+                    <a class="btn btn-primary" data-bind="click:selectWhom">Back</a>
+                    <a class="btn btn-success" data-bind="click:submit">Add</a>
                 </span>
 
             </div><!-- end modal-footer -->

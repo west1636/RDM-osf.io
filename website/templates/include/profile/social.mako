@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div data-bind="ifnot: hasValidWebsites" class="text-danger">${ _("Please enter a valid website</div>
+            <div data-bind="ifnot: hasValidWebsites" class="text-danger">${ _("Please enter a valid website") }</div>
             <div class="p-t-sm p-b-sm">
                 <a class="btn btn-default" data-bind="click: addWebsiteInput">
                     ${ _("Add website") }
@@ -55,7 +55,7 @@
                 <label>${ _("Twitter") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">@</span>
-                <input class="form-control" data-bind="value: twitter" placeholder="twitterhandle"/>
+                <input class="form-control" data-bind="value: twitter" placeholder="${ _('twitterhandle') }"/>
                 </div>
             </div>
 
@@ -63,7 +63,7 @@
                 <label>${ _("GitHub") }</label>
                 <div class="input-group">
                     <span class="input-group-addon">https://github.com/</span>
-                    <input class="form-control" data-bind="value: github" placeholder="username"/>
+                    <input class="form-control" data-bind="value: github" placeholder="${ _('username') }"/>
                     <span class="input-group-btn" data-bind="if: github.hasAddon()">
                         <button
                                 class="btn btn-primary"
@@ -77,7 +77,7 @@
                 <label>${ _("LinkedIn") }</label>
                 <div class="input-group">
                 <span class="input-group-addon">https://www.linkedin.com/</span>
-                <input class="form-control" data-bind="value: linkedIn" placeholder="in/userID, profile/view?id=profileID, or pub/pubID"/>
+                <input class="form-control" data-bind="value: linkedIn" placeholder="${ _('in/userID, profile/view?id=profileID, or pub/pubID') }"/>
                 </div>
             </div>
 

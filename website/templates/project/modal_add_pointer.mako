@@ -12,7 +12,7 @@
 
                 <form role='form'>
                     <div class="form-group">
-                        <input class="form-control" placeholder="Search projects" data-bind="value:query" />
+                        <input class="form-control" placeholder="${ _('Search projects') }" data-bind="value:query" />
 
                         <div class="help-block">
                             <span class="text-danger" data-bind="html: searchWarningMsg"></span>
@@ -24,7 +24,7 @@
                           text: searchAllProjectsSubmitText(),
                           attr: {disabled: loadingResults()},
                           css: {active: includePublic()}">
-                          Search all projects
+                          ${ _("Search all projects") }
                       </button>
                       <button class="btn btn-default"
                           data-bind="
@@ -32,7 +32,7 @@
                           text: searchMyProjectsSubmitText(),
                           attr: {disabled: loadingResults()},
                           css: {active: !includePublic()}">
-                          Search my projects
+                          ${ _("Search my projects") }
                       </button>
                     </div>
                 </form>

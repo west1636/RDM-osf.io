@@ -9,7 +9,7 @@
                 </div><!-- end modal-header -->
                 <div class="modal-body">
                     <div class='form-group'>
-                        <input id="data" placeholder="New Wiki Name" type="text" class='form-control'>
+                        <input id="data" placeholder="${ _('New Wiki Name') }" type="text" class='form-control'>
                     </div>
                     <p id="alert" class="text-danger"> </p>
                 </div><!-- end modal-body -->

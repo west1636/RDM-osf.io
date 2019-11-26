@@ -46,7 +46,7 @@
                     <div class="collapse" id="osf-meeting-register">
                         <div class="m-lg osf-box-lt p-md text-left">
                             <p>${ _("GakuNin RDM Meetings is a product that we offer to academic conferences at no cost. To request poster and talk hosting for a conference:") }</p>
-                                <p class="text-center">${ _("<strong> Submit this <a href="https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform">set-up form") }</a> </strong></p>
+                                <p class="text-center">${ _('<strong> Submit this <a href="https://docs.google.com/forms/d/e/1FAIpQLSeBq4CfC5CjTBz49TP2dO9ZIsQc6QAAJFUoUbkS767Le9twLw/viewform">set-up form') }</a> </strong></p>
                              <p>${ _("We'll review and add your conference within one business day.") }</p>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                 <li>${ _("Send your materials to the GakuNin RDM Meetings email address for your conference") }</li>
                             </ul>
 
-                            <p> ${ _("WeÅfll  create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.") }</p>
+                            <p> ${ _("We‚Äôll  create a GakuNin RDM project for you. You'll get a permanent link to your presentation, plus analytics about who has viewed and downloaded your work.") }</p>
                         </div>
 
                     </div>

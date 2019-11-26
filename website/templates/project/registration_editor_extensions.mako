@@ -4,7 +4,7 @@
 </script>
 
 <script type="text/html" id="osf-upload-open">
-  <div id="selectedFile">${ _("File(s) selected for upload:
+  <div id="selectedFile">${ _("File(s) selected for upload:") }
     <br>
     <br>
         <div data-bind="foreach: selectedFiles">

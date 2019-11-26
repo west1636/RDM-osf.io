@@ -33,7 +33,7 @@
                         <!-- ko if: tags().length -->
                         <div class="row">
                             <div class="col-md-12">
-                                <h4> ${ _("Improve your search") }:</h4>
+                                <h4> ${ _("Improve your search:") }</h4>
                                 <span class="tag-cloud" data-bind="foreach: {data: tags, as: 'tag'}">
                                     <!-- ko if: count === $parent.tagMaxCount() && count > $parent.tagMaxCount()/2  -->
                                     <span class="tag tag-big tag-container"
@@ -66,7 +66,7 @@
                         <!-- /ko -->
                         <div class="row hidden-xs" data-bind="if: showLicenses">
                             <div class="col-md-12">
-                                <h4> ${ _("Filter by license") }:</h4>
+                                <h4> ${ _("Filter by license:") }</h4>
                                 <span data-bind="if: licenses">
                                 <ul class="nav nav-pills nav-stacked"
                                     data-bind="foreach: {data: licenses, as: 'license'}">
@@ -120,15 +120,15 @@
 
     <script type="text/html" id="file">
         <!-- ko if: guid_url || deep_url -->
-            <h4><a data-bind="attr: {href: guid_url || deep_url}, text: name"></a> (<span class="text-danger" data-bind="if: is_retracted">Withdrawn </span><span data-bind="if: is_registration">${ _("Registration ") }</span>${ _("File)") }</h4>
+            <h4>${ _('<a data-bind="attr: {href: guid_url || deep_url}, text: name"></a> (<span class="text-danger" data-bind="if: is_retracted">Withdrawn </span><span data-bind="if: is_registration">Registration </span>File)') }</h4>
         <!-- /ko-->
         <!-- ko ifnot: guid_url || deep_url -->
             <h4> <span data-bind="text:name"></span> ${ _("(Preprint File)") }</h4>
         <!-- /ko-->
 
         <h5>
-            <!-- ko if: parent_url --> ${ _("From") }: <a data-bind="attr: {href: parent_url}, text: parent_title || '' + ' /'"></a> <!-- /ko -->
-            <!-- ko if: !parent_url --> ${ _("From") }: <span data-bind="if: parent_title"><span data-bind="text: parent_title"></span> /</span> <!-- /ko -->
+            <!-- ko if: parent_url --> ${ _("From:") } <a data-bind="attr: {href: parent_url}, text: parent_title || '' + ' /'"></a> <!-- /ko -->
+            <!-- ko if: !parent_url --> ${ _("From:") } <span data-bind="if: parent_title"><span data-bind="text: parent_title"></span> /</span> <!-- /ko -->
             <a data-bind="attr: {href: node_url}, text: node_title"></a>
         </h5>
         <!-- ko if: tags.length > 0 --> <div data-bind="template: 'tag-cloud'"></div> <!-- /ko -->
@@ -234,11 +234,11 @@
         <h4><span data-bind="if: parent_title"><span data-bind="text: parent_title"></span> /</span> <a data-bind="attr: {href: url}, text: title"></a></h4>
         <!-- /ko -->
 
-        <p data-bind="visible: description"><strong>${ _("Description") }:</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
+        <p data-bind="visible: description"><strong>${ _("Description:") }</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
 
         <!-- ko if: contributors.length > 0 -->
         <p>
-            <strong>${ _("Contributors") }:</strong> <span data-bind="foreach: contributors">
+            <strong>${ _("Contributors:") }</strong> <span data-bind="foreach: contributors">
                 <!-- ko if: url -->
                     <a data-bind="attr: {href: url}, text: fullname"></a>
                 <!-- /ko-->
@@ -251,7 +251,7 @@
         <!-- /ko -->
         <!-- ko if: groups ? groups.length > 0 : false -->
         <p>
-            <strong>${ _("Groups") }:</strong> <span data-bind="foreach: groups">
+            <strong>${ _("Groups:") }</strong> <span data-bind="foreach: groups">
                 <!-- ko if: url -->
                     <span data-bind="text: name"></span>
                 <!-- /ko-->
@@ -260,7 +260,7 @@
         </p>
         <!-- /ko -->
       <!-- ko if: affiliated_institutions ? affiliated_institutions.length > 0 : false -->
-        <p><strong>${ _("Affiliated institutions") }:</strong>
+        <p><strong>${ _("Affiliated institutions:") }</strong>
             <!-- ko foreach: {data: affiliated_institutions, as: 'item'} -->
                 <!-- ko if: item == $parent.affiliated_institutions[$parent.affiliated_institutions.length -1] -->
                 <span data-bind="text: item"></span>
@@ -274,7 +274,7 @@
         <!-- ko if: tags.length > 0 -->
         <div data-bind="template: 'tag-cloud'"></div>
         <!-- /ko -->
-        <p><strong>${ _("Jump to") }:</strong>
+        <p><strong>${ _("Jump to:") }</strong>
             <!-- ko if: n_wikis > 0 -->
             <a data-bind="attr: {href: wikiUrl}">${ _("Wiki") }</a> -
             <!-- /ko -->
@@ -289,7 +289,7 @@
     </script>
     <script type="text/html" id="preprint">
         <h4><a data-bind="attr: {href: url}, text: title"></a> ${ _("(Preprint)") }</h4>
-        <p data-bind="visible: description"><strong>${ _("Description") }:</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
+        <p data-bind="visible: description"><strong>${ _("Description:") }</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
         <!-- ko if: contributors.length > 0 -->
         <p>
             <strong>Contributors:</strong> <span data-bind="foreach: contributors">
@@ -311,7 +311,7 @@
         <h4><span data-bind="text: title"></span></h4>
         <!-- ko if: managers.length > 0 -->
         <p>
-            <strong>${ _("Managers") }:</strong> <span data-bind="foreach: managers">
+            <strong>${ _("Managers:") }</strong> <span data-bind="foreach: managers">
                 <!-- ko if: url -->
                     <a data-bind="attr: {href: url}, text: fullname"></a>
                 <!-- /ko-->
@@ -324,7 +324,7 @@
         <!-- /ko -->
         <!-- ko if: members.length > 0 -->
         <p>
-            <strong>${ _("Members") }:</strong> <span data-bind="foreach: members">
+            <strong>${ _("Members:") }</strong> <span data-bind="foreach: members">
                 <!-- ko if: url -->
                     <a data-bind="attr: {href: url}, text: fullname"></a>
                 <!-- /ko-->
@@ -338,18 +338,18 @@
     </script>
     <script type="text/html" id="registration">
         <!-- ko if: parent_url -->
-        <h4><a data-bind="attr: {href: parent_url}, text: parent_title"></a> / <a data-bind="attr: {href: url}, text: title"></a>  (<span class="text-danger" data-bind="if: is_retracted">${ _("Withdrawn </span>${ _("Registration)</h4>
+        <h4>${ _('<a data-bind="attr: {href: parent_url}, text: parent_title"></a> / <a data-bind="attr: {href: url}, text: title"></a>  (<span class="text-danger" data-bind="if: is_retracted">Withdrawn </span>Registration)') }</h4>
         <!-- /ko -->
         <!-- ko if: !parent_url -->
-        <h4><span data-bind="if: parent_title"><span data-bind="text: parent_title"></span> /</span> <a data-bind="attr: {href: url}, text: title"></a>  (<span class="text-danger" data-bind="if: is_retracted">${ _("Withdrawn </span>${ _("Registration)</h4>
+        <h4>${ _('<span data-bind="if: parent_title"><span data-bind="text: parent_title"></span> /</span> <a data-bind="attr: {href: url}, text: title"></a>  (<span class="text-danger" data-bind="if: is_retracted">Withdrawn </span>Registration)') }</h4>
         <!-- /ko -->
         <strong><span data-bind="text: 'Date Registered: ' + dateRegistered['local'], tooltip: {title: dateRegistered['utc']}"></span></strong>
 
-        <p data-bind="visible: description"><strong>${ _("Description") }:</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
+        <p data-bind="visible: description"><strong>${ _("Description:") }</strong> <span data-bind="fitText: {text: description, length: 500}"></span></p>
 
         <!-- ko if: contributors.length > 0 -->
         <p>
-            <strong>${ _("Contributors") }:</strong> <span data-bind="foreach: contributors">
+            <strong>${ _("Contributors:") }</strong> <span data-bind="foreach: contributors">
                 <!-- ko if: url -->
                     <a data-bind="attr: {href: url}, text: fullname"></a>
                 <!-- /ko-->
@@ -365,7 +365,7 @@
         <!-- ko if: tags.length > 0 -->
         <div data-bind="template: 'tag-cloud'"></div>
         <!-- /ko -->
-        <p><strong>${ _("Jump to") }:</strong>
+        <p><strong>${ _("Jump to:") }</strong>
             <!-- ko if: n_wikis > 0 -->
             <a data-bind="attr: {href: wikiUrl}">${ _("Wiki") }</a> -
             <!-- /ko -->
@@ -373,7 +373,7 @@
         </p>
     </script>
     <script id="tag-cloud" type="text/html">
-        <p data-bind="visible: tags.length"><strong>${ _("Tags") }:</strong>
+        <p data-bind="visible: tags.length"><strong>${ _("Tags:") }</strong>
             <div data-bind="foreach: tags">
                 <span class="tag pointer tag-container"
                       data-bind="click: $root.addTag.bind($parentContext, $data)">

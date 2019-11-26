@@ -69,7 +69,7 @@
                         <form data-bind="submit: submitSettings">
                             <div class="break-word">
                                 <div data-bind="if: selected" class="alert alert-info ${addon_short_name}-confirm-dlg">
-                                    ${ _("Connect ") }<b>&ldquo;<span data-bind="text: selectedFolderName"></span>&rdquo;</b>?
+                                    ${ _("Connect <b>&ldquo;<span data-bind=\"text: selectedFolderName\"></span>&rdquo;</b>?") }
                                 </div>
                             </div>
                             <div class="pull-right">

@@ -7,21 +7,21 @@
                 authorized by <a data-bind="attr: {href: urls().owner}, text: ownerName"></a>
                 % if not is_registration:
                     <a data-bind="click: deauthorize, visible: validCredentials"
-                        class="text-danger pull-right addon-auth">${ _("Disconnect Account</a>
+                        class="text-danger pull-right addon-auth">${ _("Disconnect Account") }</a>
                 % endif
             </span>
 
              <!-- Import Access Token Button -->
             <span data-bind="if: showImport">
                 <a data-bind="click: importAuth" href="#" class="text-primary pull-right addon-auth">
-                    ${ _("Import Account from Profile
+                    ${ _("Import Account from Profile") }
                 </a>
             </span>
 
             <!-- Loading Import Text -->
             <span data-bind="if: showLoading">
                 <p class="text-muted pull-right addon-auth">
-                    ${ _("Loading ...
+                    ${ _("Loading ...") }
                 </p>
             </span>
 

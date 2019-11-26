@@ -33,7 +33,7 @@
                                     <input type="text" class="form-control" name="customHost" data-bind="value: customHost" placeholder="nextcloud.example.org">
                                 </div>
                                 <div class="text-muted" style="text-align: center">
-                                    ${ _("<em>Only Nextcloud instances supporting <a href="https://doc.nextcloud.org/server/9.1/user_manual/files/access_webdav.html" target="_blank">WebDAV</a> and <a href="https://www.freedesktop.org/wiki/Specifications/open-collaboration-services-1.7/" target="_blank">
+                                    ${ _("<em>Only Nextcloud instances supporting <a href=\"https://doc.nextcloud.org/server/9.1/user_manual/files/access_webdav.html\" target=\"_blank\">WebDAV</a> and <a href=\"https://www.freedesktop.org/wiki/Specifications/open-collaboration-services-1.7/\" target=\"_blank\">
                                         OCS v1.7</a> are supported.
                                         </em>") }
                                 </div>
@@ -45,14 +45,14 @@
                                 <label for="username">
                                     ${ _("Username") }
                                 </label>
-                                <input class="form-control" name="username" data-bind="value: username" placeholder="username" />
+                                <input class="form-control" name="username" data-bind="value: username" placeholder="${ _('username') }" />
                                 <label for="password">
                                     ${ _("Password") }
                                 </label>
                                 <input class="form-control" name="password" data-bind="value: password" type="password" placeholder="********" />
                             </div>
                             <div class="text-muted" style="text-align: center">
-                                ${ _("<em> These credentials will be encrypted. However, we <strong>strongly encourage</strong> using a <a href="https://doc.nextcloud.org/server/9.1/user_manual/session_management.html#managing-devices" target="_blank"> Device (or App) Password</a>.
+                                ${ _("<em> These credentials will be encrypted. However, we <strong>strongly encourage</strong> using a <a href=\"https://doc.nextcloud.org/server/9.1/user_manual/session_management.html#managing-devices\" target=\"_blank\"> Device (or App) Password</a>.
                                 </em>") }
                             </div>
                         </div>

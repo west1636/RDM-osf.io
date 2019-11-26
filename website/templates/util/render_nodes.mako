@@ -33,16 +33,16 @@
         % endif
     % elif user.get('is_profile', False):
         <div class="help-block">
-        ${ _("You have no public ") }${pluralized_node_type}.
+        ${ _("You have no public %(pluralized)s.",pluralized=pluralized_node_type) }
             <p>
                 ${ _("Find out how to make your ") }${pluralized_node_type}
                 <a href="https://rdm.nii.ac.jp/getting-started/#privacy" target="_blank">public</a>.
             </p>
         </div>
     % elif profile is not UNDEFINED:  ## On profile page and user has no public projects/components
-        <div class="help-block">${ _("This user has no public ") }${pluralized_node_type}.</div>
+        <div class="help-block">${ _("This user has no public %(pluralized)s.",pluralized=pluralized_node_type) }</div>
     % else:
-        <div class="help-block">${ _("No ") }${pluralized_node_type}${ _(" to display.") }</div>
+        <div class="help-block">${ _("No $%(pluralized)s to display.",pluralized_node_type) }</div>
     % endif
 
     % if include_js:

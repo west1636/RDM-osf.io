@@ -20,7 +20,7 @@
 <%def name="newPrereg(size='')">
 <div id="newPrereg${size}" class="prereg-new-prereg p-md osf-box box-round clearfix m-b-lg" style="display:none">
   <p class="reg-landing-page-text-left">${ _("Please provide a title for your project") }: </p>
-  <input type="text" class="new-project-title form-control" placeholder="Title">
+  <input type="text" class="new-project-title form-control" placeholder="${ _('Title') }">
   <button type="submit" id="newProject${size}" class="btn btn-primary pull-right m-t-md">${ _("Continue") }</button>
 </div>
 </%def>
@@ -52,11 +52,11 @@
         %endif
     </h1>
     %if waffle.switch_is_active(features.OSF_PREREGISTRATION):
-        <p>${ _("Improve your research with ") }<a target='_blank' href='http://www.cos.io/prereg/'>${ _("preregistration") }</a>${ _(".") } ${ _("By writing out specific details such as data collection methods, analysis plans, and rules for data exclusion, you can make important decisions early on and have a clear record of these choices. This can help reduce biases that occur once the data are in front of you.") }</p>
+        <p>${ _("Improve your research with ") }<a target='_blank' href='http://www.cos.io/prereg/'>preregistration</a>. By writing out specific details such as data collection methods, analysis plans, and rules for data exclusion, you can make important decisions early on and have a clear record of these choices. This can help reduce biases that occur once the data are in front of you.") }</p>
         <p>Use <a target='_blank' href='https://osf.io/registries/'>OSF Registries</a> to discover previously registered work.</p>
     %else:
-        <p><strong> ${ _("Articles must be published by an ") }<a target='_blank' href='http://cos.io/our-services/prereg-more-information/'>${ _("approved") }</a> ${ _("journal by December 31, 2018, to be eligible for a prize. Please use this this helpful workflow to preregister, even if you are not seeking a prize. ") }</strong></p>
-        <p> ${ _("Improve your research with preregistration. ") }${ _("The process of creating a ") }<a href='http://www.cos.io/prereg'> ${ _("preregistration") }</a>${ _(" is beneficial to both the scientific field and to you, the scientist. By writing out detailed data collection methods, analysis plans, and rules for excluding or missing data, you can make important decisions that affect your workflow earlier, without the biases that occur once the data are in front of you.") }</p>
+        <p><strong> ${ _("Articles must be published by an <a target='_blank' href='http://cos.io/our-services/prereg-more-information/'>approved</a> journal by December 31, 2018, to be eligible for a prize. Please use this this helpful workflow to preregister, even if you are not seeking a prize. ") }</strong></p>
+        <p> ${ _("Improve your research with preregistration. The process of creating a <a href='http://www.cos.io/prereg'> preregistration</a> is beneficial to both the scientific field and to you, the scientist. By writing out detailed data collection methods, analysis plans, and rules for excluding or missing data, you can make important decisions that affect your workflow earlier, without the biases that occur once the data are in front of you.") }</p>
     %endif
     <div class="col-md-12 visible-xs">
       %if is_logged_in:

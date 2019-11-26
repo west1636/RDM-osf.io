@@ -6,13 +6,13 @@
 <div class="row">
     ## Center the form
     <div class="col-md-6 col-md-offset-3">
-        <p class='help'>${ _("Enter your email address and we'll resend your
+        <p class='help'>${ _("Enter your email address and we'll resend your\
         confirmation link.") } 
         </p>
 
         <form id='resendForm' method='POST' class='form' role='form'>
             <div class='form-group'>
-                ${form.email(placeholder='Email address', autofocus=True) | unicode, n }
+                ${form.email(placeholder='${ _("Email address") }', autofocus=True) | unicode, n }
             </div>
 
             <button type='submit' class='btn btn-primary'>${ _("Send") } </button>
