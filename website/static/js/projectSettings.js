@@ -9,9 +9,6 @@ var ChangeMessageMixin = require('js/changeMessage');
 var language = require('js/osfLanguage').projectSettings;
 var NodesDelete = require('js/nodesDelete').NodesDelete;
 
-var setLanguage = require('js/setLanguage');
-var browserLang = setLanguage.getBrowserLang()
-
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,
     {
@@ -38,6 +35,9 @@ var ProjectSettings = oop.extend(
 
             self.updateUrl = params.updateUrl;
             self.node_id = params.node_id;
+
+            self.selectedTimestampPattern = ko.observable(params.timestampPattern);
+            self.timestampPatternPlaceholder = params.timestampPattern;
 
             self.originalProjectSettings = ko.observable(self.serialize());
             self.dirty = ko.pureComputed(function(){
@@ -68,7 +68,7 @@ var ProjectSettings = oop.extend(
         updateAll: function() {
             var self = this;
             if (!self.dirty()){
-                JSON.stringify(self.changeMessage(setLanguage.getOsfLanguage('projectSettings','updateSuccessMessage',browserLang), 'text-success'));
+                self.changeMessage(language.updateSuccessMessage, 'text-success');
                 return;
             }
             var request = $osf.ajaxJSON('PATCH', self.updateUrl, {
@@ -82,11 +82,13 @@ var ProjectSettings = oop.extend(
                 self.categoryPlaceholder = response.data.attributes.category;
                 self.titlePlaceholder = response.data.attributes.title;
                 self.descriptionPlaceholder = response.data.attributes.description;
+                self.timestampPatternPlaceholder = self.selectedTimestampPattern();
                 self.selectedCategory(self.categoryPlaceholder);
+                self.selectedTimestampPattern(self.timestampPatternPlaceholder);
                 self.title(self.titlePlaceholder);
                 self.description(self.descriptionPlaceholder);
                 self.originalProjectSettings(self.serialize());
-                JSON.stringify(self.changeMessage(setLanguage.getOsfLanguage('projectSettings','updateSuccessMessage',browserLang), 'text-success'));
+                self.changeMessage(language.updateSuccessMessage, 'text-success');
             });
             request.fail(self.updateError.bind(self));
             return request;
@@ -101,6 +103,7 @@ var ProjectSettings = oop.extend(
             self.selectedCategory(self.categoryPlaceholder);
             self.title(self.titlePlaceholder);
             self.description(self.descriptionPlaceholder);
+            self.selectedTimestampPattern(self.timestampPatternPlaceholder);
             self.resetMessage();
         },
         serialize: function() {
@@ -113,6 +116,7 @@ var ProjectSettings = oop.extend(
                         title: self.title(),
                         category: self.selectedCategory(),
                         description: self.description(),
+                        timestampPattern: self.selectedTimestampPattern(),
                     }
                 }
             };
