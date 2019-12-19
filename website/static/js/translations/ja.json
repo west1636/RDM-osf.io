@@ -1,0 +1,10 @@
+{
+  "translations": {
+      "": {
+          "Browse and organize all your projects": {
+		    "msgid": "Browse and organize all your projects",
+		    "msgstr": ["すべてのプロジェクトを参照して整理する。"]
+		  }
+      }
+  }
+}

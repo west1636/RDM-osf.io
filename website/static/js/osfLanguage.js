@@ -26,7 +26,7 @@ module.exports = {
                 'projects you have authorized.',
             confirmNodeDeauth: 'Are you sure you want to unlink this Dataverse Account? This will ' +
                 'revoke the ability to view, download, modify, and upload files ' +
-                'to studies on the Dataverse from the GakuNin RDM. This will not remove your ' +
+                'to studies on the Dataverse from the OSF. This will not remove your ' +
                 'Dataverse authorization from your <a href="/settings/addons/">user settings</a> ' +
                 'page.',
             deauthError: 'Could not disconnect the Dataverse Account at this time.',
@@ -37,7 +37,7 @@ module.exports = {
             authInvalid: 'Your Dataverse API token is invalid.',
             authSuccess: 'Your Dataverse account was linked.',
             datasetDeaccessioned: 'This dataset has already been deaccessioned on the Dataverse ' +
-                'and cannot be connected to the GakuNin RDM.',
+                'and cannot be connected to the OSF.',
             forbiddenCharacters: 'This dataset cannot be connected due to forbidden characters ' +
                 'in one or more of the dataset\'s file names. This issue has been forwarded to our ' +
                 'development team.',
@@ -105,49 +105,6 @@ module.exports = {
                         $osf.osfSupportLink(),
             submitSettingsSuccess : 'Folder Successfully linked',
         },
-        swift: {
-            authError: 'Could not connect to OpenStack Swift at this time. Please try again later.',
-            userSettingsError: 'Could not retrieve settings. Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the problem persists.',
-        },
-        azureblobstorage: {
-            authError: 'Could not connect to Azure Blob Storage at this time. Please try again later.',
-            userSettingsError: 'Could not retrieve settings. Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the problem persists.',
-        },
-        weko: {
-            authError: 'Could not connect to WEKO at this time. Please try again later.',
-            userSettingsError: 'Could not retrieve settings. Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the problem persists.',
-        },
-        s3compat: {
-            authError: 'Could not connect to S3 Compatible Storage at this time. Please try again later.',
-            userSettingsError: 'Could not retrieve settings. Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the problem persists.',
-        },
-        nextcloud: {
-            authError: 'Invalid Nextcloud server',
-            authInvalid: 'Invalid credentials. Please enter a valid username and password.',
-            userSettingsError: 'Could not retrieve settings. Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the problem persists.',
-        },
-        iqbrims: {
-            // Shown on clicking "Delete Access Token" for iqbrims
-            confirmDeauth: 'Are you sure you want to disconnect the IQB-RIMS account? ' +
-                'This will revoke access to IQB-RIMS for all projects you have ' +
-                'associated with this account.',
-            deauthError: 'Could not disconnect the IQB-RIMS account at this time',
-            depositHelp: 'Register a paper and apply for approval',
-            checkHelp: 'Perform image only scan service before submitting a paper',
-            labo: 'Research Field',
-            accepted_date: 'Accepted Date',
-            journal_name: 'Journal Name',
-            doi: 'DOI',
-            publish_date: 'Publish Date',
-            volume: 'Volume',
-            page_number: 'Page Number',
-            workflow_overall_state: 'Current Status'
-        },
     },
     apiOauth2Application: {
         discardUnchanged: 'Are you sure you want to discard your unsaved changes?',
@@ -172,7 +129,10 @@ module.exports = {
         dataUpdated: 'Token data updated'
     },
     projectSettings: {
-        updateSuccessMessage: 'Successfully updated project settings.',
+        updateSuccessMessage: {
+            en:'Successfully updated project settings.',
+            ja: 'プロジェクトの設定が更新されました。'
+        },  
         updateErrorMessage400: 'Error updating project settings. Check that all fields are valid.',
         updateErrorMessage: 'Could not update project settings. ' + $osf.refreshOrSupport(),
         instantiationErrorMessage: 'Trying to instantiate ProjectSettings view model without an update URL'
