@@ -15,6 +15,8 @@ var AddProject = require('js/addProjectPlugin');
 var mC = require('js/mithrilComponents');
 var lodashGet = require('lodash.get');
 var lodashFind = require('lodash.find');
+var setLanguage = require('js/setLanguage');
+var gt = setLanguage.setLanguage();
 
 var MOBILE_WIDTH = 767; // Mobile view break point for responsiveness
 var NODE_PAGE_SIZE = 10; // Load 10 nodes at a time from server
@@ -1105,7 +1107,7 @@ var MyProjects = {
             !ctrl.institutionId ? m('.dashboard-header', m('.row', [
                 m('.col-xs-8', m('h3', [
                     'My Projects ',
-                    m('small.hidden-xs', 'Browse and organize all your projects')
+                    m('small.hidden-xs', gt.gettext('Browse and organize all your projects'))
                 ])),
                 m('.col-xs-4.p-sm', m('.pull-right', m.component(AddProject, {
                     buttonTemplate: m('.btn.btn-success.btn-success-high-contrast.f-w-xl[data-toggle="modal"][data-target="#addProject"]', {onclick: function() {

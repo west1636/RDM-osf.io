@@ -8,6 +8,8 @@ var oop = require('js/oop');
 var ChangeMessageMixin = require('js/changeMessage');
 var language = require('js/osfLanguage').projectSettings;
 var NodesDelete = require('js/nodesDelete').NodesDelete;
+var setLanguage = require('js/setLanguage');
+var browserLang = setLanguage.getBrowserLang()
 
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,
@@ -68,7 +70,7 @@ var ProjectSettings = oop.extend(
         updateAll: function() {
             var self = this;
             if (!self.dirty()){
-                self.changeMessage(language.updateSuccessMessage, 'text-success');
+                JSON.stringify(self.changeMessage(setLanguage.getOsfLanguage('projectSettings','updateSuccessMessage',browserLang), 'text-success'));
                 return;
             }
             var request = $osf.ajaxJSON('PATCH', self.updateUrl, {
@@ -88,7 +90,7 @@ var ProjectSettings = oop.extend(
                 self.title(self.titlePlaceholder);
                 self.description(self.descriptionPlaceholder);
                 self.originalProjectSettings(self.serialize());
-                self.changeMessage(language.updateSuccessMessage, 'text-success');
+                JSON.stringify(self.changeMessage(setLanguage.getOsfLanguage('projectSettings','updateSuccessMessage',browserLang), 'text-success'));
             });
             request.fail(self.updateError.bind(self));
             return request;

@@ -172,7 +172,10 @@ module.exports = {
         dataUpdated: 'Token data updated'
     },
     projectSettings: {
-        updateSuccessMessage: 'Successfully updated project settings.',
+        updateSuccessMessage: {
+            en:'Successfully updated project settings.',
+            ja: 'プロジェクトの設定が更新されました。'
+        },  
         updateErrorMessage400: 'Error updating project settings. Check that all fields are valid.',
         updateErrorMessage: 'Could not update project settings. ' + $osf.refreshOrSupport(),
         instantiationErrorMessage: 'Trying to instantiate ProjectSettings view model without an update URL'
