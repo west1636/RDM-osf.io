@@ -9,7 +9,7 @@ var ChangeMessageMixin = require('js/changeMessage');
 var language = require('js/osfLanguage').projectSettings;
 var NodesDelete = require('js/nodesDelete').NodesDelete;
 var rdmGettext = require('js/rdmGettext');
-var defaultDomainKey = 'projectSettings';
+var defaultDomain = 'projectSettings';
 
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,
@@ -69,8 +69,10 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
+            var osfLanguage = new OsfLanguage(defaultDomain);
+            var t = osfLanguage.t;
             if (!self.dirty()){
-                JSON.stringify(self.changeMessage(rdmGettext.getOsfLanguage(defaultDomainKey,'updateSuccessMessage'), 'text-success'));
+                JSON.stringify(self.changeMessage(t('updateSuccessMessage'), 'text-success'));
                 return;
             }
             var request = $osf.ajaxJSON('PATCH', self.updateUrl, {
@@ -90,7 +92,7 @@ var ProjectSettings = oop.extend(
                 self.title(self.titlePlaceholder);
                 self.description(self.descriptionPlaceholder);
                 self.originalProjectSettings(self.serialize());
-                JSON.stringify(self.changeMessage(rdmGettext.getOsfLanguage(defaultDomainKey,'updateSuccessMessage'), 'text-success'));
+                JSON.stringify(self.changeMessage(t('updateSuccessMessage'), 'text-success'));
             });
             request.fail(self.updateError.bind(self));
             return request;
