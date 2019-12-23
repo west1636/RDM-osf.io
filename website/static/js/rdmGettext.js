@@ -1,3 +1,4 @@
+/*globals self: false */
 'use strict';
 
 var langSetting = ['en','ja'];
