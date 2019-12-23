@@ -2,6 +2,7 @@
 
 var langSetting = ['en','ja'];
 var defaultLanguage = 'en';
+var osfLanguageProfileBasicName = 'osfLanguage'
 
 var getBrowserLang = function() {
 
@@ -27,7 +28,7 @@ var getBrowserLang = function() {
     return language;
 };
 
-var setLanguage = function() {
+var rdmGettext = function() {
 
     var language = getBrowserLang();
 
@@ -41,27 +42,33 @@ var setLanguage = function() {
     return gt;
 };
 
-var getOsfLanguage = function(key,cKey,language) {
+var getOsfLanguage = function(dKey , cKey) {
 
-        var osfLanguage = require('js/osfLanguage');
+        var language = getBrowserLang();
+        var osfLanguage = require('js/' + osfLanguageProfileBasicName + '_' + language);
  
-        var path = [key, cKey, language]
+        var path = [dKey, cKey]
         var index = 0;
         length = path.length;
 
         while (osfLanguage != null && index < length) {
-        osfLanguage = osfLanguage[path[index++]];
+            osfLanguage = osfLanguage[path[index++]];
         }
         var languageObj =  (index && index == length) ? osfLanguage : undefined; 
-        //var languageStr = JSON.stringify( languageObj )
+        
         return languageObj
 }
 
-module.exports = {
-    setLanguage:setLanguage,
-    getOsfLanguage: getOsfLanguage,
-    getBrowserLang: getBrowserLang
+var t = function(cKey) {
+
+    var tStr = getOsfLanguage(cKey)
+ 
+    return tStr;
 };
 
-
-
+module.exports = {
+    rdmGettext:rdmGettext,
+    getOsfLanguage: getOsfLanguage,
+    getBrowserLang: getBrowserLang,
+    t: t,
+};
