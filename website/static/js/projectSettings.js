@@ -69,7 +69,7 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
-            var osfLanguage = new OsfLanguage(defaultDomain);
+            var osfLanguage = rdmGettext.OsfLanguage(defaultDomain);
             var t = osfLanguage.t;
             if (!self.dirty()){
                 JSON.stringify(self.changeMessage(t('updateSuccessMessage'), 'text-success'));

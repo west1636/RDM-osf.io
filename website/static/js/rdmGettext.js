@@ -32,13 +32,14 @@ var rdmGettext = function() {
 
 var OsfLanguage = function() {
     var browserlanguage = getBrowserLang();
-    var osfLanguage = require('js/translations/' + osfLanguageProfileBaseName + '_' + language);
+    var osfLanguage = require('js/translations/' + osfLanguageProfileBaseName + '_' + browserlanguage);
     self.language = osfLanguage;
     if(arguments.length > 0) {
         for(let i = 0; i < arguments.length; i++) {
             self.language = self.language[arguments[i]];
         }
     }
+    
     self.t = function(msgid) {
         var msgstr = self.language[msgid];
         if(arguments.length > 1) {
@@ -48,6 +49,8 @@ var OsfLanguage = function() {
         }
         return msgstr
     };
+    
+    return self
 };
 
 module.exports = {
