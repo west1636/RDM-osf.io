@@ -2,7 +2,7 @@
 
 var langSetting = ['en','ja'];
 var defaultLanguage = 'en';
-var osfLanguageProfileBaseName = 'osfLanguage'
+var osfLanguageProfileBaseName = 'osfLanguage';
 
 var getBrowserLang = function() {
     var language = defaultLanguage;
@@ -12,7 +12,7 @@ var getBrowserLang = function() {
                 window.navigator.browserLanguage;
                 
     for(var i=0 ; i<langSetting.length ; i++){
-        if(browserLanguage == langSetting[i]){
+        if(browserLanguage === langSetting[i]){
             language = browserLanguage;
         }
     }
@@ -25,8 +25,8 @@ var rdmGettext = function() {
     var Gettext = require('node-gettext');
     var gt = new Gettext();
                         
-    gt.addTranslations(language, 'messages', langTranslations)
-    gt.setLocale(language)
+    gt.addTranslations(language, 'messages', langTranslations);
+    gt.setLocale(language);
     return gt;
 };
 
@@ -38,8 +38,7 @@ var OsfLanguage = function() {
         for(let i = 0; i < arguments.length; i++) {
             self.language = self.language[arguments[i]];
         }
-    }
-    
+    }    
     self.t = function(msgid) {
         var msgstr = self.language[msgid];
         if(arguments.length > 1) {
@@ -47,14 +46,13 @@ var OsfLanguage = function() {
                 msgstr = msgstr[arguments[i]];
             }
         }
-        return msgstr
+        return msgstr;
     };
-    
-    return self
 };
 
 module.exports = {
     rdmGettext: rdmGettext,
-    OsfLanguage: OsfLanguage,
     getBrowserLang: getBrowserLang
 };
+
+exports.OsfLanguage = OsfLanguage;
