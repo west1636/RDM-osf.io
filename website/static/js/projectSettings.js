@@ -196,3 +196,5 @@ module.exports = {
     ProjectSettings: ProjectSettings,
     getConfirmationCode: getConfirmationCode
 };
+
+exports.OsfLanguage = OsfLanguage;
