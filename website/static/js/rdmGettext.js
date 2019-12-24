@@ -53,7 +53,6 @@ var OsfLanguage = function() {
 
 module.exports = {
     rdmGettext: rdmGettext,
-    getBrowserLang: getBrowserLang
+    getBrowserLang: getBrowserLang,
+    OsfLanguage: OsfLanguage
 };
-
-exports.OsfLanguage = OsfLanguage;
