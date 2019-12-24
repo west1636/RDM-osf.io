@@ -197,4 +197,3 @@ module.exports = {
     getConfirmationCode: getConfirmationCode
 };
 
-exports.OsfLanguage = OsfLanguage;
