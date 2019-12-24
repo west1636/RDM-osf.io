@@ -25,7 +25,7 @@ var rdmGettext = function() {
     var langTranslations = require('js/translations/' + language + '.json' );
     var Gettext = require('node-gettext');
     var gt = new Gettext();
-                        
+
     gt.addTranslations(language, 'messages', langTranslations);
     gt.setLocale(language);
     return gt;
