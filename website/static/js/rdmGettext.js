@@ -11,7 +11,7 @@ var getBrowserLang = function() {
                 window.navigator.language ||
                 window.navigator.userLanguage ||
                 window.navigator.browserLanguage;
-                
+
     for(var i=0 ; i<langSetting.length ; i++){
         if(browserLanguage === langSetting[i]){
             language = browserLanguage;
@@ -39,7 +39,7 @@ var OsfLanguage = function() {
         for(let i = 0; i < arguments.length; i++) {
             self.language = self.language[arguments[i]];
         }
-    }    
+    }
     self.t = function(msgid) {
         var msgstr = self.language[msgid];
         if(arguments.length > 1) {
