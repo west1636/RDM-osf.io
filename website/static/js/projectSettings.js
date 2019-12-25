@@ -10,6 +10,7 @@ var language = require('js/osfLanguage').projectSettings;
 var NodesDelete = require('js/nodesDelete').NodesDelete;
 var rdmGettext = require('js/rdmGettext');
 var defaultDomain = 'projectSettings';
+var OsfLanguage = rdmGettext.OsfLanguage;
 
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,

@@ -11,7 +11,7 @@ var getBrowserLang = function() {
                 window.navigator.language ||
                 window.navigator.userLanguage ||
                 window.navigator.browserLanguage;
-                
+
     for(var i=0 ; i<langSetting.length ; i++){
         if(browserLanguage === langSetting[i]){
             language = browserLanguage;
@@ -25,7 +25,7 @@ var rdmGettext = function() {
     var langTranslations = require('js/translations/' + language + '.json' );
     var Gettext = require('node-gettext');
     var gt = new Gettext();
-                        
+
     gt.addTranslations(language, 'messages', langTranslations);
     gt.setLocale(language);
     return gt;
@@ -40,7 +40,7 @@ var OsfLanguage = function() {
         for(; i < arguments.length; i++) {
             self.language = self.language[arguments[i]];
         }
-    }    
+    }
     self.t = function(msgid) {
         var msgstr = self.language[msgid];
         if(arguments.length > 1) {
@@ -54,7 +54,7 @@ var OsfLanguage = function() {
 
 module.exports = {
     rdmGettext: rdmGettext,
-    getBrowserLang: getBrowserLang
+    getBrowserLang: getBrowserLang,
+    OsfLanguage: OsfLanguage
 };
 
-exports.OsfLanguage = OsfLanguage;
