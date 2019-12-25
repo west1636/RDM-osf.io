@@ -39,13 +39,13 @@ var OsfLanguage = function() {
         for(var j = 0; j < defaultDomain.length; j++) {
             language = language[defaultDomain[j]];
         }
-        self.languages[acceptLanguages[i]] = language;
+        this.languages[acceptLanguages[i]] = language;
     }
 
     this.t = function(msgid) {
         var msgid = [].slice.call(arguments);
         var browserlanguage = getBrowserLang();
-        var msgstr = self.languages[browserlanguage];
+        var msgstr = this.languages[browserlanguage];
         for(var i = 0; i < msgid.length; i++) {
             msgstr = msgstr[msgid[i]];
         }
