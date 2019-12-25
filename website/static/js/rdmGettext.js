@@ -35,15 +35,16 @@ var OsfLanguage = function() {
     var browserlanguage = getBrowserLang();
     var osfLanguage = require('js/translations/' + osfLanguageProfileBaseName + '_' + browserlanguage);
     self.language = osfLanguage;
+    var i = 0;
     if(arguments.length > 0) {
-        for(let i = 0; i < arguments.length; i++) {
+        for(; i < arguments.length; i++) {
             self.language = self.language[arguments[i]];
         }
     }    
     self.t = function(msgid) {
         var msgstr = self.language[msgid];
         if(arguments.length > 1) {
-            for(let i = 1; i < arguments.length; i++) {
+            for(i = 1; i < arguments.length; i++) {
                 msgstr = msgstr[arguments[i]];
             }
         }
