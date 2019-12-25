@@ -1,7 +1,7 @@
 /*globals self: false */
 'use strict';
 
-var langSetting = ['en','ja'];
+var acceptLanguages = ['en','ja'];
 var defaultLanguage = 'en';
 var osfLanguageProfileBaseName = 'osfLanguage';
 
@@ -12,8 +12,8 @@ var getBrowserLang = function() {
                 window.navigator.userLanguage ||
                 window.navigator.browserLanguage;
 
-    for(var i=0 ; i<langSetting.length ; i++){
-        if(browserLanguage === langSetting[i]){
+    for(var i=0 ; i<acceptLanguages.length ; i++){
+        if(browserLanguage === acceptLanguages[i]){
             language = browserLanguage;
         }
     }
@@ -32,21 +32,22 @@ var rdmGettext = function() {
 };
 
 var OsfLanguage = function() {
-    var browserlanguage = getBrowserLang();
-    var osfLanguage = require('js/translations/' + osfLanguageProfileBaseName + '_' + browserlanguage);
-    self.language = osfLanguage;
-    var i = 0;
-    if(arguments.length > 0) {
-        for(; i < arguments.length; i++) {
-            self.language = self.language[arguments[i]];
+    var defaultDomain = [].slice.call(arguments);
+    self.languages = {};
+    for(var i = 0; i < acceptLanguages.length; i++) {
+        var language = require('js/translations/' + osfLanguageProfileBaseName + '_' + acceptLanguages[i]);
+        for(var j = 0; j < defaultDomain.length; j++) {
+            language = language[defaultDomain[j]];
         }
+        self.languages[acceptLanguages[i]] = language;
     }
+
     self.t = function(msgid) {
-        var msgstr = self.language[msgid];
-        if(arguments.length > 1) {
-            for(i = 1; i < arguments.length; i++) {
-                msgstr = msgstr[arguments[i]];
-            }
+        var msgid = [].slice.call(arguments);
+        var browserlanguage = getBrowserLang();
+        var msgstr = self.languages[browserlanguage];
+        for(var i = 0; i < msgid.length; i++) {
+            msgstr = msgstr[msgid[i]];
         }
         return msgstr;
     };

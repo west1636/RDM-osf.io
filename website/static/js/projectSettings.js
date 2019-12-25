@@ -10,7 +10,8 @@ var language = require('js/osfLanguage').projectSettings;
 var NodesDelete = require('js/nodesDelete').NodesDelete;
 var rdmGettext = require('js/rdmGettext');
 var defaultDomain = 'projectSettings';
-var OsfLanguage = rdmGettext.OsfLanguage;
+var osfLanguage = new rdmGettext.OsfLanguage(defaultDomain);
+var t = osfLanguage.t;
 
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,
@@ -70,8 +71,6 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
-            var osfLanguage = new OsfLanguage(defaultDomain);
-            var t = osfLanguage.t;
             if (!self.dirty()){
                 self.changeMessage(t('updateSuccessMessage'), 'text-success');
                 return;
