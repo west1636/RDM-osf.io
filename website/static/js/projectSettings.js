@@ -96,7 +96,7 @@ var ProjectSettings = oop.extend(
                 self.title(self.titlePlaceholder);
                 self.description(self.descriptionPlaceholder);
                 self.originalProjectSettings(self.serialize());
-                self.changeMessage(t('updateSuccessMessage'), 'text-success');
+                self.changeMessage(osfLanguage.t('updateSuccessMessage'), 'text-success');
             });
             request.fail(self.updateError.bind(self));
             return request;
