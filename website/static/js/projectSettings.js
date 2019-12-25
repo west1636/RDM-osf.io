@@ -124,7 +124,8 @@ var ProjectSettings = oop.extend(
                     }
                 }
             };
-        }
+        },
+        t: t
     });
 
 // TODO: Pass this in as an argument rather than relying on global contextVars
