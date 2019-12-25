@@ -71,6 +71,7 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
+            console.log(t('updateSuccessMessage'));
             if (!self.dirty()){
                 self.changeMessage(t('updateSuccessMessage'), 'text-success');
                 return;
@@ -124,8 +125,7 @@ var ProjectSettings = oop.extend(
                     }
                 }
             };
-        },
-        t: t
+        }
     });
 
 // TODO: Pass this in as an argument rather than relying on global contextVars
