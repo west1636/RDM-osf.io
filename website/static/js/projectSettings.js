@@ -71,7 +71,9 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
-            console.log(t('updateSuccessMessage'));
+            console.log(osfLanguage);
+            console.log(osfLanguage.t);
+            console.log(osfLanguage.t('updateSuccessMessage'));
             if (!self.dirty()){
                 self.changeMessage(t('updateSuccessMessage'), 'text-success');
                 return;
