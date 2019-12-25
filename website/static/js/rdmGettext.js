@@ -33,7 +33,7 @@ var rdmGettext = function() {
 
 var OsfLanguage = function() {
     var defaultDomain = [].slice.call(arguments);
-    self.languages = {};
+    this.languages = {};
     for(var i = 0; i < acceptLanguages.length; i++) {
         var language = require('js/translations/' + osfLanguageProfileBaseName + '_' + acceptLanguages[i]);
         for(var j = 0; j < defaultDomain.length; j++) {
@@ -42,7 +42,7 @@ var OsfLanguage = function() {
         self.languages[acceptLanguages[i]] = language;
     }
 
-    self.t = function(msgid) {
+    this.t = function(msgid) {
         var msgid = [].slice.call(arguments);
         var browserlanguage = getBrowserLang();
         var msgstr = self.languages[browserlanguage];
