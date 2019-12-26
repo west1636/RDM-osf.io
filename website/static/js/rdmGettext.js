@@ -1,9 +1,15 @@
-/*globals self: false */
 'use strict';
+
+var $ = require('jquery');
+var path = require('path');
+var Gettext = require('node-gettext');
+var $osf = require('js/osfHelpers');
 
 var acceptLanguages = ['en','ja'];
 var defaultLanguage = 'en';
+var translationsBaseDir = 'translations';
 var osfLanguageProfileBaseName = 'osfLanguage';
+var getTextDomain = 'messages';
 
 var getBrowserLang = function() {
     var language = defaultLanguage;
@@ -12,8 +18,8 @@ var getBrowserLang = function() {
                 window.navigator.userLanguage ||
                 window.navigator.browserLanguage;
 
-    for(var i=0 ; i<acceptLanguages.length ; i++){
-        if(browserLanguage === acceptLanguages[i]){
+    for(var i=0 ; i<acceptLanguages.length ; i++) {
+        if(browserLanguage === acceptLanguages[i]) {
             language = browserLanguage;
         }
     }
@@ -21,13 +27,13 @@ var getBrowserLang = function() {
 };
 
 var rdmGettext = function() {
-    var language = getBrowserLang();
-    var langTranslations = require('js/translations/' + language + '.json' );
-    var Gettext = require('node-gettext');
     var gt = new Gettext();
-
-    gt.addTranslations(language, 'messages', langTranslations);
-    gt.setLocale(language);
+    var currentlanguage = getBrowserLang();
+    for(var i = 0; i < acceptLanguages.length; i++) {
+        var translation = require(path.join('js', translationsBaseDir, acceptLanguages[i] + '.json'));
+        gt.addTranslations(acceptLanguages[i], getTextDomain, langTranslations);
+    }
+    gt.setLocale(currentlanguage);
     return gt;
 };
 
@@ -35,14 +41,14 @@ var OsfLanguage = function() {
     var defaultDomain = [].slice.call(arguments);
     this.languages = {};
     for(var i = 0; i < acceptLanguages.length; i++) {
-        var language = require('js/translations/' + osfLanguageProfileBaseName + '_' + acceptLanguages[i]);
+        var language = require(path.join('js/', translationsBaseDir, osfLanguageProfileBaseName + '_' + acceptLanguages[i]));
         for(var j = 0; j < defaultDomain.length; j++) {
             language = language[defaultDomain[j]];
         }
         this.languages[acceptLanguages[i]] = language;
     }
 
-    this.t = function(msgid) {
+    this.t = function() {
         var msgid = [].slice.call(arguments);
         var browserlanguage = getBrowserLang();
         var msgstr = this.languages[browserlanguage];
@@ -58,4 +64,3 @@ module.exports = {
     getBrowserLang: getBrowserLang,
     OsfLanguage: OsfLanguage
 };
-

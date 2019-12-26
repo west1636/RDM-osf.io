@@ -11,7 +11,6 @@ var NodesDelete = require('js/nodesDelete').NodesDelete;
 var rdmGettext = require('js/rdmGettext');
 var defaultDomain = 'projectSettings';
 var osfLanguage = new rdmGettext.OsfLanguage(defaultDomain);
-var t = osfLanguage.t;
 
 var ProjectSettings = oop.extend(
     ChangeMessageMixin,
@@ -71,12 +70,8 @@ var ProjectSettings = oop.extend(
         /*update handler*/
         updateAll: function() {
             var self = this;
-            console.log(rdmGettext);
-            console.log(osfLanguage);
-            console.log(osfLanguage.t);
-            console.log(osfLanguage.t('updateSuccessMessage'));
             if (!self.dirty()){
-                self.changeMessage(t('updateSuccessMessage'), 'text-success');
+                self.changeMessage(osfLanguage.t('updateSuccessMessage'), 'text-success');
                 return;
             }
             var request = $osf.ajaxJSON('PATCH', self.updateUrl, {
