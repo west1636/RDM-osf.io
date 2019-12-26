@@ -1,7 +1,5 @@
 'use strict';
 
-var $ = require('jquery');
-var path = require('path');
 var Gettext = require('node-gettext');
 var $osf = require('js/osfHelpers');
 
@@ -30,7 +28,7 @@ var rdmGettext = function() {
     var gt = new Gettext();
     var currentlanguage = getBrowserLang();
     for(var i = 0; i < acceptLanguages.length; i++) {
-        var translation = require(path.join('js', translationsBaseDir, acceptLanguages[i] + '.json'));
+        var translation = require('js/' + translationsBaseDir + '/' + acceptLanguages[i] + '.json');
         gt.addTranslations(acceptLanguages[i], getTextDomain, langTranslations);
     }
     gt.setLocale(currentlanguage);
@@ -41,7 +39,7 @@ var OsfLanguage = function() {
     var defaultDomain = [].slice.call(arguments);
     this.languages = {};
     for(var i = 0; i < acceptLanguages.length; i++) {
-        var language = require(path.join('js/', translationsBaseDir, osfLanguageProfileBaseName + '_' + acceptLanguages[i]));
+        var language = require('js/' + translationsBaseDir + '/' + osfLanguageProfileBaseName + '_' + acceptLanguages[i]);
         for(var j = 0; j < defaultDomain.length; j++) {
             language = language[defaultDomain[j]];
         }
