@@ -1,10 +1,438 @@
 {
   "translations": {
       "": {
+          "myProject.js": {
+		    "msgid": "myProject.js",
+		    "msgstr": ["myProject.js"]
+			},
           "Browse and organize all your projects": {
 		    "msgid": "Browse and organize all your projects",
 		    "msgstr": ["すべてのプロジェクトを参照して整理する。"]
-		  }
+			},
+          "We're having some trouble contacting our servers. Try reloading the page.": {
+		    "msgid": "We\\'re having some trouble contacting our servers. Try reloading the page.",
+		    "msgstr": ["サーバーへの接続に問題があります。 ページを再読み込みしてください。"]
+			},
+          "Something went wrong!": {
+		    "msgid": "Something went wrong!",
+		    "msgstr": ["何かが上手くいきませんでした！"]
+			},
+          "Error loading project category names.": {
+		    "msgid": "Error loading project category names.",
+		    "msgstr": ["プロジェクトカテゴリ名の読み込みエラー"]
+			},
+          "Some projects": {
+		    "msgid": "Some projects",
+		    "msgstr": ["いくつかのプロジェクト"]
+			},
+          " could not be removed from the collection": {
+		    "msgid": " could not be removed from the collection",
+		    "msgstr": ["がコレクションから除外されました。"]
+			},
+          "Please try again.": {
+		    "msgid": "Please try again.",
+		    "msgstr": ["もう一度試してください。"]
+			},
+          "You have not created any projects yet.": {
+		    "msgid": "You have not created any projects yet.",
+		    "msgstr": ["プロジェクトはまだ作成されていません。"]
+			},
+          "You have no bookmarks. You can add projects or registrations by dragging them into your bookmarks or by clicking the Add to Bookmark button on the project or registration.": {
+		    "msgid": "You have no bookmarks. You can add projects or registrations by dragging them into your bookmarks or by clicking the Add to Bookmark button on the project or registration.",
+		    "msgstr": ["ブックマークがありません。 プロジェクトまたは登録を追加するには、それらをブックマークにドラッグするか、プロジェクトまたは登録の[ブックマークに追加]ボタンをクリックします。"]
+			},
+          "There have been no completed registrations for this institution, but you can view the ": {
+		    "msgid": "There have been no completed registrations for this institution, but you can view the ",
+		    "msgstr": ["この機関の登録は完了していませんが、表示できます："]
+			},
+          "newest public registrations": {
+		    "msgid": "newest public registrations",
+		    "msgstr": ["最新の公的登録"]
+			},
+          "popular public registrations.": {
+		    "msgid": "popular public registrations.",
+		    "msgstr": ["人気のある公的な登録"]
+			},
+          " or ": {
+		    "msgid": " or ",
+		    "msgstr": ["または"]
+			},
+          "You have not made any registrations yet. Go to ": {
+		    "msgid": "You have not made any registrations yet. Go to ",
+		    "msgstr": ["まだ登録していません。こちらへ："]
+			},
+          "Guides": {
+		    "msgid": "Guides",
+		    "msgstr": ["ガイド"]
+			},
+          " to learn how registrations work.": {
+		    "msgid": " to learn how registrations work.",
+		    "msgstr": ["登録の仕組みを学習するために。"]
+			},
+          "(You have not made any preprints yet. Learn more about preprints in the ": {
+		    "msgid": "(You have not made any preprints yet. Learn more about preprints in the ",
+		    "msgstr": ["まだプレプリントを作成していません。 プレプリントの詳細については、"]
+			},
+          "OSF Guides": {
+		    "msgid": "OSF Guides",
+		    "msgstr": ["OSFガイド"]
+			},
+          "make one now.": {
+		    "msgid": "make one now.",
+		    "msgstr": ["を読むか、今すぐ作りましょう。"]
+			},
+          "You have no bookmarks. You can add projects or registrations by dragging them into your bookmarks or by clicking the Add to Bookmark button on the project or registration.": {
+		    "msgid": "You have no bookmarks. You can add projects or registrations by dragging them into your bookmarks or by clicking the Add to Bookmark button on the project or registration.",
+		    "msgstr": ["ブックマークがありません。 プロジェクトまたは登録を追加するには、それらをブックマークにドラッグするか、プロジェクトまたは登録の[ブックマークに追加]ボタンをクリックします。"]
+			},
+          "This collection is empty.": {
+		    "msgid": "This collection is empty.",
+		    "msgstr": ["このコレクションは空です。"]
+			},
+          " You can add projects, registrations, or preprints by dragging them into the collection.": {
+		    "msgid": " You can add projects, registrations, or preprints by dragging them into the collection.",
+		    "msgstr": ["プロジェクト、登録、またはプレプリントをコレクションにドラッグして追加できます。"]
+			},
+          "No components to display. Either there are no components, or there are private components in which you are not a contributor.": {
+		    "msgid": "No components to display. Either there are no components, or there are private components in which you are not a contributor.",
+		    "msgstr": ["表示するコンポーネントはありません。 コンポーネントがないか、コントリビュータではないプライベートコンポーネントがあります。"]
+			},
+          "Collections could not be loaded.": {
+		    "msgid": "Collections could not be loaded.",
+		    "msgstr": ["コレクションをロードできませんでした。"]
+			},
+          "Please reload the page.": {
+		    "msgid": "Please reload the page.",
+		    "msgstr": ["ページをリロードしてください。"]
+			},
+          "\" collection could not be created.": {
+		    "msgid": "\" collection could not be created.",
+		    "msgstr": ["\"コレクションを作成できませんでした。"]
+			},
+          "\" could not be deleted.": {
+		    "msgid": "\" could not be deleted.",
+		    "msgstr": ["は削除できませんでした。"]
+			},
+          "\" could not be renamed.": {
+		    "msgid": "\" could not be renamed.",
+		    "msgstr": ["はリネームできませんでした。"]
+			},
+          "\" is already in \"": {
+		    "msgid": "\" is already in \"",
+		    "msgstr": ["はすでに入っています："]
+			},
+          "\"Bookmarks\" is a reserved collection name. Please use another name.": {
+		    "msgid": "\"Bookmarks\" is a reserved collection name. Please use another name.",
+		    "msgstr": ["「ブックマーク」は予約済みのコレクション名です。 別の名前を使用してください。"]
+			},
+          "Collections are groups of projects. You can create custom collections. Drag and drop your projects or bookmarked projects to add them.": {
+		    "msgid": "Collections are groups of projects. You can create custom collections. Drag and drop your projects or bookmarked projects to add them.",
+		    "msgstr": ["コレクションはプロジェクトのグループです。 カスタムコレクションを作成できます。 プロジェクトまたはブックマークしたプロジェクトをドラッグアンドドロップして追加します。"]
+			},
+          "Collections are groups of projects that help you organize your work. After you create your collection, you can add projects by dragging them into the collection.": {
+		    "msgid": "Collections are groups of projects that help you organize your work. After you create your collection, you can add projects by dragging them into the collection.",
+		    "msgstr": ["コレクションは、作業の整理に役立つプロジェクトのグループです。 コレクションを作成したら、プロジェクトをコレクションにドラッグして追加できます。"]
+			},
+          "e.g.  My Replications": {
+		    "msgid": "e.g.  My Replications",
+		    "msgstr": ["例：私の複製"]
+			},
+          "Rename": {
+		    "msgid": "Rename",
+		    "msgstr": ["リネーム"]
+			},
+          "This will delete your collection, but your projects will not be deleted.": {
+		    "msgid": "This will delete your collection, but your projects will not be deleted.",
+		    "msgstr": ["これによりコレクションが削除されますが、プロジェクトは削除されません。"]
+			},
+          "Create component": {
+		    "msgid": "Create component",
+		    "msgstr": ["コンポーネントを作成"]
+			},
+          "No contributors to display in this collection. Project administrators can add contributors.": {
+		    "msgid": "No contributors to display in this collection. Project administrators can add contributors.",
+		    "msgstr": ["このコレクションに表示するコントリビュータはいません。 プロジェクト管理者はコントリビュータを追加できます。"]
+			},
+          "No tags to display in this collection. Project administrators and write contributors can add tags.": {
+		    "msgid": "No tags to display in this collection. Project administrators and write contributors can add tags.",
+		    "msgstr": ["このコレクションに表示するタグはありません。 プロジェクト管理者と寄稿者はタグを追加できます。"]
+			},
+          "Click a contributor\\'s name to see projects that you have in common.": {
+		    "msgid": "Click a contributor\\'s name to see projects that you have in common.",
+		    "msgstr": ["コントリビュータの名前をクリックして、共通のプロジェクトを表示します。"]
+			},
+          "Select a row to view project details.": {
+		    "msgid": "Select a row to view project details.",
+		    "msgstr": ["行を選択して、プロジェクトの詳細を表示します。"]
+			},
+          "Remove selected from collection": {
+		    "msgid": "Remove selected from collection",
+		    "msgstr": ["コレクションから選択を削除"]
+			},
+          "The file content could not be loaded.": {
+		    "msgid": "The file content could not be loaded.",
+		    "msgstr": ["ファイルの内容をロードできませんでした。"]
+			},
+          "Could not GET file contents.": {
+		    "msgid": "Could not GET file contents.",
+		    "msgstr": ["ファイルの内容を取得できませんでした。"]
+			},
+          "Could not update file. Insufficient storage space in your Dropbox.": {
+		    "msgid": "Could not update file. Insufficient storage space in your Dropbox.",
+		    "msgstr": ["ファイルを更新できませんでした。 Dropboxのストレージ容量が不足しています。"]
+			},
+          "The file could not be updated.": {
+		    "msgid": "The file could not be updated.",
+		    "msgstr": ["ファイルを更新できませんでした。"]
+			},
+          "Could not PUT file content.": {
+		    "msgid": "Could not PUT file content.",
+		    "msgstr": ["ファイルコンテンツをPUTできませんでした。"]
+			},
+          "Direct iframe with fixed height and width": {
+		    "msgid": "Direct iframe with fixed height and width",
+		    "msgstr": ["高さと幅を固定したiframeを管理する"]
+			},
+          "File is checked out.": {
+		    "msgid": "File is checked out.",
+		    "msgstr": ["ファイルはチェックアウトされています。"]
+			},
+          " This file has been checked out by a COS Preregistration Challenge Reviewer and will become available when review is complete.": {
+		    "msgid": " This file has been checked out by a COS Preregistration Challenge Reviewer and will become available when review is complete.",
+		    "msgstr": ["このファイルはCOS Preregistration Challenge Reviewerによってチェックアウトされており、レビューが完了すると利用可能になります。"]
+			},
+          "File is checked out.": {
+		    "msgid": "File is checked out.",
+		    "msgstr": ["ファイルはチェックアウトされています。"]
+			},
+          "collaborator": {
+		    "msgid": "collaborator",
+		    "msgstr": [""]
+			},
+          " This file has been checked out by a ": {
+		    "msgid": " This file has been checked out by a ",
+		    "msgstr": ["このファイルはコラボーレータによってチェックアウトされました。"]
+			},
+          ". It needs to be checked in before any changes can be made.": {
+		    "msgid": ". It needs to be checked in before any changes can be made.",
+		    "msgstr": ["変更を行う前にチェックインする必要があります。"]
+			},
+          "Are you sure you want to delete <strong>": {
+		    "msgid": "",
+		    "msgstr": ["次のファイルを削除してもよろしいですか？：<strong>"]
+			},
+          "</strong>?": {
+		    "msgid": "</strong>?",
+		    "msgstr": ["</strong>"]
+			},
+          "Could not delete file.": {
+		    "msgid": "Could not delete file.",
+		    "msgstr": ["ファイルを削除できませんでした。"]
+			},
+          "Confirm file check out?": {
+		    "msgid": "Confirm file check out?",
+		    "msgstr": ["ファイルのチェックアウトを確認しますか？"]
+			},
+          "This would mean ": {
+		    "msgid": "This would mean ",
+		    "msgstr": ["これはチェックアウトされている限り、他の貢献者がこのファイルの新しいバージョンを編集、削除、またはアップロードできないことを意味します。 いつでもチェックインできます。"]
+			},
+          "other contributors cannot edit, delete or upload new versions of this file ": {
+		    "msgid": "other contributors cannot edit, delete or upload new versions of this file ",
+		    "msgstr": [" "]
+			},
+          "as long as it is checked out. You can check it back in at anytime.": {
+		    "msgid": "as long as it is checked out. You can check it back in at anytime.",
+		    "msgstr": [" "]
+			},
+          "Unable to check out file": {
+		    "msgid": "Unable to check out file",
+		    "msgstr": ["ファイルをチェックアウトできません"]
+			},
+          "Check out file": {
+		    "msgid": "Check out file",
+		    "msgstr": ["ファイルをチェックアウトする"]
+			},
+          "Unable to check in file": {
+		    "msgid": "Unable to check in file",
+		    "msgstr": ["ファイルをチェックインできません"]
+			},
+          "Force check in file?": {
+		    "msgid": "Force check in file?",
+		    "msgstr": ["ファイルを強制的にチェックインしますか？"]
+			},
+          "This will check in the file for all users, allowing it to be edited. Are you sure?": {
+		    "msgid": "This will check in the file for all users, allowing it to be edited. Are you sure?",
+		    "msgstr": ["これにより、すべてのユーザーのファイルがチェックインされ、編集できるようになります。 よろしいですか？"]
+			},
+          "Force check in": {
+		    "msgid": "Force check in",
+		    "msgstr": ["強制チェックイン"]
+			},
+          "Unable to force check in file. Make sure you have admin privileges.": {
+		    "msgid": "Unable to force check in file. Make sure you have admin privileges.",
+		    "msgstr": ["ファイルを強制的にチェックインできません。 管理者権限があることを確認してください。"]
+			},
+          "Live editing mode ": {
+		    "msgid": "Live editing mode ",
+		    "msgstr": ["ライブ編集モード"]
+			},
+          "Attempting to connect ": {
+		    "msgid": "Attempting to connect ",
+		    "msgstr": ["接続しようとしています"]
+			},
+          "Unsupported browser ": {
+		    "msgid": "Unsupported browser ",
+		    "msgstr": ["サポートされていないブラウザ"]
+			},
+          "Saving... ": {
+		    "msgid": "Saving... ",
+		    "msgstr": ["保存しています..."]
+			},
+          "View this file on ": {
+		    "msgid": "View this file on ",
+		    "msgstr": ["このファイルを表示："]
+			},
+          "Force check in": {
+		    "msgid": "Force check in",
+		    "msgstr": ["強制チェックイン"]
+			},
+          "Check out": {
+		    "msgid": "Check out",
+		    "msgstr": ["チェックアウト"]
+			},
+          "Check in": {
+		    "msgid": "Check in",
+		    "msgstr": ["チェックイン"]
+			},
+          "Request Trusted Timestamp": {
+		    "msgid": "Request Trusted Timestamp",
+		    "msgstr": ["信頼できるタイムスタンプをリクエスト"]
+			},
+          "Delete": {
+		    "msgid": "Delete",
+		    "msgstr": ["削除"]
+			},
+          "Download": {
+		    "msgid": "Download",
+		    "msgstr": ["ダウンロード"]
+			},
+          "Toggle view: ": {
+		    "msgid": "Toggle view: ",
+		    "msgstr": ["ビューの切り替え："]
+			},
+          "Unable to fetch versions": {
+		    "msgid": "Unable to fetch versions",
+		    "msgstr": ["バージョンを取得できません"]
+			},
+          "MD5 is an algorithm used to verify data integrity.": {
+		    "msgid": "MD5 is an algorithm used to verify data integrity.",
+		    "msgstr": ["MD5は、データの整合性を検証するために使用されるアルゴリズムです。"]
+			},
+          "SHA-2 is a cryptographic hash function designed by the NSA used to verify data integrity.": {
+		    "msgid": "SHA-2 is a cryptographic hash function designed by the NSA used to verify data integrity.",
+		    "msgstr": ["SHA-2は、データの整合性を検証するために使用されるNSAによって設計された暗号化ハッシュ関数です。"]
+			},
+          " Loading... ": {
+		    "msgid": " Loading... ",
+		    "msgstr": ["ロード中"]
+			},
+          "Error in request to ": {
+		    "msgid": "Error in request to ",
+		    "msgstr": ["リクエストエラー："]
+			},
+          "A request to make this registration public is pending": {
+		    "msgid": "A request to make this registration public is pending",
+		    "msgstr": ["この登録を公開するリクエストは保留中です"]
+			},
+          "Title cannot be blank.": {
+		    "msgid": "Title cannot be blank.",
+		    "msgstr": ["タイトルを空白にすることはできません。"]
+			},
+          "Title cannot exceed 512 characters.": {
+		    "msgid": "Title cannot exceed 512 characters.",
+		    "msgstr": ["タイトルは512文字を超えることはできません。"]
+			},
+          "project": {
+		    "msgid": "project",
+		    "msgstr": [" "]
+			},
+          "component": {
+		    "msgid": "component",
+		    "msgstr": [" "]
+			},
+          "Add a brief description to your ": {
+		    "msgid": "Add a brief description to your ",
+		    "msgstr": ["プロジェクト又はコンポーネントに関する簡単な説明を追加します"]
+			},
+          "The project could not be removed": {
+		    "msgid": "The project could not be removed",
+		    "msgstr": ["プロジェクトを削除できませんでした"]
+			},
+          "Are you sure you want to create a DOI for this ": {
+		    "msgid": "Are you sure you want to create a DOI for this ",
+		    "msgstr": ["次のためのDOIを作成してもよろしいですか？："]
+			},
+          "? A DOI": {
+		    "msgid": "? A DOI",
+		    "msgstr": ["DOIは永続的であり、常にこのページに解決されます。"]
+			},
+          " is persistent and will always resolve to this page.": {
+		    "msgid": " is persistent and will always resolve to this page.",
+		    "msgstr": [" "]
+			},
+          "Create": {
+		    "msgid": "Create",
+		    "msgstr": ["作成"]
+			},
+          "We could not create the identifier at this time. ": {
+		    "msgid": "We could not create the identifier at this time. ",
+		    "msgstr": [""]
+			},
+          "We could not create the identifier at this time. ": {
+		    "msgid": "We could not create the identifier at this time. ",
+		    "msgstr": ["現時点では識別子を作成できませんでした。"]
+			},
+          "The DOI acquisition service may be down right now. ": {
+		    "msgid": "The DOI acquisition service may be down right now. ",
+		    "msgstr": ["DOI取得サービスは現在停止している可能性があります。"]
+			},
+          "Please try again soon and/or contact ": {
+		    "msgid": "Please try again soon and/or contact ",
+		    "msgstr": ["すぐに再試行するか、お問い合わせください："]
+			},
+          "Could not create doi": {
+		    "msgid": "Could not create doi",
+		    "msgstr": ["DOIを作成できませんでした。"]
+			},
+          "The wiki page name cannot be empty.": {
+		    "msgid": "The wiki page name cannot be empty.",
+		    "msgstr": ["Wikiページ名を空にすることはできません。"]
+			},
+          "The wiki page name cannot be more than 100 characters.": {
+		    "msgid": "The wiki page name cannot be more than 100 characters.",
+		    "msgstr": ["Wikiページ名は100文字を超えることはできません。"]
+			},
+          "Error in renaming wiki": {
+		    "msgid": "Error in renaming wiki",
+		    "msgstr": ["Wikiの名前変更中のエラー"]
+			},
+          "An unexpected error occurred. Please try again.": {
+		    "msgid": "An unexpected error occurred. Please try again.",
+		    "msgstr": ["予期しないエラーが発生しました。 もう一度やり直してください。"]
+			},
+          "<p>Could not retrieve wiki pages. If this issue persists, ": {
+		    "msgid": "<p>Could not retrieve wiki pages. If this issue persists, ",
+		    "msgstr": ["<p> Wikiページを取得できませんでした。 この問題が続く場合、"]
+			},
+          "please report it to ": {
+		    "msgid": "please report it to ",
+		    "msgstr": ["報告をお願いします："]
+			},
+          "Could not GET wiki menu pages": {
+		    "msgid": "Could not GET wiki menu pages",
+		    "msgstr": ["Wikiメニューページを取得できませんでした"]
+			}
       }
   }
 }
