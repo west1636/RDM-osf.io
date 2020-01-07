@@ -1,6 +1,3 @@
-<%
-from flask_babel import gettext as _
-%>
 <div id="s3InputCredentials" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

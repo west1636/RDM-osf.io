@@ -50,9 +50,9 @@ _TPL_LOOKUP_SAFE = TemplateLookup(
     ],
     imports=[
         'from website.util.sanitize import temp_ampersand_fixer',  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
-        'from flask_babel import gettext as _',
-        'from flask_babel import ngettext',
-        'from markupsafe import escape as h',
+#        'from flask_babel import gettext as _',
+#        'from flask_babel import ngettext',
+#        'from markupsafe import escape as h',
     ],
     directories=[
         TEMPLATE_DIR,
@@ -60,6 +60,15 @@ _TPL_LOOKUP_SAFE = TemplateLookup(
     ],
     module_directory='/tmp/mako_modules',
 )
+
+
+GETTEXT_IMPORT = '''
+<%
+from flask_babel import gettext as _
+from flask_babel import ngettext
+from markupsafe import escape as h
+%>
+'''
 
 REDIRECT_CODES = [
     http.MOVED_PERMANENTLY,
@@ -236,6 +245,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     if tpl is None:
         with open(os.path.join(tpldir, tplname)) as f:
             tpl_text = f.read()
+        tpl_text = GETTEXT_IMPORT + tpl_text
         tpl = Template(
             tpl_text,
             format_exceptions=show_errors,
