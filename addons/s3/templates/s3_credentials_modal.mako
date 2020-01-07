@@ -1,9 +1,12 @@
+<%
+from flask_babel import gettext as _
+%>
 <div id="s3InputCredentials" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Connect an Amazon S3 Account</h3>
+                <h3>${_("Connect an Amazon S3 Account")}</h3>
             </div>
 
             <form>
