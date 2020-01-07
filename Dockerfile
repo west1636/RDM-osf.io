@@ -213,6 +213,7 @@ ARG GIT_COMMIT=
 ENV GIT_COMMIT ${GIT_COMMIT}
 
 RUN pybabel compile -d ./website/translations
+RUN pybabel compile -d ./addons/translations
 
 RUN for module in \
         api.base.settings \
