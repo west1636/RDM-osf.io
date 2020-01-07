@@ -7,15 +7,6 @@ from website.settings import parent_dir
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATIC_PATH = os.path.join(parent_dir(HERE), 'static')
 
-BABEL_TRANSLATION_DIRECTORIES = os.path.join(parent_dir(parent_dir(HERE)), 'translations')
-BABEL_DOMAIN = 'messages'
-BABEL_LANGUAGES = {
-    'en': 'English',
-    'ja': '日本語'
-}
-BABEL_DEFAULT_LOCALE = 'ja'
-
-
 MAX_RENDER_SIZE = (1024 ** 2) * 3
 
 # Max file size permitted by frontend in megabytes
