@@ -61,15 +61,6 @@ _TPL_LOOKUP_SAFE = TemplateLookup(
     module_directory='/tmp/mako_modules',
 )
 
-
-GETTEXT_IMPORT = '''
-<%
-from flask_babel import gettext as _
-from flask_babel import ngettext
-from markupsafe import escape as h
-%>
-'''
-
 REDIRECT_CODES = [
     http.MOVED_PERMANENTLY,
     http.FOUND,
@@ -245,7 +236,6 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     if tpl is None:
         with open(os.path.join(tpldir, tplname)) as f:
             tpl_text = f.read()
-        tpl_text = GETTEXT_IMPORT + tpl_text
         tpl = Template(
             tpl_text,
             format_exceptions=show_errors,
