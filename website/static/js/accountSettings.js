@@ -81,7 +81,7 @@ var UserProfileClient = oop.defclass({
             ret.resolve(this.unserialize(data));
         }.bind(this));
         request.fail(function(xhr, status, error) {
-            $osf.growl('Error', '_(Could not fetch user profile.'), 'danger');
+            $osf.growl('Error', _('Could not fetch user profile.'), 'danger');
             Raven.captureMessage(_('Error fetching user profile'), {
                 extra: {
                     url: this.urls.fetch,

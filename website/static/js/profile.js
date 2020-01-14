@@ -356,7 +356,7 @@ BaseViewModel.prototype.cancel = function(data, event) {
     if (this.dirty()) {
         bootbox.confirm({
             title: _('Discard changes?'),
-            message: '_(Are you sure you want to discard your unsaved changes?'),
+            message: _('Are you sure you want to discard your unsaved changes?'),
             callback: function(confirmed) {
                 if (confirmed) {
                     self.restoreOriginal();

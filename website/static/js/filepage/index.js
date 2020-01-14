@@ -215,7 +215,7 @@ var FileViewPage = {
         });
         $(document).on('fileviewpage:checkout', function() {
             bootbox.confirm({
-                title: _('Confirm file check out?)',
+                title: _('Confirm file check out?'),
                 message: _('This would mean ') +
                     _('other contributors cannot edit, delete or upload new versions of this file ') +
                     _('as long as it is checked out. You can check it back in at anytime.'),
