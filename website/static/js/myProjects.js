@@ -431,7 +431,7 @@ var MyProjects = {
 
         // Add All my Projects and All my registrations to collections
         self.systemCollections = options.systemCollections || [
-            new LinkObject('collection', { nodeType : 'projects'}, 'All my projects')
+            new LinkObject('collection', { nodeType : 'projects'}, _('All my projects'))
         ];
 
         self.fetchers = {};
@@ -1170,7 +1170,7 @@ var MyProjects = {
                 ctrl.loadValue() < 100 ? m('.line-loader', [
                     m('.line-empty'),
                     m('.line-full.bg-color-blue', { style : 'width: ' + ctrl.loadValue() +'%'}),
-                    m('.load-message', 'Fetching more projects')
+                    m('.load-message', _('Fetching more projects'))
                 ]) : '',
                 ctrl.nonLoadTemplate(),
                 m('.db-poOrganizer', {
@@ -1467,7 +1467,7 @@ var Collections = {
         };
         var collectionListTemplate = [
             m('h5.clearfix', [
-                'Collections ',
+                _('Collections '),
                  viewOnly ? '' : m('i.fa.fa-question-circle.text-muted', {
                     'data-toggle':  'tooltip',
                     'title':  _('Collections are groups of projects. You can create custom collections. Drag and drop your projects or bookmarked projects to add them.'),
@@ -1526,12 +1526,12 @@ var Collections = {
                         }}, [
                             m('span[aria-hidden="true"]','×')
                         ]),
-                        m('h3.modal-title', 'Add new collection')
+                        m('h3.modal-title', _('Add new collection'))
                     ]),
                     body : m('.modal-body', [
                         m('p', _('Collections are groups of projects that help you organize your work. After you create your collection, you can add projects by dragging them into the collection.')),
                         m('.form-group', [
-                            m('label[for="addCollInput].f-w-lg.text-bigger', 'Collection name'),
+                            m('label[for="addCollInput].f-w-lg.text-bigger', _('Collection name')),
                             m('input[type="text"].form-control#addCollInput', {
                                 onkeyup: function (ev){
                                     var val = $(this).val();
@@ -1558,12 +1558,12 @@ var Collections = {
                                     ctrl.resetAddCollection();
                                     $osf.trackClick('myProjects', 'add-collection', 'click-cancel-button');
                                 }
-                            }, 'Cancel'),
+                            }, _('Cancel')),
                         ctrl.isValid() ? m('button[type="button"].btn.btn-success', { onclick : function() {
                             ctrl.addCollection();
                             $osf.trackClick('myProjects', 'add-collection', 'click-add-button');
                         }},'Add')
-                            : m('button[type="button"].btn.btn-success[disabled]', 'Add')
+                            : m('button[type="button"].btn.btn-success[disabled]', _('Add'))
                     ])
                 }),
                 m.component(mC.modal, {
@@ -1574,12 +1574,12 @@ var Collections = {
                         }}, [
                             m('span[aria-hidden="true"]','×')
                         ]),
-                        m('h3.modal-title', 'Rename collection')
+                        m('h3.modal-title', _('Rename collection'))
                     ]),
                     body: m('.modal-body', [
                         m('.form-inline', [
                             m('.form-group', [
-                                m('label[for="addCollInput]', 'Rename to: '),
+                                m('label[for="addCollInput]', _('Rename to: ')),
                                 m('input[type="text"].form-control.m-l-sm',{
                                     onkeyup: function(ev){
                                         var val = $(this).val();
@@ -1735,7 +1735,7 @@ var Breadcrumbs = {
                                 }}, [
                                     m('span[aria-hidden="true"]','×')
                                 ]),
-                                m('h4', 'Parent projects'),
+                                m('h4', _('Parent projects')),
                                 args.breadcrumbs().map(function(item, index, array){
                                     if(index === array.length-1){
                                         return m('.db-parent-row.btn', {
@@ -1922,7 +1922,7 @@ var Filters = {
         return m('.db-filters.m-t-lg',
             [
                 m('h5.m-t-sm', [
-                    'Contributors ',
+                    _('Contributors '),
                     args.viewOnly ? '' : m('i.fa.fa-question-circle.text-muted', {
                         'data-toggle':  'tooltip',
                         'title': _('Click a contributor\'s name to see projects that you have in common.'),
@@ -1936,7 +1936,7 @@ var Filters = {
                     args.currentView().fetcher.loaded === 0 && !args.currentView().fetcher.isEmpty() ? m('.ball-beat.text-center.m-t-md', m('')) : returnNameFilters()
                 ]),
                 m('h5.m-t-sm', [
-                    'Tags',
+                    _('Tags'),
                     m('.pull-right',
                         args.tagFilters.length && ctrl.tagTotalPages() > 1 ? m.component(MicroPagination, { currentPage : ctrl.tagCurrentPage, totalPages : ctrl.tagTotalPages, type: 'tags' }) : ''
                         )
@@ -2003,21 +2003,21 @@ var Information = {
                             m('p.db-info-meta.text-muted', [
                                 resourceType === 'preprints' && item.attributes.reviews_state !== 'initial' && item.attributes.reviews_state !== null ? m('.text-capitalize', 'Status: ' + item.attributes.reviews_state) : resourceType === 'preprints' && item.attributes.date_withdrawn !== null ? 'Status: Withdrawn' : '',  // is a preprint, has a state, provider uses moderation
                                 resourceType === 'preprints' && item.attributes.is_published === true ? m('.text-capitalize', 'Published: ' + item.attributes.is_published) : '',
-                                m('', 'Visibility: ' + (item.attributes.public ? 'Public' : 'Private')),
+                                m('', _('Visibility: ') + (item.attributes.public ? _('Public') : _('Private'))),
                                 m('', [
-                                  m('span', 'Category: '),
+                                  m('span', _('Category: ')),
                                   m('span', { className : mHelpers.getIcon(category) }),
                                   m('span.text-capitalize', ' ' + category)
                                 ]),
-                                m('.text-capitalize', 'Permission: ' + permission),
-                                m('', 'Last Modified on: ' + (item.date ? item.date.local : ''))
+                                m('.text-capitalize', _('Permission: ') + permission),
+                                m('', _('Last Modified on: ') + (item.date ? item.date.local : ''))
                             ]),
                             m('p', [
                                 m('span', {style: 'white-space:pre-wrap'}, $osf.decodeText(item.attributes.description))
                             ]),
                             item.attributes.tags.length > 0 ?
                             m('p.m-t-md', [
-                                m('h5', 'Tags'),
+                                m('h5', _('Tags')),
                                 item.attributes.tags.map(function(tag){
                                     return m('a.tag', { href : '/search/?q=(tags:' + tag + ')', onclick: function(){
                                         $osf.trackClick('myProjects', 'information-panel', 'navigate-to-search-by-tag');

@@ -57,9 +57,9 @@ var PrivateLinkViewModel = function(url) {
     }
 
     function onFetchError() {
-        $osf.growl('Could not retrieve projects.', 'Please refresh the page or ' +
-                'contact ' + $osf.osfSupportLink() + ' if the ' +
-                'problem persists.');
+        $osf.growl(_('Could not retrieve projects.'), _('Please refresh the page or ') +
+                _('contact ') + $osf.osfSupportLink() + _(' if the ') +
+                _('problem persists.'));
     }
 
     function fetch() {
