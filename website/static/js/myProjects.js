@@ -766,7 +766,7 @@ var MyProjects = {
                     } else if (lastcrumb.data.nodeType === 'registrations'){
                         if (self.institutionId) {
                             template = m('.db-non-load-template.m-md.p-md.osf-box',
-                                '_(There have been no completed registrations for this institution, but you can view the '),
+                                _('There have been no completed registrations for this institution, but you can view the '),
                                 m('a', {href: 'https://rdm.nii.ac.jp/explore/activity/#newPublicRegistrations'}, _('newest public registrations')),
                                 _(' or '),
                                 m('a', {href: 'https://rdm.nii.ac.jp/explore/activity/#popularPublicRegistrations'}, _('popular public registrations.'));
@@ -1333,8 +1333,8 @@ var Collections = {
                 self.collectionMenuObject().item.label = title;
             }, function(){
                 var name = self.collectionMenuObject().item.label;
-                var message = '"' + name + '_(" could not be renamed.)';
-                $osf.growl(message, '_(Please try again)', 'danger', 5000);
+                var message = '"' + name + _('" could not be renamed.');
+                $osf.growl(message, _('Please try again'), 'danger', 5000);
                 Raven.captureMessage(message, {extra: {collectionObject: self.collectionMenuObject() }});
             });
             self.dismissModal();

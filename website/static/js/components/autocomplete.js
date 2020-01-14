@@ -149,19 +149,19 @@ $.extend(DraftRegistrationsSearchViewModel.prototype, BaseSearchViewModel.protot
                     $('<p>').append(
                         $('<small>', {
                             className: 'm-l-md text-muted',
-                            text: '_(Initiated by: )' + item.value.initiator.name
+                            text: _('Initiated by: ') + item.value.initiator.name
                         })
                     ),
                     $('<p>').append(
                         $('<small>', {
                             className: 'm-l-md text-muted',
-                            text: '_(Initiated: )' + dateInitiated.local
+                            text: _('Initiated: ') + dateInitiated.local
                         })
                     ),
                     $('<p>').append(
                         $('<small>', {
                             className: 'm-l-md text-muted',
-                            text: '_(Last updated: )' + dateUpdated.local
+                            text: _('Last updated: ') + dateUpdated.local
                         })
                     )
                 ]

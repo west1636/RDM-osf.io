@@ -309,7 +309,7 @@ BaseViewModel.prototype.handleSuccess = function() {
         this.mode('view');
     } else {
         this.changeMessage(
-            '_(Settings updated)',
+            _('Settings updated'),
             'text-success',
             5000
         );
@@ -716,7 +716,7 @@ var SocialViewModel = function(urls, modes, preventUnsaved) {
         var profileWebsites = ko.toJS(self.profileWebsites());
             bootbox.confirm({
                 title: 'Remove website?',
-                message: _('Are you sure you want to remove this website from your profile?)',
+                message: _('Are you sure you want to remove this website from your profile?'),
                 callback: function(confirmed) {
                     if (confirmed) {
                         var idx = profileWebsites.indexOf(profileWebsite);

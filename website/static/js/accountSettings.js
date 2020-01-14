@@ -219,13 +219,13 @@ var UserProfileViewModel = oop.extend(ChangeMessageMixin, {
                 if (emailAdded === true) {
                     var safeAddr = $osf.htmlEscape(email.address());
                     bootbox.alert({
-                                title: '_(Confirmation email sent'),
+                                title: _('Confirmation email sent'),
                                 message: '<em>' + safeAddr + '</em>' + ' was added to your account.' +
                                 ' You will receive a confirmation email at ' + '<em>' + safeAddr + '</em>.' +
                                 _(' Please click the link in your email to confirm this action. You will be required to enter your password.'),
                                 buttons: {
                                     ok: {
-                                        label: '_(Close)',
+                                        label: _('Close'),
                                         className: 'btn-default'
                                     }
                                 }
@@ -251,7 +251,7 @@ var UserProfileViewModel = oop.extend(ChangeMessageMixin, {
                         $osf.growl(
                             'Email confirmation resent to <em>' + safeAddr + '</em>',
                             'You will receive a new confirmation email at <em>' + safeAddr  + '</em>.' +
-                            '_( Please log out of this account and check your email to confirm this action.'),
+                            _(' Please log out of this account and check your email to confirm this action.'),
                             'success');
                     });
                 }
@@ -287,7 +287,7 @@ var UserProfileViewModel = oop.extend(ChangeMessageMixin, {
                 }
             });
         } else {
-            $osf.growl('Error', _('Please refresh the page and try again.)', 'danger');
+            $osf.growl('Error', _('Please refresh the page and try again.'), 'danger');
         }
     },
     makeEmailPrimary: function (email) {
@@ -300,7 +300,7 @@ var UserProfileViewModel = oop.extend(ChangeMessageMixin, {
                 $osf.growl('Made Primary', '<em>' + addrText + '<em>', 'success');
             });
         } else {
-            $osf.growl('Error', '_(Please refresh the page and try again.)', 'danger');
+            $osf.growl('Error', _('Please refresh the page and try again.'), 'danger');
         }
     }
 });
@@ -313,7 +313,7 @@ var ExternalIdentityViewModel = oop.defclass({
     _removeIdentity: function(identity) {
         var request = $osf.ajaxJSON('PATCH', this.urls.delete, {'data': {'identity': identity}});
         request.done(function() {
-            $osf.growl('Success', '_(You have revoked this connected identity.)', 'success');
+            $osf.growl('Success', _('You have revoked this connected identity.'), 'success');
             window.location.reload();
         }.bind(this));
         request.fail(function(xhr, status, error) {
@@ -334,8 +334,8 @@ var ExternalIdentityViewModel = oop.defclass({
     removeIdentity: function (identity) {
         var self = this;
         bootbox.confirm({
-            title: _('Remove authorization?)',
-            message: _('Are you sure you want to remove this authorization?)',
+            title: _('Remove authorization?'),
+            message: _('Are you sure you want to remove this authorization?'),
             callback: function(confirmed) {
                 if (confirmed) {
                     return self._removeIdentity(identity);
@@ -343,7 +343,7 @@ var ExternalIdentityViewModel = oop.defclass({
             },
             buttons:{
                 confirm:{
-                    label:'_(Remove)',
+                    label:_('Remove'),
                     className:'btn-danger'
                 }
             }
@@ -383,7 +383,7 @@ var UpdateDefaultStorageLocation = oop.defclass({
                 'Your attempt to change your default storage location has failed. Please contact ' + $osf.osfSupportLink() + ' if the problem persists.',
                 'danger'
             );
-            Raven.captureMessage(_('Error updating default storage location )', {
+            Raven.captureMessage(_('Error updating default storage location '), {
                 extra: {
                     url: this.urls.update,
                     status: status,
@@ -431,7 +431,7 @@ var DeactivateAccountViewModel = oop.defclass({
     _cancelRequestDeactivation: function() {
         var request = $osf.postJSON(this.urls.cancelDeactivate, {});
         request.done(function() {
-            $osf.growl('Success', '_(An GakuNin RDM account is no longer up for review.'), 'success');
+            $osf.growl('Success', _('An GakuNin RDM account is no longer up for review.'), 'success');
             this.requestPending(false);
         }.bind(this));
         request.fail(function(xhr, status, error) {
@@ -466,7 +466,7 @@ var DeactivateAccountViewModel = oop.defclass({
             },
             buttons:{
                 confirm:{
-                    label:'_(Request)',
+                    label:_('Request'),
                     className:'btn-danger'
                 }
             }
@@ -475,7 +475,7 @@ var DeactivateAccountViewModel = oop.defclass({
     cancel: function () {
         var self = this;
         bootbox.confirm({
-            title: '_(Cancel deactivation request?)',
+            title: _('Cancel deactivation request?'),
             message: _('Are you sure you want to rescind your account deactivation request? This will preserve your account status.'),
             callback: function (confirmed) {
                 if (confirmed) {
@@ -484,7 +484,7 @@ var DeactivateAccountViewModel = oop.defclass({
             },
             buttons: {
                 confirm: {
-                    label: '_(Cancel Deactivation Request)',
+                    label: _('Cancel Deactivation Request'),
                     className: 'btn-success'
                 }
             }
@@ -527,7 +527,7 @@ var ExportAccountViewModel = oop.defclass({
     submit: function () {
         var self = this;
         bootbox.confirm({
-            title: '_(Request account export?)',
+            title: _('Request account export?'),
             message: _('Are you sure you want to request account export?'),
             callback: function(confirmed) {
                 if (confirmed) {

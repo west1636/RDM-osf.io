@@ -38,7 +38,7 @@ var AddonFolderPickerViewModel = oop.extend(FolderPickerViewModel, {
         });
         self.messages.submitSettingsSuccess =  ko.pureComputed(function() {
             var name = self.options.decodeFolder($osf.htmlEscape(self.folder().name));
-            return '_(Successfully linked ")' + name + _('". Go to the <a href="') +
+            return _('Successfully linked "') + name + _('". Go to the <a href="') +
                 self.urls().files + _('">Files page</a> to view your content.');
         });
         // Overrides

@@ -243,7 +243,7 @@ var FileViewPage = {
                 },
                 buttons:{
                     confirm:{
-                        label: _('Check out file)',
+                        label: _('Check out file'),
                         className: 'btn-warning'
                     }
                 }
