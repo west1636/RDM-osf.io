@@ -769,7 +769,7 @@ var MyProjects = {
                                 _('There have been no completed registrations for this institution, but you can view the '),
                                 m('a', {href: 'https://rdm.nii.ac.jp/explore/activity/#newPublicRegistrations'}, _('newest public registrations')),
                                 _(' or '),
-                                m('a', {href: 'https://rdm.nii.ac.jp/explore/activity/#popularPublicRegistrations'}, _('popular public registrations.'));
+                                m('a', {href: 'https://rdm.nii.ac.jp/explore/activity/#popularPublicRegistrations'}, _('popular public registrations.')));
                         } else {
                             template = m('.db-non-load-template.m-md.p-md.osf-box',
                             _('You have not made any registrations yet. Go to '),
