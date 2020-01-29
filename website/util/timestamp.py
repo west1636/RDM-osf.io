@@ -35,7 +35,7 @@ from inspect import currentframe
 
 logger = logging.getLogger(__name__)
 
-ENABLE_DEBUG = True#False
+ENABLE_DEBUG = False
 
 def DEBUG(msg):
     if ENABLE_DEBUG:

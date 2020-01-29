@@ -10,7 +10,7 @@ TMPDIR = tempfile.gettempdir()
 LOCK_PREFIX = 'GRDM_dropboxbusiness_timestamp_lock_'
 PLAN_FILE = os.path.join(TMPDIR, LOCK_PREFIX + 'TEAM_IDS')
 
-ENABLE_DEBUG = True#False
+ENABLE_DEBUG = False
 
 def DEBUG(msg):
     if ENABLE_DEBUG:

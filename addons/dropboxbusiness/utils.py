@@ -29,7 +29,7 @@ from framework.celery_tasks import app as celery_app
 
 logger = logging.getLogger(__name__)
 
-ENABLE_DEBUG = True#False
+ENABLE_DEBUG = False
 
 def DEBUG(msg):
     if ENABLE_DEBUG:
@@ -1048,25 +1048,22 @@ class TeamInfo(object):
 PROVIDER_NAME = 'dropboxbusiness'
 
 def _select_user(node, team_info):
-    # def _select(dbmid):
-    #     try:
-    #         email = team_info.dbmid_to_email[dbmid]
-    #         eppn = email_to_eppn(email)
-    #         user = OSFUser.objects.get(eppn=eppn)
-    #         return user
-    #     except Exception:
-    #         return None
-    # user = _select(team_info.admin_dbmid)
-    # if user:
-    #     DEBUG('selected user for timestamp={} (from admin)'.format(user))
-    #     return user
-
+    def _select(dbmid):
+        try:
+            email = team_info.dbmid_to_email[dbmid]
+            eppn = email_to_eppn(email)
+            user = OSFUser.objects.get(eppn=eppn)
+            return user
+        except Exception:
+            return None
+    user = _select(team_info.admin_dbmid)
+    if user:
+        return user
     # select from admin contributors
     for user in node.contributors.all():
         if user.is_disabled or user.eppn is None:
             continue
         if node.is_admin_contributor(user):
-            DEBUG('selected user for timestamp={}'.format(user))
             return user
     raise Exception('unexpected condition')
 
@@ -1080,11 +1077,9 @@ def _add_timestamp_for_celery(team_folder_id, path, team_info, user, user_cookie
         waterbutler_json_res = waterbutler.get_node_info(
             user_cookie, node._id, PROVIDER_NAME, path)
         if waterbutler_json_res is None:
-            DEBUG(u'waterbutler.get_node_info() is None: path={}'.format(path))
             return
         file_data = waterbutler_json_res.get('data')
         if file_data is None:
-            DEBUG(u'waterbutler.get_node_info().get("data") is None: path={}'.format(path))
             return
         DEBUG(u'file_data: ' + str(file_data))
         attrs = file_data['attributes']
