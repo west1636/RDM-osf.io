@@ -18,7 +18,7 @@ class S3CompatConnection(S3Connection):
                  calling_format=None, path='/',
                  provider='aws', bucket_class=Bucket, security_token=None,
                  suppress_consec_slashes=True, anon=False,
-                 validate_certs=None, profile_name=None):
+                 validate_certs=False, profile_name=None):
         super(S3CompatConnection, self).__init__(aws_access_key_id,
                 aws_secret_access_key,
                 is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
