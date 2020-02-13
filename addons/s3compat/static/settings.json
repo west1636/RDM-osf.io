@@ -12,7 +12,9 @@
                              "eu-central": {"name": "eu-central", "host": "s3.eu-central-1.wasabisys.com"},
                              "": {"name": "Virginia"}}},
                            {"name": "RDM Minio",
-                           "host": "minio.rdm.nii.ac.jp"}
+                           "host": "minio.rdm.nii.ac.jp"},
+                           {"name": "AS100",
+                           "host": "157.1.207.248:80"}
                            ],
     "encryptUploads": true
 }
