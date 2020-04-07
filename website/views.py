@@ -309,6 +309,7 @@ def resolve_guid(guid, suffix=None):
                 request.args = request.args.copy()
                 request.args.update({'action': 'download'})
                 # Do not include the `download` suffix in the url rebuild.
+                logger.info('THIS: {}: 01'.format(__name__))
                 url = _build_guid_url(urllib.unquote(file_referent.deep_url))
                 return proxy_url(url)
 
@@ -333,6 +334,7 @@ def resolve_guid(guid, suffix=None):
                 request.args.update({'action': 'addtimestamp'})
                 # Do not include the `addtimestamp` suffix in the url rebuild.
                 # Do not include the `addtimestamp` suffix in the url rebuild.
+                logger.info('THIS: {}: 02'.format(__name__))
                 url = _build_guid_url(urllib.unquote(file_referent.deep_url))
                 return proxy_url(url)
         elif suffix and suffix.rstrip('/').split('/')[-1].lower() == 'addtimestamp':
@@ -341,6 +343,7 @@ def resolve_guid(guid, suffix=None):
             request.args.update({'action': 'addtimestamp'})
             # Do not include the `addtimestamp` suffix in the url rebuild.
             # Do not include the `addtimestamp` suffix in the url rebuild.
+            logger.info('THIS: {}: 03'.format(__name__))
             url = _build_guid_url(urllib.unquote(referent.deep_url), suffix.split('/')[0])
             return proxy_url(url)
 
@@ -377,12 +380,14 @@ def resolve_guid(guid, suffix=None):
 
                 return send_from_directory(registries_dir, 'index.html')
 
+        logger.info('THIS: {}: 04'.format(__name__))
         url = _build_guid_url(urllib.unquote(referent.deep_url), suffix)
         return proxy_url(url)
 
     # GUID not found; try lower-cased and redirect if exists
     guid_object_lower = Guid.load(guid.lower())
     if guid_object_lower:
+        logger.info('THIS: {}: 05'.format(__name__))
         return redirect(
             _build_guid_url(guid.lower(), suffix)
         )
