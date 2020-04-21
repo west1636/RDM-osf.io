@@ -213,7 +213,6 @@ MIDDLEWARE = (
     'api.base.middleware.PostcommitTaskMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -259,7 +258,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, '../website/static'),
 )
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'en-us'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -329,14 +328,3 @@ ANNOUNCEMENT_EMAIL_FROM = 'noreply@rdm.rcos.nii.ac.jp'
 
 # Addon Controls
 ENABLE_FORCE_CHECK = False
-
-def parent_dir(path):
-    '''Return the parent of a directory.'''
-    return os.path.abspath(os.path.join(path, os.pardir))
-
-HERE = os.path.dirname(os.path.abspath(__file__))
-BASE_PATH = parent_dir(parent_dir(HERE))  # admin/ directory
-
-LOCALE_PATHS = (
-    os.path.join(BASE_PATH, 'translations'),
-)

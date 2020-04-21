@@ -11,8 +11,6 @@ from website.project import signals
 
 from framework.celery_tasks import app
 
-from django.utils.translation import ugettext_lazy as _
-
 
 class NotificationsDict(dict):
     def __init__(self):
@@ -499,8 +497,10 @@ def format_user_and_project_subscriptions(user):
         {
             'node': {
                 'id': user._id,
-                'title': unicode(_('Default Notification Settings')),
-                'help': unicode(_('These are default settings for new projects you create or are added to. Modifying these settings will not modify settings on existing projects.'))
+                'title': 'Default Notification Settings',
+                'help': 'These are default settings for new projects you create ' +
+                        'or are added to. Modifying these settings will not ' +
+                        'modify settings on existing projects.'
             },
             'kind': 'heading',
             'children': format_user_subscriptions(user)
@@ -508,7 +508,7 @@ def format_user_and_project_subscriptions(user):
         {
             'node': {
                 'id': '',
-                'title': unicode(_('Project Notifications')),
+                'title': 'Project Notifications',
                 'help': 'These are settings for each of your projects. Modifying ' +
                         'these settings will only modify the settings for the selected project.'
             },

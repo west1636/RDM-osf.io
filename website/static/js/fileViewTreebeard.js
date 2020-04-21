@@ -2,11 +2,6 @@ var Fangorn = require('js/fangorn').Fangorn;
 var m = require('mithril');
 var $osf = require('js/osfHelpers');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
-
 function FileViewTreebeard(data) {
 
     // Set item.branch to show the branch of the rendered GitHub / Bitbucket file instead of the default branch
@@ -62,7 +57,7 @@ function FileViewTreebeard(data) {
         },
         columnTitles: function () {
             return [{
-                title: _('Name'),
+                title: 'Name',
                 width: '100%'
             }];
         },
@@ -119,7 +114,7 @@ function FileViewTreebeard(data) {
                         folderIcons: true,
                         filter: true,
                         custom: function () {
-                            return m('span.text-muted', agh.sprintf(_('Uploading %1$s...'), item.data.name ));
+                            return m('span.text-muted', 'Uploading ' + item.data.name + '...');
                         }
                     }
                 ];

@@ -11,10 +11,6 @@ require('jquery-qrcode');
 var osfHelpers = require('js/osfHelpers');
 var ChangeMessageMixin = require('js/changeMessage');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
 
 function ViewModel(settingsUrl, qrCodeSelector) {
     var self = this;
@@ -175,8 +171,11 @@ ViewModel.prototype.enableTwofactorConfirm = function() {
 ViewModel.prototype.enableTwofactor = function() {
     var self = this;
     bootbox.confirm({
-        title:  _('Enable Two-factor Authentication'),
-        message: _('Enabling two-factor authentication will not immediately activate this feature for your account. You will need to follow the steps that appear below to complete the activation of two-factor authentication for your account.'),
+        title: 'Enable Two-factor Authentication',
+        message: 'Enabling two-factor authentication will not immediately activate ' +
+            'this feature for your account. You will need to follow the ' +
+            'steps that appear below to complete the activation of two-factor authentication ' +
+            'for your account.',
         callback: function(confirmed) {
             if (confirmed) {
                 self.enableTwofactorConfirm.call(self);
@@ -184,7 +183,7 @@ ViewModel.prototype.enableTwofactor = function() {
         },
         buttons:{
             confirm:{
-                label:_('Enable'),
+                label:'Enable',
             }
         }
     });

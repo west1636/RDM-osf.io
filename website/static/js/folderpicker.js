@@ -17,9 +17,6 @@ var $ = require('jquery');
 var m = require('mithril');
 var Treebeard = require('treebeard');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 function treebeardToggleCheck(item) {
     return ((typeof item.data.hasChildren === 'undefined') || item.data.hasChildren);
@@ -100,11 +97,11 @@ function treebeardSelectView(item) {
 
 function treebeardColumnTitle() {
     return [{
-        title: _('Folders'),
+        title: 'Folders',
         width: '75%',
         sort: false
     }, {
-        title: _('Select'),
+        title: 'Select',
         width: '25%',
         sort: false
     }];

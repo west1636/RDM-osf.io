@@ -12,11 +12,6 @@ var rt = require('js/responsiveTable');
 var $osf = require('./osfHelpers');
 require('js/filters');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
-var agh = require('agh.sprintf');
 
 var AccessRequestModel = function(accessRequest, pageOwner, isRegistration, isParentAdmin, options) {
     var self = this;
@@ -85,9 +80,9 @@ var AccessRequestModel = function(accessRequest, pageOwner, isRegistration, isPa
 
         request.fail(function(xhr, status, error){
             $osf.unblock();
-            var errorMessage = lodashGet(xhr, 'responseJSON.message') || (agh.sprintf(_('There was a problem trying to %1$s the request from the user. %2$s'),trigger,osfLanguage.REFRESH_OR_SUPPORT));
-            $osf.growl(agh.sprintf(_('Could not %1$s access request'),trigger), errorMessage);
-            Raven.captureMessage(agh.sprintf(_('Could not %1$s access request'),trigger), {
+            var errorMessage = lodashGet(xhr, 'responseJSON.message') || ('There was a problem trying to ' + trigger + ' the request from the user. ' + osfLanguage.REFRESH_OR_SUPPORT);
+            $osf.growl('Could not '+ trigger + ' access request', errorMessage);
+            Raven.captureMessage('Could not ' + trigger + ' access request', {
                 extra: {
                     url: requestUrl,
                     status: status,
@@ -115,9 +110,9 @@ var AccessRequestsViewModel = function(accessRequests, user, isRegistration, tab
     self.table = $(table);
 
     self.permissionMap = {
-        read: _('Read'),
-        write: _('Read + Write'),
-        admin: _('Administrator')
+        read: 'Read',
+        write: 'Read + Write',
+        admin: 'Administrator'
     };
 
     self.permissionList = Object.keys(self.permissionMap);

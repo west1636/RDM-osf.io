@@ -12,10 +12,6 @@ var $osf = require('./osfHelpers');
 var Paginator = require('./paginator');
 var projectSettingsTreebeardBase = require('js/projectSettingsTreebeardBase');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 function removeNodesContributors(contributor, nodes) {
 
     var removeUrl = window.contextVars.node.urls.api + 'contributor/remove/';
@@ -56,9 +52,9 @@ var RemoveContributorViewModel = oop.extend(Paginator, {
         self.page = ko.observable(self.REMOVE);
         self.pageTitle = ko.computed(function() {
             return {
-                remove: _('Remove Contributor'),
-                removeAll: _('Remove Contributor'),
-                removeNoChildren: _('Remove Contributor')
+                remove: 'Remove Contributor',
+                removeAll: 'Remove Contributor',
+                removeNoChildren: 'Remove Contributor'
             }[self.page()];
         });
         self.userName = ko.observable(userName);
@@ -208,8 +204,8 @@ var RemoveContributorViewModel = oop.extend(Paginator, {
             nodesOriginal = projectSettingsTreebeardBase.getNodesOriginal(response[0], nodesOriginal);
             self.nodesOriginal(nodesOriginal);
         }).fail(function(xhr, status, error) {
-            $osf.growl('Error', _('Unable to retrieve projects and components'));
-            Raven.captureMessage(_('Unable to retrieve projects and components'), {
+            $osf.growl('Error', 'Unable to retrieve projects and components');
+            Raven.captureMessage('Unable to retrieve projects and components', {
                 extra: {
                     url: self.nodeApiUrl, status: status, error: error
                 }
@@ -232,8 +228,8 @@ var RemoveContributorViewModel = oop.extend(Paginator, {
             } else {
                 window.location.reload();
             }        }).fail(function(xhr, status, error) {
-            $osf.growl('Error', _('Unable to delete Contributor'));
-            Raven.captureMessage(_('Could not DELETE Contributor.') + error, {
+            $osf.growl('Error', 'Unable to delete Contributor');
+            Raven.captureMessage('Could not DELETE Contributor.' + error, {
                 extra: {
                     url: window.contextVars.node.urls.api + 'contributor/remove/', status: status, error: error
                 }

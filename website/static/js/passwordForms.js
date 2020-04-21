@@ -10,10 +10,6 @@ var $osf = require('./osfHelpers');
 var ChangeMessageMixin = require('js/changeMessage');
 require('js/knockoutPassword');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 ko.validation.init({
     insertMessages : false
 });
@@ -22,7 +18,7 @@ ko.validation.rules.complexity = {
     validator: function (val, minimumComplexity) {
         return zxcvbn(val).score >= minimumComplexity;
     },
-    message: _('Please enter a more complex password.')
+    message: 'Please enter a more complex password.'
 };
 
 ko.validation.registerExtenders();
@@ -116,7 +112,7 @@ var ChangePasswordViewModel = oop.extend(BaseViewModel, {
                         return true;
                     }
                 },
-                'message': _('Your password cannot be the same as your email address.'),
+                'message': 'Your password cannot be the same as your email address.',
                 params: self.email1
             }
         });
@@ -131,7 +127,7 @@ var ChangePasswordViewModel = oop.extend(BaseViewModel, {
                         return true;
                     }
                 },
-                'message': _('Your new password cannot be the same as your old password.'),
+                'message': 'Your new password cannot be the same as your old password.',
                 params: self.oldPassword
             }
         });
@@ -142,7 +138,7 @@ var ChangePasswordViewModel = oop.extend(BaseViewModel, {
                 validator: function(val, other) {
                     return String(val).toLowerCase() === String(other).toLowerCase();
                 },
-                'message': _('Passwords must match.'),
+                'message': 'Passwords must match.',
                 params: self.password
             }
         });
@@ -177,7 +173,7 @@ var SetPasswordViewModel = oop.extend(BaseViewModel, {
                 validator: function(val, other) {
                     return val;
                 },
-                'message': _('This field is required.')
+                'message': 'This field is required.'
             }
         });
 
@@ -191,7 +187,7 @@ var SetPasswordViewModel = oop.extend(BaseViewModel, {
                         return true;
                     }
                 },
-                'message': _('Your password cannot be the same as your email address.'),
+                'message': 'Your password cannot be the same as your email address.',
                 params: self.email1
             }
         });
@@ -202,7 +198,7 @@ var SetPasswordViewModel = oop.extend(BaseViewModel, {
                 validator: function(val, other) {
                     return String(val).toLowerCase() === String(other).toLowerCase();
                 },
-                'message': _('Passwords must match.'),
+                'message': 'Passwords must match.',
                 params: self.password
             }
         });
@@ -229,7 +225,7 @@ var SignUpViewModel = oop.extend(BaseViewModel, {
                 validator: function(val, other) {
                     return String(val).toLowerCase() === String(other).toLowerCase();
                 },
-                'message': _('Email addresses must match.'),
+                'message': 'Email addresses must match.',
                 params: self.email1
             }
         });
@@ -240,7 +236,7 @@ var SignUpViewModel = oop.extend(BaseViewModel, {
                 validator: function(val) {
                     return val;
                 },
-                'message': _('This field is required.')
+                'message': 'This field is required.'
             }
         });
 
@@ -257,7 +253,7 @@ var SignUpViewModel = oop.extend(BaseViewModel, {
                         return true;
                     }
                 },
-                'message': _('Your password cannot be the same as your email address.'),
+                'message': 'Your password cannot be the same as your email address.',
                 params: self.email1
             }
         });
@@ -300,7 +296,7 @@ var SignUpViewModel = oop.extend(BaseViewModel, {
         var submitUrl = '/api/v1/register/';
         if (self.submitted()) {
             self.changeMessage(
-                _('You have already submitted. You cannot sign up more than once.'),
+                'You have already submitted. You cannot sign up more than once.',
                 'text-danger p-xs'
             );
             return false;
@@ -321,7 +317,7 @@ var SignUpViewModel = oop.extend(BaseViewModel, {
             var captchaResponse = $('#g-recaptcha-response').val();
             if (captchaResponse.length === 0) {
                 self.changeMessage(
-                    _('Please complete reCAPTCHA'),
+                    'Please complete reCAPTCHA',
                     'text-danger p-xs'
                 );
                 return false;

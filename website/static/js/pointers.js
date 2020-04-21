@@ -22,14 +22,9 @@ var nodeLinksUrl = $osf.apiV2Url(
   }
 );
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
-
-var SEARCH_ALL_SUBMIT_TEXT = _('Search all projects');
-var SEARCH_MY_PROJECTS_SUBMIT_TEXT = _('Search my projects');
-var SEARCHING_TEXT = _('Searching...');
+var SEARCH_ALL_SUBMIT_TEXT = 'Search all projects';
+var SEARCH_MY_PROJECTS_SUBMIT_TEXT = 'Search my projects';
+var SEARCHING_TEXT = 'Searching...';
 
 var AddPointerViewModel = oop.extend(Paginator, {
     constructor: function(nodeTitle){
@@ -132,7 +127,7 @@ var AddPointerViewModel = oop.extend(Paginator, {
             var nodes = response.data;
             var count = nodes.length;
             if (!count){
-                self.errorMsg(_('No results found.'));
+                self.errorMsg('No results found.');
                 self.doneSearching();
                 return;
             }
@@ -182,7 +177,7 @@ var AddPointerViewModel = oop.extend(Paginator, {
             });
         });
         requestNodes.fail(function(xhr, status, error){
-            var msg = _('Error retrieving nodes');
+            var msg = 'Error retrieving nodes';
             Raven.captureMessage(msg, {
                 extra: {
                     url: url,
@@ -327,9 +322,9 @@ var AddPointerViewModel = oop.extend(Paginator, {
     getDates: function(data){
         var date = '';
         if (data.type === 'registrations'){
-            date = _('Registered: ') + data.dateRegistered.local;
+            date = 'Registered: ' + data.dateRegistered.local;
         } else {
-            date = _('Created: ') + data.dateCreated.local + _('\nModified: ') + data.dateModified.local;
+            date = 'Created: ' + data.dateCreated.local + '\nModified: ' + data.dateModified.local;
         }
         return date;
     },
@@ -361,7 +356,7 @@ var LinksViewModel = function($elm){
                 self.links(response.pointed);
             }).fail(function(){
                 $elm.modal('hide');
-                $osf.growl('Error:', _('Could not get links'));
+                $osf.growl('Error:', 'Could not get links');
             });
         }
     });

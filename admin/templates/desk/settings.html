@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-{% load i18n %}
 {% load static %}
 {% block title %}
-    <title>{% trans "Desk user settings" %}</title>
+    <title>Desk user settings</title>
 {% endblock title %}
 {% block content %}
     <form class="well" method="post" action="{% url 'auth:desk' %}">

@@ -6,11 +6,6 @@ var Raven = require('raven-js');
 var Markdown = require('pagedown-ace-converter');
 Markdown.getSanitizingConverter = require('pagedown-ace-sanitizer').getSanitizingConverter;
 require('imports-loader?Markdown=pagedown-ace-converter!pagedown-ace-editor');
-
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 /**
  * Binding handler that instantiates an ACE editor.
  * The value accessor must be a ko.observable.
@@ -85,13 +80,13 @@ function ViewModel(url, viewText) {
     self.statusDisplay = ko.computed(function() {
         switch(self.throttledStatus()) {
             case 'connected':
-                return _('Live editing mode');
+                return 'Live editing mode';
             case 'connecting':
-                return _('Attempting to connect');
+                return 'Attempting to connect';
             case 'unsupported':
-                return _('Unsupported browser');
+                return 'Unsupported browser';
             default:
-                return _('Unavailable: Live editing');
+                return 'Unavailable: Live editing';
         }
     });
 
@@ -130,9 +125,9 @@ function ViewModel(url, viewText) {
 
     self.wikisDiffer = function(wiki1, wiki2) {
         // Handle inconsistencies in newline notation
-        var clean1 = typeof wiki1 === 'string' ?
+        var clean1 = typeof wiki1 === 'string' ? 
             wiki1.replace(/(\r\n|\n|\r)/gm, '\n') : '';
-        var clean2 = typeof wiki2 === 'string' ?
+         var clean2 = typeof wiki2 === 'string' ? 
             wiki2.replace(/(\r\n|\n|\r)/gm, '\n') : '';
         return clean1 !== clean2;
     };
@@ -152,9 +147,9 @@ function ViewModel(url, viewText) {
             self.initText(response.wiki_draft);
         });
         request.fail(function (xhr, textStatus, error) {
-            $osf.growl('Error',_('The wiki content could not be loaded.'));
+            $osf.growl('Error','The wiki content could not be loaded.');
             self.status('disconnected');
-            Raven.captureMessage(_('Could not GET wiki contents.'), {
+            Raven.captureMessage('Could not GET wiki contents.', {
                 extra: {
                     url: url,
                     textStatus: textStatus,
@@ -175,8 +170,8 @@ function ViewModel(url, viewText) {
 
     $(window).on('beforeunload', function() {
         if (self.changed() && self.status() !== 'connected') {
-            return _('There are unsaved changes to your wiki. If you exit ') +
-                _('the page now, those changes may be lost.');
+            return 'There are unsaved changes to your wiki. If you exit ' +
+                'the page now, those changes may be lost.';
         }
     });
 

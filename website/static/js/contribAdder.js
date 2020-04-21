@@ -18,19 +18,15 @@ var NodeSelectTreebeard = require('js/nodeSelectTreebeard');
 var m = require('mithril');
 var projectSettingsTreebeardBase = require('js/projectSettingsTreebeardBase');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
 
 function Contributor(data) {
     $.extend(this, data);
     if (data.n_projects_in_common === 1) {
-        this.displayProjectsInCommon = data.n_projects_in_common + _(' project in common');
+        this.displayProjectsInCommon = data.n_projects_in_common + ' project in common';
     } else if (data.n_projects_in_common === -1) {
-        this.displayProjectsInCommon = _('Yourself');
+        this.displayProjectsInCommon = 'Yourself';
     } else if (data.n_projects_in_common !== 0) {
-        this.displayProjectsInCommon = data.n_projects_in_common + _(' projects in common');
+        this.displayProjectsInCommon = data.n_projects_in_common + ' projects in common';
     } else {
         this.displayProjectsInCommon = '';
     }
@@ -71,9 +67,9 @@ AddContributorViewModel = oop.extend(Paginator, {
 
         //list of permission objects for select.
         self.permissionList = [
-            {value: 'read', text: _('Read')},
-            {value: 'write', text: _('Read + Write')},
-            {value: 'admin', text: _('Administrator')}
+            {value: 'read', text: 'Read'},
+            {value: 'write', text: 'Read + Write'},
+            {value: 'admin', text: 'Administrator'}
         ];
 
         self.inviteFromExplicitLink = false;
@@ -82,11 +78,11 @@ AddContributorViewModel = oop.extend(Paginator, {
             var flag = self.inviteFromExplicitLink;
             self.inviteFromExplicitLink = false;
             return {
-                whom: _('Add Contributors'),
-                which: _('Select Components'),
+                whom: 'Add Contributors',
+                which: 'Select Components',
                 invite: flag ?
-                    _('Invite new contributor by e-mail') :
-                    _('Add Unregistered Contributor')
+                    'Invite new contributor by e-mail' :
+                    'Add Unregistered Contributor'
             }[self.page()];
         });
         self.query = ko.observable();
@@ -331,17 +327,17 @@ AddContributorViewModel = oop.extend(Paginator, {
         var self = this;
         // Make sure Full Name is not blank
         if (!self.inviteName().trim().length) {
-            return _('Full Name is required.');
+            return 'Full Name is required.';
         }
         if (self.inviteEmail() && !$osf.isEmail(self.inviteEmail().replace(/^\s+|\s+$/g, ''))) {
-            return _('Not a valid email address.');
+            return 'Not a valid email address.';
         }
         // Make sure that entered email is not already in selection
         for (var i = 0, contrib; contrib = self.selection()[i]; ++i) {
             if (contrib.email) {
                 var contribEmail = contrib.email.toLowerCase().trim();
                 if (contribEmail === self.inviteEmail().toLowerCase().trim()) {
-                    return agh.sprintf(_('%1$s is already in queue.'),self.inviteEmail());
+                    return self.inviteEmail() + ' is already in queue.';
                 }
             }
         }
@@ -460,9 +456,9 @@ AddContributorViewModel = oop.extend(Paginator, {
         }).fail(function (xhr, status, error) {
             self.hide();
             $osf.unblock();
-            var errorMessage = lodashGet(xhr, 'responseJSON.message') || (agh.sprintf(_('There was a problem trying to add contributors%1$s.') , osfLanguage.REFRESH_OR_SUPPORT));
-            $osf.growl(_('Could not add contributors'), errorMessage);
-            Raven.captureMessage(_('Error adding contributors'), {
+            var errorMessage = lodashGet(xhr, 'responseJSON.message') || ('There was a problem trying to add contributors.' + osfLanguage.REFRESH_OR_SUPPORT);
+            $osf.growl('Could not add contributors', errorMessage);
+            Raven.captureMessage('Error adding contributors', {
                 extra: {
                     url: url,
                     status: status,
@@ -532,8 +528,8 @@ AddContributorViewModel = oop.extend(Paginator, {
             nodesState[nodeParent].isAdmin = false;
             self.nodesState(nodesState);
         }).fail(function (xhr, status, error) {
-            $osf.growl('Error', _('Unable to retrieve project settings'));
-            Raven.captureMessage(_('Could not GET project settings.'), {
+            $osf.growl('Error', 'Unable to retrieve project settings');
+            Raven.captureMessage('Could not GET project settings.', {
                 extra: {
                     url: treebeardUrl, status: status, error: error
                 }

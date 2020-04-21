@@ -2,9 +2,6 @@ var m = require('mithril');
 var osfHelpers = require('js/osfHelpers');
 var Treebeard = require('treebeard');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 function Meeting(data) {
     //  Treebeard version
@@ -18,31 +15,31 @@ function Meeting(data) {
         columnTitles : function _conferenceColumnTitles(item, col) {
              return [
                 {
-                    title: _('Title'),
+                    title: 'Title',
                     width: '50%',
                     sortType : 'text',
                     sort : true
                 },
                 {
-                    title: _('Author'),
+                    title: 'Author',
                     width : '10%',
                     sortType : 'text',
                     sort : true
                 },
                 {
-                    title: _('Category'),
+                    title: 'Category',
                     width : '10%',
                     sortType : 'text',
                     sort : true
                 },
                 {
-                    title: _('Date Created'),
+                    title: 'Date Created',
                     width: '15%',
                     sortType: 'date',
                     sort: true
                 },
                 {
-                    title: _('Downloads'),
+                    title: 'Downloads',
                     width : '15%',
                     sortType : 'number',
                     sort : true

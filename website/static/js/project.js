@@ -8,9 +8,6 @@ var bootbox = require('bootbox');
 var Raven = require('raven-js');
 var ko = require('knockout');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 var $osf = require('js/osfHelpers');
 
@@ -27,7 +24,7 @@ NodeActions.beforeForkNode = function(url, done) {
         contentType: 'application/json'
     }).done(function(response) {
         bootbox.confirm({
-            message: $osf.joinPrompts(response.prompts, (_('<h4>Are you sure you want to fork this project?</h4>'))),
+            message: $osf.joinPrompts(response.prompts, ('<h4>Are you sure you want to fork this project?</h4>')),
             callback: function (result) {
                 if (result) {
                     done && done();
@@ -35,10 +32,7 @@ NodeActions.beforeForkNode = function(url, done) {
             },
             buttons:{
                 confirm:{
-                    label:_('Fork')
-                },
-                cancel:{
-                    label:_('Cancel')
+                    label:'Fork'
                 }
             }
         });
@@ -49,7 +43,7 @@ NodeActions.beforeForkNode = function(url, done) {
 
 function afterForkGoto(url) {
   bootbox.confirm({
-      message: '<h4 class="add-project-success text-success">' + _('Fork created successfully!') + '</h4>',
+      message: '<h4 class="add-project-success text-success">Fork created successfully!</h4>',
       callback: function(result) {
           if(result) {
               window.location = url;
@@ -57,11 +51,11 @@ function afterForkGoto(url) {
       },
       buttons: {
           confirm: {
-              label: _('Go to new fork'),
+              label: 'Go to new fork',
               className: 'btn-success'
           },
           cancel: {
-              label: _('Keep working here')
+              label: 'Keep working here'
           }
       },
       closeButton: false
@@ -86,14 +80,14 @@ NodeActions.forkNode = function() {
                 data: payload
             }
         );
-        $osf.growl('Fork status', _('Your fork is being created. You\'ll receive an email when it is complete.'), 'info');
+        $osf.growl('Fork status', 'Your fork is being created. You\'ll receive an email when it is complete.', 'info');
     });
 };
 
 NodeActions.forkPointer = function(nodeId) {
     bootbox.confirm({
-        title: _('Fork this project?'),
-        message: _('Are you sure you want to fork this project?'),
+        title: 'Fork this project?',
+        message: 'Are you sure you want to fork this project?',
         callback: function(result) {
             if(result) {
                 // Block page
@@ -108,13 +102,13 @@ NodeActions.forkPointer = function(nodeId) {
                     afterForkGoto(response.data.node.url);
                 }).fail(function() {
                     $osf.unblock();
-                    $osf.growl('Error',_('Could not fork link.'));
+                    $osf.growl('Error','Could not fork link.');
                 });
             }
         },
         buttons:{
             confirm:{
-                label:_('Fork')
+                label:'Fork'
             }
         }
     });
@@ -125,10 +119,10 @@ NodeActions.beforeTemplate = function(url, done) {
         url: url,
         contentType: 'application/json'
     }).done(function(response) {
-        var language = _('<h4>Are you sure you want to create a new project using this project as a template?</h4>') +
-                _('<p>Any add-ons configured for this project will not be authenticated in the new project.</p>');
+        var language = '<h4>Are you sure you want to create a new project using this project as a template?</h4>' +
+                '<p>Any add-ons configured for this project will not be authenticated in the new project.</p>';
         if(response.isRegistration){
-            language = _('<h4>Are you sure you want to create a new project using this registration as a template?</h4>');
+            language = '<h4>Are you sure you want to create a new project using this registration as a template?</h4>';
         }
         bootbox.confirm({
             message: $osf.joinPrompts(response.prompts, (language)),
@@ -139,10 +133,7 @@ NodeActions.beforeTemplate = function(url, done) {
             },
             buttons:{
                 confirm:{
-                    label:_('Create')
-                },
-                cancel:{
-                    label:_('Cancel')
+                    label:'Create'
                 }
             }
         });
@@ -204,16 +195,16 @@ NodeActions.removePointer = function(pointerId, pointerElm) {
 // TODO: remove this
 $(document).ready(function() {
     var permissionInfoHtml = '<dl>' +
-        _('<dt>Read</dt>') +
-            _('<dd><ul><li>View project content and comment</li></ul></dd>') +
-        _('<dt>Read + Write</dt>') +
-            _('<dd><ul><li>Read privileges</li> ') +
-                _('<li>Add and configure components</li> ') +
-                _('<li>Add and edit content</li></ul></dd>') +
-        _('<dt>Administrator</dt><dd><ul>') +
-            _('<li>Read and write privileges</li>') +
-            _('<li>Manage contributor</li>') +
-            _('<li>Delete and register project</li><li>Public-private settings</li></ul></dd>') +
+        '<dt>Read</dt>' +
+            '<dd><ul><li>View project content and comment</li></ul></dd>' +
+        '<dt>Read + Write</dt>' +
+            '<dd><ul><li>Read privileges</li> ' +
+                '<li>Add and configure components</li> ' +
+                '<li>Add and edit content</li></ul></dd>' +
+        '<dt>Administrator</dt><dd><ul>' +
+            '<li>Read and write privileges</li>' +
+            '<li>Manage contributor</li>' +
+            '<li>Delete and register project</li><li>Public-private settings</li></ul></dd>' +
         '</dl>';
 
     $('.permission-info').attr(
@@ -222,7 +213,9 @@ $(document).ready(function() {
         trigger: 'hover'
     });
 
-    var bibliographicContribInfoHtml = _('Only bibliographic contributors will be displayed in the Contributors list and in project citations. Non-bibliographic contributors can read and modify the project as normal.');
+    var bibliographicContribInfoHtml = 'Only bibliographic contributors will be displayed ' +
+           'in the Contributors list and in project citations. Non-bibliographic contributors ' +
+            'can read and modify the project as normal.';
 
     $('.visibility-info').attr(
         'data-content', bibliographicContribInfoHtml
@@ -237,8 +230,9 @@ $(document).ready(function() {
     $('.remove-pointer').on('click', function() {
         var $this = $(this);
         bootbox.confirm({
-            title: _('Remove this link?'),
-            message: _('Are you sure you want to remove this link? This will not remove the project this link refers to.'),
+            title: 'Remove this link?',
+            message: 'Are you sure you want to remove this link? This will not remove the ' +
+                'project this link refers to.',
             callback: function(result) {
                 if(result) {
                     var pointerId = $this.attr('data-id');
@@ -248,11 +242,8 @@ $(document).ready(function() {
             },
             buttons:{
                     confirm:{
-                        label:_('Remove'),
+                        label:'Remove',
                         className:'btn-danger'
-                    },
-                    cancel:{
-                        label:_('Cancel')
                     }
             }
         });

@@ -9,9 +9,6 @@ var $osf = require('js/osfHelpers');
 var AddonPermissionsTable = require('js/addonPermissions');
 var addonSettings = require('js/addonSettings');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 // Show capabilities modal on selecting an addon; unselect if user
 // rejects terms
@@ -31,11 +28,8 @@ $('.addon-select').on('change', function() {
                 },
                 buttons:{
                     confirm:{
-                        label:_('Confirm')
-                    },
-                    cancel:{
-                        label:_('Cancel')
-                        }
+                        label:'Confirm'
+                    }
                 }
         });
         }
@@ -65,13 +59,13 @@ $('#selectAddonsForm').on('submit', function() {
             window.location.reload();
         });
         request.fail(function() {
-            var msg = _('Sorry, we had trouble saving your settings. If this persists please contact ') + $osf.osfSupportLink();
+            var msg = 'Sorry, we had trouble saving your settings. If this persists please contact ' + $osf.osfSupportLink();
             bootbox.alert({
-                title: _('Request failed'),
+                title: 'Request failed',
                 message: msg,
                 buttons:{
                     ok:{
-                        label:_('Close'),
+                        label:'Close',
                         className:'btn-default'
                     }
                 }
@@ -85,7 +79,7 @@ $('#selectAddonsForm').on('submit', function() {
         }).join('');
         uncheckedText = ['<ul>', uncheckedText, '</ul>'].join('');
         bootbox.confirm({
-            title: _('Are you sure you want to remove the add-ons you have deselected? '),
+            title: 'Are you sure you want to remove the add-ons you have deselected? ',
             message: uncheckedText,
             callback: function(result) {
                 if (result) {
@@ -96,11 +90,8 @@ $('#selectAddonsForm').on('submit', function() {
             },
             buttons:{
                 confirm:{
-                    label:_('Remove'),
+                    label:'Remove',
                     className:'btn-danger'
-                },
-                cancel:{
-                    label:_('Cancel')
                 }
             }
         });
@@ -128,7 +119,7 @@ $(window).on('beforeunload',function() {
     var unchecked = checkedOnLoad.filter('#selectAddonsForm input:not(:checked)');
 
     if(unchecked.length > 0 || checked.length > 0) {
-        return _('The changes on addon setting are not submitted!');
+        return 'The changes on addon setting are not submitted!';
     }
 });
 

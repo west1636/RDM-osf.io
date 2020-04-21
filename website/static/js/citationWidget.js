@@ -12,10 +12,6 @@ var citations = require('./citations');
 
 require('../css/citations_widget.css');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 var ctx = window.contextVars;
 
 var formatResult = function(state) {
@@ -41,7 +37,7 @@ CitationWidget.prototype.init = function() {
         allowClear: true,
         formatResult: formatResult,
         formatSelection: formatSelection,
-        placeholder: _('Enter citation style (e.g. "APA")'),
+        placeholder: 'Enter citation style (e.g. "APA")',
         minimumInputLength: 1,
         ajax: {
             url: '/api/v1/citations/styles/',
@@ -71,11 +67,11 @@ CitationWidget.prototype.init = function() {
             self.$citationElement.html(items[0]).slideDown();
         }).fail(function(jqxhr, status, error) {
             $osf.growl(
-                _('Citation render failed'),
-                _('The requested citation format generated an error.'),
+                'Citation render failed',
+                'The requested citation format generated an error.',
                 'danger'
             );
-            Raven.captureMessage(_('Unexpected error when fetching citation'), {
+            Raven.captureMessage('Unexpected error when fetching citation', {
                 extra: {
                     url: styleUrl,
                     citationStyle: event.val,

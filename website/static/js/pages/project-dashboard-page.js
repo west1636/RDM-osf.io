@@ -30,10 +30,6 @@ var nodeApiUrl = ctx.node.urls.api;
 var nodeCategories = ctx.nodeCategories || [];
 var currentUserRequestState = ctx.currentUserRequestState;
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
 
 // Listen for the nodeLoad event (prevents multiple requests for data)
 $('body').on('nodeLoad', function(event, data) {
@@ -119,9 +115,9 @@ $(document).ready(function () {
     var AddComponentButton = m.component(AddProject, {
         buttonTemplate: m('.btn.btn-sm.btn-default[data-toggle="modal"][data-target="#addSubComponent"]', {onclick: function() {
             $osf.trackClick('project-dashboard', 'add-component', 'open-add-project-modal');
-        }}, _('Add Component')),
+        }}, 'Add Component'),
         modalID: 'addSubComponent',
-        title: _('Create new component'),
+        title: 'Create new component',
         parentID: window.contextVars.node.id,
         parentTitle: window.contextVars.node.title,
         categoryList: nodeCategories,
@@ -328,7 +324,7 @@ $(document).ready(function () {
                             }
                         }
                         if (!found) {
-                            $osf.growl(_('no user matched'), '"' + and_list.join(' AND ')  + '"', 'warning');
+                            $osf.growl('no user matched', '"' + and_list.join(' AND ')  + '"', 'warning');
                         }
                     }
                     var userKeys = Object.keys(userKeyDict);
@@ -369,13 +365,13 @@ $(document).ready(function () {
                 columnTitles : function () {
                     return [
                         {
-                            title: _('Name'),
+                            title: 'Name',
                             width : '70%',
                             sort : true,
                             sortType : 'text'
                         },
                         {
-                            title: _('Modified'),
+                            title: 'Modified',
                             width : '30%',
                             sort : true,
                             sortType : 'text'
@@ -433,7 +429,7 @@ $(document).ready(function () {
             }
             return promise;
         }, function(xhr, textStatus, error) {
-            Raven.captureMessage(_('Error retrieving filebrowser'), {extra: {url: urlFilesGrid, textStatus: textStatus, error: error}});
+            Raven.captureMessage('Error retrieving filebrowser', {extra: {url: urlFilesGrid, textStatus: textStatus, error: error}});
         }
 
       );
@@ -450,7 +446,7 @@ $(document).ready(function () {
         width: '100%',
         interactive: window.contextVars.currentUser.canEditTags,
         maxChars: 128,
-        defaultText: _('Add a project tag to enhance discoverability'),
+        defaultText: 'Add a tag to enhance discoverability',
         onAddTag: function(tag) {
             $('#node-tags_tag').attr('data-default', 'Add a tag');
             window.contextVars.node.tags.push(tag);
@@ -475,7 +471,7 @@ $(document).ready(function () {
 
             request.fail(function(xhr, textStatus, error) {
                 window.contextVars.node.tags.splice(window.contextVars.node.tags.indexOf(tag),1);
-                Raven.captureMessage(_('Failed to add tag'), {
+                Raven.captureMessage('Failed to add tag', {
                     extra: {
                         tag: tag, url: tagsApiUrl, textStatus: textStatus, error: error
                     }
@@ -510,8 +506,8 @@ $(document).ready(function () {
                 window.contextVars.node.tags.push(tag);
                 // Suppress "tag not found" errors, as the end result is what the user wanted (tag is gone)- eg could be because two people were working at same time
                 if (xhr.status !== 409) {
-                    $osf.growl('Error', _('Could not remove tag'));
-                    Raven.captureMessage(_('Failed to remove tag'), {
+                    $osf.growl('Error', 'Could not remove tag');
+                    Raven.captureMessage('Failed to remove tag', {
                         extra: {
                             tag: tag, url: tagsApiUrl, textStatus: textStatus, error: error
                         }
@@ -550,9 +546,9 @@ $(document).ready(function () {
             if(resp.wiki_content){
                 rawText = resp.wiki_content;
             } else if(window.contextVars.currentUser.canEdit) {
-                rawText = _('*Add important information, links, or images here to describe your project.*');
+                rawText = '*Add important information, links, or images here to describe your project.*';
             } else {
-                rawText = _('*No wiki content.*');
+                rawText = '*No wiki content.*';
             }
 
             var renderedText = ctx.renderedBeforeUpdate ? oldMd.render(rawText) : md.render(rawText);

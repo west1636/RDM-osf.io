@@ -2,26 +2,25 @@
 {% load static %}
 {% load user_extras %}
 {% load spam_extras %}
-{% load i18n %}
 {% block title %}
-    <title>{% trans "Comment" %}</title>
+    <title>Comment</title>
 {% endblock title %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <a href="{% reverse_spam_list page=page_number status=status %}"
                class="btn btn-primary">
-                {% trans "Back to general list" %}
+                Back to general list
             </a>
             <a href="{% reverse_spam_user comment.author_id page=page_number status=status %}"
                class="btn btn-primary">
-                {% trans "Back to user's list" %}
+                Back to user's list
             </a>
             {%  if perms.osf.mark_spam %}
             <a href="{% url 'spam:email' comment.id %}"
                data-toggle="modal" data-target="#email"
                class="btn btn-default">
-                {% trans "Email" %}
+                Email
             </a>
             {% endif %}
             <div class="modal" id="email">
@@ -62,18 +61,18 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>
-                    <strong>{% trans "Author:" %}</strong> {{ comment.author.fullname }}
+                    <strong>Author:</strong> {{ comment.author.fullname }}
                     <small>
                         (<a href="{{ comment.author_path }}">
-                            {% blocktrans %}User's <b>osf</b> profile{% endblocktrans %}
+                            User's <b>osf</b> profile
                         </a>) (<a href="{{ comment.author_id | reverse_user }}">
-                            {% trans "User's profile" %}
+                            User's profile
                         </a>)
                     </small>
                 </h4>
             </div>
             <div class="col-md-6">
-                <h4><strong>{% trans "Comment ID:" %}</strong> {{ comment.id }}</h4>
+                <h4><strong>Comment ID:</strong> {{ comment.id }}</h4>
             </div>
         </div>
 
@@ -81,15 +80,15 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>
-                    <strong>{% trans "Status: " %}</strong>
+                    <strong>Status: </strong>
                     {% if comment.spam_status == SPAM_STATUS.UNKNOWN %}
-                        <span class="label label-default">{% trans "Unknown" %}</span>
+                        <span class="label label-default">Unknown</span>
                     {% elif comment.spam_status == SPAM_STATUS.FLAGGED %}
-                        <span class="label label-warning">{% trans "Flagged" %}</span>
+                        <span class="label label-warning">Flagged</span>
                     {% elif comment.spam_status == SPAM_STATUS.SPAM %}
-                        <span class="label label-danger">{% trans "Spam" %}</span>
+                        <span class="label label-danger">Spam</span>
                     {% elif comment.spam_status == SPAM_STATUS.HAM %}
-                        <span class="label label-success">{% trans "Ham" %}</span>
+                        <span class="label label-success">Ham</span>
                     {% endif %}
                 </h4>
             </div>
@@ -100,8 +99,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>
-                        <strong>{% trans "Comment content" %}</strong>
-                        {% trans "created on:" %}
+                        <strong>Comment content</strong>
+                        created on:
                         {{ comment.date_created }}
                     </h4>
                 </div>
@@ -117,7 +116,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>
-                            {% trans "Type:" %}
+                            Type:
                             <strong>
                                 {{ report.category }}
                             </strong>
@@ -125,7 +124,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-md-6">
-                            <strong>{% trans "Reporter:" %}</strong>
+                            <strong>Reporter:</strong>
                             {{ report.reporter.fullname }}
                             (<a href="{{ report.reporter.pk | reverse_user }}">
                             User's profile
@@ -133,7 +132,7 @@
                         </div>
                         <div class="col-md-6">
                             <strong>
-                                {% trans "Reason:" %}
+                                Reason:
                             </strong>
                             {{ report.reason|default:"--Nothing--" }}
                         </div>
@@ -141,7 +140,7 @@
                 </div>
             </div>
         {% empty %}
-            <div>{% trans "No reports!" %}</div>
+            <div>No reports!</div>
         {% endfor %}
     </div>
 

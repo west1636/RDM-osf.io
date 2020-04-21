@@ -7,28 +7,28 @@
                 authorized by <a data-bind="attr: {href: urls().owner}, text: ownerName"></a>
                 % if not is_registration:
                     <a data-bind="click: deauthorize, visible: validCredentials"
-                        class="text-danger pull-right addon-auth">${_("Disconnect Account")}</a>
+                        class="text-danger pull-right addon-auth">Disconnect Account</a>
                 % endif
             </span>
 
              <!-- Import Access Token Button -->
             <span data-bind="if: showImport">
                 <a data-bind="click: importAuth" href="#" class="text-primary pull-right addon-auth">
-                    ${_("Import Account from Profile")}
+                    Import Account from Profile
                 </a>
             </span>
 
             <!-- Loading Import Text -->
             <span data-bind="if: showLoading">
                 <p class="text-muted pull-right addon-auth">
-                    ${_("Loading ...")}
+                    Loading ...
                 </p>
             </span>
 
             <!-- Oauth Start Button -->
             <span data-bind="if: showTokenCreateButton">
                 <a data-bind="click: connectAccount" class="text-primary pull-right addon-auth">
-                  ${_("Connect Account")}
+                  Connect Account
                 </a>
             </span>
         </small>
@@ -38,12 +38,12 @@
         <div class="row">
             <div class="col-md-12">
                 <p class="break-word">
-                    <strong>${_("Current Library:")}</strong>
+                    <strong>Current Library:</strong>
                     <span data-bind="if: libraryName">
                         <a data-bind="attr: {href: urls().files}, text: libraryName"></a>
                     </span>
                     <span class="text-muted" data-bind="ifnot: libraryName">
-                        ${_("None")}
+                        None
                     </span>
                 </p>
             </div>
@@ -56,17 +56,17 @@
         </div>
         <!-- Library picker -->
         <p class="text-muted text-center ${addon_short_name}-loading-text" data-bind="visible: libraryLoading">
-            ${_("Loading libraries...")}
+            Loading libraries...
         </p>
         <div data-bind="visible: toggleChangeLibraryText() === 'Close' & !libraryLoading()">
             <form data-bind="submit: saveLibrary">
                 <div class="tb-table m-v-sm" style="width:100%; overflow-y: scroll; height: 200px;" data-bind="event: { scroll: scrolled }">
                     <div class="tb-row-titles">
                         <div class="tb-th" data-tb-th-col="0" style="width: 75%">
-                            ${_("Libraries")}
+                            Libraries
                         </div>
                         <div class="tb-th" data-tb-th-col="1" style="width: 25%, border-left: 1px solid #CCC;">
-                            ${_("Select")}
+                            Select
                         </div>
                     </div>
                     <div class="tb-tbody" style="border-left: 1px solid #EEE;border-right: 1px solid #EEE;" data-bind="foreach: libraries">
@@ -80,9 +80,9 @@
                 </div>
                 <div class="pull-right" data-bind="visible: selectedLibrary() && currentLibraryDisplay()">
                    <button class="btn btn-default" data-bind="click: cancelLibrarySelection">
-                       ${_("Cancel")}
+                       Cancel
                    </button>
-                   <input type="submit" class="btn btn-success" value="${_('Save')}" />
+                   <input type="submit" class="btn btn-success" value="Save" />
                 </div>
                 <div class="clearfix"></div>
             </form>
@@ -98,7 +98,7 @@
                         <a data-bind="attr: {href: urls().files}, text: folderName"></a>
                     </span>
                     <span class="text-muted" data-bind="ifnot: folderName">
-                        ${_("None")}
+                        None
                     </span>
                 </p>
                 <!-- Folder buttons -->
@@ -110,7 +110,7 @@
                 <!-- Folder picker -->
                 <div class="m-t-sm addon-folderpicker-widget ${addon_short_name}-widget">
                     <p class="text-muted text-center ${addon_short_name}-loading-text" data-bind="visible: loading">
-                        ${_("Loading folders...")}</p>
+                        Loading folders...</p>
                     <div data-bind="visible: currentDisplay() === PICKER">
                         <div id="${addon_short_name}Grid" class="filebrowser ${addon_short_name}-folder-picker"></div>
                     </div>
@@ -119,14 +119,14 @@
                         <form data-bind="submit: submitSettings">
                             <div class="break-word">
                                 <div data-bind="if: selected" class="alert alert-info ${addon_short_name}-confirm-dlg">
-                                    ${_("Connect %(folderName)s?") % dict(folderName='<b>&ldquo;<span data-bind="text: selectedFolderName"></span>&rdquo;</b>') | n}
+                                    Connect <b>&ldquo;<span data-bind="text: selectedFolderName"></span>&rdquo;</b>?
                                 </div>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-default" data-bind="click: cancelSelection">
-                                    ${_("Cancel")}
+                                    Cancel
                                 </button>
-                                <input type="submit" class="btn btn-success" value="${_('Save')}" />
+                                <input type="submit" class="btn btn-success" value="Save" />
                             </div>
                         </form>
                     </div>

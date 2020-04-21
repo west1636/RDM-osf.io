@@ -2,11 +2,6 @@
 var m = require('mithril');
 var iconmap = require('js/iconmap');
 var Treebeard = require('treebeard');
-
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 require('../css/fangorn.css');
 
 function resolveToggle(item) {
@@ -57,7 +52,7 @@ function WikiMenu(data, wikiID, canEdit) {
         resolveToggle : resolveToggle,
         columnTitles: function () {
             return[{
-                title: _('Name'),
+                title: 'Name',
                 width: '100%'
             }];
         },

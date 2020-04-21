@@ -1,9 +1,6 @@
 var $ = require('jquery');
 var m = require('mithril');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 function Panel(title, header, inner, args, selected) {
     panel = m.component(Panel, title, header, inner, args);
@@ -35,7 +32,7 @@ var Spinner = m.component({
     view: function() {
         return m('.spinner-loading-wrapper', [
             m('.ball-scale.ball-scale-blue', [m('div')]),
-            m('p.m-t-sm.fg-load-message', _(' Loading... '))
+            m('p.m-t-sm.fg-load-message', ' Loading... ')
         ]);
     }
 });

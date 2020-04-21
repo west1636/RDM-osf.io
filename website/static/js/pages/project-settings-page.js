@@ -14,9 +14,6 @@ require('css/addonsettings.css');
 
 var ctx = window.contextVars;
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
 
 // Initialize treebeard grid for notifications
 var ProjectNotifications = require('js/notificationsTreebeard.js');
@@ -32,8 +29,8 @@ if ($('#grid').length) {
         new ProjectNotifications(response);
     }).fail(function(xhr, status, error) {
         $notificationsMsg.addClass('text-danger');
-        $notificationsMsg.text(_('Could not retrieve notification settings.'));
-        Raven.captureMessage(_('Could not GET notification settings.'), {
+        $notificationsMsg.text('Could not retrieve notification settings.');
+        Raven.captureMessage('Could not GET notification settings.', {
             extra: { url: notificationsURL, status: status, error: error }
         });
     });
@@ -53,8 +50,8 @@ if ($('#wgrid').length) {
         new ProjectWiki(response);
     }).fail(function(xhr, status, error) {
         $wikiMsg.addClass('text-danger');
-        $wikiMsg.text(_('Could not retrieve wiki settings.'));
-        Raven.captureMessage(_('Could not GET wiki settings.'), {
+        $wikiMsg.text('Could not retrieve wiki settings.');
+        Raven.captureMessage('Could not GET wiki settings.', {
             extra: { url: wikiSettingsURL, status: status, error: error }
         });
     });
@@ -69,7 +66,7 @@ $(document).ready(function() {
     var keys = Object.keys(window.contextVars.nodeCategories);
     for (var i = 0; i < keys.length; i++) {
         categoryOptions.push({
-            label: _(window.contextVars.nodeCategories[keys[i]]),
+            label: window.contextVars.nodeCategories[keys[i]],
             value: keys[i]
         });
     }
@@ -103,7 +100,7 @@ $(document).ready(function() {
             ctx.node.urls.api + 'settings/comments/',
             {commentLevel: commentLevel}
         ).done(function() {
-            $commentMsg.text(_('Successfully updated settings.'));
+            $commentMsg.text('Successfully updated settings.');
             $commentMsg.addClass('text-success');
             if($osf.isSafari()){
                 //Safari can't update jquery style change before reloading. So delay is applied here
@@ -114,10 +111,10 @@ $(document).ready(function() {
 
         }).fail(function() {
             bootbox.alert({
-                message: _('Could not set commenting configuration. Please try again.'),
+                message: 'Could not set commenting configuration. Please try again.',
                 buttons:{
                     ok:{
-                        label:_('Close'),
+                        label:'Close',
                         className:'btn-default'
                     }
                 }
@@ -150,8 +147,8 @@ var subscribeViewModel = function(viewModel, options) {
             //Give user time to see message before reload.
             setTimeout(function(){window.location.reload();}, 1500);
         }).fail(function(xhr, status, error) {
-            $osf.growl('Error', _('Unable to update settings'));
-            Raven.captureMessage(_('Could not update settings.'), {
+            $osf.growl('Error', 'Unable to update settings');
+            Raven.captureMessage('Could not update settings.', {
                 extra: {
                     url: ctx.node.urls.api + options.updateUrl, status: status, error: error
                 }

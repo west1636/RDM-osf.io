@@ -6,10 +6,6 @@ var bootbox = require('bootbox');
 
 require('css/rdm-addon-settings.css');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 var RdmAddonSettings = function() {
     var self = this;
     var buildHtml = function(data) {
@@ -30,7 +26,7 @@ var RdmAddonSettings = function() {
                 }
                 var small = '<small>' +
                     '<a class="pull-right text-primary import-account">' +
-                    _('Import Account from Admin') + '</a></small>' +
+                    'Import Account from Admin</a></small>' +
                     '<div class="clearfix"></div>';
                 $h4.append(small);
             }
@@ -51,16 +47,16 @@ var RdmAddonSettings = function() {
         .done(function(data) {
             context.$root.updateAccounts();
             if (context.$root.setMessage) {
-                context.$root.setMessage(_('Successfully imported the account.'), 'text-success');
+                context.$root.setMessage('Successfully imported the account.', 'text-success');
             } else if (context.$root.changeMessage) {
-                context.$root.changeMessage(_('Successfully imported the account.'), 'text-success');
+                context.$root.changeMessage('Successfully imported the account.', 'text-success');
             }
         })
         .fail(function(xhr, status, error) {
             if (context.$root.setMessage) {
-                context.$root.setMessage(_('Failed to import the account.'), 'text-danger');
+                context.$root.setMessage('Failed to import the account.', 'text-danger');
             } else if (context.$root.changeMessage) {
-                context.$root.changeMessage(_('Failed to import the account.'), 'text-danger');
+                context.$root.changeMessage('Failed to import the account.', 'text-danger');
             }
         });
     };

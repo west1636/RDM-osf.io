@@ -6,10 +6,6 @@ var ko = require('knockout');
 var Treebeard = require('treebeard');
 var projectSettingsTreebeardBase = require('js/projectSettingsTreebeardBase');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 function expandOnLoad() {
     var tb = this;  // jshint ignore: line
     for (var i = 0; i < tb.treeData.children.length; i++) {
@@ -55,13 +51,13 @@ function NodesDeleteTreebeard(divID, data, nodesState, nodesOriginal) {
         columnTitles : function() {
             return [
                 {
-                    title: _('checkBox'),
+                    title: 'checkBox',
                     width: '4%',
                     sortType : 'text',
                     sort : true
                 },
                 {
-                    title: _('project'),
+                    title: 'project',
                     width : '96%',
                     sortType : 'text',
                     sort: true
@@ -83,7 +79,7 @@ function NodesDeleteTreebeard(divID, data, nodesState, nodesOriginal) {
             //this lets treebeard know when changes come from the knockout side (select all or select none)
             item.data.node.changed = nodesStateLocal[id].changed;
             //A wrapper div for tooltips must exist because tooltips does not work on a disabled element
-            var tooltipWrapper = item.data.node.is_admin ? 'div' : 'div[data-toggle="tooltip"][title="' + _('You must have admin permissions on this component to be able to delete it.') + '"][data-placement="right"]';
+            var tooltipWrapper = item.data.node.is_admin ? 'div' : 'div[data-toggle="tooltip"][title="You must have admin permissions on this component to be able to delete it."][data-placement="right"]';
             columns.push(
                 {
                     data : 'action',

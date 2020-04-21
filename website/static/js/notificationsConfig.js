@@ -4,10 +4,6 @@ var ko = require('knockout');
 var $ = require('jquery');
 var $osf = require('js/osfHelpers');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
 
 var ViewModel = function(list) {
     var self = this;
@@ -30,7 +26,7 @@ var ViewModel = function(list) {
                 }
             },
             error: function() {
-                var message = _('Could not retrieve settings information.');
+                var message = 'Could not retrieve settings information.';
                 self.changeMessage(message, 'text-danger', 5000);
             }});
     };
@@ -62,8 +58,8 @@ var ViewModel = function(list) {
         });
         request.fail(function (xhr) {
             if (xhr.responseJSON.error_type !== 'not_subscribed') {
-                var message = _('Could not update email preferences at this time. If this issue persists, ') +
-                    agh.sprintf(_('please report it to %1$s.') , $osf.osfSupportLink());
+                var message = 'Could not update email preferences at this time. If this issue persists, ' +
+                    'please report it to ' + $osf.osfSupportLink() + '.';
                 self.changeMessage(message, 'text-danger', 5000);
             }
         });

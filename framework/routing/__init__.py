@@ -13,11 +13,10 @@ from mako.template import Template
 import markupsafe
 from werkzeug.exceptions import NotFound
 import werkzeug.wrappers
-from babel import support
 
 from framework import sentry
 from framework.exceptions import HTTPError
-from framework.flask import app, redirect, get_locale
+from framework.flask import app, redirect
 from framework.sessions import session
 
 from website import settings
@@ -29,11 +28,6 @@ TEMPLATE_DIR = settings.TEMPLATES_PATH
 _TPL_LOOKUP = TemplateLookup(
     default_filters=[
         'unicode',  # default filter; must set explicitly when overriding
-    ],
-    imports=[
-        'from flask_babel import gettext as _',
-        'from flask_babel import ngettext',
-        'from markupsafe import escape as h',
     ],
     directories=[
         TEMPLATE_DIR,
@@ -50,9 +44,6 @@ _TPL_LOOKUP_SAFE = TemplateLookup(
     ],
     imports=[
         'from website.util.sanitize import temp_ampersand_fixer',  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
-        'from flask_babel import gettext as _',
-        'from flask_babel import ngettext',
-        'from markupsafe import escape as h',
     ],
     directories=[
         TEMPLATE_DIR,
@@ -248,11 +239,6 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     # Don't cache in debug mode
     if not app.debug:
         mako_cache[tplname] = tpl
-
-    catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
-    request.babel_translations = catalog
-    app.babel_translations = catalog
-
     return tpl.render(**data)
 
 

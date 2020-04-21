@@ -18,10 +18,6 @@ var lodashGet = require('lodash.get');
 var lodashFind = require('lodash.find');
 var iconmap = require('js/iconmap');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 var LinkObject;
 var NodeFetcher;
 var formatDataforPO;
@@ -98,7 +94,7 @@ function _poContributors(item) {
         } else if(fullName){
             name = fullName;
         } else {
-            name = _('A contributor');
+            name = 'A contributor';
         }
         var comma;
         if (index === 0) {
@@ -188,23 +184,23 @@ function _poColumnTitles() {
     var mobile = window.innerWidth < MOBILE_WIDTH; // true if mobile view
     if(!mobile){
         columns.push({
-            title: _('Name'),
+            title: 'Name',
             width : '55%',
             sort : true,
             sortType : 'text'
         },{
-            title : _('Contributors'),
+            title : 'Contributors',
             width : '25%',
             sort : false
         }, {
-            title : _('Modified'),
+            title : 'Modified',
             width : '20%',
             sort : true,
             sortType : 'date'
         });
     } else {
         columns.push({
-            title: _('Name'),
+            title: 'Name',
             width : '90%',
             sort : true,
             sortType : 'text'
@@ -412,7 +408,7 @@ var tbOptions = {
             tb.resetFilter.call(tb);
             $('.db-poFilter>input').val('');
         }
-        return [ m(_('input.form-control[placeholder="Filter displayed projects"][type="text"]'), {
+        return [ m('input.form-control[placeholder="Filter displayed projects"][type="text"]', {
             style: 'display:inline;',
             onkeyup: function(event) {
                 tb.options.showSidebar(false);

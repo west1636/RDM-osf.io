@@ -1,4 +1,3 @@
-{% load i18n %}
 {% block content %}
 
     <div class="pagination pagination-lg">
@@ -22,7 +21,7 @@
             {% endif %}
 
             <span class="current">
-                {% blocktrans itemsNumber=items.number paginatorNumPage=items.paginator.num_pages %}Page {{ itemsNumber }} of {{ paginatorNumPage }}{% endblocktrans %}
+                Page {{ items.number }} of {{ items.paginator.num_pages }}
             </span>
 
             {% if items.has_next %}

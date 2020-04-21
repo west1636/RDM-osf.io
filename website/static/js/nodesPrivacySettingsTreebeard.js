@@ -6,10 +6,6 @@ var ko = require('knockout');
 var Treebeard = require('treebeard');
 var projectSettingsTreebeardBase = require('js/projectSettingsTreebeardBase');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 function expandOnLoad() {
     var tb = this;  // jshint ignore: line
     for (var i = 0; i < tb.treeData.children.length; i++) {
@@ -55,13 +51,13 @@ function NodesPrivacyTreebeard(divID, data, nodesState, nodesOriginal) {
         columnTitles : function() {
             return [
                 {
-                    title: _('checkBox'),
+                    title: 'checkBox',
                     width: '4%',
                     sortType : 'text',
                     sort : true
                 },
                 {
-                    title: _('project'),
+                    title: 'project',
                     width : '96%',
                     sortType : 'text',
                     sort: true

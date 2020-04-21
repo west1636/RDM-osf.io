@@ -59,7 +59,6 @@ var entry = {
     'render-nodes': staticPath('js/pages/render-nodes.js'),
     'institution-page': staticPath('js/pages/institution-page.js'),
     'rdm-firebase': staticPath('js/rdm-firebase.js'),
-    'rdmGettext': staticPath('js/rdmGettext.js'),
     // Commons chunk
     'vendor': [
         // Vendor libraries

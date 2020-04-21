@@ -3,14 +3,9 @@
 var $ = require('jquery');
 var Clipboard = require('clipboard');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 var setTooltip = function (elm, message) {
     $(elm).tooltip('hide')
     .attr('title', message)
-    .attr('data-container', 'body')
     .tooltip('show');
 };
 
@@ -26,12 +21,12 @@ var makeClient = function(elm) {
     var client = new Clipboard(elm);
 
     client.on('success', function(e){
-        setTooltip(e.trigger, _('Copied!'));
+        setTooltip(e.trigger, 'Copied!');
         hideTooltip(e.trigger);
     });
 
     client.on('error', function(e){
-        setTooltip(e.trigger, _('Copy failed!'));
+        setTooltip(e.trigger, 'Copy failed!');
         hideTooltip(e.trigger);
     });
 

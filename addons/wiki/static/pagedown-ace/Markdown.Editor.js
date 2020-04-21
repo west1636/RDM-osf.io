@@ -9,10 +9,6 @@ var Range = ace.require('ace/range').Range;
 var Cookie = require('js-cookie');
 var addDragNDrop = require('../dragNDrop');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 $(function(){
     var toggled_off = Cookie.get('spellcheckPersistKey' + window.location.toString()) === '0';
     if (toggled_off) {
@@ -42,41 +38,41 @@ $(function(){
         };
 
     var defaultsStrings = {
-        bold: _("Strong <strong>"),
+        bold: "Strong <strong>",
         boldexample: "strong text",
 
-        italic: _("Emphasis <em>"),
+        italic: "Emphasis <em>",
         italicexample: "emphasized text",
 
-        spellcheck: _("Spellcheck: Toggle spellcheck on and off"),
+        spellcheck: "Spellcheck: Toggle spellcheck on and off",
 
-        link: _("Hyperlink <a>"),
+        link: "Hyperlink <a>",
         linkdescription: "enter link description here",
         linkdialog: "<div class='modal-header'> <h4 class='modal-title f-w-lg'>Add hyperlink</h4></div><div class='modal-body'> <p><b>Example:</b><br>http://example.com/ \"optional title\"</p></div>",
 
-        quote: _("Blockquote <blockquote>"),
+        quote: "Blockquote <blockquote>",
         quoteexample: "Blockquote",
 
-        code: _("Code Sample <pre><code>"),
+        code: "Code Sample <pre><code>",
         codeexample: "enter code here",
 
-        image: _("Image <img>"),
+        image: "Image <img>",
         imagedescription: "enter image description here",
         imagedialog: "<div class='modal-header'> <h4 class='modal-title f-w-lg'>Add image</h4></div><div class='modal-body'><p><b>Example:</b><br>http://example.com/images/diagram.jpg \"optional title\"</p></div>",
 
-        olist: _("Numbered List <ol>"),
-        ulist: _("Bulleted List <ul>"),
-        litem: _("List item"),
+        olist: "Numbered List <ol>",
+        ulist: "Bulleted List <ul>",
+        litem: "List item",
 
-        heading: _("Heading <h1>/<h2>"),
+        heading: "Heading <h1>/<h2>",
         headingexample: "Heading",
 
-        hr: _("Horizontal Rule <hr>"),
+        hr: "Horizontal Rule <hr>",
 
-        undo: _("Undo -"),
-        redo: _("Redo -"),
+        undo: "Undo -",
+        redo: "Redo -",
 
-        help: _("Wiki Syntax Help")
+        help: "Wiki Syntax Help"
     };
 
     var keyStrokes = {
@@ -1742,7 +1738,7 @@ $(function(){
             buttons.redo.execute = function (manager) { inputBox.session.getUndoManager().redo(); };
 
             makeSpacer(4);
-            makeCheckBox("wmd-autocom-toggle", "autocom", "-240px", _("Autocomplete"));
+            makeCheckBox("wmd-autocom-toggle", "autocom", "-240px", "Autocomplete");
 
             makeSpacer(5);
             buttons.help = makeHelpButton("wmd-help-button",getString("help"),"-240px");

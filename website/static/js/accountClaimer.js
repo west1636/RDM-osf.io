@@ -11,11 +11,6 @@ var bootbox = require('bootbox');
 
 var $osf = require('js/osfHelpers');
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-var agh = require('agh.sprintf');
-
 var currentUserId = window.contextVars.currentUser.id;
 
 function AccountClaimer (selector) {
@@ -33,16 +28,16 @@ function getClaimUrl() {
 }
 
 function alertFinished(email) {
-    $osf.growl(_('Email will arrive shortly'), [_('Please check <em>'), $osf.htmlEscape(email), '</em>'].join(''), 'success');
+    $osf.growl('Email will arrive shortly', ['Please check <em>', $osf.htmlEscape(email), '</em>'].join(''), 'success');
 }
 
 function onClickIfLoggedIn() {
     var pk = $(this).data('pk');
     if (pk !== currentUserId) {
         bootbox.confirm({
-            title: agh.sprintf(_('Claim as %1$s?'),$osf.htmlEscape(global.contextVars.currentUser.username)),
-            message: _('If you claim this account, a contributor of this project ') +
-                    _('will be emailed to confirm your identity.'),
+            title: 'Claim as ' + $osf.htmlEscape(global.contextVars.currentUser.username) + '?',
+            message: 'If you claim this account, a contributor of this project ' +
+                    'will be emailed to confirm your identity.',
             callback: function(confirmed) {
                 if (confirmed) {
                     $osf.postJSON(
@@ -60,7 +55,7 @@ function onClickIfLoggedIn() {
             },
             buttons:{
                 confirm:{
-                    label:_('Claim')
+                    label:'Claim'
                 }
             }
         });
@@ -72,7 +67,7 @@ AccountClaimer.prototype = {
     init: function() {
         var self = this;
         self.element.tooltip({
-            title: _('Is this you? Click to claim')
+            title: 'Is this you? Click to claim'
         });
         if (currentUserId.length) { // If user is logged in, ask for confirmation
             self.element.on('click', onClickIfLoggedIn);
@@ -98,13 +93,13 @@ AccountClaimer.prototype = {
                 params: function(params) {
                     return JSON.stringify(params);
                 },
-                title: _('Claim Account'),
+                title: 'Claim Account',
                 placement: 'bottom',
-                placeholder: _('Enter email...'),
+                placeholder: 'Enter email...',
                 validate: function(value) {
                     var trimmed = $.trim(value);
                     if (!$osf.isEmail(trimmed)) {
-                        return _('Not a valid email.');
+                        return 'Not a valid email.';
                     }
                 },
                 url: getClaimUrl.call(this),

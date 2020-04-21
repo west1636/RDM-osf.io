@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-{% load i18n %}
-<title>{% trans "Flagged Spam Nodes" %}</title>
+<title>Flagged Spam Nodes</title>
 {% endblock title %}
 {% block content %}
   {% url 'nodes:flagged-spam' as form_action %}

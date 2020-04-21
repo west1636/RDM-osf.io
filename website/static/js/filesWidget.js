@@ -5,10 +5,6 @@ var $osf = require('js/osfHelpers');
 var osfLanguage = require('js/osfLanguage');
 var Fangorn = require('js/fangorn').Fangorn;
 
-var rdmGettext = require('js/rdmGettext');
-var gt = rdmGettext.rdmGettext();
-var _ = function(msgid) { return gt.gettext(msgid); };
-
 /**
  * @class FilesWidget
  * Modularized files widget
@@ -33,7 +29,7 @@ var FilesWidget = function(divID, filesUrl, opts) {
         hScroll: null,
         columnTitles: function() {
             return [{
-                title: _('Name'),
+                title: 'Name',
                 width: '90%',
                 sort: true,
                 sortType: 'text'
@@ -76,7 +72,7 @@ FilesWidget.prototype.init = function() {
         self.fangornOpts.filesData = response.data;
         self.filebrowser = new Fangorn(self.fangornOpts);
     }).fail(function(xhr, status, error) {
-        Raven.captureMessage(_('Could not GET files'), {
+        Raven.captureMessage('Could not GET files', {
             extra: {
                 url: self.filesUrl,
                 textStatus: status,
@@ -91,7 +87,7 @@ FilesWidget.prototype.init = function() {
                 }
             }).append(
                 $('<span>', {
-                    html: _('Sorry, we could not load files right now. ') + osfLanguage.REFRESH_OR_SUPPORT
+                    html: 'Sorry, we could not load files right now. ' + osfLanguage.REFRESH_OR_SUPPORT
                 })
             )
         );
