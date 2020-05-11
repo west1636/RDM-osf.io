@@ -36,6 +36,7 @@ from api.base.utils import waterbutler_api_url_for
 import matplotlib as mpl           # noqa
 mpl.use('Agg')                     # noqa
 import matplotlib.pyplot as plt    # noqa
+from matplotlib.font_manager import FontProperties
 import matplotlib.ticker as ticker  # noqa
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import seaborn as sns
@@ -44,6 +45,9 @@ from admin.base import settings
 from admin.rdm.utils import RdmPermissionMixin, get_dummy_institution
 from admin.rdm_addons import utils
 import logging
+
+from django.utils.translation import ugettext_lazy as _
+
 logger = logging.getLogger(__name__)
 
 RANGE_STATISTICS = 10
@@ -192,9 +196,9 @@ class ProviderData(object):
             number_df_sum = self.number_df.groupby('left', as_index=False).sum()
             statistics_data.df = self.number_df
             number_sum_list = list(number_df_sum['height'].values.flatten())
-            statistics_data.title = 'Number of files'
-            statistics_data.y_label = 'File Numbers'
-            statistics_data.add('number', number_sum_list)
+            statistics_data.title = _('Number of files')
+            statistics_data.y_label = _('File Numbers')
+            statistics_data.add(_('number'), number_sum_list)
             statistics_data.graphstyle = 'whitegrid'
             statistics_data.background = '#EEEEFF'
             statistics_data.image_string = create_image_string(statistics_data.provider,
@@ -203,16 +207,16 @@ class ProviderData(object):
             size_df_sum = self.size_df.groupby('left', as_index=False).sum()
             statistics_data.df = self.size_df
             size_sum_list = list(size_df_sum['height'].values.flatten())
-            statistics_data.title = 'Subtotal of file sizes'
+            statistics_data.title = _('Subtotal of file sizes')
             statistics_data.y_label = 'File Sizes'
-            statistics_data.add('size', map(lambda x: approximate_size(x, True), size_sum_list))
+            statistics_data.add(_('size'), map(lambda x: approximate_size(x, True), size_sum_list))
             statistics_data.graphstyle = 'whitegrid'
             statistics_data.background = '#EEFFEE'
             statistics_data.image_string = create_image_string(statistics_data.provider, statistics_data=statistics_data)
         else:
             statistics_data.df = self.number_df
-            statistics_data.title = 'Number of files by extension type'
-            statistics_data.y_label = 'File Numbers'
+            statistics_data.title = _('Number of files by extension type')
+            statistics_data.y_label = _('File Numbers')
             statistics_data.graphstyle = 'whitegrid'
             statistics_data.background = '#FFEEEE'
             for ext in self.ext_list:
@@ -268,15 +272,16 @@ def create_image_string(provider, statistics_data):
         data = pd.DataFrame({'left': left, 'height': size_sum_list,
                              'type': statistics_data.data_type})
 
+    fp = FontProperties(fname=r'./ipaexg.ttf')
     # fig properties
-    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
+    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT), fontproperties=fp)
     sns.set_style(statistics_data.graphstyle)
     fig.patch.set_facecolor(statistics_data.background)
     ax = sns.pointplot(x='left', y='height', hue='type', data=data)
     ax.set_xticklabels(labels=statistics_data.label, rotation=20)
     ax.set_xlabel(xlabel=statistics_data.x_label)
     ax.set_ylabel(ylabel=statistics_data.y_label)
-    ax.set_title(statistics_data.title + ' in ' + provider)
+    ax.set_title((_('%(statisticsData)s in %(provider)s') % dict(statisticsData=statistics_data.title, provider=provider))
     ax.tick_params(labelsize=9)
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     plt.legend(loc='upper right', bbox_to_anchor=(1.1255555, 1), ncol=1, borderaxespad=1, shadow=True)
@@ -424,7 +429,7 @@ class ImageView(RdmPermissionMixin, UserPassesTestMixin, View):
         ax.set_xticklabels(labels=statistics_data.label, rotation=20)
         ax.set_xlabel(xlabel=statistics_data.x_label)
         ax.set_ylabel(ylabel=statistics_data.y_label)
-        ax.set_title(statistics_data.title + ' in ' + provider)
+        ax.set_title((_('%(statisticsData)s in %(provider)s') % dict(statisticsData=statistics_data.title, provider=provider))
         ax.tick_params(labelsize=9)
         ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
         plt.legend(loc='upper right', bbox_to_anchor=(1.1255555, 1), ncol=1, borderaxespad=1, shadow=True)
