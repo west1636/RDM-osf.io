@@ -36,6 +36,7 @@ from api.base.utils import waterbutler_api_url_for
 import matplotlib as mpl           # noqa
 mpl.use('Agg')                     # noqa
 import matplotlib.pyplot as plt    # noqa
+from matplotlib.font_manager import FontProperties
 import matplotlib.ticker as ticker  # noqa
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import seaborn as sns
@@ -271,8 +272,9 @@ def create_image_string(provider, statistics_data):
         data = pd.DataFrame({'left': left, 'height': size_sum_list,
                              'type': statistics_data.data_type})
 
+    fp = FontProperties(fname=r'./ipaexg.ttf')
     # fig properties
-    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
+    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT), fontproperties=fp)
     sns.set_style(statistics_data.graphstyle)
     fig.patch.set_facecolor(statistics_data.background)
     ax = sns.pointplot(x='left', y='height', hue='type', data=data)
