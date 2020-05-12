@@ -20,6 +20,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
+#: .\templates\base.html:89
+msgid "Sign out"
+msgstr "サインアウト"
+
 #: .\admin\rdm_statistics\views.py:198
 msgid "Number of files"
 msgstr "ファイル数"
