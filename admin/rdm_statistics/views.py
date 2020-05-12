@@ -272,7 +272,7 @@ def create_image_string(provider, statistics_data):
         data = pd.DataFrame({'left': left, 'height': size_sum_list,
                              'type': statistics_data.data_type})
 
-    fp = FontProperties(fname=r'./ipaexg.ttf')
+    #fp = FontProperties(fname=r'./ipaexg.ttf')
     # fig properties
     fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
     sns.set_style(statistics_data.graphstyle)
