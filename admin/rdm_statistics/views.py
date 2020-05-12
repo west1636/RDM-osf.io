@@ -274,7 +274,7 @@ def create_image_string(provider, statistics_data):
 
     fp = FontProperties(fname=r'./ipaexg.ttf')
     # fig properties
-    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT), fontproperties=fp)
+    fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
     sns.set_style(statistics_data.graphstyle)
     fig.patch.set_facecolor(statistics_data.background)
     ax = sns.pointplot(x='left', y='height', hue='type', data=data)
