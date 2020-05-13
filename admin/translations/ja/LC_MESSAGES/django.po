@@ -24,10 +24,6 @@ msgstr ""
 msgid "num"
 msgstr "数"
 
-#: test
-msgid "size"
-msgstr "サイズ"
-
 #: .\admin\rdm_statistics\views.py:198
 msgid "Number of files"
 msgstr "ファイル数"
@@ -55,6 +51,10 @@ msgstr "サイズ"
 #: .\admin\rdm_statistics\views.py:217
 msgid "Number of files by extension type"
 msgstr "拡張子タイプごとのファイル数"
+
+#: .\admin\rdm_statistics\views.py:282 .\admin\rdm_statistics\views.py:430
+msgid "%(statisticsData)s in %(provider)s"
+msgstr "%(provider)sの%(statisticsData)s"
 
 #: .\templates\banners\confirm_delete.html:4
 msgid "GakuNin RDM Admin | Delete banner"
