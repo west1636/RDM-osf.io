@@ -335,7 +335,7 @@ def create_pdf(request, is_pdf=True, **kwargs):
 def convert_to_pdf(html_string, file=False):
     # wkhtmltopdf settings
     wkhtmltopdf_path = os.path.join(os.path.dirname(__file__), '.', 'wkhtmltopdf')
-    pdfkit.font('./ipaexg.ttf')
+    #pdfkit.font('./ipaexg.ttf')
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     options = {
         'page-size': 'A4',
@@ -343,7 +343,9 @@ def convert_to_pdf(html_string, file=False):
         'margin-right': '0.60in',
         'margin-bottom': '0.60in',
         'margin-left': '0.60in',
-        'encoding': "UTF-8"
+        'encoding': "UTF-8",
+        'footer-font-name': 'IPAexGothic',
+        'footer-font-size': '24'
     }
     current_date = get_current_date()
     if file:
