@@ -24,6 +24,21 @@ msgstr ""
 msgid "num"
 msgstr "数"
 
+#: .\templates\base.html:313
+#: .\templates\rdm_statistics\statistics_report.html:290
+msgid "National Institute of Informatics"
+msgstr "国立情報学研究所"
+
+#: .\templates\base.html:314
+#: .\templates\rdm_statistics\statistics_report.html:291
+msgid "Terms of Use"
+msgstr "利用規約"
+
+#: .\templates\base.html:315
+#: .\templates\rdm_statistics\statistics_report.html:292
+msgid "Privacy Policy"
+msgstr "プライバシーポリシー"
+
 #: .\admin\rdm_statistics\views.py:198
 msgid "Number of files"
 msgstr "ファイル数"
