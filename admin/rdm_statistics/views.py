@@ -275,7 +275,7 @@ def create_image_string(provider, statistics_data):
     fp = FontProperties(fname=r'./ipaexg.ttf')
     # fig properties
     fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
-    sns.set(font=['IPAexGothic'])
+    sns.set(font_scale=5)
     sns.set_style(statistics_data.graphstyle)
     fig.patch.set_facecolor(statistics_data.background)
     ax = sns.pointplot(x='left', y='height', hue='type', data=data)
@@ -424,7 +424,7 @@ class ImageView(RdmPermissionMixin, UserPassesTestMixin, View):
             size_sum_list = list(size_df_sum['height'].values.flatten())
             data = pd.DataFrame({'left': left, 'height': size_sum_list, 'type': statistics_data.data_type})
         fig = plt.figure(figsize=(STATISTICS_IMAGE_WIDTH, STATISTICS_IMAGE_HEIGHT))
-        sns.set(font=['IPAexGothic'])
+        sns.set(font_scale=5)
         sns.set_style(statistics_data.graphstyle)
         fig.patch.set_facecolor(statistics_data.background)
         ax = sns.pointplot(x='left', y='height', hue='type', data=data)
