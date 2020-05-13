@@ -335,6 +335,7 @@ def create_pdf(request, is_pdf=True, **kwargs):
 def convert_to_pdf(html_string, file=False):
     # wkhtmltopdf settings
     wkhtmltopdf_path = os.path.join(os.path.dirname(__file__), '.', 'wkhtmltopdf')
+    pdfkit.font('./ipaexg.ttf')
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     options = {
         'page-size': 'A4',
