@@ -194,7 +194,7 @@ class ProviderData(object):
         statistics_data.data_type = data_type
         if data_type == 'num':
             number_df_sum = self.number_df.groupby('left', as_index=False).sum()
-            statistics_data.df = self.number_df
+            statistics_data.df = _(self.number_df)
             number_sum_list = list(number_df_sum['height'].values.flatten())
             statistics_data.title = _('Number of files')
             statistics_data.y_label = _('File Numbers')
@@ -205,7 +205,7 @@ class ProviderData(object):
                                                                statistics_data=statistics_data)
         elif data_type == 'size':
             size_df_sum = self.size_df.groupby('left', as_index=False).sum()
-            statistics_data.df = self.size_df
+            statistics_data.df = _(self.size_df)
             size_sum_list = list(size_df_sum['height'].values.flatten())
             statistics_data.title = _('Subtotal of file sizes')
             statistics_data.y_label = _('File Sizes')
@@ -214,7 +214,7 @@ class ProviderData(object):
             statistics_data.background = '#EEFFEE'
             statistics_data.image_string = create_image_string(statistics_data.provider, statistics_data=statistics_data)
         else:
-            statistics_data.df = self.number_df
+            statistics_data.df = _(self.number_df)
             statistics_data.title = _('Number of files by extension type')
             statistics_data.y_label = _('File Numbers')
             statistics_data.graphstyle = 'whitegrid'
