@@ -24,10 +24,6 @@ from website import settings
 
 logger = logging.getLogger(__name__)
 
-import sys
-
-logger.info('defaultencoding:' + sys.getdefaultencoding())
-
 TEMPLATE_DIR = settings.TEMPLATES_PATH
 
 _TPL_LOOKUP = TemplateLookup(
@@ -246,7 +242,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
             lookup=lookup_obj,
             input_encoding='utf-8',
             output_encoding='utf-8',
-            default_filters=['decode.utf8'],
+            default_filters=lookup_obj.template_args['default_filters'],
             imports=lookup_obj.template_args['imports']  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
         )
     # Don't cache in debug mode
@@ -257,7 +253,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     request.babel_translations = catalog
     app.babel_translations = catalog
 
-    return tpl.render(**data)
+    return tpl.render(**data).decode('utf-8', 'replace'))
 
 
 renderer_extension_map = {
