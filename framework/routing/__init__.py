@@ -24,6 +24,10 @@ from website import settings
 
 logger = logging.getLogger(__name__)
 
+import sys
+
+logger.info('defaultencoding:' + sys.getdefaultencoding())
+
 TEMPLATE_DIR = settings.TEMPLATES_PATH
 
 _TPL_LOOKUP = TemplateLookup(
@@ -237,12 +241,12 @@ def render_mako_string(tpldir, tplname, data, trust=True):
         with open(os.path.join(tpldir, tplname)) as f:
             tpl_text = f.read()
         tpl = Template(
-            tpl_text.decode('utf-8'),
+            tpl_text,
             format_exceptions=show_errors,
             lookup=lookup_obj,
             input_encoding='utf-8',
             output_encoding='utf-8',
-            default_filters=lookup_obj.template_args['default_filters'],
+            default_filters=['decode.utf8'],
             imports=lookup_obj.template_args['imports']  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
         )
     # Don't cache in debug mode
