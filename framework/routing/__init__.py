@@ -237,7 +237,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
         with open(os.path.join(tpldir, tplname)) as f:
             tpl_text = f.read()
         tpl = Template(
-            tpl_text.encode('utf-8'),
+            tpl_text.decode('utf-8'),
             format_exceptions=show_errors,
             lookup=lookup_obj,
             input_encoding='utf-8',
