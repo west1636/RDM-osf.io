@@ -253,7 +253,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     request.babel_translations = catalog
     app.babel_translations = catalog
 
-    return tpl.render(**data).decode('utf-8', 'replace'))
+    return tpl.render(**data).decode('utf-8', 'replace')
 
 
 renderer_extension_map = {
