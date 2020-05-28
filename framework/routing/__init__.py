@@ -237,7 +237,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
         with open(os.path.join(tpldir, tplname)) as f:
             tpl_text = f.read()
         tpl = Template(
-            tpl_text,
+            unicode(tpl_text),
             format_exceptions=show_errors,
             lookup=lookup_obj,
             input_encoding='utf-8',
@@ -253,7 +253,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     request.babel_translations = catalog
     app.babel_translations = catalog
 
-    return tpl.render(**data).decode('utf-8', 'replace')
+    return tpl.render(**data)
 
 
 renderer_extension_map = {
