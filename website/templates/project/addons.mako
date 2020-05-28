@@ -1,3 +1,4 @@
+## -*- coding: utf-8 -*-
 <%inherit file="project/project_base.mako"/>
 <%def name="title()">${node['title']} Add-ons</%def>
 
