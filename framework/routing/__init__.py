@@ -234,8 +234,8 @@ def render_mako_string(tpldir, tplname, data, trust=True):
 
     tpl = mako_cache.get(tplname)
     if tpl is None:
-        with open(os.path.join(tpldir, tplname),encoding='utf-8') as f:
-            tpl_text = f.read()
+        with open(os.path.join(tpldir, tplname)) as f:
+            tpl_text = f.read().decode(encoding='utf-8')
         tpl = Template(
             tpl_text,
             format_exceptions=show_errors,
