@@ -60,7 +60,6 @@ _TPL_LOOKUP_SAFE = TemplateLookup(
         settings.ADDON_PATH,
     ],
     module_directory='/tmp/mako_modules',
-    source_encoding='utf-8',
 )
 
 REDIRECT_CODES = [
