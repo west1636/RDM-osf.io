@@ -40,7 +40,6 @@ _TPL_LOOKUP = TemplateLookup(
         settings.ADDON_PATH,
     ],
     module_directory='/tmp/mako_modules',
-    source_encoding='utf-8',
 )
 
 _TPL_LOOKUP_SAFE = TemplateLookup(
