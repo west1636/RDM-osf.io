@@ -31,7 +31,7 @@
                     <div class="panel-heading clearfix">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3 class="panel-title">${_("Select Add-ons")}</h3>
+                                <h3 class="panel-title">${_("Select’ Add-ons")}</h3>
                             </div>
                         </div>
                     </div>
