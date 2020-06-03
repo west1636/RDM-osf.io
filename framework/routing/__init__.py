@@ -28,8 +28,7 @@ TEMPLATE_DIR = settings.TEMPLATES_PATH
 
 _TPL_LOOKUP = TemplateLookup(
     default_filters=[
-#        'unicode',  # default filter; must set explicitly when overriding
-        'decode.utf8',  
+        'unicode',  # default filter; must set explicitly when overriding
     ],
     imports=[
         'from flask_babel import gettext as _',
@@ -40,13 +39,12 @@ _TPL_LOOKUP = TemplateLookup(
         TEMPLATE_DIR,
         settings.ADDON_PATH,
     ],
-    module_directory='/tmp/mako_modules',
+    module_directory='/tmp/mako_modules'
 )
 
 _TPL_LOOKUP_SAFE = TemplateLookup(
     default_filters=[
-#        'unicode',  # default filter; must set explicitly when overriding
-        'decode.utf8',
+        'unicode',  # default filter; must set explicitly when overriding
         'temp_ampersand_fixer',  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
         'h',
     ],
@@ -245,7 +243,8 @@ def render_mako_string(tpldir, tplname, data, trust=True):
             input_encoding='utf-8',
             output_encoding='utf-8',
             default_filters=lookup_obj.template_args['default_filters'],
-            imports=lookup_obj.template_args['imports']  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
+            imports=lookup_obj.template_args['imports'],  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
+            encoding_errors='replace'
         )
     # Don't cache in debug mode
     if not app.debug:
@@ -254,7 +253,6 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
     request.babel_translations = catalog
     app.babel_translations = catalog
-    data.update(source_encoding='utf-8')
 
     return tpl.render(**data)
 
