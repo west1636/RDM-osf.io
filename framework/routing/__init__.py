@@ -28,7 +28,8 @@ TEMPLATE_DIR = settings.TEMPLATES_PATH
 
 _TPL_LOOKUP = TemplateLookup(
     default_filters=[
-        'unicode',  # default filter; must set explicitly when overriding
+#        'unicode',  # default filter; must set explicitly when overriding
+        'decode.utf8',  
     ],
     imports=[
         'from flask_babel import gettext as _',
@@ -44,7 +45,8 @@ _TPL_LOOKUP = TemplateLookup(
 
 _TPL_LOOKUP_SAFE = TemplateLookup(
     default_filters=[
-        'unicode',  # default filter; must set explicitly when overriding
+#        'unicode',  # default filter; must set explicitly when overriding
+        'decode.utf8',
         'temp_ampersand_fixer',  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
         'h',
     ],
@@ -252,6 +254,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
     request.babel_translations = catalog
     app.babel_translations = catalog
+    data.update(source_encoding='utf-8')
 
     return tpl.render(**data)
 
