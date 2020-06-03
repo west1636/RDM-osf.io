@@ -252,7 +252,6 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     catalog = support.Translations.load(app.config['BABEL_TRANSLATION_DIRECTORIES'], get_locale(), app.config['BABEL_DOMAIN'])
     request.babel_translations = catalog
     app.babel_translations = catalog
-    data.update(source_encoding='utf-8')
 
     return tpl.render(**data)
 
