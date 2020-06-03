@@ -22,6 +22,10 @@ from framework.sessions import session
 
 from website import settings
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 logger = logging.getLogger(__name__)
 
 TEMPLATE_DIR = settings.TEMPLATES_PATH
