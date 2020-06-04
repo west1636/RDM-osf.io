@@ -1,4 +1,3 @@
-## -*- coding: utf-8 -*-
 <% from website import settings %>
 
 <!DOCTYPE html>
@@ -96,7 +95,7 @@
     ${self.javascript()}
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
-    <link rel="manifest" href="/static/public/js/manifest.json">
+    <link rel="manifest" href="/static/js/manifest.json">
 </head>
 <body data-spy="scroll" data-target=".scrollspy">
 
@@ -152,9 +151,11 @@
     % if not user_id:
     <div id="cookieBanner" class="alert warningBanner">
         <div id="cookieText" class="warningBannerText">
-            ${_("This website relies on cookies to help provide a better user experience. By clicking Accept or continuing to use the site, you agree. For more information,\
-            see our <a %(meatwikiUrl)s>Privacy Policy</a>\
-            and information on <a %(meatwikiUrl)s>cookie use</a>.") % dict(meatwikiUrl="href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'") | n}
+            ${_("The National Institute of Informatics (NII) uses cookies to operate the NII Research Data Cloud service and to improve your user experience. \
+                 If you intend to use the GakuNin RDM, please read our <a %(meatwikiUrl)s>Privacy Policy</a> and information on <a %(meatwikiUrl)s>NII use of cookies</a>. \
+                 By clicking Accept or continuing to use our website, you consent to the cookies use on this site. \
+                 If you do not agree with the cookies use, please change your browser settings to disable cookies or stop using our website. \
+                 Please be aware that you may not be able to use some functions on our website when you have cookies disabled.") % dict(meatwikiUrl="href='https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=32676422'") | n}
         </div>
         <div class="warningBannerAcceptBtn">
             <div class="btn btn-default" data-dismiss="alert" data-bind="click: accept" aria-label="Accept">${_("Accept")}</div>
