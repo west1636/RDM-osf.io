@@ -11,7 +11,7 @@
 
                 <div class="panel panel-default osf-affix" data-spy="affix" data-offset-top="0" data-offset-bottom="263"><!-- Begin sidebar -->
                     <ul class="nav nav-stacked nav-pills">
-                        <li><a href="#selectAddonsAnchor">${_("Select Add-ons")}</a></li>
+                        <li><a href="#selectAddonsAnchor">アドオンを選択</a></li>
                         <li><a href="#configureAddonsAnchor">${_("Configure Add-ons")}</a></li>
                     </ul>
                 </div><!-- End sidebar -->
