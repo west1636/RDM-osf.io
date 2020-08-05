@@ -589,7 +589,37 @@
                 "status": "partial",
                 "text": "IQB-RIMS content will be registered, but version history will not be copied to the registration."
             }
-        }
+        },
+        "Integromat": {
+            "Permissions": {
+                "status": "none",
+                "text": "The GakuNin RDM does not affect the permissions of Integromat."
+            },
+            "View / download file versions": {
+                "status": "none",
+                "text": "The Integromat add-on does not provide Storage Features."
+            },
+            "Add / update files": {
+                "status": "none",
+                "text": "The Integromat add-on does not provide Storage Features."
+            },
+            "Delete files": {
+                "status": "none",
+                "text": "The Integromat add-on does not provide Storage Features."
+            },
+            "Logs": {
+                "status": "none",
+                "text": "The Integromat add-on does not provide Storage Features."
+            },
+            "Forking": {
+                "status": "partial",
+                "text": "Forking a project or component copies information about linked Integromat but the GakuNin RDM does not affect authentication of Integromat."
+            },
+            "Registering": {
+                "status": "none",
+                "text": "Integromat information will not be registered."
+            }
+        },
     },
     "disclaimers": [
         "This add-on connects your GakuNin RDM project to an external service. Use of this service is bound by its terms and conditions. The GakuNin RDM is not responsible for the service or for your use thereof.",
