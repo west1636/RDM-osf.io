@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.6.0\n"
 "Report-Msgid-Bugs-To: rocs-office@nii.ac.jp\n"
-"POT-Creation-Date: 2020-07-02 20:20+0900\n"
-"PO-Revision-Date: 2020-07-02 20:20+0900\n"
+"POT-Creation-Date: 2020-08-06 20:15+0900\n"
+"PO-Revision-Date: 2020-08-06 20:15+0900\n"
 "Last-Translator: Shunta Nishikawa\n"
 "Language: ja\n"
 "Language-Team: RCOS <rocs-office@nii.ac.jp>\n"
@@ -1029,6 +1029,10 @@ msgstr "ライブラリ"
 #: addons/zotero/templates/zotero_node_settings.mako:69
 msgid "Select"
 msgstr "選択"
+
+#: website/templates/base.mako:4
+msgid "en"
+msgstr "ja"
 
 #: website/templates/base.mako:110
 msgid "Title"

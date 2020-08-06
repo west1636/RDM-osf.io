@@ -1,7 +1,7 @@
 <% from website import settings %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang=${_("en")}>
 <head>
     <meta charset="utf-8">
     <title>${osf_page_name} | ${self.title()}</title>
