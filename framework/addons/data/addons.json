@@ -619,7 +619,7 @@
                 "status": "none",
                 "text": "Integromat information will not be registered."
             }
-        },
+        }
     },
     "disclaimers": [
         "This add-on connects your GakuNin RDM project to an external service. Use of this service is bound by its terms and conditions. The GakuNin RDM is not responsible for the service or for your use thereof.",
