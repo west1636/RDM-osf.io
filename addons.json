@@ -24,8 +24,7 @@
         "s3compat",
         "nextcloud",
         "iqbrims",
-        "dropboxbusiness",
-        "integromat"
+        "dropboxbusiness"
     ],
     "addons_default": [
         "osfstorage",
@@ -109,8 +108,7 @@
         "s3compat": "S3 Compatible Storage is a file storage add-on. Connect your S3 Compatible Storage account to an GakuNin RDM project to interact with files hosted on S3 Compatible Storage via the GakuNin RDM.",
         "nextcloud": "Nextcloud is an open source, self-hosted file sync and share app platform. Connect your Nextcloud account to an GakuNin RDM project to interact with files hosted on Nextcloud via the GakuNin RDM.",
         "iqbrims": "IQB-RIMS is a file storage add-on. Connect your Google Drive account to an GakuNin RDM project to interact with files hosted on Google Drive via the GakuNin RDM.",
-        "dropboxbusiness": "Dropbox Business",
-        "integromat": "Integromat is one of web integration services that connects web services such as Zoom and Slack to connect an automated workflow."
+        "dropboxbusiness": "Dropbox Business"
     },
     "addons_url": {
         "box": "http://www.box.com",
@@ -133,7 +131,6 @@
         "s3compat": "https://aws.amazon.com/s3/",
         "nextcloud": "https://nextcloud.com/",
         "iqbrims": "https://drive.google.com",
-		"dropboxbusiness": "http://www.dropbox.com",
-		"integromat": "https://www.integromat.com/"
+        "dropboxbusiness": "http://www.dropbox.com"
     }
 }
