@@ -345,11 +345,11 @@ PENDING_EMBARGO_TERMINATION_NON_ADMIN = Mail(
 
 FILE_OPERATION_SUCCESS = Mail(
     'file_operation_success',
-    subject='Your ${action} has finished',
+    subject='${u"移動" if action == "move" else u"コピー"}が終了しました / Your ${action} has finished',
 )
 FILE_OPERATION_FAILED = Mail(
     'file_operation_failed',
-    subject='Your ${action} has failed',
+    subject='${u"移動" if action == "move" else u"コピー"}が失敗しました / Your ${action} has failed',
 )
 
 UNESCAPE = '<% from osf.utils.sanitize import unescape_entities %> ${unescape_entities(src.title)}'
