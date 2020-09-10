@@ -119,7 +119,7 @@ INSTALLED_APPS = (
     'addons.jupyterhub',
     'addons.iqbrims',
     'addons.dropboxbusiness',
-    'addons.integromat'
+    'addons.integromat',
 )
 
 # local development using https
