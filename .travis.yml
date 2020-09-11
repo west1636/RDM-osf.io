@@ -169,6 +169,7 @@ after_script:
     - inv remove_failures_from_testmon --db-path=$HOME/.cache/testmon/.testmondata_$TEST_BUILD
 
 script:
+    - ls osf/migrations
     - export COVERAGE=`if [ $(echo "$TRAVIS_BRANCH"|grep -e "feature/") ]; then echo "--coverage"; else echo ""; fi`
     # Testmon will run for PRs, but will be disabled when merging into master or develop
     - export TESTMON=`if [[ "$TRAVIS_PULL_REQUEST_BRANCH" == "" && "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_PULL_REQUEST_BRANCH" == "" && "$TRAVIS_BRANCH" == "master" ]]; then echo ""; else  echo "--testmon"; fi`
