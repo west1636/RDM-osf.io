@@ -71,6 +71,8 @@ def integromat_add_user_account(auth, **kwargs):
 
     #integromat auth
 
+    user = auth.user
+
     try:
         account = ExternalAccount(
             provider=SHORT_NAME,
@@ -88,8 +90,6 @@ def integromat_add_user_account(auth, **kwargs):
         if account.oauth_key != access_token:
             account.oauth_key = access_token
             account.save()
-
-    user = auth.user
 
     if not user.external_accounts.filter(id=account.id).exists():
 
