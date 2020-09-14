@@ -34,9 +34,6 @@ class IntegromatSerializer(OAuthAddonSerializer):
     @property
     def serialized_urls(self):
 
-        node = self.node_settings
-        user = self.user_settings
-
         ret = self.addon_serialized_urls
 
         return ret
@@ -59,8 +56,6 @@ class IntegromatSerializer(OAuthAddonSerializer):
             self.node_settings = node_settings
         if not self.user_settings:
             self.user_settings = user.get_addon(self.addon_short_name)
-        
-        user_settings = self.node_settings.user_settings or self.user_settings
 
         result = {
             'urls': self.serialized_urls,
