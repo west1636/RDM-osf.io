@@ -1,8 +1,6 @@
-from website.util import web_url_for
 from addons.base.serializer import OAuthAddonSerializer
-from addons.base.models import BaseOAuthUserSettings
 import logging
-import inspect
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,10 +49,8 @@ class IntegromatSerializer(OAuthAddonSerializer):
         user = self.user_settings
 
         result = {
-#            'importAuth': node.api_url_for('_import_auth'),
             'create': node.api_url_for('integromat_add_user_account', user_settings=user),
             'deauthorize': node.api_url_for('integromat_deauthorize_node'),
-#            'config': node.api_url_for('_set_config'),
         }
 
         return result

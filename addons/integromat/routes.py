@@ -11,6 +11,13 @@ api_routes = {
     'rules': [
 
         Rule(
+            '/settings/integromat/',
+            'get',
+            views.integromat_user_config_get,
+            json_renderer,
+        ),
+
+        Rule(
             '/settings/integromat/accounts/',
             'post',
             views.integromat_add_user_account,
