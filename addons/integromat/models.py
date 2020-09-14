@@ -5,6 +5,7 @@ from addons.base.models import BaseOAuthNodeSettings, BaseOAuthUserSettings
 from django.db import models
 from addons.integromat.serializer import IntegromatSerializer
 from osf.models import ExternalAccount
+from osf.models.rdm_addons import RdmAddonOption
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,10 @@ class NodeSettings(BaseOAuthNodeSettings):
     folder_id = models.TextField(blank=True, null=True)
     folder_name = models.TextField(blank=True, null=True)
     user = models.TextField(blank=True, null=True)
+    addon_option = models.ForeignKey(
+        RdmAddonOption, null=True, blank=True,
+        related_name='integromat_addon_option',
+        on_delete=models.CASCADE)
 
     @property
     def folder_path(self):
