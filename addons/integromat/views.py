@@ -122,4 +122,4 @@ def authIntegromat(hApiKey, hSdkVersion):
 
     logger.info(response.text.encode('utf8'))
 
-    return false
+    return False
