@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
 from rest_framework import status as http_status
 from website.util import api_url_for
-from rest_framework import status as http_status
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +111,7 @@ integromat_deauthorize_node = generic_views.deauthorize_node(
 def authIntegromat(access_token, hSdkVersion):
 
     integromatApiUrl = "https://api.integromat.com/v1/app"
-
+    authSuccess = False
     token = 'Token ' + access_token
     payload = {}
     headers = {
@@ -120,9 +119,15 @@ def authIntegromat(access_token, hSdkVersion):
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
-    response=requests.request("GET", integromatApiUrl, headers=headers, data = payload)
+    response = requests.request("GET", integromatApiUrl, headers=headers, data=payload)
 
     logger.info('integromatLog1::headers' + str(headers))
     logger.info('integromatLog2::' + str(response.text.encode('utf8')))
+    logger.info('integromatLog3::' + str(response.message))
+
+    if not response.message == 'Invalid credentials.':
+        authSuccess = True
+
+    logger.info('integromatLog4::' + str(authSuccess))
 
     return False
