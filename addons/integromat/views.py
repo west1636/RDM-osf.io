@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
 from rest_framework import status as http_status
 from website.util import api_url_for
+from rest_framework import status as http_status
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ def integromat_add_user_account(auth, **kwargs):
 
     #integromat auth
     if not authIntegromat(access_token, hSdkVersion):
-        raise AuthError('AuthError')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     user = auth.user
 
@@ -108,18 +109,19 @@ integromat_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
 
-def authIntegromat(hApiKey, hSdkVersion):
+def authIntegromat(access_token, **kwargs):
 
     integromatApiUrl = "https://api.integromat.com/v1/app"
 
     payload = {}
     headers = {
-        'Authorization': hApiKey,
+        'Authorization': access_token,
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
     response=requests.request("GET", integromatApiUrl, headers=headers, data = payload)
 
-    logger.info('integromatLog::' + str(response.text.encode('utf8')))
+    logger.info('integromatLog1::headers' + str(headers))
+    logger.info('integromatLog2::' + str(response.text.encode('utf8')))
 
     return False
