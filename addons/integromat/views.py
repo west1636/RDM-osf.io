@@ -110,7 +110,7 @@ integromat_deauthorize_node = generic_views.deauthorize_node(
 
 def authIntegromat(access_token, hSdkVersion):
 
-    integromatApiUrl = "https://api.integromat.com/v1/app"
+    integromatApiUrl = 'https://api.integromat.com/v1/app'
     authSuccess = False
     token = 'Token ' + access_token
     payload = {}
@@ -120,14 +120,16 @@ def authIntegromat(access_token, hSdkVersion):
     }
 
     response = requests.request("GET", integromatApiUrl, headers=headers, data=payload)
+    authJson = response.json()
 
     logger.info('integromatLog1::headers' + str(headers))
     logger.info('integromatLog2::' + str(response.text.encode('utf8')))
-    logger.info('integromatLog3::' + str(response.message))
+    logger.info('integromatLog3::' + str(authJson))
+    logger.info('integromatLog4::' + str(authJson[message]))
 
-    if not response.message == 'Invalid credentials.':
+    if not authJson[message] == 'Invalid credentials.':
         authSuccess = True
 
-    logger.info('integromatLog4::' + str(authSuccess))
+    logger.info('integromatLog5::' + str(authSuccess))
 
     return False
