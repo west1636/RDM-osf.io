@@ -63,15 +63,15 @@ def integromat_user_config_get(auth, **kwargs):
 def integromat_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
-    hSdkVersion = '2.0.0'
+    hSdkVersion='2.0.0'
     try:
-        access_token = request.json.get('integromat_api_token')
+        access_token=request.json.get('integromat_api_token')
 
     except KeyError:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     #integromat auth
-    if !authIntegromat(access_token, hSdkVersion):
+    if not authIntegromat(access_token, hSdkVersion):
         raise AuthError(exc.error_message)
 
     user = auth.user
