@@ -125,9 +125,9 @@ def authIntegromat(access_token, hSdkVersion):
     logger.info('integromatLog1::headers' + str(headers))
     logger.info('integromatLog2::' + str(response.text.encode('utf8')))
     logger.info('integromatLog3::' + str(authJson))
-    logger.info('integromatLog4::' + str(authJson[message]))
+    logger.info('integromatLog4::' + str(authJson['message']))
 
-    if not authJson[message] == 'Invalid credentials.':
+    if not authJson['message'] == 'Invalid credentials.':
         authSuccess = True
 
     logger.info('integromatLog5::' + str(authSuccess))
