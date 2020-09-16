@@ -63,16 +63,16 @@ def integromat_user_config_get(auth, **kwargs):
 def integromat_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
-    hSdkVersion='2.0.0'
+    hSdkVersion = '2.0.0'
     try:
-        access_token=request.json.get('integromat_api_token')
+        access_token = request.json.get('integromat_api_token')
 
     except KeyError:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     #integromat auth
     if not authIntegromat(access_token, hSdkVersion):
-        raise AuthError(exc.error_message)
+        raise AuthError('AuthError')
 
     user = auth.user
 
@@ -118,8 +118,8 @@ def authIntegromat(hApiKey, hSdkVersion):
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
-    response = requests.request("GET", url, headers=headers, data = payload)
+    response=requests.request("GET", integromatApiUrl, headers=headers, data = payload)
 
-    logger.info(response.text.encode('utf8'))
+    logger.info('integromatLog::' + str(response.text.encode('utf8')))
 
     return False
