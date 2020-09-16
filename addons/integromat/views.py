@@ -109,7 +109,7 @@ integromat_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
 
-def authIntegromat(access_token, **kwargs):
+def authIntegromat(access_token, hSdkVersion):
 
     integromatApiUrl = "https://api.integromat.com/v1/app"
 
