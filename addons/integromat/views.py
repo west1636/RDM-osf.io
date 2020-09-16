@@ -127,7 +127,7 @@ def authIntegromat(access_token, hSdkVersion):
     logger.info('integromatLog3::' + str(authJson))
     logger.info('integromatLog4::' + str(authJson['message']))
 
-    if not authJson['message'] == 'Invalid credentials.':
+    if not type(authJson) is dict :
         authSuccess = True
 
     logger.info('integromatLog5::' + str(authSuccess))
