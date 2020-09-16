@@ -113,9 +113,10 @@ def authIntegromat(access_token, hSdkVersion):
 
     integromatApiUrl = "https://api.integromat.com/v1/app"
 
+    token = 'Token ' + access_token
     payload = {}
     headers = {
-        'Authorization': access_token,
+        'Authorization': token,
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
