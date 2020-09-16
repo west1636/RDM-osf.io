@@ -2,7 +2,7 @@
 from flask import request
 import logging
 
-
+import requests
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.integromat.serializer import IntegromatSerializer
@@ -63,6 +63,7 @@ def integromat_user_config_get(auth, **kwargs):
 def integromat_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
+    hSdkVersion = '2.0.0'
     try:
         access_token = request.json.get('integromat_api_token')
 
@@ -70,6 +71,8 @@ def integromat_add_user_account(auth, **kwargs):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     #integromat auth
+    if !authIntegromat(access_token, hSdkVersion):
+        raise AuthError(exc.error_message)
 
     user = auth.user
 
@@ -104,3 +107,19 @@ def integromat_add_user_account(auth, **kwargs):
 integromat_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
+
+def authIntegromat(hApiKey, hSdkVersion):
+
+    integromatApiUrl = "https://api.integromat.com/v1/app"
+
+    payload = {}
+    headers = {
+        'Authorization': hApiKey,
+        'x-imt-apps-sdk-version': hSdkVersion
+    }
+
+    response = requests.request("GET", url, headers=headers, data = payload)
+
+    logger.info(response.text.encode('utf8'))
+
+    return false
