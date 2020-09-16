@@ -120,7 +120,6 @@ INSTALLED_APPS = (
     'addons.iqbrims',
     'addons.dropboxbusiness',
     'addons.nextcloudinstitutions',
-    'addons.integromat',
 )
 
 # local development using https
