@@ -102,7 +102,7 @@ def integromat_add_user_account(auth, **kwargs):
     except ValidationError:
         # ... or get the old one
         account = ExternalAccount.objects.get(
-            provider='integromat', provider_id=access_token
+            provider='integromat', provider_id=webhook_url
         )
         if account.oauth_key != access_token:
             account.oauth_key = access_token
