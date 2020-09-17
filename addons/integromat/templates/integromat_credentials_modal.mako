@@ -10,8 +10,6 @@
                 <div class="modal-body">
 
                     <div class="row">
-                        <div class="col-sm-3"></div>
-
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="apiToken">API Token</label>
@@ -21,6 +19,12 @@
                                         (Get from Integromat <i class="fa fa-external-link-square"></i>)
                                     </a>
                                 <input class="form-control" data-bind="value: integromatApiToken" id="integromat_api_token" name="integromat_Api_Token" />
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <label for="apiToken">Webhook URL</label>
+                                <input class="form-control" data-bind="value: integromatWebhookUrl" id="integromat_webhook_url" name="integromat_Webhook_Url" />
                             </div>
                         </div>
                     </div><!-- end row -->
