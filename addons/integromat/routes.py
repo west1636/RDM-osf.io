@@ -3,8 +3,30 @@
 """
 
 from framework.routing import Rule, json_renderer
+from website.routes import OsfWebRenderer
 
 from addons.integromat import views
+
+TEMPLATE_DIR = './addons/integromat/templates/'
+
+# HTML endpoints
+page_routes = {
+
+    'rules': [
+
+        # Home (Base) | GET
+        Rule(
+            [
+                '/<pid>/integromat',
+                '/<pid>/node/<nid>/integromat',
+            ],
+            'get',
+            views.project_integromat,
+            OsfWebRenderer('page.mako', trust=False, template_dir=TEMPLATE_DIR)
+        ),
+
+    ]
+}
 
 # JSON endpoints
 api_routes = {
