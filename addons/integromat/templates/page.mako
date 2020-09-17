@@ -10,22 +10,23 @@
             % if has_auth:
                 % if not is_registration:
                     <div class="panel-body">
-                        <input type="hidden" id="infoConf">
-                        <div class="container-fluid" style="padding: 0px">
-                            <div>
-                                <div class="pull-left" style="margin-bottom: 5px">
-                                    Start Date <input type="text" id="startConf" placeholder='Start date' size="10" autocomplete="off">
+                        <form action="http://localhost:5000/hy4wa/addons/" method="post">
+                            <div class="container-fluid" style="padding: 0px">
+                                <div>
+                                    <div class="pull-left" style="margin-bottom: 5px">
+                                        Start Date <input type="text" id="startConf" placeholder='Start date' size="10" autocomplete="off">
+                                    </div>
+                                    <div class="pull-left" style="margin-left: 10px; margin-bottom: 5px">
+                                        Duration <input type="text" id="durationConf" placeholder='Duration' size="10" autocomplete="off">
+                                    </div>
                                 </div>
                                 <div class="pull-left" style="margin-left: 10px; margin-bottom: 5px">
-                                    Duration <input type="text" id="durationConf" placeholder='Duration' size="10" autocomplete="off">
+                                    Topic <input type="text" id="topicConf" placeholder='Topic' size="10" autocomplete="off">
+                                </div>
+                                <button id="registConf" type="submit" class="btn btn-sm btn-default pull-left" style="margin-left: 10px; margin-bottom: 5px">Register Conference</button>
                                 </div>
                             </div>
-                            <div class="pull-left" style="margin-left: 10px; margin-bottom: 5px">
-                                Topic <input type="text" id="topicConf" placeholder='Topic' size="10" autocomplete="off">
-                            </div>
-                            <div id="registConf" class="btn btn-sm btn-default pull-left" style="margin-left: 10px; margin-bottom: 5px">
-                                Register Conference
-                            </div>
+                        </form>
                     </div>
                 % endif
             % else:

@@ -105,13 +105,14 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
         self.super.construct.call(self, addonName, url, selector, folderPicker, opts, tbOpts);
 
         self.integromatApiToken = ko.observable();
-//		self.urls = ko.observable({});
+        self.integromatWebhookUrl = ko.observable();
 
 
     },
     clearModal : function() {
         var self = this;
         self.integromatApiToken(null);
+        self.integromatWebhookUrl(null);
     },
     connectAccount : function() {
         var self = this;
@@ -119,18 +120,18 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
         if (!self.integromatApiToken() ){
             self.changeMessage('Please enter an API token.', 'text-danger');
             return;
-			}
-/*
-        return $osf.postJSON(
-            self.urls().create, {
-                integromat_api_token: self.integromatApiToken()
-				}
-*/
+        }
+        if (!self.integromatWebhookUrl() ){
+            self.changeMessage('Please enter an Webhook URL.', 'text-danger');
+            return;
+        }
+
         var url = self.urls().create;
         return osfHelpers.postJSON(
             url,
             ko.toJS({
-                integromat_api_token: self.integromatApiToken()
+                integromat_api_token: self.integromatApiToken(),
+                integromat_webhook_url: self.integromatWebhookUrl()
             })
         ).done(function() {
             self.clearModal();

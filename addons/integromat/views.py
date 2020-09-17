@@ -79,6 +79,7 @@ def integromat_add_user_account(auth, **kwargs):
     hSdkVersion = '2.0.0'
     try:
         access_token = request.json.get('integromat_api_token')
+        webhook_url = request.json.get('integromat_webhook_url')
 
     except KeyError:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
@@ -95,7 +96,7 @@ def integromat_add_user_account(auth, **kwargs):
             provider_name=FULL_NAME,
             display_name=user.username,
             oauth_key=access_token,
-            provider_id=access_token,
+            provider_id=webhook_url,
         )
         account.save()
     except ValidationError:
