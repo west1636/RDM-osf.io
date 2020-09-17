@@ -271,7 +271,8 @@ def project_integromat(auth, **kwargs):
         'node_categories': [
             {'value': key, 'display_name': value}
             for key, value in settings.NODE_CATEGORY_MAP.items()
-        ]
+        ],
+        'has_auth': integromat.has_auth
     }
 
     if embed_contributors and not anonymous:
