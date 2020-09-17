@@ -1,5 +1,5 @@
 /**
-* Module that controls the S3 user settings. Includes Knockout view-model
+* Module that controls the Integromat user settings. Includes Knockout view-model
 * for syncing data.
 */
 
@@ -9,91 +9,61 @@ var Raven = require('raven-js');
 var bootbox = require('bootbox');
 require('js/osfToggleHeight');
 
-var language = require('js/osfLanguage').Addons.s3;
+var language = require('js/osfLanguage').Addons.integromat;
 var osfHelpers = require('js/osfHelpers');
 var addonSettings = require('js/addonSettings');
-var ChangeMessageMixin = require('js/changeMessage');
-
+var oop = require('js/oop');
+var OAuthAddonSettingsViewModel = require('js/addonSettings.js').OAuthAddonSettingsViewModel;
 
 var ExternalAccount = addonSettings.ExternalAccount;
 
-var $modal = $('#s3InputCredentials');
+var $modal = $('#integromatCredentialsModal');
 
 
-function ViewModel(url) {
-    var self = this;
+var ViewModel = oop.extend(OAuthAddonSettingsViewModel,{
+    constructor: function(url){
+        var self = this;
+        self.name = 'integromat';
+        self.properName = 'Integromat';
+        self.accounts = ko.observableArray();
+        self.message = ko.observable('');
+        self.messageClass = ko.observable('');
+        const otherString = 'Other (Please Specify)';
 
-    self.properName = 'Amazon S3';
-    self.accessKey = ko.observable();
-    self.secretKey = ko.observable();
-    self.account_url = '/api/v1/settings/s3/accounts/';
-    self.accounts = ko.observableArray();
+        self.url = url;
+        self.properName = 'Integromat';
+        self.integromatApiToken = ko.observable();
+        self.urls = ko.observable({});
+        self.hosts = ko.observableArray([]);
+        self.selectedHost = ko.observable();    // Host specified in select element
+        self.customHost = ko.observable();      // Host specified in input element
+        // Whether the initial data has been loaded
+        self.loaded = ko.observable(false);
 
-    ChangeMessageMixin.call(self);
-
-    /** Reset all fields from S3 credentials input modal */
-    self.clearModal = function() {
+        self.showApiTokenInput = ko.pureComputed(function() {
+            return Boolean(self.selectedHost());
+        });
+    },
+    clearModal: function() {
+        /** Reset all fields from Integromat host selection modal */
+        var self = this;
         self.message('');
         self.messageClass('text-info');
-        self.accessKey(null);
-        self.secretKey(null);
-    };
-    /** Send POST request to authorize S3 */
-    self.connectAccount = function() {
-        // Selection should not be empty
-        if( !self.accessKey() && !self.secretKey() ){
-            self.changeMessage('Please enter both an API access key and secret key.', 'text-danger');
-            return;
-        }
+        self.integromatApiToken(null);
 
-        if (!self.accessKey() ){
-            self.changeMessage('Please enter an API access key.', 'text-danger');
-            return;
-        }
-
-        if (!self.secretKey() ){
-            self.changeMessage('Please enter an API secret key.', 'text-danger');
-            return;
-        }
-        return osfHelpers.postJSON(
-            self.account_url,
-            ko.toJS({
-                access_key: self.accessKey,
-                secret_key: self.secretKey,
-            })
-        ).done(function() {
-            self.clearModal();
-            $modal.modal('hide');
-            self.updateAccounts();
-
-        }).fail(function(xhr, textStatus, error) {
-            var errorMessage = (xhr.status === 400 && xhr.responseJSON.message !== undefined) ? xhr.responseJSON.message : language.authError;
-            self.changeMessage(errorMessage, 'text-danger');
-            Raven.captureMessage('Could not authenticate with S3', {
-                extra: {
-                    url: self.account_url,
-                    textStatus: textStatus,
-                    error: error
-                }
-            });
-        });
-    };
-
-    self.updateAccounts = function() {
-        return $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json'
-        }).done(function (data) {
+    },
+    updateAccounts: function() {
+        var self = this;
+        var url = self.urls().accounts;
+        var request = $.get(url);
+        request.done(function(data) {
             self.accounts($.map(data.accounts, function(account) {
                 var externalAccount =  new ExternalAccount(account);
-                externalAccount.accessKey = account.oauth_key;
-                externalAccount.secretKey = account.oauth_secret;
                 return externalAccount;
             }));
-            $('#s3-header').osfToggleHeight({height: 160});
-        }).fail(function(xhr, status, error) {
-            self.changeMessage(language.userSettingsError, 'text-danger');
+            $('#integromat-header').osfToggleHeight({height: 160});
+        });
+        request.fail(function(xhr, status, error) {
             Raven.captureMessage('Error while updating addon account', {
                 extra: {
                     url: url,
@@ -102,62 +72,79 @@ function ViewModel(url) {
                 }
             });
         });
-    };
-
-    self.askDisconnect = function(account) {
+        return request;
+    },
+    connectAccount : function() {
         var self = this;
-        bootbox.confirm({
-            title: 'Disconnect Amazon S3 Account?',
-            message: '<p class="overflow">' +
-                'Are you sure you want to disconnect the S3 account <strong>' +
-                osfHelpers.htmlEscape(account.name) + '</strong>? This will revoke access to S3 for all projects associated with this account.' +
-                '</p>',
-            callback: function (confirm) {
-                if (confirm) {
-                    self.disconnectAccount(account);
-                }
-            },
-            buttons:{
-                confirm:{
-                    label:'Disconnect',
-                    className:'btn-danger'
-                }
-            }
-        });
-    };
-
-    self.disconnectAccount = function(account) {
-        var self = this;
-        var url = '/api/v1/oauth/accounts/' + account.id + '/';
-        var request = $.ajax({
-            url: url,
-            type: 'DELETE'
-        });
-        request.done(function(data) {
+        // Selection should not be empty
+        if (!self.integromatApiToken() ){
+            self.changeMessage('Please enter an API token.', 'text-danger');
+            return;
+			}
+/*
+        return $osf.postJSON(
+            self.urls().create, {
+                integromat_api_token: self.integromatApiToken()
+				}
+*/
+        var url = self.urls().create;
+        return osfHelpers.postJSON(
+            url,
+            ko.toJS({
+                integromat_api_token: self.integromatApiToken()
+            })
+        ).done(function() {
+            self.clearModal();
+            $modal.modal('hide');
+            $('#integromatCredentialsModal').modal('hide');
             self.updateAccounts();
+            self.authSuccessCallback();
+
+        }).fail(function(xhr, textStatus, error) {
+            var errorMessage = (xhr.status === 401) ? '401' : 'Invalid integromat server';
+            self.changeMessage(errorMessage, 'text-danger');
+            Raven.captureMessage('Could not authenticate with Integromat', {
+                url: self.url,
+                textStatus: textStatus,
+                error: error
+            });
         });
-        request.fail(function(xhr, status, error) {
-            Raven.captureMessage('Error while removing addon authorization for ' + account.id, {
+    },
+    authSuccessCallback: function() {
+        // Override for NS-specific auth success behavior
+        // TODO: generalize this when rewriting addon configs for ember
+        return;
+    },
+    fetch: function() {
+        // Update observables with data from the server
+        var self = this;
+        $.ajax({
+            url: self.url,
+            type: 'GET',
+            dataType: 'json'
+        }).done(function (response) {
+            var data = response.result;
+            self.urls(data.urls);
+            self.loaded(true);
+            self.updateAccounts();
+        }).fail(function (xhr, textStatus, error) {
+            self.setMessage('Could not retrieve settings', 'text-danger');
+            Raven.captureMessage('Could not GET Integromat settings', {
                 extra: {
-                    url: url,
-                    status: status,
+                    url: self.url,
+                    textStatus: textStatus,
                     error: error
                 }
             });
         });
-        return request;
-    };
+    },
+    selectionChanged: function() {
+        var self = this;
+        self.setMessage('','');
+    }
+});
 
-    self.selectionChanged = function() {
-        self.changeMessage('','');
-    };
-
-    self.updateAccounts();
-}
-
-$.extend(ViewModel.prototype, ChangeMessageMixin.prototype);
-
-function S3UserConfig(selector, url) {
+function IntegromatUserConfig(selector, url) {
     // Initialization code
     var self = this;
     self.selector = selector;
@@ -168,6 +155,6 @@ function S3UserConfig(selector, url) {
 }
 
 module.exports = {
-    S3ViewModel: ViewModel,
-    S3UserConfig: S3UserConfig
+    IntegromatUserViewModel: ViewModel,
+    IntegromatUserConfig: IntegromatUserConfig    // for backwards-compat
 };
