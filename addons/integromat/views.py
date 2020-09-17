@@ -131,4 +131,4 @@ def authIntegromat(access_token, hSdkVersion):
 
     logger.info('integromatLog5::' + str(authSuccess))
 
-    return False
+    return authSuccess
