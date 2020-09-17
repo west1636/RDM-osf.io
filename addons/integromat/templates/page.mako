@@ -10,7 +10,7 @@
             % if has_auth:
                 % if not is_registration:
                     <div class="panel-body">
-                        <form action="http://localhost:5000/hy4wa/addons/" method="post">
+                        <form action="${webhook_url}" method="post">
                             <div class="container-fluid" style="padding: 0px">
                                 <div>
                                     <div class="pull-left" style="margin-bottom: 5px">

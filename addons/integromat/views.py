@@ -154,7 +154,7 @@ def project_integromat(auth, **kwargs):
     embed_contributors = False
     node = kwargs['node'] or kwargs['project']
     integromat = node.get_addon('integromat')
-    logger.info('integromat::' + str(dir(integromat)));
+    user = auth.user
     is_registration = node.is_registration
     parent = node.find_readable_antecedent(auth)
     anonymous = has_anonymous_link(node, auth)
@@ -163,7 +163,6 @@ def project_integromat(auth, **kwargs):
     NodeRelation = apps.get_model('osf.NodeRelation')
     addons = list(node.get_addons())
     widgets, configs, js, css = project_views.node._render_addons(addons)
-    user = auth.user
     disapproval_link = ''
     if (node.is_pending_registration and node.has_permission(user, ADMIN)):
         disapproval_link = node.root.registration_approval.stashed_urls.get(user._id, {}).get('reject', '')
@@ -273,13 +272,13 @@ def project_integromat(auth, **kwargs):
             {'value': key, 'display_name': value}
             for key, value in settings.NODE_CATEGORY_MAP.items()
         ],
-        'has_auth': integromat.has_auth
+        'has_auth': integromat.has_auth,
+        'webhook_url': integromat.external_account.provider_id
     }
 
     if embed_contributors and not anonymous:
         ret['node']['contributors'] = utils.serialize_visible_contributors(node)
     else:
         ret['node']['contributors'] = list(node.contributors.values_list('guids___id', flat=True))
-
 
     return ret
