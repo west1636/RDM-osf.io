@@ -16,15 +16,15 @@ from website.project.decorators import (
     must_have_addon,
     must_be_valid_project,
 )
-from website.ember_osf_web.views import use_ember_app
+#from website.ember_osf_web.views import use_ember_app
 from website.project import views as project_views
 from osf.models.licenses import serialize_node_license_record
 from framework.utils import iso8601format
-from website.project.model import has_anonymous_link, NodeUpdateError, validate_title
 from django.apps import apps
-from osf.utils.permissions import ADMIN, READ, WRITE, CREATOR_PERMISSIONS, ADMIN_NODE
 from website import settings
 from osf.models import Node
+from website.project.metadata.utils import serialize_meta_schemas
+from website.profile import utils
 
 logger = logging.getLogger(__name__)
 
@@ -136,14 +136,8 @@ def authIntegromat(access_token, hSdkVersion):
     response = requests.request("GET", integromatApiUrl, headers=headers, data=payload)
     authJson = response.json()
 
-    logger.info('integromatLog1::headers' + str(headers))
-    logger.info('integromatLog2::' + str(response.text.encode('utf8')))
-    logger.info('integromatLog3::' + str(authJson))
-
-    if not type(authJson) is dict :
+    if not type(authJson) is dict:
         authSuccess = True
-
-    logger.info('integromatLog5::' + str(authSuccess))
 
     return authSuccess
 
