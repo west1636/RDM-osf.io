@@ -13,6 +13,9 @@
                         <form action="${webhook_url}" method="post">
                             <div class="container-fluid" style="padding: 0px">
                                 <div>
+                                    <div>
+                                        <input type="hidden" name="guid" id="guid" value="${node['id']}">
+                                    </div>
                                     <div class="pull-left" style="margin-bottom: 5px">
                                         Start Date <input type="text" name="created" id="created" placeholder='Start date' size="10" autocomplete="off">
                                     </div>
