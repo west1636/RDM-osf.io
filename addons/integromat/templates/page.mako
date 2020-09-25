@@ -14,16 +14,16 @@
                             <div class="container-fluid" style="padding: 0px">
                                 <div>
                                     <div class="pull-left" style="margin-bottom: 5px">
-                                        Start Date <input type="text" id="startConf" placeholder='Start date' size="10" autocomplete="off">
+                                        Start Date <input type="text" name="created" id="created" placeholder='Start date' size="10" autocomplete="off">
                                     </div>
                                     <div class="pull-left" style="margin-left: 10px; margin-bottom: 5px">
-                                        Duration <input type="text" id="durationConf" placeholder='Duration' size="10" autocomplete="off">
+                                        Duration <input type="text" name="duration" id="duration" placeholder='Duration' size="10" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="pull-left" style="margin-left: 10px; margin-bottom: 5px">
-                                    Topic <input type="text" id="topicConf" placeholder='Topic' size="10" autocomplete="off">
+                                    Topic <input type="text" name="name" id="name" placeholder='Topic' size="10" autocomplete="off">
                                 </div>
-                                <button id="registConf" type="submit" class="btn btn-sm btn-default pull-left" style="margin-left: 10px; margin-bottom: 5px">Register Conference</button>
+                                <input id="registConf" type="submit" class="btn btn-sm btn-default pull-left" style="margin-left: 10px; margin-bottom: 5px" value="Register Conference">
                                 </div>
                             </div>
                         </form>
