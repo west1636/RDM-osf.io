@@ -39,20 +39,20 @@
         <table width="100%" border="1" bordercolor="#f0f8ff">
             <th>
             <div class="tb-row-titles">
-                <div style="width: 75%" data-tb-th-col="0" class="tb-th">
+                <div style="width: 60%" data-tb-th-col="0" class="tb-th">
                     <span class="m-r-sm">Scenario</span>
                 </div>
             </div>
             </th>
             <th>
             <div class="tb-row-titles">
-                <div style="width: 25%" data-tb-th-col="1" class="tb-th">
+                <div style="width: 40%" data-tb-th-col="1" class="tb-th">
                     <span class="m-r-sm">Status</span>
                 </div>
             </div>
             </th>
-            <tr><td class="tb-td td-title tb-col-0"><img class="addon-icon" src="../../website/static/img/rdm_logo-1.png"> Intgration GakuNin RDM, Zoom, Slack</td><td><a class="text-danger">Deactivate</a></td></tr>
-            <tr><td class="tb-td td-title tb-col-1"><img class="addon-icon" src="../../website/static/img/rdm_logo-1.png"> Intgration GakuNin RDM, Slack</td><td><a class="text-primary">Activate</a></td></tr>
+            <tr><td class="tb-td td-title tb-col-0"><img class="addon-icon" src="/static/addons/integromat/rdm_logo-1.png"> Intgration GakuNin RDM, Zoom, Slack</td><td><a class="text-danger">Deactivate</a></td></tr>
+            <tr><td class="tb-td td-title tb-col-1"><img class="addon-icon" src="/static/addons/integromat/rdm_logo-1.png"> Intgration GakuNin RDM, Slack</td><td><a class="text-primary">Activate</a></td></tr>
             </table>
 
     % endif
