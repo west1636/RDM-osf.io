@@ -20,9 +20,9 @@ from website.project.decorators import (
 from website.project import views as project_views
 from osf.models.licenses import serialize_node_license_record
 from framework.utils import iso8601format
-from website.project.model import has_anonymous_link, NodeUpdateError, validate_title
+from website.project.model import has_anonymous_link
 from django.apps import apps
-from osf.utils.permissions import ADMIN, READ, WRITE, CREATOR_PERMISSIONS, ADMIN_NODE
+from osf.utils.permissions import ADMIN, READ, WRITE
 from website import settings
 from osf.models import Node
 from website.project.metadata.utils import serialize_meta_schemas
@@ -135,7 +135,7 @@ def authIntegromat(access_token, hSdkVersion):
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
-    response = requests.request("GET", integromatApiUrl, headers=headers, data=payload)
+    response = requests.request('GET', integromatApiUrl, headers=headers, data=payload)
     authJson = response.json()
 
     if not type(authJson) is dict:
