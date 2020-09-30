@@ -3895,4 +3895,4 @@ msgstr "メンバー管理"
 
 #: website/templates/messages.mako:3
 msgid "Web integration"
-msgstr "Webサービス連携"
+msgstr "Webアプリ連携"
