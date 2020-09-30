@@ -47,7 +47,7 @@
             <th>
             <div class="tb-row-titles">
                 <div style="width: 40%" data-tb-th-col="1" class="tb-th">
-                    <span class="m-r-sm">Status</span>
+                    <span class="m-r-sm">Activate/Deactivate</span>
                 </div>
             </div>
             </th>
