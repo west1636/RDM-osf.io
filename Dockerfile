@@ -192,6 +192,7 @@ COPY ./addons/s3compat/static/ ./addons/s3compat/static/
 COPY ./addons/nextcloud/static/ ./addons/nextcloud/static/
 COPY ./addons/nextcloudinstitutions/static/ ./addons/nextcloudinstitutions/static/
 COPY ./addons/iqbrims/static/ ./addons/iqbrims/static/
+COPY ./addons/integromat/static/ ./addons/integromat/static/
 RUN mkdir -p ./website/static/built/ \
     && invoke build_js_config_files \
     && yarn run webpack-prod
