@@ -15,7 +15,10 @@
 
                         <li><a href="#" onClick="view_del();return false;">Delete Conference</a></li>
 
+                        <li><a href="#" onClick="view_all();return false;">Schedule Conference</a></li>
+
         <!--            <li><a href="#" onClick="view_rec();return false;">Record Conference</a></li>  -->
+
 
                 </ul>
             </div><!-- End sidebar -->
@@ -25,7 +28,7 @@
     <div class="col-md-9 col-xs-12">
     <div id="registerConf" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REGISTER SCHEDULE
           <button href="#integromatCredentialsModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
@@ -102,7 +105,7 @@
     </div>
     <div id="updateConf" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UPDATE SCHEDULE
           <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
@@ -179,7 +182,7 @@
     </div>
     <div id="deleteConf" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DELETE SCHEDULE
           <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
@@ -254,9 +257,12 @@
             </div>
         </div>
     </div>
-    <div id="recordConf" style="display: none;">
+    <div id="allConference" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE RECORD
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
+          <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Conference</span></button>
+          <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Conference</span></button>
+          <button href="#integromatCredentialsModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -334,7 +340,7 @@
 </div>
 
 <div id="integromatCredentialsModal" class="modal fade" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog text-lef">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -344,14 +350,10 @@
             <form>
                 <div class="modal-body">
 
-                    <div class="row">
-                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="apiToken">Topic</label>
                                 <input class="form-control" data-bind="value: zoomTopic" id="zoom_topic" name="zoom_Topic" placeholder="input zoom conference topic"/>
                             </div>
-                        </div>
-                        <div class="col-sm-7">
                             <div class="form-group">
                                 <label >Start Date and Time</label>
                                 <input class="form-control" data-bind="value: zoomStartDate" id="zoom_start_date" name="zoom_Start_Date" placeholder="YYYY/MM/DD"/>
@@ -359,14 +361,10 @@
                                 <label >Duration</label>
                                 <input type="number" placeholder="minute" class="form-control" data-bind="value: zoomDuration" id="zoom_duration" name="zoom_Duration" />
                             </div>
-                        </div>
-                        <div class="col-sm-8">
                             <div class="form-group">
                                 <label for="apiToken">Description</label>
                                 <textarea class="form-control" data-bind="value: zoomDescription" id="zoom_description" name="zoom_Description" /></textarea>
                             </div>
-                        </div>
-                    </div><!-- end row -->
 
                     <!-- Flashed Messages -->
                     <div class="help-block">
@@ -402,34 +400,31 @@
 var reg = document.getElementById("registerConf");
 var update = document.getElementById("updateConf");
 var del = document.getElementById("deleteConf");
-var rec = document.getElementById("recordConf");
+var all = document.getElementById("allConference");
 
 function view_reg() {
   reg.style.display = "";
   update.style.display = "none";
   del.style.display = "none";
-  rec.style.display = "none";
+  all.style.display = "none";
 }
 function view_update() {
   update.style.display = "";
   reg.style.display = "none";
   del.style.display = "none";
-  rec.style.display = "none";
+  all.style.display = "none";
 }
 function view_del() {
   del.style.display = "";
   update.style.display = "none";
   reg.style.display = "none";
-  rec.style.display = "none";
+  all.style.display = "none";
 }
-function view_rec() {
-  rec.style.display = "";
+function view_all() {
+  all.style.display = "";
   update.style.display = "none";
   del.style.display = "none";
   reg.style.display = "none";
-}
-function toggle_hidden1() {
-  elem1.style.display = "none";
 }
 </script>
 
