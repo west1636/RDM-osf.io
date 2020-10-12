@@ -262,7 +262,7 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
           <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Conference</span></button>
           <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Conference</span></button>
-          <button href="#integromatCredentialsModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
+          <button href="#integromatRegisterConferenceModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -339,7 +339,7 @@
     </div>
 </div>
 
-<div id="integromatCredentialsModal" class="modal fade" style="display: none;">
+<div id="integromatRegisterConferenceModal" class="modal fade" style="display: none;">
     <div class="modal-dialog text-lef">
         <div class="modal-content">
 
@@ -351,18 +351,19 @@
                 <div class="modal-body">
 
                             <div class="form-group">
-                                <label for="apiToken">Topic</label>
+                                <input type="hidden" name="guid" id="guid" data-bind="value: ${node['id']}">
+                                <label >Topic</label>
                                 <input class="form-control" data-bind="value: zoomTopic" id="zoom_topic" name="zoom_Topic" placeholder="input zoom conference topic"/>
                             </div>
                             <div class="form-group">
                                 <label >Start Date and Time</label>
                                 <input class="form-control" data-bind="value: zoomStartDate" id="zoom_start_date" name="zoom_Start_Date" placeholder="YYYY/MM/DD"/>
-                                <input type="time" name="example" step="1800" class="form-control" data-bind="value: zoomStartDate" id="zoom_start_date" name="zoom_Start_Date" min="00:00" max="23:59">
+                                <input type="time" name="example" step="1800" class="form-control" data-bind="value: zoomStartTime" id="zoom_start_time" name="zoom_Start_Time" min="00:00" max="23:59">
                                 <label >Duration</label>
                                 <input type="number" placeholder="minute" class="form-control" data-bind="value: zoomDuration" id="zoom_duration" name="zoom_Duration" />
                             </div>
                             <div class="form-group">
-                                <label for="apiToken">Description</label>
+                                <label >Description</label>
                                 <textarea class="form-control" data-bind="value: zoomDescription" id="zoom_description" name="zoom_Description" /></textarea>
                             </div>
 
