@@ -51,7 +51,7 @@
                                             <img src="${addons[addon]['icon']}" class="addon-logo"/>
                                         % endif
                                         % if addons[addon]['full_name'] == 'Integromat':
-                                            ${_(addons[addon]['tab_name'])}
+                                            pass
                                         % else:
                                             ${addons[addon]['full_name']}
                                         % endif
@@ -79,6 +79,23 @@
                         % if permissions.WRITE in user['permissions'] and not node['is_registration']:
                             <li><a href="${node['url']}addons/">${ _("Add-ons") }</a></li>
                         % endif
+
+                        % for addon in addons_enabled:
+
+                            % if addons[addon]['has_page']:
+                                <li>
+                                    <a href="${node['url']}${addons[addon]['short_name']}">
+
+                                        % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
+                                            <img src="${addons[addon]['icon']}" class="addon-logo"/>
+                                        % endif
+                                        % if addons[addon]['full_name'] == 'Integromat':
+                                            ${_(addons[addon]['tab_name'])}
+                                        % endif
+                                    </a>
+                                </li>
+                            % endif
+                        % endfor
 
                         % if user['has_read_permissions'] and not node['is_registration'] or (node['is_registration'] and permissions.WRITE in user['permissions']):
                             <li><a href="${node['url']}settings/">${ _("Settings") }</a></li>
