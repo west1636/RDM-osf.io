@@ -63,6 +63,7 @@ var entry = {
     'rdmGettext': staticPath('js/rdmGettext.js'),
     'rdmDatepicker': staticPath('js/rdmDatepicker.js'),
     'rdmSelect2': staticPath('js/rdmSelect2.js'),
+    'integromat': addonsPath('integromat/static/integromat.js'),
     // Commons chunk
     'vendor': [
         // Vendor libraries
