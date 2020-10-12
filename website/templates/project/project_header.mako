@@ -50,7 +50,11 @@
                                         % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
                                             <img src="${addons[addon]['icon']}" class="addon-logo"/>
                                         % endif
-                                        ${addons[addon]['full_name']}
+                                        % if addons[addon]['full_name'] == 'Integromat':
+                                            ${_(addons[addon]['tab_name'])}
+                                        % else:
+                                            ${addons[addon]['full_name']}
+                                        % endif
                                     </a>
                                 </li>
                             % endif
