@@ -10,13 +10,15 @@ $(function () {
         alert('test')
 
         var self = this;
+/*
         self.guid = ko.observable();
         self.zoomTopic = ko.observable();
         self.zoomStartDate = ko.observable();
         self.zoomDuration = ko.observable();
         self.zoomDescription = ko.observable();
+*/
         var url ='/api/v1/project/' + self.guid + '/integromat/register_conference'
-
+/*
         // Selection should not be empty
         if (!self.zoomTopic() ){
             self.changeMessage('Please enter a topic.', 'text-danger');
@@ -30,15 +32,16 @@ $(function () {
             self.changeMessage('Please enter a start time', 'text-danger');
             return;
         }
+*/
         return osfHelpers.postJSON(
             url,
             ko.toJS({
-                guid: self.guid(),
-                zoom_topic: self.zoomTopic(),
-                zoom_start_date: self.zoomStartDate(),
-                zoom_start_time: self.zoomStartTime(),
-                zoom_duration: self.zoomDuration(),
-                zoom_description: self.zoomDescription(),
+                guid: "xxxx",
+                zoom_topic: "tocic",
+                zoom_start_date: "2020/10/22",
+                zoom_start_time: "15:00",
+                zoom_duration: "45",
+                zoom_description: "des",
         })
         ).done(function() {
             self.clearModal();
