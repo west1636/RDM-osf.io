@@ -29,7 +29,7 @@
     <div id="registerConf" style="display: none;">
       <div class="row tb-header-row">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REGISTER SCHEDULE
-          <button href="#integromatCredentialsModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
+          <button href="#integromatRegisterConferenceModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
