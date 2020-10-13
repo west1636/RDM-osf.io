@@ -1,6 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
+var ko = require('knockout');
 var moment = require('moment');
 var osfHelpers = require('js/osfHelpers');
 
