@@ -42,21 +42,18 @@
                         </li>
                         <!-- Add-on tabs  -->
                         % for addon in addons_enabled:
+                            % if addons[addon]['full_name'] != 'Integromat':
+                                % if addons[addon]['has_page']:
+                                    <li>
+                                        <a href="${node['url']}${addons[addon]['short_name']}">
 
-                            % if addons[addon]['has_page']:
-                                <li>
-                                    <a href="${node['url']}${addons[addon]['short_name']}">
-
-                                        % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
-                                            <img src="${addons[addon]['icon']}" class="addon-logo"/>
-                                        % endif
-                                        % if addons[addon]['full_name'] == 'Integromat':
-                                            pass
-                                        % else:
-                                            ${addons[addon]['full_name']}
-                                        % endif
-                                    </a>
-                                </li>
+                                            % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
+                                                 <img src="${addons[addon]['icon']}" class="addon-logo"/>
+                                            % endif
+                                                ${addons[addon]['full_name']}
+                                        </a>
+                                    </li>
+                                % endif
                             % endif
                         % endfor
 
@@ -81,19 +78,17 @@
                         % endif
 
                         % for addon in addons_enabled:
-
-                            % if addons[addon]['has_page']:
-                                <li>
-                                    <a href="${node['url']}${addons[addon]['short_name']}">
-
-                                        % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
-                                            <img src="${addons[addon]['icon']}" class="addon-logo"/>
-                                        % endif
-                                        % if addons[addon]['full_name'] == 'Integromat':
+                            % if addons[addon]['full_name'] == 'Integromat':
+                                % if addons[addon]['has_page']:
+                                    <li>
+                                        <a href="${node['url']}${addons[addon]['short_name']}">
+                                            % if addons[addon]['icon'] and addons[addon]['has_page_icon']:
+                                                <img src="${addons[addon]['icon']}" class="addon-logo"/>
+                                            % endif
                                             ${_(addons[addon]['tab_name'])}
-                                        % endif
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                % endif
                             % endif
                         % endfor
 
