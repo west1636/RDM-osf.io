@@ -54,7 +54,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="zoomConference-table-row" style="width: 90%">
+        <div class="row" id="teamsConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -131,7 +131,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="zoomConference-table-row" style="width: 90%">
+        <div class="row" id="teamsConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -208,7 +208,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="zoomConference-table-row" style="width: 90%">
+        <div class="row" id="teamsConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -287,7 +287,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="zoomConference-table-row" style="width: 90%">
+        <div class="row" id="teamsConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -344,27 +344,27 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Register Zoom Conference</h3>
+                <h3>Register Teams Conference</h3>
             </div>
 
             <form>
                 <div class="modal-body">
 
                             <div class="form-group">
-                                <input type="hidden" name="guid" id="guid" data-bind="value: ${node['id']}">
+                                <input type="hidden" name="teams_Guid" id="teams_guid" data-bind="value: ${node['id']}">
                                 <label >Topic</label>
-                                <input class="form-control" data-bind="value: zoomTopic" id="zoom_topic" name="zoom_Topic" placeholder="input zoom conference topic"/>
+                                <input class="form-control" data-bind="value: teamsTopic" id="teams_topic" name="teams_Topic" placeholder="input teams conference topic"/>
                             </div>
                             <div class="form-group">
                                 <label >Start Date and Time</label>
-                                <input class="form-control" data-bind="value: zoomStartDate" id="zoom_start_date" name="zoom_Start_Date" placeholder="YYYY/MM/DD"/>
-                                <input type="time" step="1800" class="form-control" data-bind="value: zoomStartTime" id="zoom_start_time" name="zoom_Start_Time" min="00:00" max="23:59">
+                                <input class="form-control" data-bind="value: teamsStartDate" id="teams_start_date" name="teams_Start_Date" placeholder="YYYY/MM/DD"/>
+                                <input type="time" step="1800" class="form-control" data-bind="value: teamsStartTime" id="teams_start_time" name="teams_Start_Time" min="00:00" max="23:59">
                                 <label >Duration</label>
-                                <input type="number" placeholder="minute" class="form-control" data-bind="value: zoomDuration" id="zoom_duration" name="zoom_Duration" />
+                                <input type="number" placeholder="minute" class="form-control" data-bind="value: teamsDuration" id="teams_duration" name="teams_Duration" />
                             </div>
                             <div class="form-group">
                                 <label >Description</label>
-                                <textarea class="form-control" data-bind="value: zoomDescription" id="zoom_description" name="zoom_Description" /></textarea>
+                                <textarea class="form-control" data-bind="value: teamsDescription" id="teams_description" name="teams_Description" /></textarea>
                             </div>
 
                     <!-- Flashed Messages -->
