@@ -145,6 +145,29 @@ def authIntegromat(access_token, hSdkVersion):
 
 @must_be_valid_project
 @must_have_addon('integromat', 'node')
+def integromat_register_conference(auth, **kwargs):
+
+    integromat = node.get_addon('integromat')
+    wbhookUrl = integromat.external_account.provider_id
+    guid = request.json.get('guid')
+    zoom_topic = request.json.get('zoom_topic')
+    zoom_start_date = request.json.get('zoom_start_date')
+    zoom_start_time = request.json.get('zoom_start_time')
+    zoom_duration = request.json.get('zoom_duration')
+    zoom_description = request.json.get('zoom_description')
+
+    payload = { "guid": guid,
+                "Start Date": zoom_start_date,
+                "Duration": zoom_duration,
+                "topic": zoom_topic,
+                "description": zoom_description
+                }
+    response = requests.post(url, data=payload)
+
+    return {}
+
+@must_be_valid_project
+@must_have_addon('integromat', 'node')
 def project_integromat(auth, **kwargs):
 
     embed_contributors = False

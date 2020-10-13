@@ -85,6 +85,13 @@ api_routes = {
             json_renderer,
         ),
 
+        Rule(
+            '/project/<pid>/integromat/register_conference',
+            'post',
+            views.integromat_register_conference,
+            json_renderer,
+        ),
+
     ],
     'prefix': '/api/v1'
 }
