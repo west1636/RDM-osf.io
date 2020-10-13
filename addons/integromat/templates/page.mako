@@ -54,7 +54,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="timestamp-table-row" style="">
+        <div class="row" id="zoomConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -131,7 +131,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="timestamp-table-row" style="">
+        <div class="row" id="zoomConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -208,7 +208,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="timestamp-table-row" style="">
+        <div class="row" id="zoomConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -287,7 +287,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="timestamp-table-row" style="">
+        <div class="row" id="zoomConference-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
