@@ -358,7 +358,7 @@
                             <div class="form-group">
                                 <label >Start Date and Time</label>
                                 <input class="form-control" data-bind="value: zoomStartDate" id="zoom_start_date" name="zoom_Start_Date" placeholder="YYYY/MM/DD"/>
-                                <input type="time" name="example" step="1800" class="form-control" data-bind="value: zoomStartTime" id="zoom_start_time" name="zoom_Start_Time" min="00:00" max="23:59">
+                                <input type="time" step="1800" class="form-control" data-bind="value: zoomStartTime" id="zoom_start_time" name="zoom_Start_Time" min="00:00" max="23:59">
                                 <label >Duration</label>
                                 <input type="number" placeholder="minute" class="form-control" data-bind="value: zoomDuration" id="zoom_duration" name="zoom_Duration" />
                             </div>
