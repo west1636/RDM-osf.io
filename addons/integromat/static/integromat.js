@@ -17,7 +17,7 @@ $(function () {
         self.zoomDuration = ko.observable();
         self.zoomDescription = ko.observable();
 */
-        var url ='/api/v1/project/' + self.guid + '/integromat/register_conference'
+        var url ='/api/v1/project/rau36/integromat/register_conference'
 /*
         // Selection should not be empty
         if (!self.zoomTopic() ){
@@ -36,7 +36,7 @@ $(function () {
         return osfHelpers.postJSON(
             url,
             ko.toJS({
-                guid: "xxxx",
+                guid: "rau36",
                 zoom_topic: "tocic",
                 zoom_start_date: "2020/10/22",
                 zoom_start_time: "15:00",
