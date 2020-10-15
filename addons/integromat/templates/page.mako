@@ -351,7 +351,7 @@
                 <div class="modal-body">
 
                             <div class="form-group">
-                                <input type="hidden" name="teams_Guid" id="teams_guid" data-bind="value: ${node['id']}">
+                                <input type="hidden" name="teams_Guid" id="teams_guid" value="${node['id']}">
                                 <label >Topic</label>
                                 <input class="form-control" data-bind="value: teamsTopic" id="teams_topic" name="teams_Topic" placeholder="input teams conference topic"/>
                             </div>
