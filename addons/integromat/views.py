@@ -151,21 +151,21 @@ def integromat_register_conference(auth, **kwargs):
     integromat = node.get_addon('integromat')
     wbhookUrl = integromat.external_account.provider_id
     guid = request.json.get('guid')
-    zoom_topic = request.json.get('zoom_topic')
-    zoom_start_date = request.json.get('zoom_start_date')
-    zoom_start_time = request.json.get('zoom_start_time')
-    zoom_duration = request.json.get('zoom_duration')
-    zoom_description = request.json.get('zoom_description')
-    zoom_start_date_time = str(zoom_start_date) + ' ' + str(zoom_start_time)
-    logger.info('1:' + str(zoom_start_date))
-    logger.info('2:' + str(zoom_start_time))
-    logger.info('3:' + str(zoom_start_date_time))
+    teams_topic = request.json.get('teams_topic')
+    teams_start_date = request.json.get('teams_start_date')
+    teams_start_time = request.json.get('teams_start_time')
+    teams_duration = request.json.get('teams_duration')
+    teams_description = request.json.get('teams_description')
+    teams_start_date_time = str(teams_start_date) + ' ' + str(teams_start_time)
+    logger.info('1:' + str(teams_start_date))
+    logger.info('2:' + str(teams_start_time))
+    logger.info('3:' + str(teams_start_date_time))
 
     payload = { "guid": guid,
-                "Start Date": zoom_start_date_time,
-                "Duration": zoom_duration,
-                "topic": zoom_topic,
-                "description": zoom_description
+                "Start Date": teams_start_date_time,
+                "Duration": teams_duration,
+                "topic": teams_topic,
+                "description": teams_description
                 }
     response = requests.post(wbhookUrl, data=payload)
 
