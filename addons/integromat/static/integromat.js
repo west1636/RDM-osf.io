@@ -9,25 +9,26 @@ $(function () {
     $('#startScenario').on('click', function () {
 
         var self = this;
-/*
-        self.guid = ko.observable();
-        self.zoomTopic = ko.observable();
-        self.zoomStartDate = ko.observable();
-        self.zoomDuration = ko.observable();
-        self.zoomDescription = ko.observable();
-*/
-        var url ='/api/v1/project/rau36/integromat/register_conference'
+
+        var teamsGuid = $("#teams_guid").val();
+        var teamsTopic = $("#teams_topic").val();
+        var teamsStartDate = $("#teams_start_date").val();
+        var teamsStartTime = $("#teams_start_time").val();
+        var teamsDuration = $("#teams_duration").val();
+        var teamsDescription = $("#teams_description").val();
+
+        var url ='/api/v1/project/' + teamsGuid + '/integromat/register_conference'
 /*
         // Selection should not be empty
-        if (!self.zoomTopic() ){
+        if (!self.teamsTopic() ){
             self.changeMessage('Please enter a topic.', 'text-danger');
             return;
         }
-        if (!self.zoomStartDate() ){
+        if (!self.teamsStartDate() ){
             self.changeMessage('Please enter a start date.', 'text-danger');
             return;
         }
-        if (!self.zoomStartTime() ){
+        if (!self.teamsStartTime() ){
             self.changeMessage('Please enter a start time', 'text-danger');
             return;
         }
@@ -35,12 +36,12 @@ $(function () {
         return osfHelpers.postJSON(
             url,
             ko.toJS({
-                guid: "rau36",
-                zoom_topic: "tocic",
-                zoom_start_date: "2020/10/22",
-                zoom_start_time: "15:00",
-                zoom_duration: "45",
-                zoom_description: "des",
+                guid: teamsGuid,
+                teams_topic: teamsTopic,
+                teams_start_date: teamsStartDate,
+                teams_start_time: teamsStartTime,
+                teams_duration: teamsDuration,
+                teams_description: teamsDescription,
         })
         ).done(function() {
             self.clearModal();
