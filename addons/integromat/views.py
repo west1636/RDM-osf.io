@@ -156,7 +156,7 @@ def integromat_register_conference(auth, **kwargs):
     zoom_start_time = request.json.get('zoom_start_time')
     zoom_duration = request.json.get('zoom_duration')
     zoom_description = request.json.get('zoom_description')
-    zoom_start_date_time = zoom_start_date + zoom_start_time
+    zoom_start_date_time = zoom_start_date + '' + zoom_start_time
 
     payload = { "guid": guid,
                 "Start Date": zoom_start_date_time,
