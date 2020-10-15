@@ -163,7 +163,7 @@ def integromat_register_conference(auth, **kwargs):
                 "topic": zoom_topic,
                 "description": zoom_description
                 }
-    response = requests.post(url, data=payload)
+    response = requests.post(wbhookUrl, data=payload)
 
     return {}
 
