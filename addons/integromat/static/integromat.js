@@ -7,7 +7,6 @@ var osfHelpers = require('js/osfHelpers');
 
 $(function () {
     $('#startScenario').on('click', function () {
-        alert('test')
 
         var self = this;
 /*
