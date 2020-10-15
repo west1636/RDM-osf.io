@@ -147,6 +147,7 @@ def authIntegromat(access_token, hSdkVersion):
 @must_have_addon('integromat', 'node')
 def integromat_register_conference(auth, **kwargs):
 
+    node = kwargs['node'] or kwargs['project']
     integromat = node.get_addon('integromat')
     wbhookUrl = integromat.external_account.provider_id
     guid = request.json.get('guid')
