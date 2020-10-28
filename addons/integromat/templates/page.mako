@@ -307,14 +307,14 @@
                                     <i id="sort_up_file_path" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
                                     <i id="sort_down_file_path" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                 </span>
-                                <span class="header_text m-r-sm" title="File Path">Topic</span>
+                                <span class="header_text m-r-sm" title="File Path">End Date</span>
                             </th>
                             <th width="15%">
                                 <span class="sorter">
                                     <i id="sort_up_verify_user_name_id" class="fa fa-chevron-up tb-sort-inactive asc-btn m-r-xs"></i>
                                     <i id="sort_down_verify_user_name_id" class="fa fa-chevron-down tb-sort-inactive desc-btn"></i>
                                 </span>
-                                <span class="header_text m-r-sm" title="Timestamp by">Meeting ID</span>
+                                <span class="header_text m-r-sm" title="Timestamp by">Attendees</span>
                             </th>
                             <th width="19%">
                                 <span class="sorter">
@@ -352,19 +352,28 @@
 
                             <div class="form-group">
                                 <input type="hidden" name="teams_Guid" id="teams_guid" value="${node['id']}">
-                                <label >Topic</label>
-                                <input class="form-control" data-bind="value: teamsTopic" id="teams_topic" name="teams_Topic" placeholder="input teams conference topic"/>
+                                <label >Subject</label>
+                                <input class="form-control" data-bind="value: teamsSubject" id="teams_subject" name="teams_Subject" placeholder="input teams meeting subject"/>
+                            </div>
+                            <div class="form-group">
+                                <label >Attendees</label>
+                                <input class="form-control" data-bind="value: teamsAttendees" id="teams_attendees" name="teams_Attendees" placeholder="input teams meeting attendees"/>
                             </div>
                             <div class="form-group">
                                 <label >Start Date and Time</label>
                                 <input class="form-control" data-bind="value: teamsStartDate" id="teams_start_date" name="teams_Start_Date" placeholder="YYYY/MM/DD"/>
                                 <input type="time" step="1800" class="form-control" data-bind="value: teamsStartTime" id="teams_start_time" name="teams_Start_Time" min="00:00" max="23:59">
-                                <label >Duration</label>
-                                <input type="number" placeholder="minute" class="form-control" data-bind="value: teamsDuration" id="teams_duration" name="teams_Duration" />
+                                <label >End Date and Time</label>
+                                <input class="form-control" data-bind="value: teamsEndDate" id="teams_end_date" name="teams_End_Date" placeholder="YYYY/MM/DD"/>
+                                <input type="time" step="1800" class="form-control" data-bind="value: teamsEndTime" id="teams_end_time" name="teams_End_Time" min="00:00" max="23:59">
                             </div>
                             <div class="form-group">
-                                <label >Description</label>
-                                <textarea class="form-control" data-bind="value: teamsDescription" id="teams_description" name="teams_Description" /></textarea>
+                                <label >Location</label>
+                                <input class="form-control" data-bind="value: teamsLocation" id="teams_location" name="teams_Location" placeholder="input teams meeting location"/>
+                            </div>
+                            <div class="form-group">
+                                <label >Content</label>
+                                <textarea class="form-control" data-bind="value: teamsContent" id="teams_content" name="teams_Content" /></textarea>
                             </div>
 
                     <!-- Flashed Messages -->

@@ -11,11 +11,14 @@ $(function () {
         var self = this;
 
         var teamsGuid = $("#teams_guid").val();
-        var teamsTopic = $("#teams_topic").val();
+        var teamsSubject = $("#teams_subject").val();
         var teamsStartDate = $("#teams_start_date").val();
         var teamsStartTime = $("#teams_start_time").val();
-        var teamsDuration = $("#teams_duration").val();
-        var teamsDescription = $("#teams_description").val();
+        var teamsEndDate = $("#teams_end_date").val();
+        var teamsEndTime = $("#teams_end_time").val();
+        var teamsAttendees = $("#teams_attendees").val();
+        var teamsLocation = $("#teams_location").val();
+        var teamsContent = $("#teams_content").val();
 
         var url ='/api/v1/project/' + teamsGuid + '/integromat/register_conference'
 /*
@@ -37,11 +40,14 @@ $(function () {
             url,
             ko.toJS({
                 guid: teamsGuid,
-                teams_topic: teamsTopic,
+                teams_subject: teamsSubject,
+                teams_attendees: teamsAttendees,
                 teams_start_date: teamsStartDate,
                 teams_start_time: teamsStartTime,
-                teams_duration: teamsDuration,
-                teams_description: teamsDescription,
+                teams_end_date: teamsEndDate,
+                teams_end_time: teamsEndTime,
+                teams_location: teamsLocation,
+                teams_content: teamsContent,
         })
         ).done(function() {
             self.clearModal();
