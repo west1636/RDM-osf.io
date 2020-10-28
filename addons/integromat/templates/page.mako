@@ -9,16 +9,13 @@
             <div class="panel panel-default osf-affix" data-spy="affix" data-offset-top="0" data-offset-bottom="263"><!-- Begin sidebar -->
                 <ul class="nav nav-stacked nav-pills">
 
-                        <li><a href="#" onClick="view_reg();return false;">Regster Conference</a></li>
+                        <li><a href="#" onClick="view_reg();return false;">Regster Meeting</a></li>
 
-                        <li><a href="#" onClick="view_update();return false;">Update Conference</a></li>
+                        <li><a href="#" onClick="view_update();return false;">Update Meeting</a></li>
 
-                        <li><a href="#" onClick="view_del();return false;">Delete Conference</a></li>
+                        <li><a href="#" onClick="view_del();return false;">Delete Meeting</a></li>
 
-                        <li><a href="#" onClick="view_all();return false;">Schedule Conference</a></li>
-
-        <!--            <li><a href="#" onClick="view_rec();return false;">Record Conference</a></li>  -->
-
+                        <li><a href="#" onClick="view_all();return false;">Schedule Meeting</a></li>
 
                 </ul>
             </div><!-- End sidebar -->
@@ -26,10 +23,10 @@
 
     <!-- End left column -->
     <div class="col-md-9 col-xs-12">
-    <div id="registerConf" style="display: none;">
+    <div id="registerMeeting" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REGISTER SCHEDULE
-          <button href="#integromatRegisterConferenceModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REGISTER MEETING
+          <button href="#integromatRegisterMeetingModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Meeting</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -54,7 +51,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="teamsConference-table-row" style="width: 90%">
+        <div class="row" id="teamsMeeting-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -103,10 +100,10 @@
             </div>
         </div>
     </div>
-    <div id="updateConf" style="display: none;">
+    <div id="updateMeeting" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UPDATE SCHEDULE
-          <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Conference</span></button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UPDATE MEETING
+          <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Meeting</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -131,7 +128,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="teamsConference-table-row" style="width: 90%">
+        <div class="row" id="teamsMeeting-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -180,10 +177,10 @@
             </div>
         </div>
     </div>
-    <div id="deleteConf" style="display: none;">
+    <div id="deleteMeeting" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DELETE SCHEDULE
-          <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Conference</span></button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DELETE MEETING
+          <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Meeting</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -208,7 +205,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="teamsConference-table-row" style="width: 90%">
+        <div class="row" id="teamsMeeting-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -257,12 +254,12 @@
             </div>
         </div>
     </div>
-    <div id="allConference" style="display: none;">
+    <div id="allMeeting" style="display: none;">
       <div class="row tb-header-row">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFERENCE SCHEDULE
-          <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Conference</span></button>
-          <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Conference</span></button>
-          <button href="#integromatRegisterConferenceModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Conference</span></button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEETING SCHEDULE
+          <button class="text-danger pull-right" style="border: 1px solid #DDD;"><i class="fa fa-trash"></i><span>Delete Meeting</span></button>
+          <button class="text-info pull-right" style="border: 1px solid #DDD;"><i class="fa fa-edit"></i><span>Update Meeting</span></button>
+          <button href="#integromatRegisterMeetingModal" data-toggle="modal"  class="text-success pull-right" style="border: 1px solid #DDD;"><i class="fa fa-plus"></i><span>Register Meeting</span></button>
       </div>
         <div class="row" id="pagination-row">
             <div class="col-sm-8">
@@ -287,7 +284,7 @@
                 </select>
             </div>
         </div>
-        <div class="row" id="teamsConference-table-row" style="width: 90%">
+        <div class="row" id="teamsMeeting-table-row" style="width: 90%">
             <div class="col-xs-12">
                 <table class="table table-bordered table-addon-terms">
                     <thead class="block-head">
@@ -339,12 +336,12 @@
     </div>
 </div>
 
-<div id="integromatRegisterConferenceModal" class="modal fade" style="display: none;">
+<div id="integromatRegisterMeetingModal" class="modal fade" style="display: none;">
     <div class="modal-dialog text-lef">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h3>Register Teams Conference</h3>
+                <h3>Register Teams Meeting</h3>
             </div>
 
             <form>
@@ -352,7 +349,7 @@
 
                             <div class="form-group">
                                 <input type="hidden" name="teams_Guid" id="teams_guid" value="${node['id']}">
-                                <input type="hidden" name="teams_Action" id="teams_action" value="teams_action">
+                                <input type="hidden" name="teams_Action" id="teams_action" value="create">
                                 <label >Subject</label>
                                 <input class="form-control" data-bind="value: teamsSubject" id="teams_subject" name="teams_Subject" placeholder="input teams meeting subject"/>
                             </div>
@@ -408,10 +405,10 @@
 
 
 <script language="JavaScript" type="text/javascript">
-var reg = document.getElementById("registerConf");
-var update = document.getElementById("updateConf");
-var del = document.getElementById("deleteConf");
-var all = document.getElementById("allConference");
+var reg = document.getElementById("registerMeeting");
+var update = document.getElementById("updateMeeting");
+var del = document.getElementById("deleteMeeting");
+var all = document.getElementById("allMeeting");
 
 function view_reg() {
   reg.style.display = "";
