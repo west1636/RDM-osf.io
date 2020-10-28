@@ -145,12 +145,13 @@ def authIntegromat(access_token, hSdkVersion):
 
 @must_be_valid_project
 @must_have_addon('integromat', 'node')
-def integromat_register_conference(auth, **kwargs):
+def integromat_register_meeting(auth, **kwargs):
 
     node = kwargs['node'] or kwargs['project']
     integromat = node.get_addon('integromat')
     wbhookUrl = integromat.external_account.provider_id
     guid = request.json.get('guid')
+    teams_action = request.json.get('teams_action')
     teams_subject = request.json.get('teams_subject')
     teams_attendees = request.json.get('teams_attendees')
     teams_start_date = request.json.get('teams_start_date')
@@ -166,6 +167,7 @@ def integromat_register_conference(auth, **kwargs):
     logger.info('3:' + str(teams_start_date_time))
 
     payload = { "guid": guid,
+                "Action": teams_action,
                 "Start Date": teams_start_date_time,
                 "End Date": teams_end_date_time,
                 "Content": teams_content,

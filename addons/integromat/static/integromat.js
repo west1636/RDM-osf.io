@@ -11,6 +11,7 @@ $(function () {
         var self = this;
 
         var teamsGuid = $("#teams_guid").val();
+        var teamsAction = $("#teams_action").val();
         var teamsSubject = $("#teams_subject").val();
         var teamsStartDate = $("#teams_start_date").val();
         var teamsStartTime = $("#teams_start_time").val();
@@ -20,7 +21,7 @@ $(function () {
         var teamsLocation = $("#teams_location").val();
         var teamsContent = $("#teams_content").val();
 
-        var url ='/api/v1/project/' + teamsGuid + '/integromat/register_conference'
+        var url ='/api/v1/project/' + teamsGuid + '/integromat/register_meeting'
 /*
         // Selection should not be empty
         if (!self.teamsTopic() ){
@@ -40,6 +41,7 @@ $(function () {
             url,
             ko.toJS({
                 guid: teamsGuid,
+                teams_action: teamsAction,
                 teams_subject: teamsSubject,
                 teams_attendees: teamsAttendees,
                 teams_start_date: teamsStartDate,

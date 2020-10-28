@@ -86,9 +86,9 @@ api_routes = {
         ),
 
         Rule(
-            '/project/<pid>/integromat/register_conference',
+            '/project/<pid>/integromat/register_meeting',
             'post',
-            views.integromat_register_conference,
+            views.integromat_register_meeting,
             json_renderer,
         ),
 

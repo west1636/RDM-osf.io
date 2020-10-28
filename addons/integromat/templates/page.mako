@@ -352,6 +352,7 @@
 
                             <div class="form-group">
                                 <input type="hidden" name="teams_Guid" id="teams_guid" value="${node['id']}">
+                                <input type="hidden" name="teams_Action" id="teams_action" value="teams_action">
                                 <label >Subject</label>
                                 <input class="form-control" data-bind="value: teamsSubject" id="teams_subject" name="teams_Subject" placeholder="input teams meeting subject"/>
                             </div>
