@@ -4,6 +4,8 @@
                            "bucketLocations": {"us-east-1": {"name": "Fukushima"}}},
                           {"name": "SAKURA Cloud",
                            "host": "b.sakurastorage.jp"},
+                          {"name": "Oracle Cloud Infrastructure",
+                           "host": "https://nrjjxl1nnwb4.compat.objectstorage.ap-tokyo-1.oraclecloud.com"},
                           {"name": "Wasabi",
                            "host": "s3.wasabisys.com",
                            "bucketLocations": {
