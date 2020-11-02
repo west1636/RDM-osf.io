@@ -5,7 +5,7 @@ import mock
 from nose.tools import *  # noqa
 import pytest
 import re
-import urllib
+from future.moves.urllib.parse import quote
 
 from addons.base.tests.views import OAuthAddonAuthViewsTestCaseMixin, OAuthAddonConfigViewsTestCaseMixin
 from addons.iqbrims.tests.utils import mock_folders as sample_folder_data
@@ -1074,7 +1074,7 @@ class TestStorageViews(IQBRIMSAddonTestCase, OsfTestCase):
         assert_equal(mock_create_folder.call_args,
                      (('1234567890', u'チェックリスト'),))
 
-        folderurlpath = '/' + urllib.quote(foldername.encode('utf8'))
+        folderurlpath = '/' + quote(foldername.encode('utf8'))
         assert_equal(res.json['management']['id'], management_project._id)
         assert_equal(len(res.json['management']['urls']), 2)
         assert_equal(res.json['management']['urls'][0]['title'], 'test1.pdf')
