@@ -166,11 +166,11 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         res = self.app.get(url, auth=self.user.auth)
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json.keys(), ['data'])
-        assert_items_equal(res.json['data'].keys(), ['id', 'type', 'attributes'])
+        assert_equals(res.json.keys(), ['data'])
+        assert_equals(res.json['data'].keys(), ['id', 'type', 'attributes'])
         assert_equal(res.json['data']['id'], self.project._id)
         assert_equal(res.json['data']['type'], 'iqbrims-status')
-        assert_items_equal(res.json['data']['attributes'].keys(), ['state', 'labo_list', 'review_folders', 'is_admin'])
+        assert_equals(res.json['data']['attributes'].keys(), ['state', 'labo_list', 'review_folders', 'is_admin'])
         assert_equal(res.json['data']['attributes']['state'], 'initialized')
         assert_equal(len(res.json['data']['attributes']['labo_list']), len(settings.LABO_LIST))
         assert_equal(res.json['data']['attributes']['review_folders'], iqbrims_views.REVIEW_FOLDERS)
@@ -184,11 +184,11 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         res = self.app.get(url, auth=self.user.auth)
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json.keys(), ['data'])
-        assert_items_equal(res.json['data'].keys(), ['id', 'type', 'attributes'])
+        assert_equals(res.json.keys(), ['data'])
+        assert_equals(res.json['data'].keys(), ['id', 'type', 'attributes'])
         assert_equal(res.json['data']['id'], self.project._id)
         assert_equal(res.json['data']['type'], 'iqbrims-status')
-        assert_items_equal(res.json['data']['attributes'].keys(), ['state', 'labo_list', 'review_folders', 'is_admin',
+        assert_equals(res.json['data']['attributes'].keys(), ['state', 'labo_list', 'review_folders', 'is_admin',
                                                                    'task_url'])
         assert_equal(res.json['data']['attributes']['state'], 'initialized')
         assert_equal(len(res.json['data']['attributes']['labo_list']), len(settings.LABO_LIST))
@@ -289,14 +289,14 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         assert_equal(iqbrims.folder_path, fake_folder['path'])
 
         assert_equal(mock_import_auth_from_management_node.call_count, 1)
-        assert_items_equal(mock_import_auth_from_management_node.call_args[0], [
+        assert_equals(mock_import_auth_from_management_node.call_args[0], [
             self.project,
             iqbrims,
             fake_management_project
         ])
 
         assert_equal(mock_iqbrims_init_folders.call_count, 1)
-        assert_items_equal(mock_iqbrims_init_folders.call_args[0], [
+        assert_equals(mock_iqbrims_init_folders.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -304,7 +304,7 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         ])
 
         assert_equal(mock_update_spreadsheet.call_count, 1)
-        assert_items_equal(mock_update_spreadsheet.call_args[0], [
+        assert_equals(mock_update_spreadsheet.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -379,14 +379,14 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         assert_equal(iqbrims.folder_path, fake_folder['path'])
 
         assert_equal(mock_import_auth_from_management_node.call_count, 1)
-        assert_items_equal(mock_import_auth_from_management_node.call_args[0], [
+        assert_equals(mock_import_auth_from_management_node.call_args[0], [
             self.project,
             iqbrims,
             fake_management_project
         ])
 
         assert_equal(mock_iqbrims_init_folders.call_count, 1)
-        assert_items_equal(mock_iqbrims_init_folders.call_args[0], [
+        assert_equals(mock_iqbrims_init_folders.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -445,14 +445,14 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         assert_equal(iqbrims.folder_path, fake_folder['path'])
 
         assert_equal(mock_import_auth_from_management_node.call_count, 1)
-        assert_items_equal(mock_import_auth_from_management_node.call_args[0], [
+        assert_equals(mock_import_auth_from_management_node.call_args[0], [
             self.project,
             iqbrims,
             fake_management_project
         ])
 
         assert_equal(mock_iqbrims_init_folders.call_count, 1)
-        assert_items_equal(mock_iqbrims_init_folders.call_args[0], [
+        assert_equals(mock_iqbrims_init_folders.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -460,7 +460,7 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         ])
 
         assert_equal(mock_update_spreadsheet.call_count, 1)
-        assert_items_equal(mock_update_spreadsheet.call_args[0], [
+        assert_equals(mock_update_spreadsheet.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -543,14 +543,14 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         assert_equal(iqbrims.folder_path, fake_folder['path'])
 
         assert_equal(mock_import_auth_from_management_node.call_count, 1)
-        assert_items_equal(mock_import_auth_from_management_node.call_args[0], [
+        assert_equals(mock_import_auth_from_management_node.call_args[0], [
             self.project,
             iqbrims,
             fake_management_project
         ])
 
         assert_equal(mock_iqbrims_init_folders.call_count, 1)
-        assert_items_equal(mock_iqbrims_init_folders.call_args[0], [
+        assert_equals(mock_iqbrims_init_folders.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -558,7 +558,7 @@ class TestStatusViews(IQBRIMSAddonTestCase, OsfTestCase):
         ])
 
         assert_equal(mock_update_spreadsheet.call_count, 1)
-        assert_items_equal(mock_update_spreadsheet.call_args[0], [
+        assert_equals(mock_update_spreadsheet.call_args[0], [
             self.project,
             fake_management_project,
             status['state'],
@@ -1797,7 +1797,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1828,7 +1828,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1860,7 +1860,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1892,7 +1892,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1924,7 +1924,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 3)
         assert_equal(management_project.logs.count(), 2)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1956,7 +1956,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 3)
         assert_equal(management_project.logs.count(), 2)
         user_comments = Comment.objects.filter(node=self.project)
@@ -1989,7 +1989,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2030,7 +2030,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2071,7 +2071,7 @@ class TestNotificationViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2122,7 +2122,7 @@ URL: http://test.test<br>
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2165,7 +2165,7 @@ URL: http://test.test<br>
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2207,7 +2207,7 @@ URL: http://test.test<br>
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'status': 'complete'})
+        assert_equals(res.json, {'status': 'complete'})
         assert_equal(self.project.logs.count(), 2)
         assert_equal(management_project.logs.count(), 1)
         user_comments = Comment.objects.filter(node=self.project)
@@ -2242,7 +2242,7 @@ URL: http://test.test<br>
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {'notify_type': 'test_notify'})
+        assert_equals(res.json, {'notify_type': 'test_notify'})
 
     @mock.patch.object(IQBRIMSWorkflowUserSettings, 'load')
     @mock.patch.object(iqbrims_views, '_get_management_node')
@@ -2328,7 +2328,7 @@ class TestWorkflowStateViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {
+        assert_equals(res.json, {
           'status': 'complete',
           'data': {
             'workflow_rawdata_state': 'test',
@@ -2359,7 +2359,7 @@ class TestWorkflowStateViews(IQBRIMSAddonTestCase, OsfTestCase):
         }, headers={'X-RDM-Token': token})
 
         assert_equal(res.status_code, 200)
-        assert_items_equal(res.json, {
+        assert_equals(res.json, {
           'status': 'complete',
           'data': {
             'workflow_rawdata_state': 'test',
