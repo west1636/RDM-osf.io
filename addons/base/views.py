@@ -847,7 +847,7 @@ def addon_view_or_download_file(auth, path, provider, **kwargs):
         return dict(guid=guid._id)
 
     if action == 'addtimestamp':
-        cookie = auth.user.get_or_create_cookie()
+        cookie = auth.user.get_or_create_cookie().decode()
         file_info = timestamp.get_file_info(cookie, file_node, version)
         if file_info is not None:
             timestamp.add_token(auth.user.id, target, file_info)
@@ -943,7 +943,7 @@ def addon_view_file(auth, node, file_node, version):
 
     # Verify file
     verify_result = None
-    cookie = auth.user.get_or_create_cookie()
+    cookie = auth.user.get_or_create_cookie().decode()
     file_info = timestamp.get_file_info(cookie, file_node, version)
     if file_info is not None:
         verify_result = timestamp.check_file_timestamp(auth.user.id, node, file_info)

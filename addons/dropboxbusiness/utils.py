@@ -1068,7 +1068,7 @@ def _add_timestamp_for_celery(team_folder_id, path, team_info):
     def _check_and_add(addon):
         node = addon.owner
         user = _select_admin(node)
-        user_cookie = user.get_or_create_cookie()
+        user_cookie = user.get_or_create_cookie().decode()
 
         cls = BaseFileNode.resolve_class(PROVIDER_NAME, BaseFileNode.FILE)
         file_node = cls.get_or_create(node, path)
