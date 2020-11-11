@@ -315,3 +315,40 @@ def project_integromat(auth, **kwargs):
         ret['node']['contributors'] = list(node.contributors.values_list('guids___id', flat=True))
 
     return ret
+
+@must_be_valid_project
+@must_have_addon('integromat', 'node')
+def integromat_api_call(auth, **kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    integromat = node.get_addon('integromat')
+    wbhookUrl = integromat.external_account.provider_id
+    guid = request.json.get('guid')
+    teams_action = request.json.get('teams_action')
+    teams_subject = request.json.get('teams_subject')
+    teams_attendees = request.json.get('teams_attendees')
+    teams_start_date = request.json.get('teams_start_date')
+    teams_start_time = request.json.get('teams_start_time')
+    teams_end_date = request.json.get('teams_end_date')
+    teams_end_time = request.json.get('teams_end_time')
+    teams_location = request.json.get('teams_location')
+    teams_content = request.json.get('teams_content')
+    teams_start_date_time = str(teams_start_date) + ' ' + str(teams_start_time)
+    teams_end_date_time = str(teams_end_date) + ' ' + str(teams_end_time)
+    logger.info('1:' + str(teams_start_date))
+    logger.info('2:' + str(teams_start_time))
+    logger.info('3:' + str(teams_start_date_time))
+
+    payload = { "guid": guid,
+                "Action": 'test',
+                "Start Date": teams_start_date_time,
+                "End Date": teams_end_date_time,
+                "Content": teams_content,
+                "Subject": teams_subject,
+                "Attendees": teams_attendees,
+                "Location": teams_location,
+                "Content": teams_content
+                }
+    response = requests.post(wbhookUrl, data=payload)
+
+    return {}
