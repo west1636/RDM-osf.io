@@ -162,13 +162,12 @@ def integromat_register_meeting(auth, **kwargs):
     teams_content = request.json.get('teams_content')
     teams_start_date_time = str(teams_start_date) + ' ' + str(teams_start_time)
     teams_end_date_time = str(teams_end_date) + ' ' + str(teams_end_time)
-    logger.info('1:' + str(node))
-    logger.info('2:' + str(auth.user))
-    logger.info('3:' + str(wbhookUrl))
+    logger.info('1:' + str(teams_start_date))
+    logger.info('2:' + str(teams_start_time))
+    logger.info('3:' + str(teams_start_date_time))
 
-    payload = {
-                "guid": guid,
-                "Action": 'test',
+    payload = { "guid": guid,
+                "Action": teams_action,
                 "Start Date": teams_start_date_time,
                 "End Date": teams_end_date_time,
                 "Content": teams_content,
