@@ -315,3 +315,9 @@ def project_integromat(auth, **kwargs):
         ret['node']['contributors'] = list(node.contributors.values_list('guids___id', flat=True))
 
     return ret
+
+def integromat_api_call(**kwargs):
+
+    logger.info('integromat called integromat_api_call')
+
+    return {}

@@ -92,6 +92,13 @@ api_routes = {
             json_renderer,
         ),
 
+        Rule(
+            '/integromat/integromat_api_call',
+            'post',
+            views.integromat_api_call,
+            notamplate,
+        ),
+
     ],
     'prefix': '/api/v1'
 }
