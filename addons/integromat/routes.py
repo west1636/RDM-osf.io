@@ -97,7 +97,7 @@ api_routes = {
             '/integromat/integromat_api_call',
             'post',
             views.integromat_api_call,
-            notamplate,
+            notemplate,
         ),
 
     ],
