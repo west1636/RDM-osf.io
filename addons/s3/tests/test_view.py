@@ -80,7 +80,7 @@ class TestS3Views(S3AddonTestCase, OAuthAddonConfigViewsTestCaseMixin, OsfTestCa
             'secret_key': 'las'
         }, auth=self.user.auth, expect_errors=True)
         assert_equal(rv.status_int, http_status.HTTP_403_FORBIDDEN)
-        assert_in('You are prohibited from using this add-on.', rv.body)
+        assert_in('You are prohibited from using this add-on.', rv.body.decode())
 
     def test_s3_set_bucket_no_settings(self):
         user = AuthUserFactory()

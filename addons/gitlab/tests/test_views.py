@@ -98,7 +98,7 @@ class TestGitLabConfigViews(GitLabAddonTestCase, OAuthAddonConfigViewsTestCaseMi
             'secret_key': 'las'
         }, auth=self.user.auth, expect_errors=True)
         assert_equal(rv.status_int, http_status.HTTP_403_FORBIDDEN)
-        assert_in('You are prohibited from using this add-on.', rv.body)
+        assert_in('You are prohibited from using this add-on.', rv.body.decode())
 
 
 # TODO: Test remaining CRUD methods
