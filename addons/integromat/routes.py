@@ -4,7 +4,6 @@
 
 from framework.routing import Rule, json_renderer
 from website.routes import OsfWebRenderer
-from website.routes import notemplate
 
 from addons.integromat import views
 
@@ -91,13 +90,6 @@ api_routes = {
             'post',
             views.integromat_register_meeting,
             json_renderer,
-        ),
-
-        Rule(
-            '/integromat/integromat_api_call',
-            'post',
-            views.integromat_api_call,
-            notamplate,
         ),
 
     ],
