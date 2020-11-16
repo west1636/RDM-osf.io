@@ -323,7 +323,7 @@ def project_integromat(**kwargs):
     return use_ember_app()
 
 @must_be_valid_project
-@must_have_permission('admin')
+#@must_have_permission('admin')
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_get_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
