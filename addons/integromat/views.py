@@ -182,7 +182,7 @@ def integromat_register_meeting(auth, **kwargs):
 
 @must_be_valid_project
 @must_have_addon('integromat', 'node')
-def project_integromat(auth, **kwargs):
+def project_integromat_rdmio(auth, **kwargs):
 
     embed_contributors = False
     node = kwargs['node'] or kwargs['project']
@@ -315,6 +315,23 @@ def project_integromat(auth, **kwargs):
         ret['node']['contributors'] = list(node.contributors.values_list('guids___id', flat=True))
 
     return ret
+
+# ember: ここから
+@must_be_valid_project
+@must_have_addon(SHORT_NAME, 'node')
+def project_integromat(**kwargs):
+    return use_ember_app()
+
+@must_be_valid_project
+@must_have_permission('admin')
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_get_config_ember(**kwargs):
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+    return {'data': {'id': node._id, 'type': 'integromat-config',
+                     'attributes': {
+                         'webhook_url': addon.external_account.provider_id
+                     }}}
 
 def integromat_api_call(**kwargs):
 
