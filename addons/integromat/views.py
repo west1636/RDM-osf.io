@@ -16,7 +16,7 @@ from website.project.decorators import (
     must_have_addon,
     must_be_valid_project,
 )
-#from website.ember_osf_web.views import use_ember_app
+from website.ember_osf_web.views import use_ember_app
 from website.project import views as project_views
 from osf.models.licenses import serialize_node_license_record
 from framework.utils import iso8601format
