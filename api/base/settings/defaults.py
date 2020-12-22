@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'addons.iqbrims',
     'addons.dropboxbusiness',
     'addons.nextcloudinstitutions',
+    'addons.niirdccore',
 )
 
 # local development using https
