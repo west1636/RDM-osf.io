@@ -33,15 +33,9 @@ class UserSettings(BaseOAuthUserSettings):
 class NodeSettings(BaseOAuthNodeSettings):
     oauth_provider = IntegromatProvider
     serializer = IntegromatSerializer
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True)
     user_settings = models.ForeignKey(UserSettings, null=True, blank=True)
     folder_id = models.TextField(blank=True, null=True)
     folder_name = models.TextField(blank=True, null=True)
-    user = models.TextField(blank=True, null=True)
-    addon_option = models.ForeignKey(
-        RdmAddonOption, null=True, blank=True,
-        related_name='integromat_addon_option',
-        on_delete=models.CASCADE)
 
     @property
     def folder_path(self):
