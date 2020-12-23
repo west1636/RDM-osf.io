@@ -79,30 +79,28 @@ def integromat_add_user_account(auth, **kwargs):
     #integromat auth
     if not authIntegromat(access_token, hSdkVersion):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+    else:
+        integromatUserInfo = getIntegromatUser(access_token, hSdkVersion)
+        logger.info('getIntegromatUser:' + integromatUserInfo)
+        integromat_userid = integromatUserInfo['id']
+        integromat_username = integromatUserInfo['name']
 
-#    try:
-#        integromatUserInfo = getIntegromatUser(access_token, hSdkVersion)
-#    except ValidationError:
-#        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
-
-#    integromat_userid = integromatUserInfo['id']
-#    integromat_username = integromatUserInfo['name']
     user = auth.user
 
     try:
         account = ExternalAccount(
             provider=SHORT_NAME,
             provider_name=FULL_NAME,
-            display_name='testname',
+            display_name=integromat_username,
             oauth_key=access_token,
-            provider_id='testid',
+            provider_id=integromat_userid,
             webhook_url=webhook_url,
         )
         account.save()
     except ValidationError:
         # ... or get the old one
         account = ExternalAccount.objects.get(
-            provider='integromat', provider_id='testid'
+            provider='integromat', provider_id=integromat_userid
         )
         if account.oauth_key != access_token:
             account.oauth_key = access_token
