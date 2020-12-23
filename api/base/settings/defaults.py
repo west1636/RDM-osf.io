@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'addons.dropboxbusiness',
     'addons.nextcloudinstitutions',
     'addons.s3compatinstitutions',
+    'addons.integromat',
 )
 
 # local development using https
