@@ -4,8 +4,6 @@ import logging
 from addons.base.models import BaseOAuthNodeSettings, BaseOAuthUserSettings
 from django.db import models
 from addons.integromat.serializer import IntegromatSerializer
-from osf.models import ExternalAccount
-from osf.models.rdm_addons import RdmAddonOption
 
 logger = logging.getLogger(__name__)
 

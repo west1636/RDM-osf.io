@@ -17,16 +17,6 @@ from website.project.decorators import (
     must_be_valid_project,
 )
 from website.ember_osf_web.views import use_ember_app
-from website.project import views as project_views
-from osf.models.licenses import serialize_node_license_record
-from framework.utils import iso8601format
-from website.project.model import has_anonymous_link
-from django.apps import apps
-from osf.utils.permissions import ADMIN, READ, WRITE
-from website import settings
-from osf.models import Node
-from website.project.metadata.utils import serialize_meta_schemas
-from website.profile import utils
 
 logger = logging.getLogger(__name__)
 

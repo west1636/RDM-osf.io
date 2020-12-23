@@ -3,7 +3,6 @@
 """
 
 from framework.routing import Rule, json_renderer
-from website.routes import OsfWebRenderer
 from website.routes import notemplate
 
 from addons.integromat import views
@@ -24,7 +23,6 @@ page_routes = {
             'get',
             views.project_integromat,
             notemplate
-#            OsfWebRenderer('page.mako', trust=False, template_dir=TEMPLATE_DIR)
         ),
 
     ]
