@@ -90,10 +90,10 @@ def integromat_add_user_account(auth, **kwargs):
     if not authIntegromat(access_token, hSdkVersion):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
-    try:
+#    try:
 #        integromatUserInfo = getIntegromatUser(access_token, hSdkVersion)
-    except ValidationError:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+#    except ValidationError:
+#        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
 #    integromat_userid = integromatUserInfo['id']
 #    integromat_username = integromatUserInfo['name']
