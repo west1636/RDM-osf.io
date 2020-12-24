@@ -39,6 +39,18 @@ class NodeSettings(BaseOAuthNodeSettings):
     def folder_path(self):
         return self.folder_name
 
+    def serialize_waterbutler_settings(self, *args, **kwargs):
+        # required by superclass, not actually used
+        pass
+
+    def serialize_waterbutler_credentials(self, *args, **kwargs):
+        # required by superclass, not actually used
+        pass
+
+    def create_waterbutler_log(self, *args, **kwargs):
+        # required by superclass, not actually used
+        pass
+
     def to_json(self, user):
 
         ret = super(NodeSettings, self).to_json(user)
