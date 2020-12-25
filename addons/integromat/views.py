@@ -17,6 +17,7 @@ from website.project.decorators import (
     must_be_valid_project,
 )
 from website.ember_osf_web.views import use_ember_app
+from addons.integromat import settings
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +69,6 @@ def integromat_user_config_get(auth, **kwargs):
 def integromat_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
-    hSdkVersion = '2.0.0'
     try:
         access_token = request.json.get('integromat_api_token')
         webhook_url = request.json.get('integromat_webhook_url')
@@ -77,11 +77,9 @@ def integromat_add_user_account(auth, **kwargs):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     #integromat auth
-    if not authIntegromat(access_token, hSdkVersion):
+    if not authIntegromat(access_token, settings.H_SDK_VERSION):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
     else:
-        integromatUserInfo = getIntegromatUser(access_token, hSdkVersion)
-        logger.info('getIntegromatUser:' + str(integromatUserInfo))
         integromat_userid = integromatUserInfo['id']
         integromat_username = integromatUserInfo['name']
 
@@ -122,8 +120,6 @@ def integromat_add_user_account(auth, **kwargs):
 
 def authIntegromat(access_token, hSdkVersion):
 
-    integromatApiUrl = 'https://api.integromat.com/v1/app'
-    authSuccess = False
     token = 'Token ' + access_token
     payload = {}
     headers = {
@@ -131,29 +127,20 @@ def authIntegromat(access_token, hSdkVersion):
         'x-imt-apps-sdk-version': hSdkVersion
     }
 
-    response = requests.request('GET', integromatApiUrl, headers=headers, data=payload)
-    authJson = response.json()
-
-    if not type(authJson) is dict:
-        authSuccess = True
-
-    return authSuccess
-
-def getIntegromatUser(access_token, hSdkVersion):
-
-    integromatApiWhoami = 'https://api.integromat.com/v1/whoami'
-    token = 'Token ' + access_token
-    payload = {}
-    headers = {
-        'Authorization': token,
-        'x-imt-apps-sdk-version': hSdkVersion
-    }
-
-    response = requests.request('GET', integromatApiWhoami, headers=headers, data=payload)
+    response = requests.request('GET', settings.INTEGROMAT_API_WHOAMI, headers=headers, data=payload)
     userInfo = response.json()
 
-    return userInfo
+    if not userInfo.viewkeys() >= {'id','name','email','scope'}
 
+        message = ''
+        if userInfo.viewkeys() >= {'message'}
+            message = userInfo['message']
+
+        logger.info('Integromat Authentication failure:' + message)
+
+        userInfo.clear()
+
+    return userInfo
 
 # ember: ここから
 @must_be_valid_project
@@ -174,6 +161,6 @@ def integromat_get_config_ember(**kwargs):
 
 def integromat_api_call(**kwargs):
 
-    logger.info('integromat called integromat_api_call')
+    logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.')
 
     return {}
