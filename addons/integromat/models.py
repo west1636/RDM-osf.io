@@ -32,6 +32,12 @@ class NodeSettings(BaseOAuthNodeSettings):
     oauth_provider = IntegromatProvider
     serializer = IntegromatSerializer
     user_settings = models.ForeignKey(UserSettings, null=True, blank=True)
+    folder_id = models.TextField(blank=True, null=True)
+    folder_name = models.TextField(blank=True, null=True)
+
+    @property
+    def folder_path(self):
+        return self.folder_name
 
     def serialize_waterbutler_settings(self, *args, **kwargs):
         # required by superclass, not actually used
