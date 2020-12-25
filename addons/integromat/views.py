@@ -130,10 +130,11 @@ def authIntegromat(access_token, hSdkVersion):
     response = requests.request('GET', settings.INTEGROMAT_API_WHOAMI, headers=headers, data=payload)
     userInfo = response.json()
 
-    if not userInfo.viewkeys() >= {'id','name','email','scope'}
+    if not userInfo.viewkeys() >= {'id', 'name', 'email', 'scope'}:
 
         message = ''
-        if userInfo.viewkeys() >= {'message'}
+
+        if userInfo.viewkeys() >= {'message'}:
             message = userInfo['message']
 
         logger.info('Integromat Authentication failure:' + message)
