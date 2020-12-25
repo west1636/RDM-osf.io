@@ -77,9 +77,7 @@ def integromat_add_user_account(auth, **kwargs):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
     #integromat auth
-    integromatUserInfo = authIntegromat(access_token, settings.H_SDK_VERSION)
-
-    if not integromatUserInfo:
+    if not authIntegromat(access_token, settings.H_SDK_VERSION):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
     else:
         integromat_userid = integromatUserInfo['id']
@@ -162,7 +160,6 @@ def integromat_get_config_ember(**kwargs):
                          'webhook_url': addon.external_account.webhook_url
                      }}}
 
-#api for Integromat action
 def integromat_api_call(**kwargs):
 
     logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.')
