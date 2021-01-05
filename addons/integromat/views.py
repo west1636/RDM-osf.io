@@ -175,7 +175,7 @@ def integromat_create_meeting_info(**kwargs):
     logger.info('kwargs:' + str(dict(kwargs)))
     logger.info('request:' + str(request.get_data()))
 
-    if request['meetingAppName'] == settings.MICROSOFT_TEAMS:
+    if request.form.get('meetingAppName') == settings.MICROSOFT_TEAMS:
         logger.info('meetingAppName')
 
     return {}
