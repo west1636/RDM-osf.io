@@ -84,11 +84,18 @@ api_routes = {
             views.integromat_deauthorize_node,
             json_renderer,
         ),
-
+        #route for Integromat action
         Rule(
             '/integromat/integromat_api_call',
             'post',
             views.integromat_api_call,
+            notemplate,
+        ),
+
+        Rule(
+            '/integromat/createMeetingInfo',
+            'post',
+            views.integromat_create_meeting_info,
             notemplate,
         ),
 
