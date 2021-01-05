@@ -168,3 +168,14 @@ def integromat_api_call(**kwargs):
     logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.')
 
     return {}
+
+def integromat_create_meeting_info(**kwargs):
+
+    logger.info('integromat_create_meeting_info start')
+    logger.info('kwargs:' + dict(kwargs))
+
+    if kwargs['meetingAppName'] == settings.MICROSOFT_TEAMS:
+        logger.info('meetingAppName')
+
+    return {}
+
