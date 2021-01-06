@@ -173,12 +173,11 @@ def integromat_create_meeting_info(**kwargs):
 
     logger.info('integromat_create_meeting_info start')
     response = request.get_data()
-    logger.info('response:' + str(response))
-    logger.info('response:' + str(response.json()))
-    logger.info('meetingAppName:' + str(response.form.get('meetingAppName')))
-    logger.info('nodeId:' + str(response.form.get('nodeId')))
+    meetingInfo = response.json()
+    logger.info('meetingAppName:' + str(meetingInfo['nodeId']))
+    logger.info('nodeId:' + str(meetingInfo['meetingAppName']))
 
-    if request.form.get('meetingAppName') == settings.MICROSOFT_TEAMS:
+    if meetingInfo['meetingAppName'] == settings.MICROSOFT_TEAMS:
         logger.info('meetingAppName')
 
     return {}
