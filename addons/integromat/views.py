@@ -172,7 +172,7 @@ def integromat_api_call(**kwargs):
 def integromat_create_meeting_info(**kwargs):
 
     logger.info('integromat_create_meeting_info start')
-    logger.info('form:' + str(request.json()))
+    logger.info('request.get_json:' + str(request.get_json()))
 
 
     if meetingInfo['meetingAppName'] == settings.MICROSOFT_TEAMS:
