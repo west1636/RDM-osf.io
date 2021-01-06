@@ -217,7 +217,7 @@ def get_full_list(uid, pid, node):
     '''Get a full list of timestamps from all files uploaded to a storage.
     '''
     user_info = OSFUser.objects.get(id=uid)
-    cookie = user_info.get_or_create_cookie().decode()
+    cookie = user_info.get_or_create_cookie()
 
     api_url = util.api_v2_url('nodes/{}/files'.format(pid))
     headers = {'content-type': 'application/json'}
@@ -312,7 +312,7 @@ def check_file_timestamp(uid, node, data, verify_external_only=False):
             return TimeStampTokenVerifyCheckHash.timestamp_check(
                 ext_info, user._id, data, node._id)
 
-    cookie = user.get_or_create_cookie().decode()
+    cookie = user.get_or_create_cookie()
     tmp_dir = None
     result = None
     try:
@@ -525,7 +525,7 @@ def add_token(uid, node, data):
             return AddTimestampHash.add_timestamp(
                 user._id, data, node._id, ext_info)
 
-    cookie = user.get_or_create_cookie().decode()
+    cookie = user.get_or_create_cookie()
     tmp_dir = None
 
     # Check access to provider
@@ -923,7 +923,8 @@ def userkey_generation_check(guid):
     return RdmUserKey.objects.filter(guid=Guid.objects.get(_id=guid, content_type_id=ContentType.objects.get_for_model(OSFUser).id).object_id).exists()
 
 def userkey_generation(guid):
-
+    if not settings.ENABLE_TIMESTAMP:
+        return
     try:
         generation_date = datetime.datetime.now()
         generation_date_str = generation_date.strftime('%Y%m%d%H%M%S')
@@ -1604,7 +1605,7 @@ class ExternalInfo():
     @property
     def file_exists(self):
         if self._file_exists is None:
-            cookie = self.user.get_or_create_cookie().decode()
+            cookie = self.user.get_or_create_cookie()
             file_info = waterbutler.get_node_info(
                 cookie, self.node._id,
                 self.file_node.provider, self.file_node.path)

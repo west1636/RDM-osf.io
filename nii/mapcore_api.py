@@ -11,7 +11,7 @@ import json
 import logging
 import hashlib
 import requests
-from future.moves.urllib.parse import urlencode
+import urllib
 
 from django.utils import timezone
 from django.db import transaction
@@ -172,7 +172,7 @@ class MAPCore(object):
             'grant_type': 'refresh_token',
             'refresh_token': self.user.map_profile.oauth_refresh_token
         }
-        params = urlencode(params)
+        params = urllib.urlencode(params)
         logger.debug('MAPCore::refresh_token: params=' + params)
 
         r = requests.post(url, auth=basic_auth, headers=headers, data=params, verify=VERIFY)

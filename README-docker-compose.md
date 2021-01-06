@@ -70,7 +70,7 @@
 
 * _NOTE: After making changes to `Environment Variables` or `Volume Mounts` you will need to recreate the container(s)._
 
-  - `$ docker-compose up --force-recreate --no-deps preprints`
+  - `$ docker-compose up -d --force-recreate --no-deps preprints`
 
 1. Application Settings
  - e.g. OSF & OSF API local.py
@@ -348,7 +348,7 @@ wb:
 
 When you use "Trusted Timestamp Token", execute following steps.
 1. add cotaining keyfile directory at web container:
-mofify docker-compose.yml
+mofify docker-compose.override.yml
 ```yml
 admin:
   ...
@@ -370,4 +370,3 @@ web:
 ```bash
   $ api/timestamp/local-dist.py api/timestamp/local.py
 ```
-

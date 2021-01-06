@@ -8,7 +8,7 @@ import pytz
 import re
 import json
 import requests
-from future.moves.urllib.parse import quote
+import urllib
 import csv
 import pandas as pd
 import numpy as np
@@ -283,7 +283,7 @@ def create_image_string(provider, statistics_data):
     canvas = FigureCanvasAgg(fig)
     png_output = BytesIO()
     canvas.print_png(png_output)
-    img_data = quote(png_output.getvalue())
+    img_data = urllib.quote(png_output.getvalue())
     plt.close()
     return img_data
 
@@ -530,7 +530,7 @@ class GatherView(TemplateView):
         return OSFUser.objects.all()
 
     def get_cookie(self, user):
-        cookie = user.get_or_create_cookie().decode()
+        cookie = user.get_or_create_cookie()
         return cookie
 
     def get_user_nodes(self, user):

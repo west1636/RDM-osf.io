@@ -1,5 +1,6 @@
 import logging
 import requests
+from io import BytesIO
 from lxml import etree
 import os
 import datetime
@@ -74,14 +75,14 @@ class Connection(object):
         resp = requests.get(self.host + path, **self._requests_args())
         if resp.status_code != 200:
             resp.raise_for_status()
-        tree = etree.parse(resp.content)
+        tree = etree.parse(BytesIO(resp.content))
         return tree
 
     def get_url(self, url):
         resp = requests.get(url, **self._requests_args())
         if resp.status_code != 200:
             resp.raise_for_status()
-        tree = etree.parse(resp.content)
+        tree = etree.parse(BytesIO(resp.content))
         return tree
 
     def delete_url(self, url):
@@ -94,7 +95,7 @@ class Connection(object):
                              **self._requests_args(default_headers))
         if resp.status_code != 200:
             resp.raise_for_status()
-        tree = etree.parse(resp.content)
+        tree = etree.parse(BytesIO(resp.content))
         return tree
 
     def _requests_args(self, headers=None):
