@@ -3,6 +3,9 @@ import logging
 
 from addons.base.models import BaseOAuthNodeSettings, BaseOAuthUserSettings
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
+from osf.models.base import BaseModel
+from osf.models.rdm_integromat import RdmWorkflows, RdmWebMeetingApps
 from addons.integromat.serializer import IntegromatSerializer
 
 logger = logging.getLogger(__name__)
@@ -73,3 +76,42 @@ class NodeSettings(BaseOAuthNodeSettings):
                 'valid_credentials': valid_credentials,
             })
         return ret
+
+class Categories(BaseModel):
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=128)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class AllMeetingInformation(BaseModel):
+
+    id = models.AutoField(primary_key=True)
+    subject = models.CharField(blank=True, null=True, max_length=128)
+    organizer = models.CharField(max_length=128)
+    attendees = ArrayField(ForeignKey(Attendees, to_field='id'), default=list, blank=True, null=True)
+    start_datetime = models.DateTimeField(blank=True, null=True)
+    end_datetime = models.DateTimeField(blank=True, null=True)
+    location = models.CharField(blank=True, null=True, max_length=128)
+    content = models.CharField(blank=True, null=True, max_length=128)
+    join_url = models.CharField(max_length=128)
+    meetingid = models.CharField(max_length=128)
+    app = models.ForeignKey(RdmWebMeetingApps, to_field='id', on_delete=models.CASCADE)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class Attendees(BaseModel):
+    id = models.AutoField(primary_key=True)
+    user_guid = models.CharField(max_length=128)
+    microsoft_teams_user_object = models.CharField(max_length=128)
+    microsoft_teams_mail = models.CharField(max_length=128)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class Bookmarks(BaseModel):
+    id = models.AutoField(primary_key=True)
+    workflow = models.ForeignKey(RdmWorkflows, to_field='id', on_delete=models.CASCADE)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class CategoryWorkflowMap(BaseModel):
+    id = models.AutoField(primary_key=True)
+    category = models.ForeignKey(Categories, to_field='id', on_delete=models.CASCADE)
+    workflow = models.ForeignKey(RdmWorkflows, to_field='id', on_delete=models.CASCADE)
+    node_settings = models.ForeignKey(NodeSettings, to_field='_id', on_delete=models.CASCADE)
+
