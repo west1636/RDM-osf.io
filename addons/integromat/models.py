@@ -87,7 +87,7 @@ class AllMeetingInformation(BaseModel):
     id = models.AutoField(primary_key=True)
     subject = models.CharField(blank=True, null=True, max_length=128)
     organizer = models.CharField(max_length=128)
-    attendees = ArrayField(ForeignKey(Attendees, to_field='id'), default=list, blank=True, null=True)
+    attendees = ArrayField(models.ForeignKey(Attendees, to_field='id'), default=list, blank=True, null=True)
     start_datetime = models.DateTimeField(blank=True, null=True)
     end_datetime = models.DateTimeField(blank=True, null=True)
     location = models.CharField(blank=True, null=True, max_length=128)
