@@ -82,21 +82,6 @@ class Categories(BaseModel):
     category_name = models.CharField(max_length=128)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
-class AllMeetingInformation(BaseModel):
-
-    id = models.AutoField(primary_key=True)
-    subject = models.CharField(blank=True, null=True, max_length=128)
-    organizer = models.CharField(max_length=128)
-    attendees = ArrayField(models.ForeignKey(Attendees, to_field='id'), default=list, blank=True, null=True)
-    start_datetime = models.DateTimeField(blank=True, null=True)
-    end_datetime = models.DateTimeField(blank=True, null=True)
-    location = models.CharField(blank=True, null=True, max_length=128)
-    content = models.CharField(blank=True, null=True, max_length=128)
-    join_url = models.CharField(max_length=128)
-    meetingid = models.CharField(max_length=128)
-    app = models.ForeignKey(RdmWebMeetingApps, to_field='id', on_delete=models.CASCADE)
-    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
-
 class Attendees(BaseModel):
     id = models.AutoField(primary_key=True)
     user_guid = models.CharField(max_length=128)
@@ -115,3 +100,17 @@ class CategoryWorkflowMap(BaseModel):
     workflow = models.ForeignKey(RdmWorkflows, to_field='id', on_delete=models.CASCADE)
     node_settings = models.ForeignKey(NodeSettings, to_field='_id', on_delete=models.CASCADE)
 
+class AllMeetingInformation(BaseModel):
+
+    id = models.AutoField(primary_key=True)
+    subject = models.CharField(blank=True, null=True, max_length=128)
+    organizer = models.CharField(max_length=128)
+    attendees = ArrayField(models.ForeignKey(Attendees, to_field='id'), default=list, blank=True, null=True)
+    start_datetime = models.DateTimeField(blank=True, null=True)
+    end_datetime = models.DateTimeField(blank=True, null=True)
+    location = models.CharField(blank=True, null=True, max_length=128)
+    content = models.CharField(blank=True, null=True, max_length=128)
+    join_url = models.CharField(max_length=128)
+    meetingid = models.CharField(max_length=128)
+    app = models.ForeignKey(RdmWebMeetingApps, to_field='id', on_delete=models.CASCADE)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
