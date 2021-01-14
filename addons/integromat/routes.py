@@ -93,10 +93,10 @@ api_routes = {
         ),
 
         Rule(
-            '/integromat/createMeetingInfo',
+            '/integromat/createMeetingInfo/',
             'post',
             views.integromat_create_meeting_info,
-            notemplate,
+            json_renderer,
         ),
 
         # ember: ここから

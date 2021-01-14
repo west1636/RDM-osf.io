@@ -171,13 +171,45 @@ def integromat_api_call(**kwargs):
 
 def integromat_create_meeting_info(**kwargs):
 
-    logger.info('integromat_create_meeting_info start')
-    logger.info('request.get_json:' + str(request.get_json()))
-    logger.info('request.get_json:' + str(request.get_json().get('nodeId')))
+    nodeId = request.get_json().get('nodeId')
+    appName = request.get_json().get('meetingAppName')
+    subject = request.get_json().get('subject')
+    organizer = request.get_json().get('organizer')
+    attendees = request.get_json().get('attendees')
+    startDatetime = request.get_json().get('startDate')
+    endDatetime = request.get_json().get('endDate')
+    location = request.get_json().get('location')
+    content = request.get_json().get('content')
+    joinUrl = request.get_json().get('mecrosoftTeamsJoinUrl')
+    meetingId = request.get_json().get('MicrosoftTeamsMeetingId')
+
+    try:
+        node = models.NodeSettings.objects.get(_id=nodeId)
+    except:
+        logger.error('nodesettings _id is invalid.')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    try:
+        webApp = RdmWebMeetingApps.objects.get(app_name=appName)
+    except:
+        logger.error('web app name is invalid.')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
 
-    if request.get_json().get('meetingAppName') == settings.MICROSOFT_TEAMS:
-        logger.info('meetingAppName')
+    meetingInfo = models.AllMeetingInformation(
+        subject = subject,
+        organizer = organizer,
+        attendees = attendees,
+        start_datetime = startDatetime,
+        end_datetime = endDatetime,
+        location = location,
+        content = content,
+        join_url = joinUrl,
+        meetingid = meetingId,
+        app_id = webApp.id,
+        node_settings_id = node.id,
+        )
+    meetingInfo.save()
 
     return {}
 
