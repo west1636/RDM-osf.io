@@ -104,7 +104,7 @@ class AllMeetingInformation(BaseModel):
     id = models.AutoField(primary_key=True)
     subject = models.CharField(blank=True, null=True, max_length=128)
     organizer = models.CharField(max_length=128)
-    attendees = models.ManyToManyField(blank=True, null=True)
+    attendees = models.ManyToManyField(Attendees, blank=True, null=True)
     start_datetime = models.DateTimeField(blank=True, null=True)
     end_datetime = models.DateTimeField(blank=True, null=True)
     location = models.CharField(blank=True, null=True, max_length=128)
