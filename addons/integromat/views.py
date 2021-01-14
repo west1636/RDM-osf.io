@@ -19,6 +19,10 @@ from website.project.decorators import (
 from website.ember_osf_web.views import use_ember_app
 from addons.integromat import settings
 
+from addons.integromat import models
+from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
+from django.core import serializers
+
 logger = logging.getLogger(__name__)
 
 SHORT_NAME = 'integromat'
@@ -157,9 +161,20 @@ def project_integromat(**kwargs):
 def integromat_get_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
+
+    appMicrosoftTeams = RdmWebMeetingApps.objects.get(app_name='MicrosoftTeams')
+
+    workflows = RdmWorkflows.objects.all()
+    microsoftTeamsMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, app_id=appMicrosoftTeams.id)
+
+    workflowsJson = serializers.serialize('json', workflows, ensure_ascii=False)
+    microsoftTeamsMeetingsJson = serializers.serialize('json', microsoftTeamsMeetings, ensure_ascii=False)
+
     return {'data': {'id': node._id, 'type': 'integromat-config',
                      'attributes': {
-                         'webhook_url': addon.external_account.webhook_url
+                         'webhook_url': addon.external_account.webhook_url,
+                         'microsoft_teams_meetings': microsoftTeamsMeetingsJson,
+                         'workflows': workflowsJson
                      }}}
 
 #api for Integromat action
