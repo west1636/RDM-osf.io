@@ -41,6 +41,10 @@ var ViewModel = oop.extend(OAuthAddonSettingsViewModel,{
         // Whether the initial data has been loaded
         self.loaded = ko.observable(false);
 
+        self.userGuid = ko.observable();
+        self.microsoftTeamsUserObject = ko.observable();
+        self.microsoftTeamsMail = ko.observable();
+
         self.showApiTokenInput = ko.pureComputed(function() {
             return Boolean(self.selectedHost());
         });
