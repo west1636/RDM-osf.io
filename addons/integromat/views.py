@@ -157,10 +157,19 @@ def project_integromat(**kwargs):
 
 @must_be_valid_project
 #@must_have_permission('admin')
+@must_be_logged_in
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_get_config_ember(**kwargs):
+def integromat_get_config_ember(auth, **kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
+    user = auth.user
+
+    qsUserGuid = user._prefetched_objects_cache['guids'].only()
+    userGuidSerializer = serializers.serialize('json', qsUserGuid, ensure_ascii=False)
+    userGuidJson = json.loads(userGuidSerializer)
+    userGuid = userGuidJson[0]['fields']['_id']
+    organizer = models.Attendees.objects.get(user_guid=userGuid)
+    organizerId = organizer.microsoft_teams_user_object
 
     appMicrosoftTeams = RdmWebMeetingApps.objects.get(app_name='MicrosoftTeams')
 
@@ -177,7 +186,8 @@ def integromat_get_config_ember(**kwargs):
                          'microsoft_teams_meetings': microsoftTeamsMeetingsJson,
                          'workflows': workflowsJson,
                          'app_name_microsoft_teams' : settings.MICROSOFT_TEAMS,
-                         'info_grdm_scenario_processing': settings.INFO_GRDM_SCENARIO_PROCESSING
+                         'info_grdm_scenario_processing': settings.INFO_GRDM_SCENARIO_PROCESSING,
+                         'organizer_id': organizerId
                      }}}
 
 #api for Integromat action
