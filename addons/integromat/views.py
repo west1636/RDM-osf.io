@@ -2,6 +2,7 @@
 from flask import request
 import logging
 import requests
+import json
 
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
