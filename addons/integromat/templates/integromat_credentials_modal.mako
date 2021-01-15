@@ -69,8 +69,8 @@
             </tr>
             <tr>
             <td><input type="text" data-bind="value: userGuid" style="width: 80%"></td>
-            <td><input type="text" data-bind="value: microsoftTeamsUserObject" style="width: 80%"></td>
-            <td><input type="text" data-bind="value: microsoftTeamsMail" style="width: 90%"></td>
+            <td><input type="text" data-bind="value: microsoftTeamsMail" style="width: 80%"></td>
+            <td><input type="text" data-bind="value: microsoftTeamsUserObject" style="width: 90%"></td>
             <td style="border-top-style:none; border-bottom-style:none;" ><button data-bind="click: addMicrosoftTeamsUser" style="margin-top:5px; margin-bottom:5px;" class="btn btn-success pull-right">Add</button></td>
             </tr>
             </table>
