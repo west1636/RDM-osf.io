@@ -172,9 +172,12 @@ def integromat_get_config_ember(**kwargs):
 
     return {'data': {'id': node._id, 'type': 'integromat-config',
                      'attributes': {
+                         'node_settings_id': addon._id, 
                          'webhook_url': addon.external_account.webhook_url,
                          'microsoft_teams_meetings': microsoftTeamsMeetingsJson,
-                         'workflows': workflowsJson
+                         'workflows': workflowsJson,
+                         'app_name_microsoft_teams' : settings.MICROSOFT_TEAMS,
+                         'info_grdm_scenario_processing': settings.INFO_GRDM_SCENARIO_PROCESSING
                      }}}
 
 #api for Integromat action
@@ -228,3 +231,14 @@ def integromat_create_meeting_info(**kwargs):
 
     return {}
 
+def integromat_info_msg(msgKey):
+
+    msgKey = request.get_json().get('notifyType')
+
+    if msgKey == settings.INFO_GRDM_SCENARIO_PROCESSING:
+            return {'data': {'id': node._id, 'type': 'integromat-config',
+                     'attributes': {
+                         'infoMsg': 'The workflow is running.'
+                     }}}
+
+    return {}
