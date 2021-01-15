@@ -85,8 +85,8 @@ class Categories(BaseModel):
 class Attendees(BaseModel):
     id = models.AutoField(primary_key=True)
     user_guid = models.CharField(max_length=128)
-    microsoft_teams_user_object = models.CharField(max_length=128)
-    microsoft_teams_mail = models.CharField(max_length=128)
+    microsoft_teams_user_object = models.CharField(max_length=256)
+    microsoft_teams_mail = models.CharField(max_length=256)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
 class Bookmarks(BaseModel):
@@ -109,7 +109,7 @@ class AllMeetingInformation(BaseModel):
     end_datetime = models.DateTimeField(blank=True, null=True)
     location = models.CharField(blank=True, null=True, max_length=128)
     content = models.CharField(blank=True, null=True, max_length=128)
-    join_url = models.CharField(max_length=128)
-    meetingid = models.CharField(max_length=128)
+    join_url = models.CharField(max_length=512)
+    meetingid = models.CharField(max_length=512)
     app = models.ForeignKey(RdmWebMeetingApps, to_field='id', on_delete=models.CASCADE)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
