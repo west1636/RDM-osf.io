@@ -198,8 +198,8 @@ def integromat_create_meeting_info(**kwargs):
     endDatetime = request.get_json().get('endDate')
     location = request.get_json().get('location')
     content = request.get_json().get('content')
-    joinUrl = request.get_json().get('mecrosoftTeamsJoinUrl')
-    meetingId = request.get_json().get('MicrosoftTeamsMeetingId')
+    joinUrl = request.get_json().get('microsoftTeamsJoinUrl')
+    meetingId = request.get_json().get('microsoftTeamsMeetingId')
 
     try:
         node = models.NodeSettings.objects.get(_id=nodeId)
