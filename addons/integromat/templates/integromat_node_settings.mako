@@ -35,6 +35,13 @@
 
     % if node_has_auth and valid_credentials:
 
+        <div align="right">
+            <i title="Manage your Microsoft User information to create meetings." class="fa fa-question-circle text-muted"></i>
+            <a href="#microsoftTeamsUserRegistrationModal" data-toggle="modal"
+            class="btn btn-primary" style="margin-bottom:10px">
+            Manage Microsoft Teams Attendees
+            </a>
+        </div>
         <div id="scenarioList" ></div>
         <table width="100%" border="1" bordercolor="#f0f8ff">
             <th>

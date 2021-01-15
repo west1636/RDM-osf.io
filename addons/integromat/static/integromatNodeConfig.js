@@ -106,7 +106,9 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
 
         self.integromatApiToken = ko.observable();
         self.integromatWebhookUrl = ko.observable();
-
+        self.userGuid = ko.observable();
+        self.microsoftTeamsUserObject = ko.observable();
+        self.microsoftTeamsMail = ko.observable();
 
     },
     clearModal : function() {
@@ -152,7 +154,35 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
     },
     authSuccessCallback: function() {
         askImport();
-    }
+    },
+    addMicrosoftTeamsUser : function() {
+        var self = this;
+        var url = self.urls().add_microsoft_teams_user;
+        return osfHelpers.postJSON(
+            url,
+            ko.toJS({
+                user_guid: self.userGuid(),
+                microsoft_teams_user_object: self.microsoftTeamsUserObject(),
+                microsoft_teams_mail: self.microsoftTeamsMail()
+            })
+        ).done(function() {
+            self.clearModal();
+            $modal.modal('hide');
+            $('#microsoftTeamsUserRegistrationModal').modal('hide');
+            self.userGuid(null);
+            self.microsoftTeamsUserObject(null);
+            self.microsoftTeamsMail(null);
+
+        }).fail(function(xhr, textStatus, error) {
+            var errorMessage = (xhr.status === 401) ? '401' : 'deplicated';
+            self.changeMessage(errorMessage, 'text-danger');
+            Raven.captureMessage('Could not add Micorosoft Teams user', {
+                url: self.url,
+                textStatus: textStatus,
+                error: error
+            });
+        });
+    },
 });
 
 // Public API
