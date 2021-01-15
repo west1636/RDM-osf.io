@@ -217,7 +217,6 @@ def integromat_create_meeting_info(**kwargs):
     meetingInfo = models.AllMeetingInformation(
         subject = subject,
         organizer = organizer,
-        attendees = attendees,
         start_datetime = startDatetime,
         end_datetime = endDatetime,
         location = location,
@@ -228,6 +227,46 @@ def integromat_create_meeting_info(**kwargs):
         node_settings_id = node.id,
         )
     meetingInfo.save()
+    meetingInfo.attendees = attendees
+    meetingInfo.save()
+
+    return {}
+
+@must_be_valid_project
+#@must_have_permission('admin')
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_add_microsoft_teams_user(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+
+    userGuid = request.get_json().get('user_guid')
+    microsoftTeamsUserObject = request.get_json().get('microsoft_teams_user_object')
+    microsoftTeamsMail = request.get_json().get('microsoft_teams_mail')
+
+    nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    nodeNum = nodeSettings.id
+    if models.Attendees.objects.filter(node_settings_id=nodeNum, user_guid=userGuid).exists():
+        logger.info('user_guid deplicated')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    if models.Attendees.objects.filter(node_settings_id=nodeNum, microsoft_teams_user_object=microsoftTeamsUserObject).exists():
+        logger.info('Microsoft User Object ID deplicated')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    if models.Attendees.objects.filter(node_settings_id=nodeNum, microsoft_teams_mail=microsoftTeamsMail).exists():
+        logger.info('Microsoft Teams Sign-in Address')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    microsoftTeamsUserInfo = models.Attendees(
+        user_guid = userGuid,
+        microsoft_teams_user_object = microsoftTeamsUserObject,
+        microsoft_teams_mail = microsoftTeamsMail,
+        node_settings = nodeSettings,
+
+        )
+
+    microsoftTeamsUserInfo.save()
 
     return {}
 
