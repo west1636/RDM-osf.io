@@ -58,7 +58,6 @@
                 </div>
             </div>
             </th>
-            <tr><td class="tb-td td-title tb-col-0"> Intgration GakuNin RDM, Microsoft 365 Calendar, Slack</td><td><a class="text-danger">Deactivate</a></td></tr>
             </table>
 
     % endif
