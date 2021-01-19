@@ -76,7 +76,7 @@
             </table>
             </form>
             <table style="width: 100%">
-                <tr><td><button data-bind="click: deleteYourMicrosoftTeamsUser" style="margin-top:5px; margin-bottom:5px;" class="btn btn-danger pull-right">Delete Your Information</button></td></tr>
+                <tr><td><button style="margin-top:5px; margin-bottom:5px;" class="btn btn-danger pull-right">Delete Your Information</button></td></tr>
             </table>
             </div><!-- end modal-body -->
         </div><!-- end modal-content -->
