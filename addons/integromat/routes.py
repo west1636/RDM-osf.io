@@ -106,6 +106,13 @@ api_routes = {
             json_renderer,
         ),
 
+        Rule(
+            '/integromat/deleteMeetingInfo',
+            'post',
+            views.integromat_delete_meeting_info,
+            json_renderer,
+        ),
+
         # ember: ここから
         Rule([
             '/project/<pid>/integromat/config',

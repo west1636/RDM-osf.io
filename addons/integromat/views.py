@@ -238,16 +238,29 @@ def integromat_create_meeting_info(**kwargs):
         node_settings_id = node.id,
         )
     meetingInfo.save()
-    logger.info('attendees:' + str(attendees))
+    ####MAKE COLLECTION LATER####
     qsAttendee = models.Attendees.objects.get(microsoft_teams_mail=attendees[0])
     attendeeId = qsAttendee.id
     attendeeIds = []
     attendeeIds.append(attendeeId)
-
+    ####MAKE COLLECTION LATER####
     meetingInfo.attendees = attendeeIds
     meetingInfo.save()
 
     return {}
+
+def integromat_delete_meeting_info(**kwargs):
+
+    nodeId = request.get_json().get('nodeId')
+    appName = request.get_json().get('meetingAppName')
+    meetingIds = request.get_json().get('microsoftTeamsMeetingIds')
+    logger.info('meetingIds:' + str(meetingIds))
+    for meetingId in meetingIds:
+         qsDeleteMeeting = models.AllMeetingInformation.objects.get(meetingid=meetingId)
+         qsDeleteMeeting.delete()
+
+    return {}
+
 
 @must_be_valid_project
 #@must_have_permission('admin')
