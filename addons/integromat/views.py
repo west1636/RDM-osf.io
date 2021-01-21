@@ -249,6 +249,51 @@ def integromat_create_meeting_info(**kwargs):
 
     return {}
 
+def integromat_update_meeting_info(**kwargs):
+
+    nodeId = request.get_json().get('nodeId')
+    appName = request.get_json().get('meetingAppName')
+    subject = request.get_json().get('subject')
+    attendees = request.get_json().get('attendees')
+    startDatetime = request.get_json().get('startDate')
+    endDatetime = request.get_json().get('endDate')
+    location = request.get_json().get('location')
+    content = request.get_json().get('content')
+    meetingId = request.get_json().get('microsoftTeamsMeetingId')
+
+    try:
+        node = models.NodeSettings.objects.get(_id=nodeId)
+    except:
+        logger.error('nodesettings _id is invalid.')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    try:
+        webApp = RdmWebMeetingApps.objects.get(app_name=appName)
+    except:
+        logger.error('web app name is invalid.')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
+    qsUpdateMeetingInfo = models.AllMeetingInformation.objects.get(node_settings_id=nodeId, app_id=webApp.id, meetingid=meetingId)
+
+    qsUpdateMeetingInfo.subject = subject
+    qsUpdateMeetingInfo.start_datetime = startDatetime
+    qsUpdateMeetingInfo.end_datetime = endDatetime
+    qsUpdateMeetingInfo.location = location
+    qsUpdateMeetingInfo.content = content
+
+    ####MAKE COLLECTION LATER####
+    qsAttendee = models.Attendees.objects.get(microsoft_teams_mail=attendees[0])
+    attendeeId = qsAttendee.id
+    attendeeIds = []
+    attendeeIds.append(attendeeId)
+    ####MAKE COLLECTION LATER####
+
+    qsUpdateMeetingInfo.attendees = attendeeIds
+
+    updateMeetingInfo.save()
+
+    return {}
+
 def integromat_delete_meeting_info(**kwargs):
 
     nodeId = request.get_json().get('nodeId')

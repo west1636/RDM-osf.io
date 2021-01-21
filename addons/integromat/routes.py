@@ -107,6 +107,13 @@ api_routes = {
         ),
 
         Rule(
+            '/integromat/updateMeetingInfo',
+            'post',
+            views.integromat_update_meeting_info,
+            json_renderer,
+        ),
+
+        Rule(
             '/integromat/deleteMeetingInfo',
             'post',
             views.integromat_delete_meeting_info,
