@@ -278,7 +278,7 @@ def integromat_update_meeting_info(**kwargs):
 
     qsUpdateMeetingInfo.attendees = attendeeIds
 
-    updateMeetingInfo.save()
+    qsUpdateMeetingInfo.save()
 
     return {}
 
