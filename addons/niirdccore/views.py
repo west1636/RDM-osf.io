@@ -12,6 +12,7 @@ from website.project.decorators import (
     must_have_permission,
     must_have_addon,
 )
+from website.ember_osf_web.views import use_ember_app
 from addons.jupyterhub.apps import JupyterhubAddonAppConfig
 
 logger = logging.getLogger(__name__)
@@ -59,5 +60,9 @@ def niirdccore_get_dmp_info(**kwargs):
     dmp_info = requests.get(url, headers=headers)
 
     return {'data': {'id': node._id, 'type': 'dmp-status',
-                    'attributes': dmp_info.text}}
+                    'attributes': dmp_info.json()}}
 
+@must_be_valid_project
+@must_have_addon(SHORT_NAME, 'node')
+def project_niirdccore(**kwargs):
+    return use_ember_app()

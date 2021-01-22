@@ -3,9 +3,28 @@ Routes associated with the niirdccore addon
 """
 
 from framework.routing import Rule, json_renderer
+from website.routes import notemplate
 from . import SHORT_NAME
 from . import views
 
+# HTML endpoints
+page_routes = {
+    'rules': [
+        # Home (Base) | GET
+        Rule(
+            [
+                '/<pid>/{}'.format(SHORT_NAME),
+                '/<pid>/node/<nid>/{}'.format(SHORT_NAME),
+            ],
+            'get',
+            views.project_niirdccore,
+            notemplate
+        ),
+
+    ]
+}
+
+# JSON endpoints
 api_routes = {
     'rules': [
         Rule([

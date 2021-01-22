@@ -55,7 +55,8 @@
         "nextcloud": "partial",
         "nextcloudinstitutions": "partial",
         "iqbrims": "partial",
-        "dropboxbusiness": "partial"
+        "dropboxbusiness": "partial",
+        "niirdccore": "partial"
     },
     "addons_commentable": [
         "osfstorage",
@@ -78,7 +79,8 @@
         "nextcloud",
         "nextcloudinstitutions",
         "iqbrims",
-        "dropboxbusiness"
+        "dropboxbusiness",
+        "niirdccore"
     ],
     "addons_based_on_ids": [
         "osfstorage",
