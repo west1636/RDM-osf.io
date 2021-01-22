@@ -260,7 +260,7 @@ def integromat_update_meeting_info(**kwargs):
     location = request.get_json().get('location')
     content = request.get_json().get('content')
     meetingId = request.get_json().get('microsoftTeamsMeetingId')
-
+    logger.info('meetingIds:' + str(meetingIds))
     qsUpdateMeetingInfo = models.AllMeetingInformation.objects.get(meetingid=meetingId)
 
     qsUpdateMeetingInfo.subject = subject
