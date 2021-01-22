@@ -261,19 +261,7 @@ def integromat_update_meeting_info(**kwargs):
     content = request.get_json().get('content')
     meetingId = request.get_json().get('microsoftTeamsMeetingId')
 
-    try:
-        node = models.NodeSettings.objects.get(_id=nodeId)
-    except:
-        logger.error('nodesettings _id is invalid.')
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
-
-    try:
-        webApp = RdmWebMeetingApps.objects.get(app_name=appName)
-    except:
-        logger.error('web app name is invalid.')
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
-
-    qsUpdateMeetingInfo = models.AllMeetingInformation.objects.get(node_settings_id=nodeId, app_id=webApp.id, meetingid=meetingId)
+    qsUpdateMeetingInfo = models.AllMeetingInformation.objects.get(meetingid=meetingId)
 
     qsUpdateMeetingInfo.subject = subject
     qsUpdateMeetingInfo.start_datetime = startDatetime
