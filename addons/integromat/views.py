@@ -176,7 +176,9 @@ def integromat_get_config_ember(auth, **kwargs):
 
     workflows = RdmWorkflows.objects.all()
     microsoftTeamsMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, app_id=appMicrosoftTeams.id)
+    microsoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=nodeNum)
 
+    microsoftTeamsAttendeesJson = serializers.serialize('json', microsoftTeamsAttendees, ensure_ascii=False)
     workflowsJson = serializers.serialize('json', workflows, ensure_ascii=False)
     microsoftTeamsMeetingsJson = serializers.serialize('json', microsoftTeamsMeetings, ensure_ascii=False)
 
@@ -185,6 +187,7 @@ def integromat_get_config_ember(auth, **kwargs):
                          'node_settings_id': addon._id, 
                          'webhook_url': addon.external_account.webhook_url,
                          'microsoft_teams_meetings': microsoftTeamsMeetingsJson,
+                         'microsoft_teams_attendees': microsoftTeamsAttendeesJson,
                          'workflows': workflowsJson,
                          'app_name_microsoft_teams' : settings.MICROSOFT_TEAMS,
                          'info_grdm_scenario_processing': settings.INFO_GRDM_SCENARIO_PROCESSING,
