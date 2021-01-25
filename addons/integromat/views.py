@@ -241,12 +241,13 @@ def integromat_create_meeting_info(**kwargs):
         node_settings_id = node.id,
         )
     meetingInfo.save()
-    ####MAKE COLLECTION LATER####
-    qsAttendee = models.Attendees.objects.get(microsoft_teams_mail=attendees[0])
-    attendeeId = qsAttendee.id
-    attendeeIds = []
-    attendeeIds.append(attendeeId)
-    ####MAKE COLLECTION LATER####
+
+    for attendeeMail in attendees:
+
+        qsAttendee = models.Attendees.objects.get(node_settings_id=nodeId, microsoft_teams_mail=attendeeMail)
+        attendeeId = qsAttendee.id
+        attendeeIds.append(attendeeId)
+
     meetingInfo.attendees = attendeeIds
     meetingInfo.save()
 
@@ -272,12 +273,14 @@ def integromat_update_meeting_info(**kwargs):
     qsUpdateMeetingInfo.location = location
     qsUpdateMeetingInfo.content = content
 
-    ####MAKE COLLECTION LATER####
-    qsAttendee = models.Attendees.objects.get(microsoft_teams_mail=attendees[0])
-    attendeeId = qsAttendee.id
     attendeeIds = []
-    attendeeIds.append(attendeeId)
-    ####MAKE COLLECTION LATER####
+
+    for attendeeMail in attendees:
+
+        qsAttendee = models.Attendees.objects.get(node_settings_id=nodeId, microsoft_teams_mail=attendeeMail)
+        attendeeId = qsAttendee.id
+        attendeeIds.append(attendeeId)
+
 
     qsUpdateMeetingInfo.attendees = attendeeIds
 
