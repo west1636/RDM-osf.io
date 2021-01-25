@@ -21,7 +21,7 @@ class NodeSettings(BaseNodeSettings):
     """
     プロジェクトにアタッチされたアドオンに関するモデルを定義する。
     """
-    dmp_id = models.TextField(blank=False, null=True)
+    dmp_id = models.TextField(blank=True, null=True)
 
     def get_dmr_api_key(self):
         return settings.DMR_API_KEY
