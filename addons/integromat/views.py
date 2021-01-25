@@ -176,7 +176,7 @@ def integromat_get_config_ember(auth, **kwargs):
 
     workflows = RdmWorkflows.objects.all()
     microsoftTeamsMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, app_id=appMicrosoftTeams.id)
-    microsoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=nodeNum)
+    microsoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id)
 
     microsoftTeamsAttendeesJson = serializers.serialize('json', microsoftTeamsAttendees, ensure_ascii=False)
     workflowsJson = serializers.serialize('json', workflows, ensure_ascii=False)
