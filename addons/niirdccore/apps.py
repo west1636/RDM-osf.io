@@ -7,6 +7,12 @@ import os
 from addons.base.apps import BaseAddonAppConfig
 from . import SHORT_NAME
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_PATH = os.path.join(
+    HERE,
+    'templates'
+)
+
 # `__init__.py` の `default_app_config` により本ファイル内の`AddonAppConfig`が参照される
 class AddonAppConfig(BaseAddonAppConfig):
 
@@ -26,6 +32,8 @@ class AddonAppConfig(BaseAddonAppConfig):
     include_js = {}
 
     include_css = {}
+
+    node_settings_template = os.path.join(TEMPLATE_PATH, 'node_settings.mako')
 
     @property
     def routes(self):
