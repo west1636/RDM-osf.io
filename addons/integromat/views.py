@@ -242,6 +242,8 @@ def integromat_create_meeting_info(**kwargs):
         )
     meetingInfo.save()
 
+    attendeeIds = []
+
     for attendeeMail in attendees:
 
         qsAttendee = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
@@ -277,7 +279,7 @@ def integromat_update_meeting_info(**kwargs):
 
     for attendeeMail in attendees:
 
-        qsAttendee = models.Attendees.objects.get(node_settings_id=nodeId, microsoft_teams_mail=attendeeMail)
+        qsAttendee = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
         attendeeId = qsAttendee.id
         attendeeIds.append(attendeeId)
 
