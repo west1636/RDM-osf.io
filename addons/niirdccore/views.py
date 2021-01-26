@@ -13,6 +13,7 @@ from website.project.decorators import (
     must_have_addon,
 )
 from addons.jupyterhub.apps import JupyterhubAddonAppConfig
+from addons.jupyterhub.models import NodeSettings
 
 logger = logging.getLogger(__name__)
 
@@ -36,15 +37,25 @@ def niirdccore_set_config(**kwargs):
     # provisioning
     dataAnalysisResources = dmp_metadata.get("vivo:Dataset_redbox:DataAnalysisResources")
 
-    if dataAnalysisResources == JupyterhubAddonAppConfig.full_name \
-        or dataAnalysisResources ==  JupyterhubAddonAppConfig.short_name:
+    if dataAnalysisResources:
+        try:
+            typeName = dataAnalysisResources["type"]
+            serviceName = dataAnalysisResources["name"]
+            baseUrl = dataAnalysisResources["url"]
+        except KeyError:
+            raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
-        # add jupyterHub
-        node.add_addon(JupyterhubAddonAppConfig.short_name, auth=None, log=False)
-    else:
-        return {"result": "jupyterhub none"}
+        if typeName == JupyterhubAddonAppConfig.full_name \
+            or typeName ==  JupyterhubAddonAppConfig.short_name:
 
-    return {"result": "jupyterhub added"}
+            # add jupyterHub
+            node.add_addon(JupyterhubAddonAppConfig.short_name, auth=None, log=False)
+            jupyterHub = node.get_addon(JupyterhubAddonAppConfig.short_name)
+            jupyterHub.set_services([(serviceName, baseUrl)])
+
+            return {"result": "jupyterhub added"}
+
+    return {"result": "jupyterhub none"}
 
 @must_be_valid_project
 @must_have_permission('admin')
