@@ -275,6 +275,12 @@ def integromat_update_meeting_info(**kwargs):
     qsUpdateMeetingInfo.location = location
     qsUpdateMeetingInfo.content = content
 
+    try:
+        node = models.NodeSettings.objects.get(_id=nodeId)
+    except:
+        logger.error('nodesettings _id is invalid.')
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+
     attendeeIds = []
 
     for attendeeMail in attendees:
