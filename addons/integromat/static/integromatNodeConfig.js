@@ -183,6 +183,33 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
             });
         });
     },
+
+    deleteMicrosoftTeamsUser : function() {
+        var self = this;
+        var url = self.urls().delete_microsoft_teams_user;
+        return osfHelpers.postJSON(
+            url,
+            ko.toJS({
+                user_guid: self.userGuid(),
+            })
+        ).done(function() {
+            self.clearModal();
+            $modal.modal('hide');
+            $('#microsoftTeamsUserRegistrationModal').modal('hide');
+            self.userGuid(null);
+            self.microsoftTeamsUserObject(null);
+            self.microsoftTeamsMail(null);
+
+        }).fail(function(xhr, textStatus, error) {
+            var errorMessage = (xhr.status === 401) ? '401' : 'deplicated';
+            self.changeMessage(errorMessage, 'text-danger');
+            Raven.captureMessage('Could not add Micorosoft Teams user', {
+                url: self.url,
+                textStatus: textStatus,
+                error: error
+            });
+        });
+    },
 });
 
 // Public API

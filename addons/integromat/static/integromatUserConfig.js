@@ -151,6 +151,9 @@ var ViewModel = oop.extend(OAuthAddonSettingsViewModel,{
     addMicrosoftTeamsUser : function() {
         var self = this;
     },
+    deleteMicrosoftTeamsUser : function() {
+        var self = this;
+    },
 });
 
 function IntegromatUserConfig(selector, url) {

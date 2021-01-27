@@ -100,6 +100,13 @@ api_routes = {
         ),
 
         Rule(
+            '/project/<pid>/integromat/delete_microsoft_teams_user',
+            'post',
+            views.integromat_delete_microsoft_teams_user,
+            json_renderer,
+        ),
+
+        Rule(
             '/integromat/createMeetingInfo',
             'post',
             views.integromat_create_meeting_info,

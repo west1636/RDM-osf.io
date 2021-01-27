@@ -347,6 +347,24 @@ def integromat_add_microsoft_teams_user(**kwargs):
 
     return {}
 
+@must_be_valid_project
+#@must_have_permission('admin')
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_delete_microsoft_teams_user(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+
+    userGuid = request.get_json().get('user_guid')
+
+    nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    nodeNum = nodeSettings.id
+    qsMicrosoftTeamsUserInfo =  models.Attendees.objects.filter(node_settings_id=nodeNum, user_guid=userGuid)
+
+    qsMicrosoftTeamsUserInfo.delete()
+
+    return {}
+
 def integromat_info_msg(msgKey):
 
     msgKey = request.get_json().get('notifyType')
