@@ -203,7 +203,7 @@ var integromatViewModel = oop.extend(OauthAddonNodeConfigViewModel,{
         }).fail(function(xhr, textStatus, error) {
             var errorMessage = (xhr.status === 401) ? '401' : 'deplicated';
             self.changeMessage(errorMessage, 'text-danger');
-            Raven.captureMessage('Could not add Micorosoft Teams user', {
+            Raven.captureMessage('Could not delete Micorosoft Teams user', {
                 url: self.url,
                 textStatus: textStatus,
                 error: error

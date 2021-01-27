@@ -16,7 +16,7 @@ class IntegromatSerializer(OAuthAddonSerializer):
             'create': node.api_url_for('integromat_add_user_account', user_settings=user),
             'deauthorize': node.api_url_for('integromat_deauthorize_node'),
             'add_microsoft_teams_user': node.api_url_for('integromat_add_microsoft_teams_user'),
-            'delete_microsoft_tams_user': node.api_url_for('integromat_delete_microsoft_teams_user')
+            'delete_microsoft_teams_user': node.api_url_for('integromat_delete_microsoft_teams_user')
         }
 
         return result
