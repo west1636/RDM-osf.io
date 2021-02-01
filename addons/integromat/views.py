@@ -365,8 +365,6 @@ def integromat_delete_microsoft_teams_user(**kwargs):
 
     return {}
 
-@must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
 def integromat_info_msg(msgKey, **kwargs):
 
     msgKey = request.get_json().get('notifyType')
@@ -377,4 +375,4 @@ def integromat_info_msg(msgKey, **kwargs):
 
     logger.info('msgKey:' + msgKey)
 
-    return use_ember_app()
+    return {}
