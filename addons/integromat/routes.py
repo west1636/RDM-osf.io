@@ -26,7 +26,7 @@ page_routes = {
         ),
 
         Rule(
-            '<pid>/integromat/integromatInfoMsg',
+            '/<pid>/integromat/integromatInfoMsg',
             'get',
             views.integromat_info_msg,
             notemplate,
