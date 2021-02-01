@@ -365,7 +365,7 @@ def integromat_delete_microsoft_teams_user(**kwargs):
 
     return {}
 
-def integromat_info_msg(msgKey, **kwargs):
+def integromat_info_msg(**kwargs):
 
     msgKey = request.get_json().get('notifyType')
     infoMsg = ''
