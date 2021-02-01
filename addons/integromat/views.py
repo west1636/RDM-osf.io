@@ -375,4 +375,6 @@ def integromat_info_msg(msgKey, **kwargs):
     if msgKey == settings.INFO_GRDM_SCENARIO_PROCESSING:
         infoMsg = 'The workflow is running.'
 
+    logger.info('msgKey:' + msgKey)
+
     return use_ember_app()
