@@ -25,6 +25,13 @@ page_routes = {
             notemplate
         ),
 
+        Rule(
+            '/integromat/integromatInfoMsg',
+            'get',
+            views.integromat_info_msg,
+            notemplate,
+        ),
+
     ]
 }
 
@@ -124,13 +131,6 @@ api_routes = {
             '/integromat/deleteMeetingInfo',
             'post',
             views.integromat_delete_meeting_info,
-            json_renderer,
-        ),
-
-        Rule(
-            '/integromat/integromatInfoMsg',
-            'post',
-            views.integromat_info_msg,
             json_renderer,
         ),
 
