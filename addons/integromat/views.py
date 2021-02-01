@@ -182,7 +182,11 @@ def integromat_get_config_ember(auth, **kwargs):
     workflowsJson = serializers.serialize('json', workflows, ensure_ascii=False)
     microsoftTeamsMeetingsJson = serializers.serialize('json', microsoftTeamsMeetings, ensure_ascii=False)
 
-    return {'data': {'id': node._id, 'type': 'integromat-config',
+
+    logger.info('node._id:' + str(node._id))
+    nodeId = node._id || request.json.get('guid')
+
+    return {'data': {'id': nodeId, 'type': 'integromat-config',
                      'attributes': {
                          'node_settings_id': addon._id, 
                          'webhook_url': addon.external_account.webhook_url,
