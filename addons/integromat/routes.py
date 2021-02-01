@@ -127,6 +127,13 @@ api_routes = {
             json_renderer,
         ),
 
+        Rule(
+            '/integromat/integromatInfoMsg',
+            'post',
+            views.integromat_info_msg,
+            json_renderer,
+        ),
+
         # ember: ここから
         Rule([
             '/project/<pid>/integromat/config',

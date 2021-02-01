@@ -365,14 +365,14 @@ def integromat_delete_microsoft_teams_user(**kwargs):
 
     return {}
 
-def integromat_info_msg(msgKey):
+@must_be_valid_project
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_info_msg(msgKey, **kwargs):
 
     msgKey = request.get_json().get('notifyType')
+    infoMsg = ''
 
     if msgKey == settings.INFO_GRDM_SCENARIO_PROCESSING:
-            return {'data': {'id': node._id, 'type': 'integromat-config',
-                     'attributes': {
-                         'infoMsg': 'The workflow is running.'
-                     }}}
+        infoMsg = 'The workflow is running.'
 
-    return {}
+    return use_ember_app()
