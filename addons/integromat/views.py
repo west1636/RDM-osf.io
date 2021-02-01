@@ -375,4 +375,4 @@ def integromat_info_msg(**kwargs):
 
     logger.info('msgKey:' + msgKey)
 
-    return {}
+    return use_ember_app()
