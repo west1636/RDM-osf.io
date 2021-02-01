@@ -49,7 +49,7 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
                               calling_format=OrdinaryCallingFormat(),
                               host=host,
                               port=port,
-                              is_secure=port == 443)
+                              is_secure=port == 443).connect_to_region('ap-tokyo-1')
 
 
 def get_bucket_names(node_settings):
