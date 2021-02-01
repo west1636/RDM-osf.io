@@ -27,7 +27,7 @@ class S3CompatConnection(S3Connection):
                 calling_format=calling_format,
                 path=path, provider=provider, bucket_class=bucket_class,
                 security_token=security_token, anon=anon,
-                validate_certs=validate_certs, profile_name=profile_name)
+                validate_certs=validate_certs, profile_name=profile_name).connect_to_region('ap-tokyo-1')
 
     def _required_auth_capability(self):
         return ['s3']
@@ -49,7 +49,7 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
                               calling_format=OrdinaryCallingFormat(),
                               host=host,
                               port=port,
-                              is_secure=port == 443).connect_to_region('ap-tokyo-1')
+                              is_secure=port == 443)
 
 
 def get_bucket_names(node_settings):
