@@ -183,8 +183,12 @@ def integromat_get_config_ember(auth, **kwargs):
     microsoftTeamsMeetingsJson = serializers.serialize('json', microsoftTeamsMeetings, ensure_ascii=False)
 
 
+    nodeId = node._id
     logger.info('node._id:' + str(node._id))
-    nodeId = node._id || request.json.get('guid')
+    if not nodeId:
+        nodeId = request.json.get('guid')
+
+    logger.info('nodeId:' + str(nodeId))
 
     return {'data': {'id': nodeId, 'type': 'integromat-config',
                      'attributes': {
