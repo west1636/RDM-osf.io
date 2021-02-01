@@ -49,11 +49,13 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     #                          host=host,
     #                          port=port,
     #                          is_secure=port == 443)
-    return s3.connect_to_region('ap-tokyo-1', access_key, secret_key,
-                              calling_format=OrdinaryCallingFormat(),
-                              host=host,
-                              port=port,
-                              is_secure=port == 443)
+    return boto3.resource(
+        's3',
+        aws_access_key_id=access_key, # "gQ4+YC530sBa8qZI6WcbUbtH8oar0exampleuniqueID",
+        aws_secret_access_key=secret_key, # "7fa22331ebe62bf4605dc9a42aaeexampleuniqueID",
+        region_name="ap-tokyo-1", # Region name here that matches the endpoint
+        endpoint_url="https://nrjjxl1nnwb4.compat.objectstorage.ap-tokyo-1.oraclecloud.com" # Include your namespace in the URL
+    )
 
 
 def get_bucket_names(node_settings):
