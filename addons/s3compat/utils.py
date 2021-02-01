@@ -1,7 +1,7 @@
 import re
 import httplib
 
-from boto import exception
+from boto import exception, s3
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
 from boto.s3.bucket import Bucket
 import addons.s3compat.settings as settings
@@ -12,8 +12,7 @@ from addons.base.exceptions import InvalidAuthError, InvalidFolderError
 
 class S3CompatConnection(S3Connection):
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
-                 is_secure=True, port=None, proxy=None, proxy_port=None,
-                 proxy_user=None, proxy_pass=None,
+
                  host=NoHostProvided, debug=0, https_connection_factory=None,
                  calling_format=None, path='/',
                  provider='aws', bucket_class=Bucket, security_token=None,
@@ -27,7 +26,7 @@ class S3CompatConnection(S3Connection):
                 calling_format=calling_format,
                 path=path, provider=provider, bucket_class=bucket_class,
                 security_token=security_token, anon=anon,
-                validate_certs=validate_certs, profile_name=profile_name).connect_to_region('ap-tokyo-1')
+                validate_certs=validate_certs, profile_name=profile_name)
 
     def _required_auth_capability(self):
         return ['s3']
@@ -45,7 +44,12 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     if m is not None:
         host = m.group(1)
         port = int(m.group(2))
-    return S3CompatConnection(access_key, secret_key,
+    # return S3CompatConnection(access_key, secret_key,
+    #                          calling_format=OrdinaryCallingFormat(),
+    #                          host=host,
+    #                          port=port,
+    #                          is_secure=port == 443)
+    return s3.connect_to_region('ap-tokyo-1', access_key, secret_key,
                               calling_format=OrdinaryCallingFormat(),
                               host=host,
                               port=port,
