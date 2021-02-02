@@ -25,7 +25,6 @@ from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
 from django.core import serializers
 
 import execjs
-import PyV8
 
 logger = logging.getLogger(__name__)
 
