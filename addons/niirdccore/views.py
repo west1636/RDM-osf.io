@@ -33,11 +33,15 @@ def niirdccore_set_config(**kwargs):
     try:
         dmp_id = request.json['dmp']['redboxOid']
         dmp_metadata = request.json['dmp']['metadata']
+
+        # fetch API key
+        dmr_api_key = request.json['dmr_api_key']
     except KeyError:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
-    # save dmp_id
+    # save dmp_id, API key
     addon.set_dmp_id(dmp_id)
+    addon.set_dmr_api_key(dmr_api_key)
 
     # provisioning
     dataAnalysisResources = dmp_metadata.get("vivo:Dataset_redbox:DataAnalysisResources")
