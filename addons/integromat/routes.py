@@ -25,13 +25,6 @@ page_routes = {
             notemplate
         ),
 
-        Rule(
-            '/<pid>/integromat/integromatInfoMsg',
-            'get',
-            views.integromat_info_msg,
-            notemplate,
-        ),
-
     ]
 }
 
@@ -132,6 +125,13 @@ api_routes = {
             'post',
             views.integromat_delete_meeting_info,
             json_renderer,
+        ),
+
+        Rule(
+            '/integromat/integromatInfoMsg',
+            'post',
+            views.integromat_info_msg,
+            notemplate,
         ),
 
         # ember: ここから
