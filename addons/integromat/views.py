@@ -377,4 +377,8 @@ def integromat_info_msg(**kwargs):
 
     logger.info('msgKey:' + msgKey)
 
-    return {}
+    msg = 'function infoGrdmScenarioProcessing(){alert("test");}'
+    msgCompile = execjs.compile(msg)
+    
+
+    return msgCompile.call('infoGrdmScenarioProcessing')
