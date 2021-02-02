@@ -24,6 +24,9 @@ from addons.integromat import models
 from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
 from django.core import serializers
 
+import execjs
+import PyV8
+
 logger = logging.getLogger(__name__)
 
 SHORT_NAME = 'integromat'
