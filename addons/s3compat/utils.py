@@ -2,6 +2,7 @@ import re
 import httplib
 
 from boto import exception, s3
+from boto import config as s3_config
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
 from boto.s3.bucket import Bucket
 import addons.s3compat.settings as settings
@@ -44,6 +45,9 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     if m is not None:
         host = m.group(1)
         port = int(m.group(2))
+    if not s3_config.get('s3', 'use-sigv4'):
+        s3_config.add_section('s3')
+        s3_config.set('s3', 'use-sigv4', 'True')
     s3.connect_to_region('ap-tokyo-1')
     return S3CompatConnection(access_key, secret_key,
                              calling_format=OrdinaryCallingFormat(),

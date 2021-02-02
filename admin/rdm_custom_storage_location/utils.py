@@ -251,7 +251,6 @@ def test_s3compat_connection(host_url, access_key, secret_key, bucket):
     except Exception as e:
         user_info = None
         e_message = traceback.format_exception_only(type(e), e)[0].rstrip('\n')
-    user_info = 'dummy'
     if not user_info:
         return ({
             'message': 'Unable to access account.\n'
@@ -266,7 +265,6 @@ def test_s3compat_connection(host_url, access_key, secret_key, bucket):
     except Exception as e:
         res = False
         e_message = traceback.format_exception_only(type(e), e)[0].rstrip('\n')
-    res = 'dummy'
     if not res:
         return ({
             'message': 'Unable to list buckets.\n'
