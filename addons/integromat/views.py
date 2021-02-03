@@ -24,8 +24,6 @@ from addons.integromat import models
 from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
 from django.core import serializers
 
-import execjs
-
 logger = logging.getLogger(__name__)
 
 SHORT_NAME = 'integromat'
@@ -377,8 +375,4 @@ def integromat_info_msg(**kwargs):
 
     logger.info('msgKey:' + msgKey)
 
-    msg = 'function infoGrdmScenarioProcessing(){alert("test");}'
-    msgCompile = execjs.compile(msg)
-    
-
-    return msgCompile.call('infoGrdmScenarioProcessing')
+    return {}

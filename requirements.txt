@@ -127,5 +127,3 @@ django-elasticsearch-metrics==5.0.0
 Babel==2.5.1
 Flask-Babel==0.12.2
 
-#execjs
-PyExecJS==1.5.1
