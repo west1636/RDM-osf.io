@@ -12,6 +12,7 @@ from osf.models import ExternalAccount
 from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
 from rest_framework import status as http_status
+from osf.utils.tokens import process_token_or_pass
 from website.util import api_url_for
 from website.project.decorators import (
     must_have_addon,
@@ -194,7 +195,7 @@ def integromat_get_config_ember(auth, **kwargs):
                      }}}
 
 #api for Integromat action
-@must_be_logged_in
+@process_token_or_pass
 def integromat_api_call(**kwargs):
 
     logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.:' + str(dict(kwargs)))
