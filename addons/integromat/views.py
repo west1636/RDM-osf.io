@@ -195,11 +195,14 @@ def integromat_get_config_ember(auth, **kwargs):
                      }}}
 
 #api for Integromat action
-@process_token_or_pass
-def integromat_api_call(**kwargs):
+def integromat_api_call(*args, **kwargs):
 
-    logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.:' + str(dict(kwargs)))
-    logger.info('request:' + str(dict(request.get_data())))
+    logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.:')
+    logger.info('kwargs' + str(dict(kwargs)))
+    logger.info('args' + str(dict(args)))
+    logger.info('headers' + str(dict(request.headers)))
+    auth = Auth.from_kwargs(request.args.to_dict(), kwargs)
+    logger.info('auth:' + auth)
 
     return {}
 
