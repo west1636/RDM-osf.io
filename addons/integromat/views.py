@@ -25,7 +25,7 @@ from addons.integromat import models
 from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
 from django.core import serializers
 
-from .core import Auth
+from framework.auth.core import Auth
 
 logger = logging.getLogger(__name__)
 
