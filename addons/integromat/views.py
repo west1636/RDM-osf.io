@@ -194,6 +194,7 @@ def integromat_get_config_ember(auth, **kwargs):
                      }}}
 
 #api for Integromat action
+@must_be_logged_in
 def integromat_api_call(**kwargs):
 
     logger.info('integromat called integromat_api_call.GRDM-Integromat connection test scceeeded.:' + str(dict(kwargs)))
