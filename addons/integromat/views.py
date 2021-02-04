@@ -156,9 +156,8 @@ def authIntegromat(access_token, hSdkVersion):
 def project_integromat(**kwargs):
     return use_ember_app()
 
-@must_be_valid_project
-#@must_have_permission('admin')
 @must_be_logged_in
+@must_be_valid_project
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_get_config_ember(auth, **kwargs):
     node = kwargs['node'] or kwargs['project']
@@ -311,7 +310,6 @@ def integromat_delete_meeting_info(**kwargs):
 
 
 @must_be_valid_project
-#@must_have_permission('admin')
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_add_microsoft_teams_user(**kwargs):
 
@@ -349,7 +347,6 @@ def integromat_add_microsoft_teams_user(**kwargs):
     return {}
 
 @must_be_valid_project
-#@must_have_permission('admin')
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_delete_microsoft_teams_user(**kwargs):
 
