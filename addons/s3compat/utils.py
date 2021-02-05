@@ -53,7 +53,7 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
         s3_config.add_section('s3')
         s3_config.set('s3', 'use-sigv4', 'True')
     region = host.split('.')[3]
-    url = ('https://' if is_secure else 'http://') + host
+    url = ('https://' if port == 443 else 'http://') + host
     return boto3.resource(
         's3',
         aws_access_key_id=access_key,
