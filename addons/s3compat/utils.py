@@ -5,6 +5,10 @@ from boto import exception, s3
 from boto import config as s3_config
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
 from boto.s3.bucket import Bucket
+
+import boto3
+import botocore
+# from boto3 import exception
 import addons.s3compat.settings as settings
 
 from framework.exceptions import HTTPError
@@ -48,17 +52,20 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     if not s3_config.get('s3', 'use-sigv4'):
         s3_config.add_section('s3')
         s3_config.set('s3', 'use-sigv4', 'True')
-    s3.connect_to_region('ap-tokyo-1')
-    return S3CompatConnection(access_key, secret_key,
-                             calling_format=OrdinaryCallingFormat(),
-                             host=host,
-                             port=port,
-                             is_secure=port == 443)
+    region = host.split('.')[3]
+    url = ('https://' if is_secure else 'http://') + host
+    return boto3.resource(
+        's3',
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+        region_name=region,
+        endpoint_url=url
+    )
 
 
 def get_bucket_names(node_settings):
     try:
-        buckets = connect_s3compat(node_settings=node_settings).get_all_buckets()
+        buckets = connect_s3compat(node_settings=node_settings).buckets.all()
     except exception.NoAuthHandlerFound:
         raise HTTPError(httplib.FORBIDDEN)
     except exception.BotoServerError as e:
@@ -96,8 +103,8 @@ def validate_bucket_name(name):
 
 
 def create_bucket(node_settings, bucket_name, location=''):
-    return connect_s3compat(node_settings=node_settings).create_bucket(bucket_name, location=location)
-
+    return connect_s3compat(node_settings=node_settings).create_bucket(Bucket=bucket_name,
+        CreateBucketConfigurationlocation={'LocationConstraint': location})
 
 def bucket_exists(host, access_key, secret_key, bucket_name):
     """Tests for the existance of a bucket and if the user
@@ -113,13 +120,17 @@ def bucket_exists(host, access_key, secret_key, bucket_name):
         # otherwise use the default as it handles bucket outside of the US
         connection.calling_format = OrdinaryCallingFormat()
 
+    bucket = s3.Bucket(bucket_name)
+    exists = True
     try:
-        # Will raise an exception if bucket_name doesn't exist
-        connect_s3compat(host, access_key, secret_key).head_bucket(bucket_name)
-    except exception.S3ResponseError as e:
-        if e.status not in (301, 302):
-            return False
-    return True
+        s3.meta.client.head_bucket(Bucket=bucket_name)
+    except botocore.exceptions.ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = e.response['Error']['Code']
+        if error_code == '404':
+            exists = False
+    return exists
 
 
 def can_list(host, access_key, secret_key):
@@ -132,7 +143,7 @@ def can_list(host, access_key, secret_key):
         return False
 
     try:
-        connect_s3compat(host, access_key, secret_key).get_all_buckets()
+        connect_s3compat(host, access_key, secret_key).buckets.all()
     except exception.S3ResponseError:
         return False
     return True
@@ -144,7 +155,7 @@ def get_user_info(host, access_key, secret_key):
         return None
 
     try:
-        return connect_s3compat(host, access_key, secret_key).get_all_buckets().owner
+        return connect_s3compat(host, access_key, secret_key).bukets.all()
     except exception.S3ResponseError:
         return None
     return None
