@@ -240,30 +240,32 @@ def integromat_create_meeting_info(**kwargs):
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
 
 
-    meetingInfo = models.AllMeetingInformation(
-        subject = subject,
-        organizer = organizer,
-        start_datetime = startDatetime,
-        end_datetime = endDatetime,
-        location = location,
-        content = content,
-        join_url = joinUrl,
-        meetingid = meetingId,
-        app_id = webApp.id,
-        node_settings_id = node.id,
-        )
-    meetingInfo.save()
+    with transaction.atomic():
 
-    attendeeIds = []
+        meetingInfo = models.AllMeetingInformation(
+            subject = subject,
+            organizer = organizer,
+            start_datetime = startDatetime,
+            end_datetime = endDatetime,
+            location = location,
+            content = content,
+            join_url = joinUrl,
+            meetingid = meetingId,
+            app_id = webApp.id,
+            node_settings_id = node.id,
+            )
+        meetingInfo.save()
 
-    for attendeeMail in attendees:
+        attendeeIds = []
 
-        qsAttendee = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
-        attendeeId = qsAttendee.id
-        attendeeIds.append(attendeeId)
+        for attendeeMail in attendees:
 
-    meetingInfo.attendees = attendeeIds
-    meetingInfo.save()
+            qsAttendee = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
+            attendeeId = qsAttendee.id
+            attendeeIds.append(attendeeId)
+
+        meetingInfo.attendees = attendeeIds
+        meetingInfo.save()
 
     return {}
 
