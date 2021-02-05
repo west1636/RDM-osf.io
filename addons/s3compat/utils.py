@@ -8,7 +8,7 @@ from boto.s3.bucket import Bucket
 
 import boto3
 import botocore
-from boto3 import exception
+# from boto3 import exception
 import addons.s3compat.settings as settings
 
 from framework.exceptions import HTTPError
