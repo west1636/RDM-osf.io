@@ -222,10 +222,10 @@ def test_s3_connection(access_key, secret_key, bucket):
             'Listing buckets is required permission that can be changed via IAM'
         }, httplib.BAD_REQUEST)
 
-    if not s3_utils.bucket_exists(access_key, secret_key, bucket):
-        return ({
-            'message': 'Invalid bucket.'
-        }, httplib.BAD_REQUEST)
+    # if not s3_utils.bucket_exists(access_key, secret_key, bucket):
+    #    return ({
+    #        'message': 'Invalid bucket.'
+    #    }, httplib.BAD_REQUEST)
 
     s3_response = {
         'id': user_info.id,
