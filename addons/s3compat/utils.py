@@ -1,10 +1,10 @@
 import re
 import httplib
 
-# from boto import exception, s3
-# from boto import config as s3_config
-# from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
-# from boto.s3.bucket import Bucket
+from boto import exception, s3
+from boto import config as s3_config
+from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
+from boto.s3.bucket import Bucket
 
 import boto3
 import botocore
