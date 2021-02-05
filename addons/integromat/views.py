@@ -210,6 +210,11 @@ def integromat_api_call(*args, **kwargs):
 
 def integromat_create_meeting_info(**kwargs):
 
+    logger.info('integromat called integromat_create_meeting_info')
+    logger.info('headers' + str(dict(request.headers)))
+    auth = Auth.from_kwargs(request.args.to_dict(), kwargs)
+    logger.info('auth:' + str(auth))
+
     nodeId = request.get_json().get('nodeId')
     appName = request.get_json().get('meetingAppName')
     subject = request.get_json().get('subject')
