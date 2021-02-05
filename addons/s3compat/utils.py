@@ -1,41 +1,41 @@
 import re
 import httplib
 
-from boto import exception, s3
-from boto import config as s3_config
-from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
-from boto.s3.bucket import Bucket
+# from boto import exception, s3
+# from boto import config as s3_config
+# from boto.s3.connection import S3Connection, OrdinaryCallingFormat, NoHostProvided
+# from boto.s3.bucket import Bucket
 
 import boto3
 import botocore
-# from boto3 import exception
+from boto3 import exception
 import addons.s3compat.settings as settings
 
 from framework.exceptions import HTTPError
 from addons.base.exceptions import InvalidAuthError, InvalidFolderError
 
 
-class S3CompatConnection(S3Connection):
-    def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
-                 is_secure=True, port=None, proxy=None, proxy_port=None,
-                 proxy_user=None, proxy_pass=None,
-                 host=NoHostProvided, debug=0, https_connection_factory=None,
-                 calling_format=None, path='/',
-                 provider='aws', bucket_class=Bucket, security_token=None,
-                 suppress_consec_slashes=True, anon=False,
-                 validate_certs=None, profile_name=None):
-        super(S3CompatConnection, self).__init__(aws_access_key_id,
-                aws_secret_access_key,
-                is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
-                host=host,
-                debug=debug, https_connection_factory=https_connection_factory,
-                calling_format=calling_format,
-                path=path, provider=provider, bucket_class=bucket_class,
-                security_token=security_token, anon=anon,
-                validate_certs=validate_certs, profile_name=profile_name)
-
-    def _required_auth_capability(self):
-        return ['s3']
+# class S3CompatConnection(S3Connection):
+#     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
+#                  is_secure=True, port=None, proxy=None, proxy_port=None,
+#                  proxy_user=None, proxy_pass=None,
+#                  host=NoHostProvided, debug=0, https_connection_factory=None,
+#                  calling_format=None, path='/',
+#                  provider='aws', bucket_class=Bucket, security_token=None,
+#                  suppress_consec_slashes=True, anon=False,
+#                  validate_certs=None, profile_name=None):
+#         super(S3CompatConnection, self).__init__(aws_access_key_id,
+#                 aws_secret_access_key,
+#                 is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
+#                 host=host,
+#                 debug=debug, https_connection_factory=https_connection_factory,
+#                 calling_format=calling_format,
+#                 path=path, provider=provider, bucket_class=bucket_class,
+#                security_token=security_token, anon=anon,
+#                 validate_certs=validate_certs, profile_name=profile_name)
+#
+#     def _required_auth_capability(self):
+#         return ['s3']
 
 def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=None):
     """Helper to build an S3CompatConnection object
