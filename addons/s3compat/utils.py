@@ -155,7 +155,7 @@ def get_user_info(host, access_key, secret_key):
         return None
 
     try:
-        return connect_s3compat(host, access_key, secret_key).bukets.all()
+        return connect_s3compat(host, access_key, secret_key).buckets.all()
     except exception.S3ResponseError:
         return None
     return None
