@@ -156,7 +156,8 @@ def get_user_info(host, access_key, secret_key):
 
     try:
         s3conn = connect_s3compat(host, access_key, secret_key)
-        return boto3.client('sts').get_caller_identity()
+        identity = boto3.client('sts').get_caller_identity()
+        return {id: identity['UserId'], display_name: identity['UserId']}
     except exception.S3ResponseError:
         return None
     return None
