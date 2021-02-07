@@ -287,8 +287,8 @@ def test_s3compat_connection(host_url, access_key, secret_key, bucket):
     return ({
         'message': 'Credentials are valid',
         'data': {
-            'id': user_info.id,
-            'display_name': user_info.display_name,
+            'id': 'user_info.id',
+            'display_name': 'user_info.display_name',
         }
     }, httplib.OK)
 
