@@ -120,10 +120,10 @@ def bucket_exists(host, access_key, secret_key, bucket_name):
         # otherwise use the default as it handles bucket outside of the US
         connection.calling_format = OrdinaryCallingFormat()
 
-    bucket = s3.Bucket(bucket_name)
+    bucket = connection.Bucket(bucket_name)
     exists = True
     try:
-        s3.meta.client.head_bucket(Bucket=bucket_name)
+        connection.meta.client.head_bucket(Bucket=bucket_name)
     except botocore.exceptions.ClientError as e:
         # If a client error is thrown, then check that it was a 404 error.
         # If it was a 404 error, then the bucket does not exist.
