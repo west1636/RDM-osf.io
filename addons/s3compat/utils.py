@@ -155,9 +155,11 @@ def get_user_info(host, access_key, secret_key):
         return None
 
     try:
-        s3conn = connect_s3compat(host, access_key, secret_key)
+        connection = connect_s3compat(host, access_key, secret_key)
+        buckets = connection.buckets.all()
+        [bucket.name for bucket in buckets]
         identity = boto3.client('sts').get_caller_identity()
-        return {'id': identity['UserId'], 'display_name': identity['UserId']}
+        return identity
     except exception.S3ResponseError:
         return None
     return None
