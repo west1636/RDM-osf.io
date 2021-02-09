@@ -209,6 +209,12 @@ def integromat_api_call(*args, **kwargs):
 
     return {}
 
+def integromat_start_scenario(**kwargs):
+
+    logger.info('integromat_start_scenario start')
+
+    return {}
+
 def integromat_create_meeting_info(**kwargs):
 
     logger.info('integromat called integromat_create_meeting_info')

@@ -93,6 +93,13 @@ api_routes = {
         ),
 
         Rule(
+            '/integromat/startIntegromatScenario',
+            'post',
+            views.integromat_start_scenario,
+            notemplate,
+        ),
+
+        Rule(
             '/project/<pid>/integromat/add_microsoft_teams_user',
             'post',
             views.integromat_add_microsoft_teams_user,
