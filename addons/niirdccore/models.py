@@ -22,9 +22,7 @@ class NodeSettings(BaseNodeSettings):
     プロジェクトにアタッチされたアドオンに関するモデルを定義する。
     """
     dmp_id = models.TextField(blank=True, null=True)
-
-    def get_dmr_api_key(self):
-        return settings.DMR_API_KEY
+    dmr_api_key = models.TextField(blank=True, null=True)
 
     def set_dmp_id(self, dmp_id):
         self.dmp_id = dmp_id
@@ -32,6 +30,13 @@ class NodeSettings(BaseNodeSettings):
 
     def get_dmp_id(self):
         return self.dmp_id
+
+    def set_dmr_api_key(self, dmr_api_key):
+        self.dmr_api_key = dmr_api_key
+        self.save()
+
+    def get_dmr_api_key(self):
+        return self.dmr_api_key
 
     @receiver(post_save, sender=Node)
     def add_niirdccore_addon(sender, instance, created, **kwargs):
