@@ -596,16 +596,16 @@
                 "text": "The GakuNin RDM does not affect the permissions of NII RDC Core."
             },
             "View / download file versions": {
-                "status": "none",
-                "text": "The NII RDC Core add-on does not provide Storage Features."
+                "status": "full",
+                "text": "some DMP/Dataset information can be viewed/download via GakuNin RDM."
             },
             "Add / update files": {
-                "status": "none",
-                "text": "The NII RDC Core add-on does not provide Storage Features."
+                "status": "full",
+                "text": "some DMP/Dataset information can be add/update via GakuNin RDM."
             },
             "Delete files": {
                 "status": "none",
-                "text": "The NII RDC Core add-on does not provide Storage Features."
+                "text": "Deleting DMP/Dataset information is not implemented yet."
             },
             "Logs": {
                 "status": "none",
@@ -613,11 +613,11 @@
             },
             "Forking": {
                 "status": "partial",
-                "text": "Forking a project or component copies information about linked DMP Cooperation but the GakuNin RDM does not affect authentication of NII RDC Core."
+                "text": "Forking a project or component copies information about linked DMP Systems but the GakuNin RDM does not affect authentication of these DMP Systems."
             },
             "Registering": {
                 "status": "none",
-                "text": "NII RDC Core information will not be registered."
+                "text": "Registering DMP/Dataset information is not implemented yet."
             }
         }
     },
