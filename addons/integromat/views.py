@@ -209,12 +209,6 @@ def integromat_api_call(*args, **kwargs):
 
     return {}
 
-def integromat_start_scenario(**kwargs):
-
-    logger.info('integromat_start_scenario start')
-
-    return {}
-
 def integromat_create_meeting_info(**kwargs):
 
     logger.info('integromat called integromat_create_meeting_info')
@@ -384,14 +378,132 @@ def integromat_delete_microsoft_teams_user(**kwargs):
 
     return {}
 
+def integromat_start_scenario(**kwargs):
+
+    logger.info('integromat_start_scenario start')
+    integromatMsg = ''
+    nodeId = request.json['nodeId']
+    action = request.json['action']
+    webhook_url = request.json['webhook_url']
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+
+    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+        if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
+            qsWorkflowExecutionMessages.create_microsoft_teams_meeting = ''
+            qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+        if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
+            qsWorkflowExecutionMessages.update_microsoft_teams_meeting = ''
+            qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+        if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
+            qsWorkflowExecutionMessages.delete_microsoft_teams_meeting = ''
+            qsWorkflowExecutionMessages.save()
+
+
+    response = requests.post(webhook_url, data=request.json)
+
+
+    for i in range(0, 10):
+        time.sleep(1)
+        if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
+                integromatMsg = qsWorkflowExecutionMessages.create_microsoft_teams_meeting
+                break
+        if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
+                integromatMsg = qsWorkflowExecutionMessages.update_microsoft_teams_meeting
+                break
+
+        if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
+                integromatMsg = qsWorkflowExecutionMessages.delete_microsoft_teams_meeting
+                break
+
+    if not integromatMsg:
+        integromatMsg = 'integromat.error.notStarted'
+
+    return {'nodeId': nodeId, 
+            'integromatMsg': integromatMsg,
+            'action': action
+            }
+
+def integromat_req_next_msg(**kwargs):
+
+    logger.info('integromat_req_next_msg start')
+    integromatMsg = ''
+    nodeId = request.json['nodeId']
+    preMsg = request.json['preMsg']
+    notify = False
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+
+    time.sleep(1)
+
+    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+        integromatMsg = qsWorkflowExecutionMessages.create_microsoft_teams_meeting
+
+    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+        integromatMsg = qsWorkflowExecutionMessages.update_microsoft_teams_meeting
+
+    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+        integromatMsg = qsWorkflowExecutionMessages.delete_microsoft_teams_meeting
+
+    if preMsg != integromatMsg:
+        notify = True
+
+    if not integromatMsg:
+        integromatMsg = 'integromat.error.canNotGetMsg'
+
+    return {'nodeId': nodeId, 
+            'integromatMsg': integromatMsg,
+            'action': action,
+            'notify': notify,
+                }
+
 def integromat_info_msg(**kwargs):
 
-    msgKey = request.get_json().get('notifyType')
-    infoMsg = ''
+    msg = request.json['notifyType']
+    nodeId = request.json['nodeId']
+    action = request.json['action']
 
-    if msgKey == settings.INFO_GRDM_SCENARIO_PROCESSING:
-        infoMsg = 'The workflow is running.'
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
 
-    logger.info('msgKey:' + msgKey)
+    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
+
+    return {}
+
+def integromat_error_msg(**kwargs):
+
+    msg = request.json['notifyType']
+    nodeId = request.json['nodeId']
+    action = request.json['action']
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+
+    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
+
+    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
+        qsWorkflowExecutionMessages.save()
 
     return {}

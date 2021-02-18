@@ -93,7 +93,7 @@ api_routes = {
         ),
 
         Rule(
-            '/integromat/startIntegromatScenario',
+            '/integromat/start_scenario',
             'post',
             views.integromat_start_scenario,
             notemplate,
@@ -114,31 +114,38 @@ api_routes = {
         ),
 
         Rule(
-            '/integromat/createMeetingInfo',
+            '/integromat/create_meeting_info',
             'post',
             views.integromat_create_meeting_info,
             json_renderer,
         ),
 
         Rule(
-            '/integromat/updateMeetingInfo',
+            '/integromat/update_meeting_info',
             'post',
             views.integromat_update_meeting_info,
             json_renderer,
         ),
 
         Rule(
-            '/integromat/deleteMeetingInfo',
+            '/integromat/delete_meeting_info',
             'post',
             views.integromat_delete_meeting_info,
             json_renderer,
         ),
 
         Rule(
-            '/integromat/integromatInfoMsg',
+            '/integromat/info_msg',
             'post',
             views.integromat_info_msg,
-            notemplate,
+            json_renderer,
+        ),
+
+        Rule(
+            '/integromat/error_msg',
+            'post',
+            views.integromat_error_msg,
+            json_renderer,
         ),
 
         # ember: ここから
