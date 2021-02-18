@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import json
+from celery import Celery
+import requests
 
 from django.db import models
 from django.db.models import Subquery
@@ -10,10 +12,15 @@ from django.dispatch import receiver
 from osf.models import Contributor, RdmAddonOption, AbstractNode
 from osf.models.node import Node
 
+from website.settings import CeleryConfig
+from website import util
+
 from . import settings
 from . import SHORT_NAME
 from addons.base.models import BaseNodeSettings
 from website import settings as ws_settings
+
+import addons
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +30,10 @@ class NodeSettings(BaseNodeSettings):
     """
     dmp_id = models.TextField(blank=True, null=True)
     dmr_api_key = models.TextField(blank=True, null=True)
+
+    # 非同期処理のための変数を定義
+    app = Celery()
+    app.config_from_object(CeleryConfig)
 
     def set_dmp_id(self, dmp_id):
         self.dmp_id = dmp_id
@@ -61,6 +72,77 @@ class NodeSettings(BaseNodeSettings):
         #     return
 
         instance.add_addon(SHORT_NAME, auth=None, log=False)
+
+    # DMP情報モニタリング
+    @receiver(post_save, sender=Node)
+    def node_monitoring(sender, instance, created, **kwargs):
+        # DMP更新タスク発行
+        NodeSettings.dmp_update(node=instance)
+
+    # DMPの非同期更新処理
+    @app.task
+    def dmp_update(node):
+        # fetch addon data
+        json_open = open('addons.json', 'r')
+        addons_json = json.load(json_open)
+
+        addon_list = []
+        for addon in node.get_addons():
+            addon_apps = eval('addons.' + addon.short_name).default_app_config
+
+            addon_dict = {
+                "type": "addon",
+                "id": addon.short_name,
+                "attributes": {
+                    "name": eval(addon_apps).full_name,
+                    "url": addons_json.get('addons_url').get(addon.short_name, ''),
+                    "description": addons_json.get('addons_description').get(addon.short_name, ''),
+                    "categories": eval(addon_apps).categories
+                }
+            }
+            if addon.short_name == addons.jupyterhub.apps.JupyterhubAddonAppConfig.short_name:
+                addon_dict['attributes']['services'] = \
+                    [{'name': name, 'base_url': url} for name, url in addon.get_services()+ addons.jupyterhub.settings.SERVICES]
+
+            addon_list.append(addon_dict)
+
+        contributor_list = []
+        for contributor in node.contributors:
+            contributor_dict = {
+                "type": contributor.settings_type,
+                "id": contributor._id,
+                "attributes": {
+                    "family_name": contributor.family_name,
+                    "given_name": contributor.given_name,
+                    "middle_names": contributor.middle_names,
+                    "full_name": contributor.fullname,
+                    "date_registered": str(contributor.date_registered)
+                },
+                "links": {
+                    "self": util.api_v2_url('/users/' + contributor._id),
+                    "href": ws_settings.DOMAIN + '/' + contributor._id
+                }
+            }
+            contributor_list.append(contributor_dict)
+
+        request_body = {
+            "data": {
+                "title": node.title,
+                "addons": addon_list,
+                "contributors": contributor_list,
+
+                "links": {
+                    "self": util.api_v2_url('/nodes/' + node._id),
+                    "href": ws_settings.DOMAIN + '/' + node._id
+                }
+            }
+        }
+
+        # DMP更新リクエスト
+        dmr_url = settings.DMR_URL + '/v1/dmp/' + str(self.dmp_id)
+        access_token = settings.DMR_ACCESS_TOKEN
+        headers = {'Authorization': 'Bearer ' + access_token}
+        requests.put(dmr_url, headers=headers, json=request_body)
 
 class AddonList(BaseNodeSettings):
     """
