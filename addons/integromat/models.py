@@ -113,3 +113,11 @@ class AllMeetingInformation(BaseModel):
     meetingid = models.CharField(max_length=512)
     app = models.ForeignKey(RdmWebMeetingApps, to_field='id', on_delete=models.CASCADE)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class workflowExecutionMessages(BaseModel):
+
+    id = models.AutoField(primary_key=True)
+    create_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
+    update_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
+    delete_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
