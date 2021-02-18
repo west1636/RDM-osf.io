@@ -8,6 +8,7 @@ from boto.s3.bucket import Bucket
 
 import boto3
 import botocore
+from botocore.exceptions import ClientError
 # from boto3 import exception
 import addons.s3compat.settings as settings
 
@@ -36,6 +37,34 @@ from addons.base.exceptions import InvalidAuthError, InvalidFolderError
 #
 #     def _required_auth_capability(self):
 #         return ['s3']
+class S3CompatConnection:
+    def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
+                 is_secure=True, port=None, proxy=None, proxy_port=None,
+                 proxy_user=None, proxy_pass=None,
+                 host=NoHostProvided, debug=0, https_connection_factory=None,
+                 calling_format=None, path='/',
+                 provider='aws', bucket_class=Bucket, security_token=None,
+                 suppress_consec_slashes=True, anon=False,
+                 validate_certs=None, profile_name=None):
+        port = 443
+        m = re.match(r'^(.+)\:([0-9]+)$', host)
+        if m is not None:
+            host = m.group(1)
+            port = int(m.group(2))
+        if not s3_config.get('s3', 'use-sigv4'):
+            s3_config.add_section('s3')
+            s3_config.set('s3', 'use-sigv4', 'True')
+        region = host.split('.')[3]
+        url = ('https://' if port == 443 else 'http://') + host
+        self.conn = boto3.resource(
+            's3',
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name=region,
+            endpoint_url=url
+        )
+
+
 
 def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=None):
     """Helper to build an S3CompatConnection object
@@ -157,10 +186,10 @@ def get_user_info(host, access_key, secret_key):
     try:
         connection = connect_s3compat(host, access_key, secret_key)
         buckets = connection.buckets.all()
-        [bucket.name for bucket in buckets]
+        bucket_names = [bucket.name for bucket in buckets]
         identity = boto3.client('sts').get_caller_identity()
         return identity
-    except exception.S3ResponseError:
+    except ClientError:
         return None
     return None
 
