@@ -93,13 +93,6 @@ api_routes = {
         ),
 
         Rule(
-            '/integromat/start_scenario',
-            'post',
-            views.integromat_start_scenario,
-            notemplate,
-        ),
-
-        Rule(
             '/project/<pid>/integromat/add_microsoft_teams_user',
             'post',
             views.integromat_add_microsoft_teams_user,
@@ -131,6 +124,13 @@ api_routes = {
             '/integromat/delete_meeting_info',
             'post',
             views.integromat_delete_meeting_info,
+            json_renderer,
+        ),
+
+        Rule(
+            '/integromat/start_scenario',
+            'post',
+            views.integromat_start_scenario,
             json_renderer,
         ),
 
