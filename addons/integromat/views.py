@@ -390,28 +390,29 @@ def integromat_start_scenario(**kwargs):
 
     try:
         qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+
+        if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
+                logger.info('log1')
+                qsWorkflowExecutionMessages.create_microsoft_teams_meeting = ''
+                qsWorkflowExecutionMessages.save()
+
+        if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
+                qsWorkflowExecutionMessages.update_microsoft_teams_meeting = ''
+                qsWorkflowExecutionMessages.save()
+
+        if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
+            if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
+                qsWorkflowExecutionMessages.delete_microsoft_teams_meeting = ''
+                qsWorkflowExecutionMessages.save()
+
     except ObjectDoesNotExist:
         workflowExecutionMessage = models.workflowExecutionMessages(
             node_settings = qsNodeSettings,
             )
         workflowExecutionMessage.save()
         qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-
-    if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-        if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
-            logger.info('log1')
-            qsWorkflowExecutionMessages.create_microsoft_teams_meeting = ''
-            qsWorkflowExecutionMessages.save()
-
-    if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-        if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
-            qsWorkflowExecutionMessages.update_microsoft_teams_meeting = ''
-            qsWorkflowExecutionMessages.save()
-
-    if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-        if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
-            qsWorkflowExecutionMessages.delete_microsoft_teams_meeting = ''
-            qsWorkflowExecutionMessages.save()
 
     logger.info('request.json::' + str(request.json))
 
@@ -421,6 +422,7 @@ def integromat_start_scenario(**kwargs):
     for i in range(0, 10):
         time.sleep(1)
         logger.info(str(i))
+        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
         if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
             logger.info(str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
             if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
