@@ -399,6 +399,7 @@ def integromat_start_scenario(**kwargs):
 
     if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
         if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
+            logger.info('log1')
             qsWorkflowExecutionMessages.create_microsoft_teams_meeting = ''
             qsWorkflowExecutionMessages.save()
 
@@ -418,7 +419,9 @@ def integromat_start_scenario(**kwargs):
 
     for i in range(0, 10):
         time.sleep(1)
+        logger.info(str(i))
         if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+            logger.info(str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
             if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
                 integromatMsg = qsWorkflowExecutionMessages.create_microsoft_teams_meeting
                 break
@@ -436,6 +439,8 @@ def integromat_start_scenario(**kwargs):
         integromatMsg = 'integromat.error.notStarted'
 
     logger.info('integromatMsg:' + integromatMsg)
+
+    logger.info('integromat_start_scenario end')
 
     return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
@@ -472,6 +477,8 @@ def integromat_req_next_msg(**kwargs):
     if not integromatMsg:
         integromatMsg = 'integromat.error.canNotGetMsg'
 
+    logger.info('integromat_req_next_msg end')
+
     return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
             'action': action,
@@ -488,7 +495,7 @@ def integromat_info_msg(**kwargs):
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
 
-    logger.info('qsNodeSettings::' + str(nodeId))
+    logger.info('nodeId::' + str(nodeId))
     logger.info('qsNodeSettings::' + str(qsNodeSettings))
     logger.info('qsNodeSettings.id::' + str(qsNodeSettings.id))
 
@@ -506,9 +513,13 @@ def integromat_info_msg(**kwargs):
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
+    logger.info('integromat_info_msg end')
+
     return {}
 
 def integromat_error_msg(**kwargs):
+
+    logger.info('integromat_error_msg start')
 
     msg = request.json['notifyType']
     nodeId = request.json['nodeId']
@@ -529,5 +540,7 @@ def integromat_error_msg(**kwargs):
     if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
+
+    logger.info('integromat_error_msg end')
 
     return {}
