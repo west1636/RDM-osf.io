@@ -435,7 +435,9 @@ def integromat_start_scenario(**kwargs):
     if not integromatMsg:
         integromatMsg = 'integromat.error.notStarted'
 
-    return {'nodeId': nodeId, 
+    logger.info('integromatMsg:' + integromatMsg)
+
+    return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
             'action': action
             }
@@ -470,7 +472,7 @@ def integromat_req_next_msg(**kwargs):
     if not integromatMsg:
         integromatMsg = 'integromat.error.canNotGetMsg'
 
-    return {'nodeId': nodeId, 
+    return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
             'action': action,
             'notify': notify,
@@ -478,11 +480,17 @@ def integromat_req_next_msg(**kwargs):
 
 def integromat_info_msg(**kwargs):
 
+    logger.info('integromat_info_msg start')
+
     msg = request.json['notifyType']
     nodeId = request.json['nodeId']
     action = request.json['action']
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+
+    logger.info('qsNodeSettings::' + str(nodeId))
+    logger.info('qsNodeSettings::' + str(qsNodeSettings))
+    logger.info('qsNodeSettings.id::' + str(qsNodeSettings.id))
 
     qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
