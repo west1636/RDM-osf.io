@@ -454,6 +454,7 @@ def integromat_req_next_msg(**kwargs):
     integromatMsg = ''
     nodeId = request.json['nodeId']
     preMsg = request.json['preMsg']
+    action = request.json['action']
     notify = False
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
@@ -502,15 +503,15 @@ def integromat_info_msg(**kwargs):
 
     qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
-    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_CREATE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
-    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_UPDATE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
-    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_DELETE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
@@ -530,15 +531,15 @@ def integromat_error_msg(**kwargs):
 
     qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
-    if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_CREATE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
-    if action == settings.ACTION_UPDATE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_UPDATE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
-    if action == settings.ACTION_DELETE_MICROSOFR_TEAMS_MEETING:
+    if action == settings.ACTION_DELETE_MICROSOFRT_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
         qsWorkflowExecutionMessages.save()
 
