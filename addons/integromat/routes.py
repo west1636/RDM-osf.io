@@ -135,6 +135,13 @@ api_routes = {
         ),
 
         Rule(
+            '/integromat/requestNextMessages',
+            'post',
+            views.integromat_req_next_msg,
+            json_renderer,
+        ),
+
+        Rule(
             '/integromat/info_msg',
             'post',
             views.integromat_info_msg,
