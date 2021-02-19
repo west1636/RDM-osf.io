@@ -25,7 +25,7 @@ from addons.integromat import settings
 from addons.integromat import models
 from osf.models.rdm_integromat import RdmWebMeetingApps, RdmWorkflows
 from django.core import serializers
-
+from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 
 logger = logging.getLogger(__name__)
@@ -387,7 +387,14 @@ def integromat_start_scenario(**kwargs):
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+    try:
+        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+    except DoesNotExist:
+        workflowExecutionMessage = models.workflowExecutionMessages(
+            node_settings = qsNodeSettings,
+            )
+        workflowExecutionMessage.save()
+        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
         if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
@@ -442,7 +449,14 @@ def integromat_req_next_msg(**kwargs):
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+    try:
+        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+    except DoesNotExist:
+        workflowExecutionMessage = models.workflowExecutionMessages(
+            node_settings = qsNodeSettings,
+            )
+        workflowExecutionMessage.save()
+        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     time.sleep(1)
 
