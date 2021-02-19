@@ -193,7 +193,6 @@ def integromat_get_config_ember(auth, **kwargs):
                          'microsoft_teams_attendees': microsoftTeamsAttendeesJson,
                          'workflows': workflowsJson,
                          'app_name_microsoft_teams' : settings.MICROSOFT_TEAMS,
-                         'info_grdm_scenario_processing': settings.INFO_GRDM_SCENARIO_PROCESSING,
                          'organizer_id': organizerId
                      }}}
 
