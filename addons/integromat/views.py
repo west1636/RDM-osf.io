@@ -3,6 +3,7 @@ from flask import request
 import logging
 import requests
 import json
+import time
 
 from django.db import transaction
 from addons.base import generic_views
@@ -449,14 +450,8 @@ def integromat_req_next_msg(**kwargs):
 
     qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
 
-    try:
-        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-    except ObjectDoesNotExist:
-        workflowExecutionMessage = models.workflowExecutionMessages(
-            node_settings = qsNodeSettings,
-            )
-        workflowExecutionMessage.save()
-        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     time.sleep(1)
 
@@ -487,7 +482,9 @@ def integromat_info_msg(**kwargs):
     nodeId = request.json['nodeId']
     action = request.json['action']
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
@@ -509,7 +506,9 @@ def integromat_error_msg(**kwargs):
     nodeId = request.json['nodeId']
     action = request.json['action']
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
         qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
