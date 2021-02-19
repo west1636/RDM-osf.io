@@ -437,7 +437,7 @@ def integromat_start_scenario(**kwargs):
                 break
 
     if not integromatMsg:
-        integromatMsg = 'integromat.error.notStarted'
+        integromatMsg = 'integromat.error.didNotStart'
 
     logger.info('integromatMsg:' + integromatMsg)
 
