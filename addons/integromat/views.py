@@ -385,7 +385,9 @@ def integromat_start_scenario(**kwargs):
     action = request.json['action']
     webhook_url = request.json['webhook_url']
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     if action == settings.ACTION_CREATE_MICROSOFR_TEAMS_MEETING:
         if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
@@ -438,7 +440,9 @@ def integromat_req_next_msg(**kwargs):
     preMsg = request.json['preMsg']
     notify = False
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=nodeId)
+    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+
+    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     time.sleep(1)
 
