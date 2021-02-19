@@ -413,6 +413,7 @@ def integromat_start_scenario(**kwargs):
             qsWorkflowExecutionMessages.delete_microsoft_teams_meeting = ''
             qsWorkflowExecutionMessages.save()
 
+    logger.info('request.json::' + request.json)
 
     response = requests.post(webhook_url, data=request.json)
 
