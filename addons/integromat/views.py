@@ -389,7 +389,7 @@ def integromat_start_scenario(**kwargs):
 
     try:
         qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-    except DoesNotExist:
+    except ObjectDoesNotExist:
         workflowExecutionMessage = models.workflowExecutionMessages(
             node_settings = qsNodeSettings,
             )
@@ -451,7 +451,7 @@ def integromat_req_next_msg(**kwargs):
 
     try:
         qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-    except DoesNotExist:
+    except ObjectDoesNotExist:
         workflowExecutionMessage = models.workflowExecutionMessages(
             node_settings = qsNodeSettings,
             )
