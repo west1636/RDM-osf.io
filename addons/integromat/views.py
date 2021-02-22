@@ -440,7 +440,7 @@ def integromat_req_next_msg(**kwargs):
 
     if integromatMsg:
         notify = True
-    else
+    else:
         integromatMsg = 'integromat.error.canNotGetMsg'
 
     logger.info('integromat_req_next_msg end')
