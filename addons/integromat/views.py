@@ -5,7 +5,7 @@ import requests
 import json
 import time
 
-from django.db import transaction
+from django.db import transaction, Min
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.integromat.serializer import IntegromatSerializer
