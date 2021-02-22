@@ -381,68 +381,27 @@ def integromat_delete_microsoft_teams_user(**kwargs):
 def integromat_start_scenario(**kwargs):
 
     logger.info('integromat_start_scenario start')
-    integromatMsg = ''
     nodeId = request.json['nodeId']
-    action = request.json['action']
+    timestamp = request.json['timestamp']
     webhook_url = request.json['webhook_url']
 
-    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
-
-    try:
-        logger.info('log1-1')
-        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-
-        logger.info('msg1:' + str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
-
-        if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-            if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
-                logger.info('log1-2')
-                qsWorkflowExecutionMessages.create_microsoft_teams_meeting = ''
-                qsWorkflowExecutionMessages.save()
-                logger.info('msg2:' + str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
-
-        if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-            if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
-                qsWorkflowExecutionMessages.update_microsoft_teams_meeting = ''
-                qsWorkflowExecutionMessages.save()
-
-        if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-            if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
-                qsWorkflowExecutionMessages.delete_microsoft_teams_meeting = ''
-                qsWorkflowExecutionMessages.save()
-
-    except ObjectDoesNotExist:
-        logger.info('log2-1')
-        workflowExecutionMessage = models.workflowExecutionMessages(
-            node_settings = qsNodeSettings,
-            )
-        workflowExecutionMessage.save()
-        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-        logger.info('log2-2')
-
-    logger.info('request.json::' + str(request.json))
+    integromatMsg = ''
+    node = models.NodeSettings.objects.get(_id=nodeId)
 
     response = requests.post(webhook_url, data=request.json)
 
-    logger.info('log1-3')
     for i in range(0, 10):
         time.sleep(1)
         logger.info(str(i))
-        qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-        if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-            logger.info('msg3:' + str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
-            if qsWorkflowExecutionMessages.create_microsoft_teams_meeting:
-                integromatMsg = qsWorkflowExecutionMessages.create_microsoft_teams_meeting
-                break
-        if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-            if qsWorkflowExecutionMessages.update_microsoft_teams_meeting:
-                integromatMsg = qsWorkflowExecutionMessages.update_microsoft_teams_meeting
-                break
-
-        if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-            if qsWorkflowExecutionMessages.delete_microsoft_teams_meeting:
-                integromatMsg = qsWorkflowExecutionMessages.delete_microsoft_teams_meeting
-                break
+        try:
+            wem = models.workflowExecutionMessages.objects.earliest(node_settings_id=node.id, timestamp=timestamp, notified=False)
+            integromatMsg = wem.integromat_msg
+            wem.notified = True
+            wem.save()
+            break
+        except ObjectDoesNotExist:
+            logger.info('object des not exist1')
+            pass
 
     if not integromatMsg:
         integromatMsg = 'integromat.error.didNotStart'
@@ -453,47 +412,44 @@ def integromat_start_scenario(**kwargs):
 
     return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
-            'action': action
+            'timestamp': timestamp
             }
 
 def integromat_req_next_msg(**kwargs):
 
     logger.info('integromat_req_next_msg start')
-    integromatMsg = ''
-    nodeId = request.json['nodeId']
-    preMsg = request.json['preMsg']
-    action = request.json['action']
-    notify = False
-
-    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
-
-
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
 
     time.sleep(1)
 
-    if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-        integromatMsg = qsWorkflowExecutionMessages.create_microsoft_teams_meeting
+    nodeId = request.json['nodeId']
+    timestamp = request.json['timestamp']
+    notify = False
 
-    if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-        integromatMsg = qsWorkflowExecutionMessages.update_microsoft_teams_meeting
+    node = models.NodeSettings.objects.get(_id=nodeId)
 
-    if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-        integromatMsg = qsWorkflowExecutionMessages.delete_microsoft_teams_meeting
+    try:
+        wem = models.workflowExecutionMessages.objects.earliest(node_settings_id=node.id, timestamp=timestamp, notified=False)
+        integromatMsg = wem.integromat_msg
+        wem.notified = True
+        wem.save()
+    except ObjectDoesNotExist:
+        logger.info('object des not exist2')
+        pass
 
-    if preMsg != integromatMsg:
+    integromatMsg = wem.integromat_msg
+
+    if integromatMsg:
         notify = True
-
-    if not integromatMsg:
+    else
         integromatMsg = 'integromat.error.canNotGetMsg'
 
     logger.info('integromat_req_next_msg end')
 
     return {'nodeId': nodeId,
             'integromatMsg': integromatMsg,
-            'action': action,
+            'timestamp': timestamp,
             'notify': notify,
-                }
+            }
 
 def integromat_info_msg(**kwargs):
 
@@ -501,31 +457,16 @@ def integromat_info_msg(**kwargs):
     logger.info('integromat_info_msg 1')
     msg = request.json['notifyType']
     nodeId = request.json['nodeId']
-    action = request.json['action']
+    timestamp = request.json['timestamp']
 
-    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
-    logger.info('integromat_info_msg 2')
-    logger.info('nodeId::' + str(nodeId))
-    logger.info('qsNodeSettings::' + str(qsNodeSettings))
-    logger.info('qsNodeSettings.id::' + str(qsNodeSettings.id))
+    node = models.NodeSettings.objects.get(_id=nodeId)
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-
-    logger.info('info_msg1:' + str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
-
-    if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-        logger.info('integromat_info_msg 3')
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
-        logger.info('info_msg2:' + str(qsWorkflowExecutionMessages.create_microsoft_teams_meeting))
-
-    if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
-
-    if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
+    wem = models.workflowExecutionMessages(
+        integromat_msg = msg,
+        timestamp = timestamp,
+        node_settings_id = node.id,
+        )
+    wem.save()
 
     logger.info('integromat_info_msg end')
 
@@ -537,23 +478,16 @@ def integromat_error_msg(**kwargs):
 
     msg = request.json['notifyType']
     nodeId = request.json['nodeId']
-    action = request.json['action']
+    timestamp = request.json['timestamp']
 
-    qsNodeSettings = models.NodeSettings.objects.get(_id=nodeId)
+    node = models.NodeSettings.objects.get(_id=nodeId)
 
-    qsWorkflowExecutionMessages = models.workflowExecutionMessages.objects.get(node_settings_id=qsNodeSettings.id)
-
-    if action == settings.ACTION_CREATE_MICROSOFT_TEAMS_MEETING:
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
-
-    if action == settings.ACTION_UPDATE_MICROSOFT_TEAMS_MEETING:
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
-
-    if action == settings.ACTION_DELETE_MICROSOFT_TEAMS_MEETING:
-        qsWorkflowExecutionMessages.create_microsoft_teams_meeting = msg
-        qsWorkflowExecutionMessages.save()
+    wem = models.workflowExecutionMessages(
+        integromat_msg = msg,
+        timestamp = timestamp,
+        node_settings_id = node.id,
+        )
+    wem.save()
 
     logger.info('integromat_error_msg end')
 

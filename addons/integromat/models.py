@@ -117,7 +117,7 @@ class AllMeetingInformation(BaseModel):
 class workflowExecutionMessages(BaseModel):
 
     id = models.AutoField(primary_key=True)
-    create_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
-    update_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
-    delete_microsoft_teams_meeting = models.CharField(blank=True, null=True, max_length=128)
+    notified = models.BooleanField(default=False)
+    integromat_msg = models.CharField(blank=True, null=True, max_length=128)
+    timestamp = models.CharField(blank=True, null=True, max_length=128)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
