@@ -395,10 +395,8 @@ def integromat_start_scenario(**kwargs):
         time.sleep(1)
         logger.info(str(i))
         try:
-            wem = models.workflowExecutionMessages.objects.filter(node_settings_id=node.id, timestamp=timestamp, notified=False).aggregate(Min('id'))
+            wem = models.workflowExecutionMessages.objects.filter(node_settings_id=node.id, timestamp=timestamp, notified=False).earliest('created')
             logger.info('wem:' + str(wem))
-            wem = models.workflowExecutionMessages.objects.get(id=wem.id)
-            logger.info('wem2:' + str(dict(wem)))
             integromatMsg = wem.integromat_msg
             wem.notified = True
             wem.save()
@@ -432,9 +430,8 @@ def integromat_req_next_msg(**kwargs):
     node = models.NodeSettings.objects.get(_id=nodeId)
 
     try:
-        wem = models.workflowExecutionMessages.objects.filter(node_settings_id=node.id, timestamp=timestamp, notified=False).aggregate(Min('id'))
+        wem = models.workflowExecutionMessages.objects.filter(node_settings_id=node.id, timestamp=timestamp, notified=False).earliest('created')
         logger.info('wem:' + str(wem))
-        wem = models.workflowExecutionMessages.objects.get(id=wem.id)
         integromatMsg = wem.integromat_msg
         wem.notified = True
         wem.save()
