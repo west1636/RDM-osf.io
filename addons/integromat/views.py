@@ -439,12 +439,10 @@ def integromat_req_next_msg(**kwargs):
         logger.info('object des not exist2')
         pass
 
-    integromatMsg = wem.integromat_msg
-
     if integromatMsg:
         notify = True
     else:
-        integromatMsg = 'integromat.error.canNotGetMsg'
+        integromatMsg = 'integromat.error.failedToGetMessage'
 
     logger.info('integromat_req_next_msg end')
 
