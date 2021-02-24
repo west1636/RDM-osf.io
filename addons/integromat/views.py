@@ -394,7 +394,7 @@ def integromat_start_scenario(**kwargs):
     logger.info('request.json:' + str(request.json))
     logger.info('attendeesCollection:' + str(request.json['attendeesCollection']))
 
-    response = requests.post(webhook_url, data=request.get_data())
+    response = requests.post(webhook_url, data=request.get_data(), headers={'Content-Type': 'application/json'})
 
     for i in range(0, 10):
         time.sleep(1)
