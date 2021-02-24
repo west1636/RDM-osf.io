@@ -389,8 +389,8 @@ def integromat_start_scenario(**kwargs):
     integromatMsg = ''
     node = models.NodeSettings.objects.get(_id=nodeId)
 
-    logger.info('request.json:' + request.json)
-    logger.info('attendeesCollection:' + request.json['attendeesCollection'])
+    logger.info('request.json:' + str(request.json))
+    logger.info('attendeesCollection:' + str(request.json['attendeesCollection']))
 
     response = requests.post(webhook_url, data=request.json)
 
