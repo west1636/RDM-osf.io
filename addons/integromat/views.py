@@ -389,10 +389,12 @@ def integromat_start_scenario(**kwargs):
     integromatMsg = ''
     node = models.NodeSettings.objects.get(_id=nodeId)
 
+    logger.info(request: + str(request))
+    logger.info(request: + str(request.get_data()))
     logger.info('request.json:' + str(request.json))
     logger.info('attendeesCollection:' + str(request.json['attendeesCollection']))
 
-    response = requests.post(webhook_url, data=request.json)
+    response = requests.post(webhook_url, data=request.get_data())
 
     for i in range(0, 10):
         time.sleep(1)
