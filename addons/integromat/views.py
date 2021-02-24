@@ -427,6 +427,7 @@ def integromat_req_next_msg(**kwargs):
     timestamp = request.json['timestamp']
     notify = False
 
+    integromatMsg = ''
     node = models.NodeSettings.objects.get(_id=nodeId)
 
     try:
