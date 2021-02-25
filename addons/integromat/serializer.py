@@ -1,34 +1,51 @@
-from addons.base.serializer import OAuthAddonSerializer
 import logging
+
+from addons.base.serializer import StorageAddonSerializer
+from addons.integromat import SHORT_NAME
+from addons.integromat import settings
+#from addons.integromat import utils
+from website.util import web_url_for
 
 logger = logging.getLogger(__name__)
 
+class IntegromatSerializer(StorageAddonSerializer):
+    addon_short_name = SHORT_NAME
 
-class IntegromatSerializer(OAuthAddonSerializer):
-    addon_short_name = 'integromat'
+    REQUIRED_URLS = []
 
     @property
     def addon_serialized_urls(self):
         node = self.node_settings.owner
-        user = self.user_settings
+        user_settings = self.node_settings.user_settings or self.user_settings
 
         result = {
-            'create': node.api_url_for('integromat_add_user_account', user_settings=user),
-            'deauthorize': node.api_url_for('integromat_deauthorize_node'),
-            'add_microsoft_teams_user': node.api_url_for('integromat_add_microsoft_teams_user'),
-            'delete_microsoft_teams_user': node.api_url_for('integromat_delete_microsoft_teams_user')
+            'accounts': node.api_url_for('{}_account_list'.format(SHORT_NAME)),
+            'createBucket': node.api_url_for('{}_create_bucket'.format(SHORT_NAME)),
+            'importAuth': node.api_url_for('{}_import_auth'.format(SHORT_NAME)),
+            'create': node.api_url_for('{}_add_user_account'.format(SHORT_NAME)),
+            'deauthorize': node.api_url_for('{}_deauthorize_node'.format(SHORT_NAME)),
+            'folders': node.api_url_for('{}_folder_list'.format(SHORT_NAME)),
+            'config': node.api_url_for('{}_set_config'.format(SHORT_NAME)),
+            'files': node.web_url_for('collect_file_trees'),
         }
-
+        if user_settings:
+            result['owner'] = web_url_for('profile_view_id',
+                                          uid=user_settings.owner._id)
         return result
 
-    def serialize_settings(self, node_settings, user):
-
-        if not self.node_settings:
-            self.node_settings = node_settings
-        if not self.user_settings:
-            self.user_settings = user.get_addon(self.addon_short_name)
-
-        result = {
-            'urls': self.addon_serialized_urls,
+    def serialized_folder(self, node_settings):
+        return {
+            'path': node_settings.folder_id,
+            'name': node_settings.folder_name
         }
-        return result
+
+    def credentials_are_valid(self, user_settings, client=None):
+        if user_settings:
+            return True
+        '''
+            for account in user_settings.external_accounts.all():
+                if utils.can_list(settings.HOST,
+                                  account.oauth_key, account.oauth_secret):
+                    return True
+        '''
+        return False

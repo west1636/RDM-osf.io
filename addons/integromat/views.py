@@ -4,7 +4,7 @@ import logging
 import requests
 import json
 import time
-
+from addons.integromat import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from django.db.models import Min
 from addons.base import generic_views
@@ -20,6 +20,8 @@ from website.util import api_url_for
 from website.project.decorators import (
     must_have_addon,
     must_be_valid_project,
+    must_be_addon_authorizer,
+    must_have_permission,
 )
 from website.ember_osf_web.views import use_ember_app
 from addons.integromat import settings
@@ -31,10 +33,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 
 logger = logging.getLogger(__name__)
-
-SHORT_NAME = 'integromat'
-FULL_NAME = 'Integromat'
-
 
 integromat_account_list = generic_views.account_list(
     SHORT_NAME,
@@ -54,6 +52,29 @@ integromat_import_auth = generic_views.import_auth(
 integromat_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
+
+def _set_folder(node_addon, folder, auth):
+    logger.info('_set_folder start')
+    folder_id = folder['id']
+    node_addon.set_folder(folder_id, auth=auth)
+    node_addon.save()
+    logger.info('_set_folder end')
+
+integromat_set_config = generic_views.set_config(
+    SHORT_NAME,
+    FULL_NAME,
+    IntegromatSerializer,
+    _set_folder
+)
+
+@must_have_addon(SHORT_NAME, 'node')
+@must_be_addon_authorizer(SHORT_NAME)
+def integromat_folder_list(node_addon, **kwargs):
+    logger.info('integromat_folder_list start')
+    """ Returns all the subsequent folders under the folder id passed.
+    """
+    logger.info('integromat_folder_list end')
+    return node_addon.get_folders()
 
 @must_be_logged_in
 def integromat_user_config_get(auth, **kwargs):
@@ -495,4 +516,14 @@ def integromat_error_msg(**kwargs):
 
     logger.info('integromat_error_msg end')
 
+    return {}
+
+@must_be_addon_authorizer(SHORT_NAME)
+@must_have_addon('integromat', 'node')
+@must_have_permission('write')
+def integromat_create_bucket(auth, node_addon, **kwargs):
+    logger.info('integromat_create_bucket start')
+    bucket_name = request.json.get('bucket_name', '')
+    # bucket_location = request.json.get('bucket_location', '')
+    logger.info('integromat_create_bucket end')
     return {}
