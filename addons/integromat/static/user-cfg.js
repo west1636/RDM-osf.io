@@ -1,11 +1,5 @@
-var $osf = require('js/osfHelpers');
-var IntegromatUserViewModel = require('./integromatUserConfig.js').IntegromatUserViewModel;
+'use strict';
 
-// Endpoint for Integromat user settings
-var url = '/api/v1/settings/integromat/';
-
-var IntegromatUserViewModel = new IntegromatUserViewModel(url);
-$osf.applyBindings(IntegromatUserViewModel, '#integromatAddonScope');
-
-// Load initial Integromat data
-IntegromatUserViewModel.fetch(url);
+var IntegromatUserConfig = require('./IntegromatUserConfig.js').IntegromatUserConfig;
+var url = '/api/v1/settings/Integromat/accounts/';
+new IntegromatUserConfig('#IntegromatAddonScope', url);

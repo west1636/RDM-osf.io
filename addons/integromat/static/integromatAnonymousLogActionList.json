@@ -1,0 +1,11 @@
+{
+    "integromat_bucket_linked" : "A user linked an Integromat bucket to a project",
+    "integromat_bucket_unlinked" : "A user unselected an Integromat bucket in a project",
+    "integromat_file_added" : "A user added a file to an Integromat bucket in a project",
+    "integromat_file_removed" : "A user removed a file in an Integromat bucket in a project",
+    "integromat_file_updated" : "A user updated a file in an Integromat bucket in a project",
+    "integromat_folder_created" : "A user created a folder in an Integromat in a project",
+    "integromat_node_authorized" : "A user authorized the Integromat addon for a project",
+    "integromat_node_deauthorized" : "A user deauthorized the Integromat addon for a project",
+    "integromat_node_deauthorized_no_user" : "Integromat addon for a project deauthorized"
+}

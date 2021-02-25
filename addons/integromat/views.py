@@ -4,7 +4,7 @@ import logging
 import requests
 import json
 import time
-
+from addons.integromat import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from django.db.models import Min
 from addons.base import generic_views
@@ -32,10 +32,6 @@ from framework.auth.core import Auth
 
 logger = logging.getLogger(__name__)
 
-SHORT_NAME = 'integromat'
-FULL_NAME = 'Integromat'
-
-
 integromat_account_list = generic_views.account_list(
     SHORT_NAME,
     IntegromatSerializer
@@ -54,6 +50,25 @@ integromat_import_auth = generic_views.import_auth(
 integromat_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
+
+def _set_folder(node_addon, folder, auth):
+    folder_id = folder['id']
+    node_addon.set_folder(folder_id, auth=auth)
+    node_addon.save()
+
+integromat_set_config = generic_views.set_config(
+    SHORT_NAME,
+    FULL_NAME,
+    IntegromatSerializer,
+    _set_folder
+)
+
+@must_have_addon(SHORT_NAME, 'node')
+@must_be_addon_authorizer(SHORT_NAME)
+def integromat_folder_list(node_addon, **kwargs):
+    """ Returns all the subsequent folders under the folder id passed.
+    """
+    return node_addon.get_folders()
 
 @must_be_logged_in
 def integromat_user_config_get(auth, **kwargs):
@@ -494,5 +509,39 @@ def integromat_error_msg(**kwargs):
     wem.save()
 
     logger.info('integromat_error_msg end')
+
+    return {}
+
+@must_be_addon_authorizer(SHORT_NAME)
+@must_have_addon('integromat', 'node')
+@must_have_permission('write')
+def integromat_create_bucket(auth, node_addon, **kwargs):
+    bucket_name = request.json.get('bucket_name', '')
+    # bucket_location = request.json.get('bucket_location', '')
+
+    if not utils.validate_bucket_name(bucket_name):
+        return {
+            'message': 'That bucket name is not valid.',
+            'title': 'Invalid bucket name',
+        }, http_status.HTTP_400_BAD_REQUEST
+
+    try:
+        # utils.create_bucket(node_addon, bucket_name, bucket_location)
+        utils.create_bucket(node_addon, bucket_name)
+    except exception.S3ResponseError as e:
+        return {
+            'message': e.message,
+            'title': 'Problem connecting to My MinIO',
+        }, http_status.HTTP_400_BAD_REQUEST
+    except exception.S3CreateError as e:
+        return {
+            'message': e.message,
+            'title': "Problem creating bucket '{0}'".format(bucket_name),
+        }, http_status.HTTP_400_BAD_REQUEST
+    except exception.BotoClientError as e:  # Base class catchall
+        return {
+            'message': e.message,
+            'title': 'Error connecting to My MinIO',
+        }, http_status.HTTP_400_BAD_REQUEST
 
     return {}

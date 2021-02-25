@@ -1,0 +1,11 @@
+{
+  "integromat_bucket_linked" : "${user} linked the Integromat bucket ${bucket} to ${node}",
+  "integromat_bucket_unlinked" : "${user} unselected the Integromat bucket ${bucket} in ${node}",
+  "integromat_file_added" : "${user} added file ${path} to Integromat bucket ${bucket} in ${node}",
+  "integromat_file_removed" : "${user} removed ${path} in Integromat bucket ${bucket} in ${node}",
+  "integromat_file_updated" : "${user} updated file ${path} in Integromat bucket ${bucket} in ${node}",
+  "integromat_folder_created" : "${user} created folder ${path} in Integromat bucket ${bucket} in ${node}",
+  "integromat_node_authorized" : "${user} authorized the Integromat addon for ${node}",
+  "integromat_node_deauthorized" : "${user} deauthorized the Integromat addon for ${node}",
+  "integromat_node_deauthorized_no_user" : "Integromat addon for ${node} deauthorized"
+}

@@ -57,11 +57,21 @@ api_routes = {
 
         Rule(
             [
-                '/project/<pid>/settings/integromat/',
-                '/project/<pid>/node/<nid>/settings/integromat/'
+                '/project/<pid>/integromat/settings/',
+                '/project/<pid>/node/<nid>/integromat/settings/'
             ],
             'get',
             views.integromat_get_config,
+            json_renderer,
+        ),
+
+        Rule(
+            [
+                '/project/<pid>/integromat/settings/',
+                '/project/<pid>/node/<nid>/integromat/settings/'
+            ],
+            'put',
+            views.integromat_set_config,
             json_renderer,
         ),
 
@@ -153,6 +163,25 @@ api_routes = {
             'post',
             views.integromat_error_msg,
             json_renderer,
+        ),
+
+        Rule(
+            [
+                '/project/<pid>/integromat/buckets/',
+                '/project/<pid>/node/<nid>/integromat/buckets/',
+            ],
+            'get',
+            views.integromat_folder_list,
+            json_renderer,
+        ),
+        Rule(
+            [
+                '/project/<pid>/integromat/newbucket/',
+                '/project/<pid>/node/<nid>/integromat/newbucket/',
+            ],
+            'post',
+            views.integromat_create_bucket,
+            json_renderer
         ),
 
         # ember: ここから
