@@ -133,6 +133,7 @@ def integromat_add_user_account(auth, **kwargs):
 
 def authIntegromat(access_token, hSdkVersion):
 
+    message = ''
     token = 'Token ' + access_token
     payload = {}
     headers = {
@@ -141,16 +142,15 @@ def authIntegromat(access_token, hSdkVersion):
     }
 
     response = requests.request('GET', settings.INTEGROMAT_API_WHOAMI, headers=headers, data=payload)
+    status_code = response.status_code
     userInfo = response.json()
 
-    if not userInfo.viewkeys() >= {'id', 'name', 'email', 'scope'}:
-
-        message = ''
+    if status_code != 200:
 
         if userInfo.viewkeys() >= {'message'}:
             message = userInfo['message']
 
-        logger.info('Integromat Authentication failure:' + message)
+        logger.info('Failed to authenticate Integromat account' + '[' + status_code + ']' + ':' + message)
 
         userInfo.clear()
 
