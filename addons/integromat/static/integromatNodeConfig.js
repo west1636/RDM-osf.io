@@ -7,7 +7,7 @@ var osfHelpers = require('js/osfHelpers');
 var oop = require('js/oop');
 var m = require('mithril');
 var bootbox = require('bootbox');
-
+var $osf = require('js/osfHelpers');
 var OauthAddonFolderPicker = require('js/oauthAddonNodeConfig')._OauthAddonNodeConfigViewModel;
 
 var IntegromatFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
