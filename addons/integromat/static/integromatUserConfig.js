@@ -152,6 +152,13 @@ function ViewModel(url) {
     };
 
     self.updateAccounts();
+
+    self.addMicrosoftTeamsUser : function() {
+        ;
+    },
+    self.deleteMicrosoftTeamsUser : function() {
+        ;
+    },
 }
 
 $.extend(ViewModel.prototype, ChangeMessageMixin.prototype);
