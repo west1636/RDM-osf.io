@@ -62,7 +62,7 @@ function ViewModel(url) {
             self.updateAccounts();
 
         }).fail(function(xhr, textStatus, error) {
-            var errorMessage = (xhr.status === 400 && xhr.responseJSON.message !== undefined) ? xhr.responseJSON.message : language.authError;
+            var errorMessage = (xhr.status === 400 && xhr.responseJSON.message !== undefined) ? xhr.responseJSON.message : 'auth error';
             self.changeMessage(errorMessage, 'text-danger');
             Raven.captureMessage('Could not authenticate with Integromat', {
                 extra: {
@@ -88,7 +88,7 @@ function ViewModel(url) {
             }));
             $('#integromat-header').osfToggleHeight({height: 160});
         }).fail(function(xhr, status, error) {
-            self.changeMessage(language.userSettingsError, 'text-danger');
+            self.changeMessage('user setting error', 'text-danger');
             Raven.captureMessage('Error while updating addon account', {
                 extra: {
                     url: url,
