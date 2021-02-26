@@ -29,6 +29,10 @@ function ViewModel(url) {
     self.integromatApiToken = ko.observable();
     self.integromatWebhookUrl = ko.observable();
 
+    self.userGuid = ko.observable();
+    self.microsoftTeamsUserObject = ko.observable();
+    self.microsoftTeamsMail = ko.observable();
+
     ChangeMessageMixin.call(self);
 
     /** Reset all fields from Integromat credentials input modal */
