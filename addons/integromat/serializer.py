@@ -27,6 +27,8 @@ class IntegromatSerializer(StorageAddonSerializer):
             'folders': node.api_url_for('{}_folder_list'.format(SHORT_NAME)),
             'config': node.api_url_for('{}_set_config'.format(SHORT_NAME)),
             'files': node.web_url_for('collect_file_trees'),
+            'add_microsoft_teams_user': node.api_url_for('{}_add_microsoft_teams_user'.format(SHORT_NAME)),
+            'delete_microsoft_teams_user': node.api_url_for('{}_delete_microsoft_teams_user'.format(SHORT_NAME)),
         }
         if user_settings:
             result['owner'] = web_url_for('profile_view_id',
