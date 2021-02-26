@@ -67,7 +67,7 @@ var IntegromatFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         ).done(function(response) {
             $osf.unblock();
             self.clearModal();
-            $('#myminioInputCredentials').modal('hide');
+            $('#integromatCredentialsModal').modal('hide');
             self.changeMessage('Successfully added Integromat credentials.', 'text-success', null, true);
             self.updateFromData(response);
             self.importAuth();
