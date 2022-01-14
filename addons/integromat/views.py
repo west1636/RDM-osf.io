@@ -686,15 +686,15 @@ def integromat_start_scenario(**kwargs):
 
     logger.info('integromat_start_scenario start')
 
-    if appName == settings.ZOOM_MEETINGS:
-        register_zoom_attendees(attendees)
-
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
     timestamp = requestDataJsonLoads['timestamp']
     appName = requestDataJsonLoads['appName']
     attendees = requestDataJsonLoads['attendees']
     webhook_url = requestDataJsonLoads['webhookUrl']
+
+    if appName == settings.ZOOM_MEETINGS:
+        register_zoom_attendees(attendees)
 
     requestDataJsonLoads.pop('webhookUrl')
     requestDataJson = json.dumps(requestDataJsonLoads)
