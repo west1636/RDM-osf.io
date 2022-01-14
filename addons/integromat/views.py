@@ -658,11 +658,11 @@ def integromat_register_web_meeting_apps_email(**kwargs):
 
     return {}
 
-def register_zoom_attendees(attendees):
+def register_zoom_attendees(nodeId, attendees):
 
     for email in attendees:
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=node.id, zoom_meetings_mail=email)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=nodeId, zoom_meetings_mail=email)
         except ObjectDoesNotExist:
             user = OSFUser.objects.get(username=email)
             fullname = user.fullname
@@ -686,6 +686,9 @@ def integromat_start_scenario(**kwargs):
 
     logger.info('integromat_start_scenario start')
 
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
     timestamp = requestDataJsonLoads['timestamp']
@@ -694,7 +697,7 @@ def integromat_start_scenario(**kwargs):
     webhook_url = requestDataJsonLoads['webhookUrl']
 
     if appName == settings.ZOOM_MEETINGS:
-        register_zoom_attendees(attendees)
+        register_zoom_attendees(addon.id, attendees)
 
     requestDataJsonLoads.pop('webhookUrl')
     requestDataJson = json.dumps(requestDataJsonLoads)
