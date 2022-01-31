@@ -659,7 +659,7 @@ def integromat_register_web_meeting_apps_email(**kwargs):
 
     return {}
 
-def register_zoom_attendees(nodeId, attendees):
+def register_zoom_attendees(nodeSettings, attendees):
 
     for email in attendees:
         try:
@@ -677,7 +677,7 @@ def register_zoom_attendees(nodeId, attendees):
                 fullname=fullname,
                 is_guest=False,
                 zoom_meetings_mail=email,
-                node_settings=nodeId,
+                node_settings=nodeSettings,
             )
 
 @must_be_valid_project
@@ -698,7 +698,7 @@ def integromat_start_scenario(**kwargs):
     webhook_url = requestDataJsonLoads['webhookUrl']
 
     if appName == settings.ZOOM_MEETINGS:
-        register_zoom_attendees(addon.id, attendees)
+        register_zoom_attendees(addon, attendees)
 
     requestDataJsonLoads.pop('webhookUrl')
     requestDataJson = json.dumps(requestDataJsonLoads)
