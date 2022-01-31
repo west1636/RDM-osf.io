@@ -677,7 +677,7 @@ def register_zoom_attendees(nodeId, attendees):
                 fullname=fullname,
                 is_guest=False,
                 zoom_meetings_mail=email,
-                node_settings=nodeSettings,
+                node_settings=nodeId,
             )
 
 @must_be_valid_project
