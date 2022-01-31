@@ -677,9 +677,11 @@ def register_instituion_users_zoom_attendees(nodeSettings, attendees):
 
             try:
                 attendeeObjUpdate = models.Attendees.objects.get(node_settings_id=nodeSettings.id, user_guid=userGuid)
-                attendeeObjUpdate.zoom_meetings_mail = email
-                attendeeObjUpdate.save()
-                logger.info('update to zoom email')
+                logger.info('attendeeObjUpdate.zoom_meetings_mail:::' +str(attendeeObjUpdate.zoom_meetings_mail))
+                if attendeeObjUpdate.zoom_meetings_mail != email:
+                    attendeeObjUpdate.zoom_meetings_mail = email
+                    attendeeObjUpdate.save()
+                    logger.info('update to zoom email')
             except ObjectDoesNotExist:
                 fullname = user.fullname
                 attendeeObjCreate = models.Attendees(
