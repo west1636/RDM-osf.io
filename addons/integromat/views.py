@@ -663,7 +663,7 @@ def register_zoom_attendees(nodeSettings, attendees):
 
     for email in attendees:
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=nodeId, zoom_meetings_mail=email)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=nodeSettings.id, zoom_meetings_mail=email)
         except ObjectDoesNotExist:
             user = OSFUser.objects.get(username=email)
             fullname = user.fullname
