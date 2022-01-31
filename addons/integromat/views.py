@@ -512,8 +512,6 @@ def integromat_update_meeting_registration(**kwargs):
                 attendeeId = qsAttendee.id
                 attendeeIds.append(attendeeId)
 
-            attendeeIds = attendeeIdsFormer
-
         qsUpdateMeetingInfo.attendees = attendeeIds
 
         qsUpdateMeetingInfo.save()
