@@ -148,6 +148,7 @@ def makeInstitutionUserList(users):
         userInfo = {}
         userInfo['guid'] = user._id
         userInfo['fullname'] = user.fullname
+        userInfo['username'] = user.username
         logger.info(str(userInfo))
         institutionUsers.append(userInfo)
 
