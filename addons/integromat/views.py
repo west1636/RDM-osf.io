@@ -663,10 +663,7 @@ def register_instituion_users_zoom_attendees(nodeSettings, attendees):
 
     for email in attendees:
         logger.info('email::' + str(email))
-        try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=nodeSettings.id, zoom_meetings_mail=email)
-            logger.info('unnecessary to register')
-        except ObjectDoesNotExist:
+        if not models.Attendees.objects.filter(node_settings_id=nodeSettings.id, zoom_meetings_mail=email).exists():
             user = OSFUser.objects.get(username=email)
             qsUserGuid = user._prefetched_objects_cache['guids'].only()
             userGuidSerializer = serializers.serialize('json', qsUserGuid, ensure_ascii=False)
