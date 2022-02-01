@@ -672,14 +672,12 @@ def register_instituion_users_zoom_attendees(nodeSettings, attendees):
             userGuidSerializer = serializers.serialize('json', qsUserGuid, ensure_ascii=False)
             userGuidJson = json.loads(userGuidSerializer)
             userGuid = userGuidJson[0]['fields']['_id']
-
             try:
                 attendeeObjUpdate = models.Attendees.objects.get(node_settings_id=nodeSettings.id, user_guid=userGuid)
                 logger.info('attendeeObjUpdate.zoom_meetings_mail:::' +str(attendeeObjUpdate.zoom_meetings_mail))
-                if attendeeObjUpdate.zoom_meetings_mail != email:
-                    attendeeObjUpdate.zoom_meetings_mail = email
-                    attendeeObjUpdate.save()
-                    logger.info('update to zoom email')
+                attendeeObjUpdate.zoom_meetings_mail = email
+                attendeeObjUpdate.save()
+                logger.info('update to zoom email')
             except ObjectDoesNotExist:
                 fullname = user.fullname
                 attendeeObjCreate = models.Attendees(
