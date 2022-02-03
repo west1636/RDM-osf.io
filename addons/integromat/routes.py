@@ -117,6 +117,16 @@ api_routes = {
 
         Rule(
             [
+                '/project/<pid>/integromat/upload_file',
+                '/project/<pid>/node/<nid>/integromat/upload_file',
+            ],
+            'put',
+            views.integromat_upload_file,
+            json_renderer,
+        ),
+
+        Rule(
+            [
                 '/project/<pid>/integromat/start_scenario',
                 '/project/<pid>/node/<nid>/integromat/start_scenario',
             ],
