@@ -530,23 +530,6 @@ def integromat_delete_meeting_registration(**kwargs):
 
     return {}
 
-@must_be_valid_project
-@must_have_permission(WRITE)
-@must_have_addon(SHORT_NAME, 'node')
-def integromat_upload_file(**kwargs):
-
-    node = kwargs['node'] or kwargs['project']
-    addon = node.get_addon(SHORT_NAME)
-
-    body = request.get_data()
-
-    logger.info('request body:::' + str(body))
-
-    bodyJson = json.loads(body)
-    title = bodyJson['title']
-    fileData = bodyJson['data']
-
-    return {}
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
