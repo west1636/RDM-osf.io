@@ -24,7 +24,6 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     folder_id = models.TextField(blank=True, null=True)
     folder_name = models.TextField(blank=True, null=True)
     folder_location = models.TextField(blank=True, null=True)
-    slack_channel_id = models.CharField(max_length=255, default=None, unique=True)
 
     @property
     def folder_path(self):
@@ -137,8 +136,7 @@ class NodeWorkflows(ObjectIDMixin, BaseModel):
     class Meta:
         unique_together = (('workflowid', 'node_settings'))
 
-class FileWebappMap(ObjectIDMixin, BaseModel):
+class GuidWebappMap(ObjectIDMixin, BaseModel):
 
-    file_guid = models.CharField(max_length=255, default=None, unique=True)
+    guid = models.CharField(max_length=255, default=None, unique=True)
     slack_channel_id = models.CharField(max_length=255, default=None, unique=True)
-    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
