@@ -679,7 +679,7 @@ def integromat_add_comment(**kwargs):
     comment_id = commentInfo["data"]['id']
 
     return {
-            'commentId': comment_id
+            'commentId': comment_id,
             'content': content,
             'gud': guid,
             }
