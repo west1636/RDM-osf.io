@@ -20,6 +20,7 @@ from website.project.decorators import (
     must_have_addon,
     must_be_valid_project,
     must_have_permission,
+    _load_node_or_fail,
 )
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from website.ember_osf_web.views import use_ember_app
@@ -514,6 +515,187 @@ def integromat_delete_meeting_registration(**kwargs):
 
     return {}
 
+@must_be_valid_project
+@must_have_permission(WRITE)
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_get_file_id(auth, **kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+
+    title = request.get_json().get('title')
+    file_path = ''
+    guid = get_guid(node)
+    auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
+
+    response = requests.get(
+        waterbutler_api_url_for(
+            guid, 'osfstorage', path='/', _internal=True, meta=''
+        ),
+        headers={
+            'content-type': 'application/json',
+            'authorization': auth_headers,
+        }
+    )
+
+    filesInfo = response.json()['data']
+
+    for fileInfo in filesInfo:
+        if title == fileInfo['attributes']['name']:
+            file_path = fileInfo['attributes']['path']
+
+    return {'filePath': file_path}
+
+def integromat_get_node(**kwargs):
+
+    auth = Auth.from_kwargs(request.args.to_dict(), kwargs)
+    user = auth.user
+    logger.info('auth:' + str(user))
+    if not user:
+        raise HTTPError(httplib.UNAUTHORIZED)
+
+    guid = request.get_json().get('guid')
+    slackChannelId = request.get_json().get('slackChannelId')
+    parent_guid = None
+    ##guidを渡された場合、プロジェクト名、SlackChannelIDを返す
+
+    if guid and not slackChannelId:
+
+        try:
+            nodeType = AbstractNode.objects.get(guids___id=guid).target_type
+            title = AbstractNode.objects.get(guids___id=guid).title
+            node = _load_node_or_fail(guid)
+            slack_channel_id = node.slackChannelId
+        except ObjectDoesNotExist:
+            nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
+            title = BaseFileNode.objects.get(guids___id=guid).name
+            targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
+            targetNode = AbstractNode.objects.get(id=targetObjectId)
+            parent_guid = get_guid(targetNode)
+            slack_channel_id = FileWebappMap(node_settings=targetNode, file_guid=guid)
+
+        reqBody = {
+            'title': title,
+            'slackChannelId': slack_channel_id,
+            'parentGuid': parent_guid
+            }
+
+    ##slack channnel id を渡された場合、ノードタイプとGUIDを返す
+    if slackChannelId and not guid:
+        try:
+            node = models.NodeSettings.objects.get(slack_channel_id=slackChannelId)
+            nodeType = 'node'
+        except ObjectDoesNotExist:
+            guid = FileWebappMap.objects.get(slack_channel_id=slackChannelId).file_guid
+            nodeType = 'files'
+
+        reqBody = {
+            'guid': guid
+            }
+
+    reqBody['nodeType'] = nodeType
+
+    return reqBody
+
+@must_be_valid_project
+@must_have_permission(ADMIN)
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_link_to_node(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+
+    guid = request.get_json().get('guid')
+    nodeType = request.get_json().get('nodeType')
+    slack_channel_id = request.get_json().get('slackChannelId')
+    #guidがnodeの場合
+    if nodeType == 'node':
+        addon.slack_channel_id = slackChannelId
+        addon.save()
+    #guidがfileの場合
+    if nodeType == 'files':
+        qsFileWebappMap = models.FileWebappMap(node_settings_id=node.id, slackChannelId=slack_channel_id , file_guid=guid)
+        qsFileWebappMap.save()
+
+    return {}
+
+@must_be_valid_project
+@must_have_permission(ADMIN)
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_watch_comment(**kwargs):
+
+    guid = request.get_json().get('guid')
+
+    rootTargetId = Guid.objects.get(_id=guid)
+
+    updatedComments = Comment.objects.filter(root_target_id=rootTargetId)
+    updatedCommentsJson = serializers.serialize('json', updatedComments, ensure_ascii=False)
+    updatedCommentsDict = json.loads(updatedCommentsJson)
+
+    retComments = {'guid': guid, 'slackChannelId': slackChannelCreated, 'data': []}
+
+    for comment in updatedCommentsDict:
+        commentsInfo = {}
+        commentsInfo['id'] = comment['pk']
+        commentsInfo['content'] = comment['fields']['content']
+        commentsInfo['modified'] = comment['fields']['modified']
+        commentsInfo['user'] = OSFUser.objects.get(id=comment['fields']['user']).fullname
+        retComments['data'].append(commentsInfo)
+
+    return retComments
+
+@must_be_valid_project
+@must_have_permission(ADMIN)
+@must_have_addon(SHORT_NAME, 'node')
+def integromat_add_comment(**kwargs):
+
+    guid = request.get_json().get('guid')
+    content = request.get_json().get('content')
+
+    apiPath = 'nodes/' + guid + '/comments/'
+    url = api_v2_url(apiPath)
+    logger.info('api_url:::' + str(url))
+
+    auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
+
+    commentReqBody = {
+                'data': {
+                    'type': 'comments',
+                    'attributes': {
+                        'content': content
+                    },
+                    'relationships': {
+                        'target': {
+                            'data': {
+                                'type': 'nodes',
+                                'id': guid
+                            }
+                        }
+                    }
+                }
+            }
+
+    req_headers={
+        'Content-type':'application/json',
+        'authorization': auth_headers
+    }
+
+    response = requests.post(
+        url,
+        json=commentReqBody,
+        headers=req_headers
+    )
+
+    logger.info('response:::' + str(vars(response)))
+    logger.info('status::' + str(response.status_code))
+
+    commentInfo = response.json()
+    comment_id = commentInfo["data"]['id']
+
+    return {
+            'commentId': comment_id
+            'content': content,
+            'gud': guid,
+            }
 
 @must_be_valid_project
 @must_have_permission(WRITE)
