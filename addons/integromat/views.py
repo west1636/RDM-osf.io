@@ -31,7 +31,7 @@ from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
-from osf.models import AbstractNode, Guid, Comment
+from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 from framework.database import get_or_http_error
 _load_node_or_fail = lambda pk: get_or_http_error(AbstractNode, pk)
 
@@ -618,14 +618,12 @@ def integromat_link_to_node(**kwargs):
 def integromat_watch_comment(**kwargs):
 
     guid = request.get_json().get('guid')
-
     rootTargetId = Guid.objects.get(_id=guid)
-
     updatedComments = Comment.objects.filter(root_target_id=rootTargetId)
     updatedCommentsJson = serializers.serialize('json', updatedComments, ensure_ascii=False)
     updatedCommentsDict = json.loads(updatedCommentsJson)
-
-    retComments = {'guid': guid, 'slackChannelId': slackChannelCreated, 'data': []}
+    slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid).slack_channel_id
+    retComments = {'guid': guid, 'slackChannelId': slack_channel_id, 'data': []}
 
     for comment in updatedCommentsDict:
         commentsInfo = {}
