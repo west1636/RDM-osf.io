@@ -562,14 +562,14 @@ def integromat_get_node(**kwargs):
         try:
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
             title = AbstractNode.objects.get(guids___id=guid).title
-            slack_channel_id = models.GuidWebappMap(guid=guid)
+            slack_channel_id = models.NodeFileWebappMap(node_file_guid=guid)
         except ObjectDoesNotExist:
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
             title = BaseFileNode.objects.get(guids___id=guid).name
             targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
             targetNode = AbstractNode.objects.get(id=targetObjectId)
             parent_guid = get_guid(targetNode)
-            slack_channel_id = models.GuidWebappMap(guid=guid)
+            slack_channel_id = models.NodeFileWebappMap(node_file_guid=guid)
 
         reqBody = {
             'title': title,
@@ -579,10 +579,10 @@ def integromat_get_node(**kwargs):
 
     if slackChannelId and not guid:
         try:
-            guid = models.GuidWebappMap(slack_channel_id=slackChannelId).guid
+            guid = models.NodeFileWebappMap(slack_channel_id=slackChannelId).node_file_guid
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
         except ObjectDoesNotExist:
-            guid = models.GuidWebappMap.objects.get(slack_channel_id=slackChannelId).guid
+            guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
 
         reqBody = {
@@ -600,8 +600,8 @@ def integromat_link_to_node(**kwargs):
 
     guid = request.get_json().get('guid')
     slack_channel_id = request.get_json().get('slackChannelId')
-    qsGuidWebappMap = models.models.GuidWebappMap(slackChannelId=slack_channel_id, guid=guid)
-    qsGuidWebappMap.save()
+    qsNodeFileWebappMap = models.NodeFileWebappMap(slackChannelId=slack_channel_id, node_file_guid=guid)
+    qsNodeFileWebappMap.save()
 
     return {}
 
