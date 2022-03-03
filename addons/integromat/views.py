@@ -31,7 +31,7 @@ from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
-from osf.models import AbstractNode, Guid
+from osf.models import AbstractNode, Guid, Comment
 from framework.database import get_or_http_error
 _load_node_or_fail = lambda pk: get_or_http_error(AbstractNode, pk)
 
@@ -556,26 +556,32 @@ def integromat_get_node(**kwargs):
 
     guid = request.get_json().get('guid')
     slackChannelId = request.get_json().get('slackChannelId')
-    parent_guid = None
+    root_guid = None
 
     if guid and not slackChannelId:
 
         try:
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
             title = AbstractNode.objects.get(guids___id=guid).title
-            slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid)
+            try:
+                slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid).slack_channel_id
+            except ObjectDoesNotExist:
+                slack_channel_id = ''
         except ObjectDoesNotExist:
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
             title = BaseFileNode.objects.get(guids___id=guid).name
             targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
             targetNode = AbstractNode.objects.get(id=targetObjectId)
-            parent_guid = get_guid(targetNode)
-            slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid)
+            root_guid = get_guid(targetNode)
+            try:
+                slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid).slack_channel_id
+            except ObjectDoesNotExist:
+                slack_channel_id = ''
 
         reqBody = {
             'title': title,
             'slackChannelId': slack_channel_id,
-            'parentGuid': parent_guid
+            'rootGuid': root_guid
             }
 
     if slackChannelId and not guid:
@@ -636,14 +642,18 @@ def integromat_watch_comment(**kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_add_comment(**kwargs):
 
+    logger.info('add_comment 1')
+
     guid = request.get_json().get('guid')
     content = request.get_json().get('content')
-
+    logger.info('add_comment 2')
     apiPath = 'nodes/' + guid + '/comments/'
     url = api_v2_url(apiPath)
     logger.info('api_url:::' + str(url))
 
     auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
+
+    logger.info('add_comment 3')
 
     commentReqBody = {
                 'data': {
@@ -667,12 +677,14 @@ def integromat_add_comment(**kwargs):
         'authorization': auth_headers
     }
 
+    logger.info('add_comment 4')
+
     response = requests.post(
         url,
         json=commentReqBody,
         headers=req_headers
     )
-
+    logger.info('add_comment 5')
     logger.info('response:::' + str(vars(response)))
     logger.info('status::' + str(response.status_code))
 
