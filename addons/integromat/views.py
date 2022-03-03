@@ -24,13 +24,14 @@ from website.project.decorators import (
 )
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from website.ember_osf_web.views import use_ember_app
+from website.util import api_v2_url
 from addons.integromat import settings
 from addons.integromat import models
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
-from osf.models import AbstractNode
+from osf.models import AbstractNode, Guid
 from framework.database import get_or_http_error
 _load_node_or_fail = lambda pk: get_or_http_error(AbstractNode, pk)
 
@@ -562,14 +563,14 @@ def integromat_get_node(**kwargs):
         try:
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
             title = AbstractNode.objects.get(guids___id=guid).title
-            slack_channel_id = models.NodeFileWebappMap(node_file_guid=guid)
+            slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid)
         except ObjectDoesNotExist:
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
             title = BaseFileNode.objects.get(guids___id=guid).name
             targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
             targetNode = AbstractNode.objects.get(id=targetObjectId)
             parent_guid = get_guid(targetNode)
-            slack_channel_id = models.NodeFileWebappMap(node_file_guid=guid)
+            slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid)
 
         reqBody = {
             'title': title,
@@ -579,7 +580,7 @@ def integromat_get_node(**kwargs):
 
     if slackChannelId and not guid:
         try:
-            guid = models.NodeFileWebappMap(slack_channel_id=slackChannelId).node_file_guid
+            guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
         except ObjectDoesNotExist:
             guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
@@ -600,7 +601,7 @@ def integromat_link_to_node(**kwargs):
 
     guid = request.get_json().get('guid')
     slack_channel_id = request.get_json().get('slackChannelId')
-    qsNodeFileWebappMap = models.NodeFileWebappMap(slackChannelId=slack_channel_id, node_file_guid=guid)
+    qsNodeFileWebappMap = models.NodeFileWebappMap(slack_channel_id=slack_channel_id, node_file_guid=guid)
     qsNodeFileWebappMap.save()
 
     return {}
