@@ -2578,7 +2578,7 @@ msgstr ""
 
 #: templates/rdm_custom_storage_location/providers/s3compat_modal.html:33
 msgid "Server Side Encryption"
-msgstr "サーバ側の暗号化"
+msgstr "サーバー側の暗号化"
 
 #: templates/rdm_custom_storage_location/providers/s3compat_modal.html:36
 msgid "Yes@institutional_storage"
