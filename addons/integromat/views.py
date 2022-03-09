@@ -25,6 +25,7 @@ from website.project.decorators import (
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from website.ember_osf_web.views import use_ember_app
 from website.util import api_v2_url
+from api.base.utils import waterbutler_api_url_for
 from addons.integromat import settings
 from addons.integromat import models
 from addons.integromat import utils
