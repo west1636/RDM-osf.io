@@ -27,6 +27,7 @@ from website.ember_osf_web.views import use_ember_app
 from website.util import api_v2_url
 from addons.integromat import settings
 from addons.integromat import models
+from addons.integromat import utils
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
@@ -525,7 +526,7 @@ def integromat_get_file_id(auth, **kwargs):
 
     title = request.get_json().get('title')
     file_path = ''
-    guid = get_guid(node)
+    guid = utils.get_guid(node)
     auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
 
     response = requests.get(
@@ -571,7 +572,7 @@ def integromat_get_node(*args, **kwargs):
             title = BaseFileNode.objects.get(guids___id=guid).name
             targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
             targetNode = AbstractNode.objects.get(id=targetObjectId)
-            root_guid = get_guid(targetNode)
+            root_guid = utils.get_guid(targetNode)
             try:
                 slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid).slack_channel_id
             except ObjectDoesNotExist:
