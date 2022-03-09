@@ -586,11 +586,12 @@ def integromat_get_node(*args, **kwargs):
             }
 
     if slackChannelId and not guid:
+
+        guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
+
         try:
-            guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
         except ObjectDoesNotExist:
-            guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
 
         reqBody = {
