@@ -154,16 +154,6 @@ api_routes = {
 
         Rule(
             [
-                '/project/<pid>/integromat/add_comment',
-                '/project/<pid>/node/<nid>/integromat/add_comment',
-            ],
-            'post',
-            views.integromat_add_comment,
-            json_renderer,
-        ),
-
-        Rule(
-            [
                 '/project/<pid>/integromat/start_scenario',
                 '/project/<pid>/node/<nid>/integromat/start_scenario',
             ],

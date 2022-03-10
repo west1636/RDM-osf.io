@@ -638,62 +638,6 @@ def integromat_watch_comment(**kwargs):
     return retComments
 
 @must_be_valid_project
-@must_have_permission(ADMIN)
-@must_have_addon(SHORT_NAME, 'node')
-def integromat_add_comment(**kwargs):
-
-    guid = request.get_json().get('guid')
-    content = request.get_json().get('content')
-
-    apiPath = 'nodes/' + guid + '/comments/'
-    url = api_v2_url(apiPath)
-    auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
-
-    try:
-        nodeType = AbstractNode.objects.get(guids___id=guid).target_type
-    except ObjectDoesNotExist:
-        nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
-
-    commentReqBody = {
-                'data': {
-                    'type': 'comments',
-                    'attributes': {
-                        'content': content
-                    },
-                    'relationships': {
-                        'target': {
-                            'data': {
-                                'type': nodeType,
-                                'id': guid
-                            }
-                        }
-                    }
-                }
-            }
-
-    req_headers={
-        'Content-type':'application/json',
-        'authorization': auth_headers
-    }
-
-    response = requests.post(
-        url,
-        json=commentReqBody,
-        headers=req_headers
-    )
-    logger.info('response:::' + str(vars(response)))
-    logger.info('status::' + str(response.status_code))
-
-    commentInfo = response.json()
-    comment_id = commentInfo["data"]['id']
-
-    return {
-            'commentId': comment_id,
-            'content': content,
-            'guid': guid,
-            }
-
-@must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_register_web_meeting_apps_email(**kwargs):
