@@ -642,18 +642,17 @@ def integromat_watch_comment(**kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_add_comment(**kwargs):
 
-    logger.info('add_comment 1')
-
     guid = request.get_json().get('guid')
     content = request.get_json().get('content')
-    logger.info('add_comment 2')
+
     apiPath = 'nodes/' + guid + '/comments/'
     url = api_v2_url(apiPath)
-    logger.info('api_url:::' + str(url))
-
     auth_headers = request.headers.environ['HTTP_AUTHORIZATION']
 
-    logger.info('add_comment 3')
+    try:
+        nodeType = AbstractNode.objects.get(guids___id=guid).target_type
+    except ObjectDoesNotExist:
+        nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
 
     commentReqBody = {
                 'data': {
@@ -664,7 +663,7 @@ def integromat_add_comment(**kwargs):
                     'relationships': {
                         'target': {
                             'data': {
-                                'type': 'nodes',
+                                'type': nodeType,
                                 'id': guid
                             }
                         }
@@ -677,14 +676,11 @@ def integromat_add_comment(**kwargs):
         'authorization': auth_headers
     }
 
-    logger.info('add_comment 4')
-
     response = requests.post(
         url,
         json=commentReqBody,
         headers=req_headers
     )
-    logger.info('add_comment 5')
     logger.info('response:::' + str(vars(response)))
     logger.info('status::' + str(response.status_code))
 
@@ -694,7 +690,7 @@ def integromat_add_comment(**kwargs):
     return {
             'commentId': comment_id,
             'content': content,
-            'gud': guid,
+            'guid': guid,
             }
 
 @must_be_valid_project
