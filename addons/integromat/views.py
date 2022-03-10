@@ -613,7 +613,7 @@ def integromat_link_to_node(**kwargs):
         qsNodeFileWebappMap = models.NodeFileWebappMap(slack_channel_id=slack_channel_id, node_file_guid=guid)
         qsNodeFileWebappMap.save()
     except Exception as e:
-        logger.info(str(e))
+        logger.info(str(vars(e)))
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='test'))
 
     return {}
