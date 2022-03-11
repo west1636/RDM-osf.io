@@ -585,6 +585,7 @@ def integromat_get_node(*args, **kwargs):
         reqBody = {
             'title': title,
             'slackChannelId': slack_channel_id,
+            'guid': guid
             'rootGuid': root_guid
             }
 
@@ -596,9 +597,13 @@ def integromat_get_node(*args, **kwargs):
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
         except ObjectDoesNotExist:
             nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
+            targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
+            targetNode = AbstractNode.objects.get(id=targetObjectId)
+            root_guid = utils.get_guid(targetNode)
 
         reqBody = {
-            'guid': guid
+            'guid': guid,
+            'rootGuid': root_guid
             }
 
     reqBody['nodeType'] = nodeType
