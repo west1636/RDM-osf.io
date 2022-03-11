@@ -569,7 +569,10 @@ def integromat_get_node(*args, **kwargs):
             except ObjectDoesNotExist:
                 slack_channel_id = ''
         except ObjectDoesNotExist:
-            nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
+            try:
+                nodeType = BaseFileNode.objects.get(guids___id=guid).target_type
+            except ObjectDoesNotExist as e:
+                raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='GUID does not exixt.'))
             title = BaseFileNode.objects.get(guids___id=guid).name
             targetObjectId = BaseFileNode.objects.get(guids___id=guid).target_object_id
             targetNode = AbstractNode.objects.get(id=targetObjectId)
@@ -613,7 +616,7 @@ def integromat_link_to_node(**kwargs):
     try:
         qsNodeFileWebappMap.save()
     except ValidationError as e:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Check your GUID or Slack Channel ID'))
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Check your GUID or Slack Channel ID.'))
 
     return {}
 
@@ -623,7 +626,11 @@ def integromat_link_to_node(**kwargs):
 def integromat_watch_comment(**kwargs):
 
     guid = request.get_json().get('guid')
-    rootTargetId = Guid.objects.get(_id=guid)
+    try
+        rootTargetId = Guid.objects.get(_id=guid)
+    except ObjectDoesNotExist as e:
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='GUID does not exixt.'))
+
     updatedComments = Comment.objects.filter(root_target_id=rootTargetId)
     updatedCommentsJson = serializers.serialize('json', updatedComments, ensure_ascii=False)
     updatedCommentsDict = json.loads(updatedCommentsJson)
