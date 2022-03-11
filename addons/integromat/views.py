@@ -635,7 +635,9 @@ def integromat_watch_comment(**kwargs):
     updatedCommentsJson = serializers.serialize('json', updatedComments, ensure_ascii=False)
     updatedCommentsDict = json.loads(updatedCommentsJson)
     qsSlackChannelId = models.NodeFileWebappMap.objects.filter(node_file_guid=guid)
-    slack_channel_id = qsSlackChannelId.slack_channel_id if len(qsSlackChannelId) > 0 else None
+    qsSlackChannelIdJson = serializers.serialize('json', qsSlackChannelId, ensure_ascii=False)
+    qsSlackChannelIdDict = json.loads(qsSlackChannelIdJson)
+    slack_channel_id = qsSlackChannelIdDict[0]['fields']['slack_channel_id'] if len(qsSlackChannelId) == 1 else None
     retComments = {'guid': guid, 'slackChannelId': slack_channel_id, 'data': []}
 
     for comment in updatedCommentsDict:
