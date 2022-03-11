@@ -607,15 +607,13 @@ def integromat_get_node(*args, **kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_link_to_node(**kwargs):
 
-    try:
         guid = request.get_json().get('guid')
         slack_channel_id = request.get_json().get('slackChannelId')
         qsNodeFileWebappMap = models.NodeFileWebappMap(slack_channel_id=slack_channel_id, node_file_guid=guid)
-        qsNodeFileWebappMap.save()
-    except ValidationError as e:
-        logger.info('e::' + str(e))
-        logger.info('vars e:::' +str(vars(e)))
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='test'))
+        try:
+            qsNodeFileWebappMap.save()
+        except ValidationError as e:
+            raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Check your GUID or Slack Channel ID'))
 
     return {}
 
