@@ -626,7 +626,7 @@ def integromat_link_to_node(**kwargs):
 def integromat_watch_comment(**kwargs):
 
     guid = request.get_json().get('guid')
-    try
+    try:
         rootTargetId = Guid.objects.get(_id=guid)
     except ObjectDoesNotExist as e:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='GUID does not exixt.'))
