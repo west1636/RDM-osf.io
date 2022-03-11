@@ -607,13 +607,13 @@ def integromat_get_node(*args, **kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def integromat_link_to_node(**kwargs):
 
-        guid = request.get_json().get('guid')
-        slack_channel_id = request.get_json().get('slackChannelId')
-        qsNodeFileWebappMap = models.NodeFileWebappMap(slack_channel_id=slack_channel_id, node_file_guid=guid)
-        try:
-            qsNodeFileWebappMap.save()
-        except ValidationError as e:
-            raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Check your GUID or Slack Channel ID'))
+    guid = request.get_json().get('guid')
+    slack_channel_id = request.get_json().get('slackChannelId')
+    qsNodeFileWebappMap = models.NodeFileWebappMap(slack_channel_id=slack_channel_id, node_file_guid=guid)
+    try:
+        qsNodeFileWebappMap.save()
+    except ValidationError as e:
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Check your GUID or Slack Channel ID'))
 
     return {}
 
@@ -627,7 +627,8 @@ def integromat_watch_comment(**kwargs):
     updatedComments = Comment.objects.filter(root_target_id=rootTargetId)
     updatedCommentsJson = serializers.serialize('json', updatedComments, ensure_ascii=False)
     updatedCommentsDict = json.loads(updatedCommentsJson)
-    slack_channel_id = models.NodeFileWebappMap.objects.get(node_file_guid=guid).slack_channel_id
+    qsSlackChannelId = models.NodeFileWebappMap.objects.filter(node_file_guid=guid)
+    slack_channel_id = qsSlackChannelId.slack_channel_id if len(qsSlackChannelId) > 0 else None
     retComments = {'guid': guid, 'slackChannelId': slack_channel_id, 'data': []}
 
     for comment in updatedCommentsDict:
