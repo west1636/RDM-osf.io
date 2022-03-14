@@ -585,7 +585,7 @@ def integromat_get_node(*args, **kwargs):
         reqBody = {
             'title': title,
             'slackChannelId': slack_channel_id,
-            'guid': guid
+            'guid': guid,
             'rootGuid': root_guid
             }
 
