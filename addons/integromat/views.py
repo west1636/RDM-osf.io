@@ -591,7 +591,12 @@ def integromat_get_node(*args, **kwargs):
 
     if slackChannelId and not guid:
 
-        guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
+
+
+        try:
+            guid = models.NodeFileWebappMap.objects.get(slack_channel_id=slackChannelId).node_file_guid
+        except ObjectDoesNotExist:
+            raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(message_short='Slack Channel ID does not registered.'))
 
         try:
             nodeType = AbstractNode.objects.get(guids___id=guid).target_type
