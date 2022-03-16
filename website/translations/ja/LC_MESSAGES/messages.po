@@ -20,7 +20,7 @@ msgstr ""
 
 #: addons/azureblobstorage/templates/azureblobstorage_credentials_modal.mako:6
 msgid "Connect an Azure Blob Storage Account"
-msgstr "Azure Blob Storageアカウントを接続する"
+msgstr "Azure Blob Storageアカウントを接続するt"
 
 #: addons/azureblobstorage/templates/azureblobstorage_credentials_modal.mako:17
 msgid "Account Name"
