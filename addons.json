@@ -28,7 +28,8 @@
         "iqbrims",
         "dropboxbusiness",
         "integromat",
-        "addonone"
+        "addonone",
+        "addontwo"
     ],
     "addons_default": [
         "osfstorage",
@@ -121,7 +122,8 @@
         "nextcloudinstitutions": "Nextcloud for Institutions is a file storage add-on for Institutions. Connect your Nextcloud account to a GakuNin RDM project to interact with files hosted on Nextcloud via the GakuNin RDM.",
         "dropboxbusiness": "Dropbox Business for Institutions is a file storage add-on for Institutions. Connect your Dropbox Business administrator account to a GakuNin RDM project to interact with files hosted on Dropbox via the GakuNin RDM.",
         "integromat": "Integromat is a service that connects web services such as Twitter and Slack to connect an automated workflow.",
-        "addonone": "addon one"
+        "addonone": "addon one",
+        "addontwo": "addon two"
     },
     "addons_url": {
         "box": "http://www.box.com",
@@ -146,6 +148,7 @@
         "iqbrims": "https://drive.google.com",
         "dropboxbusiness": "http://www.dropbox.com",
         "integromat": "https://www.integromat.com/",
-        "addonone": "addon one"
+        "addonone": "addon one",
+        "addontwo": "addontwo"
     }
 }
