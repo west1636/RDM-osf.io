@@ -43,7 +43,7 @@
                         <!-- Add-on tabs  -->
                         % for addon in addons_enabled:
 
-                            % if addon != 'integromat' and addon != 'binderhub' and addons[addon]['has_page']:
+                            % if addon != 'make' and addon != 'binderhub' and addons[addon]['has_page']:
                                 <li>
                                     <a href="${node['url']}${addons[addon]['short_name']}">
 
@@ -87,13 +87,13 @@
                             <li><a href="${node['url']}addons/">${ _("Add-ons") }</a></li>
                         % endif
 
-                        % if 'integromat' in addons_enabled and addons['integromat']['has_page']:
+                        % if 'make' in addons_enabled and addons['make']['has_page']:
                             <li>
-                                <a href="${node['url']}${addons['integromat']['tab_path']}">
-                                    % if addons['integromat']['icon'] and addons['integromat']['has_page_icon']:
-                                        <img src="${addons['integromat']['icon']}" class="addon-logo"/>
+                                <a href="${node['url']}${addons['make']['tab_path']}">
+                                    % if addons['make']['icon'] and addons['make']['has_page_icon']:
+                                        <img src="${addons['make']['icon']}" class="addon-logo"/>
                                     % endif
-                                    ${_(addons['integromat']['tab_name'])}
+                                    ${_(addons['make']['tab_name'])}
                                 </a>
                             </li>
                         % endif

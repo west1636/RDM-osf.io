@@ -6,11 +6,11 @@ import json
 import time
 import pytz
 from datetime import datetime, timedelta
-from addons.integromat import SHORT_NAME, FULL_NAME
+from addons.make import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
-from addons.integromat.serializer import IntegromatSerializer
+from addons.make.serializer import MakeSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
@@ -24,9 +24,9 @@ from website.project.decorators import (
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from website.ember_osf_web.views import use_ember_app
 from api.base.utils import waterbutler_api_url_for
-from addons.integromat import settings
-from addons.integromat import models
-from addons.integromat import utils
+from addons.make import settings
+from addons.make import models
+from addons.make import utils
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
@@ -34,28 +34,28 @@ from admin.rdm import utils as rdm_utils
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 logger = logging.getLogger(__name__)
 
-integromat_account_list = generic_views.account_list(
+make_account_list = generic_views.account_list(
     SHORT_NAME,
-    IntegromatSerializer
+    MakeSerializer
 )
 
-integromat_get_config = generic_views.get_config(
+make_get_config = generic_views.get_config(
     SHORT_NAME,
-    IntegromatSerializer
+    MakeSerializer
 )
 
-integromat_import_auth = generic_views.import_auth(
+make_import_auth = generic_views.import_auth(
     SHORT_NAME,
-    IntegromatSerializer
+    MakeSerializer
 )
 
-integromat_deauthorize_node = generic_views.deauthorize_node(
+make_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
 
 @must_be_logged_in
 @must_be_rdm_addons_allowed(SHORT_NAME)
-def integromat_add_user_account(auth, **kwargs):
+def make_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
     try:
@@ -257,7 +257,7 @@ def grdmapps_set_config_ember(**kwargs):
                      }}}
 
 #api for Integromat action
-def integromat_api_call(*args, **kwargs):
+def make_api_call(*args, **kwargs):
 
     auth = Auth.from_kwargs(request.args.to_dict(), kwargs)
     user = auth.user
@@ -274,7 +274,7 @@ def integromat_api_call(*args, **kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_get_file_id(auth, **kwargs):
+def make_get_file_id(auth, **kwargs):
 
     node = kwargs['node'] or kwargs['project']
 
@@ -301,7 +301,7 @@ def integromat_get_file_id(auth, **kwargs):
 
     return {'filePath': file_path}
 
-def integromat_get_node(*args, **kwargs):
+def make_get_node(*args, **kwargs):
     auth = Auth.from_kwargs(request.args.to_dict(), kwargs)
     user = auth.user
     logger.info('auth:' + str(user))
@@ -385,7 +385,7 @@ def integromat_get_node(*args, **kwargs):
 @must_be_valid_project
 @must_have_permission(ADMIN)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_link_to_node(**kwargs):
+def make_link_to_node(**kwargs):
 
     guid = request.get_json().get('guid')
     slack_channel_id = request.get_json().get('slackChannelId')
@@ -400,7 +400,7 @@ def integromat_link_to_node(**kwargs):
 @must_be_valid_project
 @must_have_permission(ADMIN)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_watch_comment(**kwargs):
+def make_watch_comment(**kwargs):
 
     guid = request.get_json().get('guid')
     try:
@@ -430,7 +430,7 @@ def integromat_watch_comment(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_register_web_meeting_apps_email(**kwargs):
+def make_register_web_meeting_apps_email(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -583,7 +583,7 @@ def register_instituion_users_zoom_attendees(nodeSettings, attendees):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_start_scenario(**kwargs):
+def make_start_scenario(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -611,7 +611,7 @@ def integromat_start_scenario(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_req_next_msg(**kwargs):
+def make_req_next_msg(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -655,7 +655,7 @@ def integromat_req_next_msg(**kwargs):
 @must_be_valid_project
 @must_have_permission(ADMIN)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_register_alternative_webhook_url(**kwargs):
+def make_register_alternative_webhook_url(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -683,7 +683,7 @@ def integromat_register_alternative_webhook_url(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_info_msg(**kwargs):
+def make_info_msg(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -695,7 +695,7 @@ def integromat_info_msg(**kwargs):
     node = models.NodeSettings.objects.get(_id=nodeId)
 
     wem = models.WorkflowExecutionMessages(
-        integromat_msg=msg,
+        make_msg=msg,
         timestamp=timestamp,
         node_settings_id=node.id,
     )
@@ -706,7 +706,7 @@ def integromat_info_msg(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_error_msg(**kwargs):
+def make_error_msg(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -729,7 +729,7 @@ def integromat_error_msg(**kwargs):
 @must_be_valid_project
 @must_have_permission(READ)
 @must_have_addon(SHORT_NAME, 'node')
-def integromat_get_meetings(**kwargs):
+def make_get_meetings(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)

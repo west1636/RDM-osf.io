@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Routes for the integromat addon.
+"""Routes for the make addon.
 """
 
 from framework.routing import Rule, json_renderer
 from website.routes import notemplate
 
-from addons.integromat import views
+from addons.make import views
 
-TEMPLATE_DIR = './addons/integromat/templates/'
+TEMPLATE_DIR = './addons/make/templates/'
 
 # HTML endpoints
 page_routes = {
@@ -33,55 +33,55 @@ api_routes = {
     'rules': [
 
         Rule(
-            '/settings/integromat/accounts/',
+            '/settings/make/accounts/',
             'post',
-            views.integromat_add_user_account,
+            views.make_add_user_account,
             json_renderer,
         ),
 
         Rule(
             [
-                '/settings/integromat/accounts/',
+                '/settings/make/accounts/',
             ],
             'get',
-            views.integromat_account_list,
+            views.make_account_list,
             json_renderer,
         ),
 
         Rule(
             [
-                '/project/<pid>/integromat/settings/',
-                '/project/<pid>/node/<nid>/integromat/settings/'
+                '/project/<pid>/make/settings/',
+                '/project/<pid>/node/<nid>/make/settings/'
             ],
             'get',
-            views.integromat_get_config,
+            views.make_get_config,
             json_renderer,
         ),
 
         Rule(
             [
-                '/project/<pid>/integromat/user_auth/',
-                '/project/<pid>/node/<nid>/integromat/user_auth/'
+                '/project/<pid>/make/user_auth/',
+                '/project/<pid>/node/<nid>/make/user_auth/'
             ],
             'put',
-            views.integromat_import_auth,
+            views.make_import_auth,
             json_renderer,
         ),
 
         Rule(
             [
-                '/project/<pid>/integromat/user_auth/',
-                '/project/<pid>/node/<nid>/integromat/user_auth/'
+                '/project/<pid>/make/user_auth/',
+                '/project/<pid>/node/<nid>/make/user_auth/'
             ],
             'delete',
-            views.integromat_deauthorize_node,
+            views.make_deauthorize_node,
             json_renderer,
         ),
         #route for Integromat action
         Rule(
             '/integromat/integromat_api_call',
             'get',
-            views.integromat_api_call,
+            views.make_api_call,
             json_renderer,
         ),
 
@@ -91,14 +91,14 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/get_file_id',
             ],
             'post',
-            views.integromat_get_file_id,
+            views.make_get_file_id,
             json_renderer,
         ),
 
         Rule(
             '/integromat/get_node',
             'post',
-            views.integromat_get_node,
+            views.make_get_node,
             json_renderer,
         ),
 
@@ -108,7 +108,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/link_to_node',
             ],
             'post',
-            views.integromat_link_to_node,
+            views.make_link_to_node,
             json_renderer,
         ),
 
@@ -118,7 +118,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/watch_comment',
             ],
             'post',
-            views.integromat_watch_comment,
+            views.make_watch_comment,
             json_renderer,
         ),
 
@@ -128,7 +128,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/start_scenario',
             ],
             'post',
-            views.integromat_start_scenario,
+            views.make_start_scenario,
             json_renderer,
         ),
 
@@ -138,7 +138,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/requestNextMessages',
             ],
             'post',
-            views.integromat_req_next_msg,
+            views.make_req_next_msg,
             json_renderer,
         ),
 
@@ -148,7 +148,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/register_alternative_webhook_url',
             ],
             'post',
-            views.integromat_register_alternative_webhook_url,
+            views.make_register_alternative_webhook_url,
             json_renderer,
         ),
 
@@ -158,7 +158,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/register_web_meeting_apps_email',
             ],
             'post',
-            views.integromat_register_web_meeting_apps_email,
+            views.make_register_web_meeting_apps_email,
             json_renderer,
         ),
 
@@ -168,7 +168,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/info_msg',
             ],
             'post',
-            views.integromat_info_msg,
+            views.make_info_msg,
             json_renderer,
         ),
 
@@ -178,7 +178,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/error_msg',
             ],
             'post',
-            views.integromat_error_msg,
+            views.make_error_msg,
             json_renderer,
         ),
 
@@ -188,7 +188,7 @@ api_routes = {
                 '/project/<pid>/node/<nid>/integromat/get_meetings',
             ],
             'get',
-            views.integromat_get_meetings,
+            views.make_get_meetings,
             json_renderer,
         ),
 

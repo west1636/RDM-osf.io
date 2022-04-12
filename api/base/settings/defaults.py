@@ -373,9 +373,9 @@ ADDONS_OAUTH.append('s3compatb3')
 INSTALLED_APPS += ('addons.nextcloud',)
 ADDONS_FOLDER_CONFIGURABLE.append('nextcloud')
 ADDONS_OAUTH.append('nextcloud')
-INSTALLED_APPS += ('addons.integromat',)
-ADDONS_FOLDER_CONFIGURABLE.append('integromat')
-ADDONS_OAUTH.append('integromat')
+INSTALLED_APPS += ('addons.make',)
+ADDONS_FOLDER_CONFIGURABLE.append('make')
+ADDONS_OAUTH.append('make')
 
 TST_COMMAND_DELIMITER = ' '
 # RSA key generation settings

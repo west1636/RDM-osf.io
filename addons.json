@@ -32,7 +32,7 @@
         "binderhub",
         "onedrivebusiness",
         "metadata",
-        "integromat"
+        "make"
     ],
     "addons_default": [
         "osfstorage",
@@ -67,7 +67,7 @@
         "iqbrims": "partial",
         "dropboxbusiness": "partial",
         "onedrivebusiness": "partial",
-        "integromat": "partial"
+        "make": "partial"
     },
     "addons_commentable": [
         "osfstorage",
@@ -95,7 +95,7 @@
         "iqbrims",
         "dropboxbusiness",
         "onedrivebusiness",
-        "integromat"
+        "make"
     ],
     "addons_based_on_ids": [
         "osfstorage",
@@ -138,7 +138,7 @@
         "binderhub": "BinderHub is a web-based interactive computational environment. Files on a GakuNin RDM project can be imported to/exported from BinderHub",
         "onedrivebusiness": "OneDrive for Office365 is a file storage add-on. Connect your Microsoft OneDrive account to a GakuNin RDM project to interact with files hosted on Microsoft OneDrive via the GakuNin RDM.",
         "metadata": "Metadata addon is ...",
-        "integromat": "Integromat is a service that connects web services such as Twitter and Slack to connect an automated workflow."
+        "make": "Make is a service that connects web services such as Twitter and Slack to connect an automated workflow."
     },
     "addons_url": {
         "box": "http://www.box.com",
@@ -166,6 +166,6 @@
         "binderhub": "https://binder.cs.rcos.nii.ac.jp",
         "onedrivebusiness": "https://onedrive.live.com",
         "metadata": "https://dummy.nii.ac.jp/metadata",
-        "integromat": "https://www.integromat.com/"
+        "make": "https://www.make.com/"
     }
 }

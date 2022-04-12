@@ -680,34 +680,34 @@
                 "text": "Metadata information will not be registered."
             }
         },
-        "Integromat": {
+        "Make": {
             "Permissions": {
                 "status": "none",
-                "text": "The GakuNin RDM does not affect the permissions of Integromat."
+                "text": "The GakuNin RDM does not affect the permissions of Make."
             },
             "View / download file versions": {
                 "status": "none",
-                "text": "The Integromat add-on does not provide Storage Features."
+                "text": "The Make add-on does not provide Storage Features."
             },
             "Add / update files": {
                 "status": "none",
-                "text": "The Integromat add-on does not provide Storage Features."
+                "text": "The Make add-on does not provide Storage Features."
             },
             "Delete files": {
                 "status": "none",
-                "text": "The Integromat add-on does not provide Storage Features."
+                "text": "The Make add-on does not provide Storage Features."
             },
             "Logs": {
                 "status": "none",
-                "text": "The Integromat add-on does not provide Storage Features."
+                "text": "The Make add-on does not provide Storage Features."
             },
             "Forking": {
                 "status": "partial",
-                "text": "Forking a project or component copies information about linked Integromat but the GakuNin RDM does not affect authentication of Integromat."
+                "text": "Forking a project or component copies information about linked Make but the GakuNin RDM does not affect authentication of Make."
             },
             "Registering": {
                 "status": "none",
-                "text": "Integromat information will not be registered."
+                "text": "Make information will not be registered."
             }
         }
     },
