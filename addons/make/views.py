@@ -164,26 +164,16 @@ def grdmapps_get_config_ember(**kwargs):
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
     workflowsJson = json.dumps(settings.RDM_WORKFLOW)
-    allWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     webMeetingAppsJson = json.dumps(settings.RDM_WEB_MEETING_APPS)
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
     nodeZoomMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(zoom_meetings_mail__exact='').exclude(zoom_meetings_mail__isnull=True)
-    nodeWorkflows = models.NodeWorkflows.objects.filter(node_settings_id=addon.id)
-    nodeWebMeetingsAttendeesRelation = models.AllMeetingInformationAttendeesRelation.objects.filter(all_meeting_information__node_settings_id=addon.id)
 
-    allWebMeetingsJson = serializers.serialize('json', allWebMeetings, ensure_ascii=False)
-    upcomingWebMeetingsJson = serializers.serialize('json', upcomingWebMeetings, ensure_ascii=False)
-    previousWebMeetingsJson = serializers.serialize('json', previousWebMeetings, ensure_ascii=False)
     nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
     nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
-    nodeWorkflowsJson = serializers.serialize('json', nodeWorkflows, ensure_ascii=False)
-    nodeWebMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebMeetingsAttendeesRelation, ensure_ascii=False)
 
     institutionId = rdm_utils.get_institution_id(user)
     users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
@@ -193,16 +183,11 @@ def grdmapps_get_config_ember(**kwargs):
     return {'data': {'id': node._id, 'type': 'grdmapps-config',
                      'attributes': {
                          'node_settings_id': addon._id,
-                         'all_web_meetings': allWebMeetingsJson,
-                         'upcoming_web_meetings': upcomingWebMeetingsJson,
-                         'previous_web_meetings': previousWebMeetingsJson,
                          'node_attendees_all': nodeAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
-                         'node_web_meetings_attendees_relation': nodeWebMeetingsAttendeesRelationJson,
                          'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
                          'workflows': workflowsJson,
-                         'node_workflows': nodeWorkflowsJson,
                          'web_meeting_apps': webMeetingAppsJson,
                          'app_name_microsoft_teams': settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': settings.WEBEX_MEETINGS,
@@ -218,25 +203,15 @@ def grdmapps_set_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
-    allWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousWebMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
     nodeZoomMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(zoom_meetings_mail__exact='').exclude(zoom_meetings_mail__isnull=True)
-    nodeWorkflows = models.NodeWorkflows.objects.filter(node_settings_id=addon.id)
-    nodeWebMeetingsAttendeesRelation = models.AllMeetingInformationAttendeesRelation.objects.filter(all_meeting_information__node_settings_id=addon.id)
 
-    allWebMeetingsJson = serializers.serialize('json', allWebMeetings, ensure_ascii=False)
-    upcomingWebMeetingsJson = serializers.serialize('json', upcomingWebMeetings, ensure_ascii=False)
-    previousWebMeetingsJson = serializers.serialize('json', previousWebMeetings, ensure_ascii=False)
     nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
     nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
-    nodeWorkflowsJson = serializers.serialize('json', nodeWorkflows, ensure_ascii=False)
-    nodeWebMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebMeetingsAttendeesRelation, ensure_ascii=False)
 
     institutionId = rdm_utils.get_institution_id(user)
     users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
@@ -244,15 +219,10 @@ def grdmapps_set_config_ember(**kwargs):
 
     return {'data': {'id': node._id, 'type': 'grdmapps-config',
                      'attributes': {
-                         'all_web_meetings': allWebMeetingsJson,
-                         'upcoming_web_meetings': upcomingWebMeetingsJson,
-                         'previous_web_meetings': previousWebMeetingsJson,
                          'node_attendees_all': nodeAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
-                         'node_web_meetings_attendees_relation': nodeWebMeetingsAttendeesRelationJson,
                          'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
-                         'node_workflows': nodeWorkflowsJson,
                          'institution_users': institutionUsers
                      }}}
 
