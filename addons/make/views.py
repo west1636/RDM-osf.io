@@ -59,7 +59,7 @@ def make_add_user_account(auth, **kwargs):
     """Verifies new external account credentials and adds to user's list"""
 
     try:
-        access_token = request.json.get('integromat_api_token')
+        access_token = request.json.get('make_api_token')
 
     except KeyError:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
