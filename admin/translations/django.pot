@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.6.0\n"
 "Report-Msgid-Bugs-To: rocs-office@nii.ac.jp\n"
-"POT-Creation-Date: 2022-03-07 16:24+0900\n"
+"POT-Creation-Date: 2022-04-14 14:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Shunta Nishikawa\n"
 "Language-Team: RCOS <rocs-office@nii.ac.jp>\n"
@@ -203,7 +203,7 @@ msgstr ""
 #: templates/rdm_custom_storage_location/providers/osfstorage_modal.html:22
 #: templates/rdm_custom_storage_location/providers/owncloud_modal.html:55
 #: templates/rdm_custom_storage_location/providers/s3_modal.html:38
-#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:51
+#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:49
 #: templates/rdm_custom_storage_location/providers/s3compatinstitutions_modal.html:42
 #: templates/rdm_custom_storage_location/providers/swift_modal.html:59
 msgid "Save"
@@ -1698,7 +1698,7 @@ msgstr ""
 #: templates/rdm_custom_storage_location/providers/osfstorage_modal.html:21
 #: templates/rdm_custom_storage_location/providers/owncloud_modal.html:53
 #: templates/rdm_custom_storage_location/providers/s3_modal.html:36
-#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:49
+#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:47
 #: templates/rdm_custom_storage_location/providers/s3compatinstitutions_modal.html:40
 #: templates/rdm_custom_storage_location/providers/swift_modal.html:57
 #: templates/rdm_timestampadd/node_list.html:124
@@ -2347,7 +2347,7 @@ msgstr ""
 #: templates/rdm_custom_storage_location/providers/onedrivebusiness_modal.html:54
 #: templates/rdm_custom_storage_location/providers/owncloud_modal.html:54
 #: templates/rdm_custom_storage_location/providers/s3_modal.html:37
-#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:50
+#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:48
 #: templates/rdm_custom_storage_location/providers/s3compatinstitutions_modal.html:41
 #: templates/rdm_custom_storage_location/providers/swift_modal.html:58
 msgid "Connect"
@@ -2542,10 +2542,6 @@ msgstr ""
 
 #: templates/rdm_custom_storage_location/providers/s3compat_modal.html:36
 msgid "Yes@institutional_storage"
-msgstr ""
-
-#: templates/rdm_custom_storage_location/providers/s3compat_modal.html:37
-msgid "No@institutional_storage"
 msgstr ""
 
 #: templates/rdm_custom_storage_location/providers/swift_modal.html:8
