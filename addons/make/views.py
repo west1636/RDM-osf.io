@@ -90,7 +90,7 @@ def make_add_user_account(auth, **kwargs):
     except ValidationError:
         # ... or get the old one
         account = ExternalAccount.objects.get(
-            provider='integromat', provider_id=integromat_userid
+            provider='make', provider_id=integromat_userid
         )
         if account.oauth_key != access_token:
             account.oauth_key = access_token
@@ -100,7 +100,7 @@ def make_add_user_account(auth, **kwargs):
 
         user.external_accounts.add(account)
 
-    user.get_or_add_addon('integromat', auth=auth)
+    user.get_or_add_addon('make', auth=auth)
 
     user.save()
 
