@@ -10,7 +10,7 @@ from addons.zoommeetings import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
-from addons.zoommeetings.serializer import ZoommeetingsSerializer
+from addons.zoommeetings.serializer import ZoomMeetingsSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
