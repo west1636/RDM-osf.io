@@ -172,5 +172,5 @@ function ZoomMeetingsUserConfig(selector, url) {
 
 module.exports = {
     ZoomMeetingsViewModel: ViewModel,
-    ZoomMeetingsUserConfig: ZoomeMeetingsUserConfig
+    ZoomMeetingsUserConfig: ZoomMeetingsUserConfig
 };

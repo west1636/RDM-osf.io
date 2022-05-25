@@ -74,7 +74,7 @@ def zoommeetings_add_user_account(auth, **kwargs):
     if not user_info:
         return {
             'message': ('Unable to access account.\n'
-                'Check to make sure that the above credentials are valid, ')
+                'Check to make sure that the above credentials are valid.')
         }, http_status.HTTP_400_BAD_REQUEST
 
     account = None
