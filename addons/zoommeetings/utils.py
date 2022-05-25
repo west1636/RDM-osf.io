@@ -31,6 +31,9 @@ def get_user_info(user_id, jwt_token):
     responseData = response.json()
     userInfo = []
 
+    logger.info(str(responseData))
+    logger.info(str(status_code))
+
     if status_code != 200:
         if status_code == 404:
             logger.info('Failed to authenticate Zoom account' + '[' + str(status_code) + ']' + ':' + message)
