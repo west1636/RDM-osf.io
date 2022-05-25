@@ -36,17 +36,17 @@ logger = logging.getLogger(__name__)
 
 zoommeetings_account_list = generic_views.account_list(
     SHORT_NAME,
-    ZoommeetingsSerializer
+    ZoomMeetingsSerializer
 )
 
 zoommeetings_get_config = generic_views.get_config(
     SHORT_NAME,
-    ZoommeetingsSerializer
+    ZoomMeetingsSerializer
 )
 
 zoommeetings_import_auth = generic_views.import_auth(
     SHORT_NAME,
-    ZoommeetingsSerializer
+    ZoomMeetingsSerializer
 )
 
 zoommeetings_deauthorize_node = generic_views.deauthorize_node(
