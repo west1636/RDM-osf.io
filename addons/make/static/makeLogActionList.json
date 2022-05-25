@@ -1,5 +1,0 @@
-{
-  "make_node_authorized" : "${user} authorized the Make addon for ${node}",
-  "make_node_deauthorized" : "${user} deauthorized the Make addon for ${node}",
-  "make_node_deauthorized_no_user" : "Make addon for ${node} deauthorized"
-}

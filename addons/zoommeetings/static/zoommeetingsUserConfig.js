@@ -1,5 +1,5 @@
 /**
-* Module that controls the Make user settings. Includes Knockout view-model
+* Module that controls the Zoom Meetings user settings. Includes Knockout view-model
 * for syncing data.
 */
 
@@ -9,7 +9,7 @@ var Raven = require('raven-js');
 var bootbox = require('bootbox');
 require('js/osfToggleHeight');
 
-var language = require('js/osfLanguage').Addons.make;
+var language = require('js/osfLanguage').Addons.zoommeetings;
 var osfHelpers = require('js/osfHelpers');
 var addonSettings = require('js/addonSettings');
 var ChangeMessageMixin = require('js/changeMessage');
@@ -18,18 +18,19 @@ var ExternalAccount = addonSettings.ExternalAccount;
 var _ = require('js/rdmGettext')._;
 var sprintf = require('agh.sprintf').sprintf;
 
-var $modal = $('#makeCredentialsModal');
+var $modal = $('#zoommeetingsCredentialsModal');
 
 function ViewModel(url) {
     var self = this;
 
-    self.properName = 'Make';
+    self.properName = 'Zoom Meetings';
     self.accessKey = ko.observable();
     self.secretKey = ko.observable();
-    self.account_url = '/api/v1/settings/make/accounts/';
+    self.account_url = '/api/v1/settings/zoommeetings/accounts/';
     self.accounts = ko.observableArray();
 
-    self.makeApiToken = ko.observable();
+    self.zoommeetingsEmail = ko.observable();
+    self.zoommeetingsJwtToken = ko.observable();
 
     self.userGuid = ko.observable();
     self.microsoftTeamsUserName = ko.observable();
@@ -40,24 +41,30 @@ function ViewModel(url) {
 
     ChangeMessageMixin.call(self);
 
-    /** Reset all fields from Make credentials input modal */
+    /** Reset all fields from Zoom Meetings credentials input modal */
     self.clearModal = function() {
         self.message('');
         self.messageClass('text-info');
-        self.makeApiToken(null);
+        self.zoommeetingsJwtToken(null);
     };
-    /** Send POST request to authorize Make */
+    /** Send POST request to authorize Zoom Meetings */
     self.connectAccount = function() {
         // Selection should not be empty
-        if (!self.makeApiToken() ){
+        if (!self.zoommeetingsJwtToken() ){
+            self.changeMessage('Please enter an API token.', 'text-danger');
+            return;
+        }
+        if (!self.zoommeetingsJwtToken() ){
             self.changeMessage('Please enter an API token.', 'text-danger');
             return;
         }
 
+
         return osfHelpers.postJSON(
             self.account_url,
             ko.toJS({
-                make_api_token: self.makeApiToken(),
+                zoommeetings_email: self.zoommeetingsEmail(),
+                zoommeetings_jwt_token: self.zoommeetingsJwtToken(),
             })
         ).done(function() {
             self.clearModal();
@@ -67,7 +74,7 @@ function ViewModel(url) {
         }).fail(function(xhr, textStatus, error) {
             var errorMessage = (xhr.status === 400 && xhr.responseJSON.message !== undefined) ? xhr.responseJSON.message : 'auth error';
             self.changeMessage(errorMessage, 'text-danger');
-            Raven.captureMessage('Could not authenticate with Make', {
+            Raven.captureMessage('Could not authenticate with Zoom Meetings', {
                 extra: {
                     url: self.account_url,
                     textStatus: textStatus,
@@ -85,10 +92,11 @@ function ViewModel(url) {
         }).done(function (data) {
             self.accounts($.map(data.accounts, function(account) {
                 var externalAccount =  new ExternalAccount(account);
-                externalAccount.makeApiToken = account.make_api_token;
+                externalAccount.zoommeetingsEmail = account.zoommeetingsEmail;
+                externalAccount.zoommeetingsJwtToken = account.zoommeetings_jwt_token;
                 return externalAccount;
             }));
-            $('#make-header').osfToggleHeight({height: 160});
+            $('#zoommeetings-header').osfToggleHeight({height: 160});
         }).fail(function(xhr, status, error) {
             self.changeMessage('user setting error', 'text-danger');
             Raven.captureMessage('Error while updating addon account', {
@@ -104,8 +112,8 @@ function ViewModel(url) {
     self.askDisconnect = function(account) {
         var self = this;
         bootbox.confirm({
-            title: _('Disconnect Make Account?'),
-            message: sprintf(_('<p class="overflow">Are you sure you want to disconnect the Make account <strong>%1$s</strong>? This will revoke access to Make for all projects associated with this account.</p>'), osfHelpers.htmlEscape(account.name)),
+            title: _('Disconnect Zoom Meetings Account?'),
+            message: sprintf(_('<p class="overflow">Are you sure you want to disconnect the Zoom Meetings account <strong>%1$s</strong>? This will revoke access to Zoom Meetings for all projects associated with this account.</p>'), osfHelpers.htmlEscape(account.name)),
             callback: function (confirm) {
                 if (confirm) {
                     self.disconnectAccount(account);
@@ -152,7 +160,7 @@ function ViewModel(url) {
 
 $.extend(ViewModel.prototype, ChangeMessageMixin.prototype);
 
-function MakeUserConfig(selector, url) {
+function ZoomMeetingsUserConfig(selector, url) {
     // Initialization code
     var self = this;
     self.selector = selector;
@@ -163,6 +171,6 @@ function MakeUserConfig(selector, url) {
 }
 
 module.exports = {
-    MakeViewModel: ViewModel,
-    MakeUserConfig: MakeUserConfig
+    ZoomMeetingsViewModel: ViewModel,
+    ZoomMeetingsUserConfig: ZoomeMeetingsUserConfig
 };

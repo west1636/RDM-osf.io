@@ -373,9 +373,9 @@ ADDONS_OAUTH.append('s3compatb3')
 INSTALLED_APPS += ('addons.nextcloud',)
 ADDONS_FOLDER_CONFIGURABLE.append('nextcloud')
 ADDONS_OAUTH.append('nextcloud')
-INSTALLED_APPS += ('addons.make',)
-ADDONS_FOLDER_CONFIGURABLE.append('make')
-ADDONS_OAUTH.append('make')
+INSTALLED_APPS += ('addons.zoommeetings',)
+ADDONS_FOLDER_CONFIGURABLE.append('zoommeetings')
+ADDONS_OAUTH.append('zoommeetings')
 
 TST_COMMAND_DELIMITER = ' '
 # RSA key generation settings

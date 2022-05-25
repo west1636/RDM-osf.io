@@ -1,6 +1,6 @@
 import os
 from addons.base.apps import BaseAddonAppConfig
-from addons.make import SHORT_NAME, FULL_NAME
+from addons.zoommeetings import SHORT_NAME, FULL_NAME
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.join(
@@ -8,7 +8,7 @@ TEMPLATE_PATH = os.path.join(
     'templates'
 )
 
-class MakeAddonConfig(BaseAddonAppConfig):
+class ZoomMeetingsAddonConfig(BaseAddonAppConfig):
 
     name = 'addons.{}'.format(SHORT_NAME)
     label = 'addons_{}'.format(SHORT_NAME)
@@ -19,11 +19,11 @@ class MakeAddonConfig(BaseAddonAppConfig):
     owners = ['user', 'node']
     configs = ['accounts', 'node']
     has_page_icon = False
-    tab_name = 'Web Apps'
-    tab_path = 'grdmapps'
+    tab_name = 'Zoom Meetings'
+    tab_path = 'zoommeetings'
 
-    node_settings_template = os.path.join(TEMPLATE_PATH, 'make_node_settings.mako')
-    user_settings_template = os.path.join(TEMPLATE_PATH, 'make_user_settings.mako')
+    node_settings_template = os.path.join(TEMPLATE_PATH, 'zoommeetings_node_settings.mako')
+    user_settings_template = os.path.join(TEMPLATE_PATH, 'zoommeetings_user_settings.mako')
 
     # default value for RdmAddonOption.is_allowed for GRDM Admin
     is_allowed_default = False

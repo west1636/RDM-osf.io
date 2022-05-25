@@ -1,15 +1,15 @@
 <!-- Authorization -->
-<div id='makeScope' class='addon-settings addon-generic scripted'
+<div id='zoommeetingsScope' class='addon-settings addon-generic scripted'
      data-addon-short-name="${ addon_short_name }"
      data-addon-name="${ addon_full_name }">
 
-    <%include file="make_credentials_modal.mako"/>
+    <%include file="zoommeetings_credentials_modal.mako"/>
 
     <h4 class="addon-title">
         <img class="addon-icon" src=${addon_icon_url}>
         <span data-bind="text: properName"></span>
         <small>
-            <a href="#makeCredentialsModal" data-toggle="modal" class="pull-right text-primary">${_("Connect or Reauthorize Account")}</a>
+            <a href="#zoommeetingsCredentialsModal" data-toggle="modal" class="pull-right text-primary">${_("Connect or Reauthorize Account")}</a>
         </small>
     </h4>
 

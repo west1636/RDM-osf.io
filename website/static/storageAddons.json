@@ -95,8 +95,8 @@
         "fullName": "OneDrive for Office365",
         "externalView": false
     },
-    "make": {
-        "fullName": "Make",
+    "zoommeetings": {
+        "fullName": "Zoom Meetings",
         "externalView": false
     }
 }

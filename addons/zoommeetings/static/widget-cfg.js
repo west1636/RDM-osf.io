@@ -6,14 +6,14 @@ var ko = require('knockout');
 var Raven = require('raven-js');
 var osfHelpers = require('js/osfHelpers');
 var moment = require('moment');
-var logPrefix = '[make] ';
+var logPrefix = '[zoommeetings] ';
 
-require('./make.css');
+require('./zoommeetings.css');
 
 
-function MakeWidget() {
+function ZoomMeetingsWidget() {
     var self = this;
-    self.baseUrl = window.contextVars.node.urls.api + 'make/';
+    self.baseUrl = window.contextVars.node.urls.api + 'zoommeetings/';
     self.loading = ko.observable(true);
     self.loadFailed = ko.observable(false);
     self.loadCompleted = ko.observable(false);
@@ -80,6 +80,6 @@ function MakeWidget() {
 
 }
 
-var w = new MakeWidget();
-osfHelpers.applyBindings(w, '#make-content');
+var w = new ZoomMeetingsWidget();
+osfHelpers.applyBindings(w, '#zoommeetings-content');
 w.loadConfig();

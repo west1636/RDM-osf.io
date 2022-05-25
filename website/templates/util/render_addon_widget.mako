@@ -3,16 +3,16 @@
     % if addon_data['complete'] or permissions.WRITE in user['permissions']:
         <div class="panel panel-default" name="${addon_data['short_name']}">
             <div class="panel-heading clearfix">
-                % if addon_name != 'make':
+                % if addon_name != 'zoommeetings':
                     <h3 class="panel-title">${addon_data['full_name']}</h3>
-                % elif addon_name == 'make':
+                % elif addon_name == 'zoommeetings':
                     <h3 class="panel-title">${_(addon_data['tab_name'])}</h3>
                 % endif
                 <div class="pull-right">
                     % if addon_data['has_page']:
-                        % if addon_name != 'make':
+                        % if addon_name != 'zoommeetings':
                             <a href="${node['url']}${addon_data['short_name']}"><i class="fa fa-external-link"></i></a>
-                        % elif addon_name == 'make':
+                        % elif addon_name == 'zoommeetings':
                             <a href="${node['url']}${addon_data['tab_path']}"><i class="fa fa-external-link"></i></a>
                         % endif
                     % endif
@@ -240,8 +240,8 @@
                     </div>
                 % endif
 
-                % if addon_name == 'make':
-                    <div id="make-content" class="scripted">
+                % if addon_name == 'zoommeetings':
+                    <div id="zoommeetings-content" class="scripted">
                         <!-- ko if: loading -->
                         <div>${_("Loading")}</div>
                         <!-- /ko -->

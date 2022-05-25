@@ -176,7 +176,7 @@ COPY ./addons/nextcloudinstitutions/static/ ./addons/nextcloudinstitutions/stati
 COPY ./addons/iqbrims/static/ ./addons/iqbrims/static/
 COPY ./addons/binderhub/static/ ./addons/binderhub/static/
 COPY ./addons/metadata/static/ ./addons/metadata/static/
-COPY ./addons/make/static/ ./addons/make/static/
+COPY ./addons/zoom/static/ ./addons/zoommeetings/static/
 RUN \
     # OSF
     yarn install --frozen-lockfile \

@@ -12,7 +12,7 @@ var OauthAddonFolderPicker = require('js/oauthAddonNodeConfig')._OauthAddonNodeC
 var _ = require('js/rdmGettext')._;
 var sprintf = require('agh.sprintf').sprintf;
 
-var MakeFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
+var ZoomMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
     constructor: function(addonName, url, selector, folderPicker, opts, tbOpts) {
         var self = this;
         // TODO: [OSF-7069]
@@ -20,33 +20,34 @@ var MakeFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         self.super.construct.call(self, addonName, url, selector, folderPicker, opts, tbOpts);
 
         // Non-OAuth fields
-        self.makeApiToken = ko.observable();
-        self.userGuid = ko.observable();
-        self.microsoftTeamsUserName = ko.observable();
-        self.microsoftTeamsMail = ko.observable();
-        self.webexMeetingsDisplayName = ko.observable();
-        self.webexMeetingsMail = ko.observable();
-        self.userGuidToDelete = ko.observable();
+        self.zoommeetingsEmail = ko.observable();
+        self.zoommeetingsJwtToken = ko.observable();
 
     },
 
     connectAccount: function() {
         var self = this;
-        if (!self.makeApiToken() ){
+        if (!self.zoommeetingsEmail() ){
             self.changeMessage(_('Please enter an API token.'), 'text-danger');
             return;
         }
+        if (!self.zoommeetingsJwtToken() ){
+            self.changeMessage(_('Please enter an API token.'), 'text-danger');
+            return;
+        }
+
         $osf.block();
 
         return $osf.postJSON(
             self.urls().create, {
-                make_api_token: self.makeApiToken(),
+                zoommeetings_email: self.zoommeetingsEmail(),
+                zoommeetings_jwt_token: self.zoommeetingsJwtToken(),
             }
         ).done(function(response) {
             $osf.unblock();
             self.clearModal();
-            $('#makeCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Make credentials.'), 'text-success', null, true);
+            $('#zoommeetingsCredentialsModal').modal('hide');
+            self.changeMessage(_('Successfully added Zoom Meetings credentials.'), 'text-success', null, true);
             self.updateFromData(response);
             self.importAuth();
         }).fail(function(xhr, status, error) {
@@ -57,7 +58,7 @@ var MakeFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 message = response.message;
             }
             self.changeMessage(message, 'text-danger');
-            Raven.captureMessage(_('Could not add Make credentials'), {
+            Raven.captureMessage(_('Could not add Zoom Meetings credentials'), {
                 extra: {
                     url: self.urls().importAuth,
                     textStatus: status,
@@ -67,28 +68,29 @@ var MakeFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         });
     },
 
-    /** Reset all fields from Make credentials input modal */
+    /** Reset all fields from Zoom Meetings credentials input modal */
     clearModal: function() {
         var self = this;
         self.message('');
         self.messageClass('text-info');
-        self.makeApiToken(null);
+        self.zoommeetingsEmail(null);
+        self.zoommeetingsJwtToken(null);
     },
 });
 
 // Public API
-function MakeNodeConfig(addonName, selector, url, folderPicker, opts, tbOpts) {
+function ZoomMeetingsNodeConfig(addonName, selector, url, folderPicker, opts, tbOpts) {
     var self = this;
     self.url = url;
     self.folderPicker = folderPicker;
     opts = opts || {};
     tbOpts = tbOpts || {};
-    self.viewModel = new MakeFolderPickerViewModel(addonName, url, selector, folderPicker, opts, tbOpts);
+    self.viewModel = new ZoomMeetingsFolderPickerViewModel(addonName, url, selector, folderPicker, opts, tbOpts);
     self.viewModel.updateFromData();
     $osf.applyBindings(self.viewModel, selector);
 }
 
 module.exports = {
-    MakeNodeConfig: MakeNodeConfig,
-    _MakeNodeConfigViewModel: MakeFolderPickerViewModel
+    ZoomMeetingsNodeConfig: ZoomMeetingsNodeConfig,
+    _ZoomMeetingsNodeConfigViewModel: ZoomMeetingsFolderPickerViewModel
 };

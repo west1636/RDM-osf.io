@@ -1,8 +1,8 @@
 from addons.base.serializer import StorageAddonSerializer
-from addons.make import SHORT_NAME
+from addons.zoommeetings import SHORT_NAME
 from website.util import web_url_for
 
-class MakeSerializer(StorageAddonSerializer):
+class ZoomMeetingsSerializer(StorageAddonSerializer):
     addon_short_name = SHORT_NAME
 
     REQUIRED_URLS = []

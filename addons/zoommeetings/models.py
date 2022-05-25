@@ -5,8 +5,8 @@ from django.db import models
 from osf.models.base import BaseModel, ObjectIDMixin
 from addons.base.models import (BaseOAuthNodeSettings, BaseOAuthUserSettings,
                                 BaseStorageAddon)
-from addons.make.serializer import MakeSerializer
-from addons.make.provider import MakeProvider
+from addons.zoommeetings.serializer import ZoomMeetingsSerializer
+from addons.zoommeetings.provider import ZoomMeetingsProvider
 
 from framework.auth.core import Auth
 from osf.utils.fields import EncryptedTextField
@@ -14,12 +14,12 @@ from osf.utils.fields import EncryptedTextField
 logger = logging.getLogger(__name__)
 
 class UserSettings(BaseOAuthUserSettings):
-    oauth_provider = MakeProvider
-    serializer = MakeSerializer
+    oauth_provider = ZoomMeetingsProvider
+    serializer = ZoomMeetingsSerializer
 
 class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
-    oauth_provider = MakeProvider
-    serializer = MakeSerializer
+    oauth_provider = ZoomMeetingsProvider
+    serializer = ZoomMeetingsSerializer
     user_settings = models.ForeignKey(UserSettings, null=True, blank=True)
     folder_id = models.TextField(blank=True, null=True)
     folder_name = models.TextField(blank=True, null=True)
@@ -80,29 +80,15 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     def after_delete(self, user):
         self.deauthorize(Auth(user=user), log=True)
 
-class WorkflowExecutionMessages(ObjectIDMixin, BaseModel):
+class ZoomMeetings(ObjectIDMixin, BaseModel):
 
-    notified = models.BooleanField(default=False)
-    make_msg = models.CharField(max_length=255)
-    timestamp = models.CharField(max_length=128)
+    subject = models.CharField(max_length=255)
+    organizer = models.CharField(max_length=255)
+    organizer_fullname = models.CharField(max_length=255)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+    content = models.TextField(blank=True, null=True, max_length=10000)
+    join_url = models.TextField(max_length=512)
+    meetingid = models.TextField(max_length=512)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
-class Attendees(ObjectIDMixin, BaseModel):
-
-    user_guid = models.CharField(max_length=255, default=None)
-    fullname = models.CharField(max_length=255)
-    microsoft_teams_mail = models.CharField(max_length=254, blank=True, null=True)
-    microsoft_teams_user_name = models.CharField(max_length=255, blank=True, null=True)
-    webex_meetings_mail = models.CharField(max_length=254, blank=True, null=True)
-    webex_meetings_display_name = models.CharField(max_length=255, blank=True, null=True)
-    zoom_meetings_mail = models.CharField(max_length=254, blank=True, null=True)
-    is_guest = models.BooleanField(default=False)
-    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
-
-    class Meta:
-        unique_together = (('user_guid', 'node_settings'), ('microsoft_teams_mail', 'node_settings'), ('webex_meetings_mail', 'node_settings'), ('zoom_meetings_mail', 'node_settings'))
-
-class NodeFileWebappMap(ObjectIDMixin, BaseModel):
-
-    node_file_guid = models.CharField(max_length=255, default=None, unique=True)
-    slack_channel_id = models.CharField(max_length=255, default=None, unique=True)

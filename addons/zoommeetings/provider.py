@@ -1,14 +1,14 @@
-from addons.make.serializer import MakeSerializer
-from addons.make import SHORT_NAME, FULL_NAME
+from addons.zoommeetings.serializer import ZoomMeetingsSerializer
+from addons.zoommeetings import SHORT_NAME, FULL_NAME
 
 
-class MakeProvider(object):
+class ZoomMeetingsProvider(object):
     name = FULL_NAME
     short_name = SHORT_NAME
-    serializer = MakeSerializer
+    serializer = ZoomMeetingsSerializer
 
     def __init__(self, account=None):
-        super(MakeProvider, self).__init__()  # this does exactly nothing...
+        super(ZoomMeetingsProvider, self).__init__()  # this does exactly nothing...
         # provide an unauthenticated session by default
         self.account = account
 

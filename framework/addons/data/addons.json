@@ -680,34 +680,34 @@
                 "text": "Metadata information will not be registered."
             }
         },
-        "Make": {
+        "Zoom Meetings": {
             "Permissions": {
                 "status": "none",
-                "text": "The GakuNin RDM does not affect the permissions of Make."
+                "text": "The GakuNin RDM does not affect the permissions of Zoom Meetings."
             },
             "View / download file versions": {
                 "status": "none",
-                "text": "The Make add-on does not provide Storage Features."
+                "text": "The Zoom Meetings add-on does not provide Storage Features."
             },
             "Add / update files": {
                 "status": "none",
-                "text": "The Make add-on does not provide Storage Features."
+                "text": "The Zoom Meetings add-on does not provide Storage Features."
             },
             "Delete files": {
                 "status": "none",
-                "text": "The Make add-on does not provide Storage Features."
+                "text": "The Zoom Meetings add-on does not provide Storage Features."
             },
             "Logs": {
                 "status": "none",
-                "text": "The Make add-on does not provide Storage Features."
+                "text": "The Zoom Meetings add-on does not provide Storage Features."
             },
             "Forking": {
                 "status": "partial",
-                "text": "Forking a project or component copies information about linked Make but the GakuNin RDM does not affect authentication of Make."
+                "text": "Forking a project or component copies information about linked Zoom Meetings but the GakuNin RDM does not affect authentication of Zoom Meetings."
             },
             "Registering": {
                 "status": "none",
-                "text": "Make information will not be registered."
+                "text": "Zoom Meetings information will not be registered."
             }
         }
     },

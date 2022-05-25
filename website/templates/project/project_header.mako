@@ -43,7 +43,7 @@
                         <!-- Add-on tabs  -->
                         % for addon in addons_enabled:
 
-                            % if addon != 'make' and addon != 'binderhub' and addons[addon]['has_page']:
+                            % if addon != 'zoommeetings' and addon != 'binderhub' and addons[addon]['has_page']:
                                 <li>
                                     <a href="${node['url']}${addons[addon]['short_name']}">
 
@@ -87,13 +87,13 @@
                             <li><a href="${node['url']}addons/">${ _("Add-ons") }</a></li>
                         % endif
 
-                        % if 'make' in addons_enabled and addons['make']['has_page']:
+                        % if 'zoommeetings' in addons_enabled and addons['zoommeetings']['has_page']:
                             <li>
-                                <a href="${node['url']}${addons['make']['tab_path']}">
-                                    % if addons['make']['icon'] and addons['make']['has_page_icon']:
-                                        <img src="${addons['make']['icon']}" class="addon-logo"/>
+                                <a href="${node['url']}${addons['zoommeetings']['short_name']}">
+                                    % if addons['zoommeetings']['icon'] and addons['zoommeetings']['has_page_icon']:
+                                        <img src="${addons['zoommeetings']['icon']}" class="addon-logo"/>
                                     % endif
-                                    ${_(addons['make']['tab_name'])}
+                                    ${addons[addon]['full_name']}
                                 </a>
                             </li>
                         % endif
