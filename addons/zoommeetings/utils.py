@@ -3,6 +3,8 @@ import json
 import requests
 from addons.zoommeetings import settings
 from django.core import serializers
+import logging
+logger = logging.getLogger(__name__)
 
 # widget: ここから
 def serialize_zoommeetings_widget(node):
