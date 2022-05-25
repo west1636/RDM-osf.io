@@ -31,7 +31,7 @@ def get_user_info(user_id, jwt_token):
     response = requests.request('GET', url, headers=headers, data=payload)
     status_code = response.status_code
     responseData = response.json()
-    userInfo = []
+    userInfo = {}
 
     logger.info(str(responseData))
     logger.info(str(status_code))
