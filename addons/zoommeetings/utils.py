@@ -23,7 +23,7 @@ def get_user_info(user_id, jwt_token):
 
     url = settings.ZOOM_API_URL_USERS + user_id
     payload = {}
-    token = 'Token ' + jwt_token
+    token = 'Bearer ' + jwt_token
     headers = {
         'Authorization': token,
     }
