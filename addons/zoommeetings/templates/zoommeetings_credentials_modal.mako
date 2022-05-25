@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="zoommeetings_Email">${ _("User ID")}</label>
+                                <label for="zoommeetings_Email">${ _("Sign in Address")}</label>
                                     <!-- Link to Zoom Meetings sign up page -->
                                     <a href="https://zoom.us/"
                                        target="_blank" class="text-muted addon-external-link">
@@ -21,9 +21,9 @@
                                 <input class="form-control" data-bind="value: zoommeetingsEmail" id="zoommeetings_email" name="zoommeetings_Email" />
                             </div>
                             <div class="form-group">
-                                <label for="zoommeetings_jwtToken">${ _("User ID")}</label>
+                                <label for="zoommeetings_jwtToken">${ _("JWT Token")}</label>
                                     <!-- Link to API token generation page -->
-                                    <a href="https://zoom.us/"
+                                    <a href="https://marketplace.zoom.us/develop/create"
                                        target="_blank" class="text-muted addon-external-link">
                                         ${_('(Get from Zoom Meetings account%(externalLinkIcon)s)') % dict(externalLinkIcon='<i class="fa fa-external-link-square"></i>') | n}
                                     </a>

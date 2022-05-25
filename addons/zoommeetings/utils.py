@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import requests
 from addons.zoommeetings import settings
 from django.core import serializers
 
