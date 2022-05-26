@@ -165,6 +165,29 @@ def zoommeetings_set_config_ember(**kwargs):
                      }}}
 
 @must_be_valid_project
+@must_have_permission(WRITE)
+@must_have_addon(SHORT_NAME, 'node')
+def zoommeetings_request_api(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+    account_id = addon.external_account_id
+    requestData = request.get_data()
+    requestDataJsonLoads = json.loads(requestData)
+    action = requestDataJsonLoads['action']
+
+    account = ExternalAccount.objects.get(
+        provider='zoommeetings', id=account_id
+    )
+
+    if action == 'create':
+        createdMeetings = api_create_zoom_meeting(requestDataJsonLoads, account)
+        #synchronize data
+        grdm_create_zoom_meeting(node, account, createdMeetings)
+
+    return {}
+
+@must_be_valid_project
 @must_have_permission(READ)
 @must_have_addon(SHORT_NAME, 'node')
 def zoommeetings_get_meetings(**kwargs):

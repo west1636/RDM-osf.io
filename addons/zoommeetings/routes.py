@@ -80,6 +80,16 @@ api_routes = {
 
         Rule(
             [
+                '/project/<pid>/zoommeetings/request_api',
+                '/project/<pid>/node/<nid>/zoommeetings/request_api',
+            ],
+            'get',
+            views.zoommeetings_request_api,
+            json_renderer,
+        ),
+
+        Rule(
+            [
                 '/project/<pid>/zoommeetings/get_meetings',
                 '/project/<pid>/node/<nid>/zoommeetings/get_meetings',
             ],
