@@ -83,7 +83,7 @@ api_routes = {
                 '/project/<pid>/zoommeetings/request_api',
                 '/project/<pid>/node/<nid>/zoommeetings/request_api',
             ],
-            'get',
+            'post',
             views.zoommeetings_request_api,
             json_renderer,
         ),

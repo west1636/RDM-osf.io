@@ -59,7 +59,7 @@ def zoom_create_meeting(requestData, account):
         'Content-Type': 'application/json'
     }
 
-    response = requests.post(url, data=requestData, headers=requestHeaders)
+    response = requests.post(url, data=requestData, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
 
