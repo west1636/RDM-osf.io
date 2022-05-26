@@ -136,15 +136,11 @@ def zoommeetings_get_config_ember(**kwargs):
     upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
     previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
 
-    institutionId = rdm_utils.get_institution_id(user)
-    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
-
     return {'data': {'id': node._id, 'type': 'zoommeetings-config',
                      'attributes': {
                          'all_zoom_meetings': allZoomMeetingsJson,
                          'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
                          'previous_zoom_meetings': previousZoomMeetingsJson,
-                         'app_name_zoom_meetings': settings.ZOOM_MEETINGS,
                      }}}
 
 @must_be_valid_project
@@ -181,7 +177,7 @@ def zoommeetings_get_meetings(**kwargs):
     sYesterday = sToday + timedelta(days=-1)
     sTomorrow = sToday + timedelta(days=1)
 
-    recentMeetings = models.AllMeetingInformation.objects.filter(node_settings_id=addon.id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
+    recentMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
     recentMeetingsJson = serializers.serialize('json', recentMeetings, ensure_ascii=False)
     recentMeetingsDict = json.loads(recentMeetingsJson)
 
