@@ -52,7 +52,7 @@ def api_create_zoom_meeting(requestData, account):
 
     userId = account.oauth_key
     token = account.oauth_secret
-    url = settings.ZOOM_API_URL_USERS + 'users' + '/' + userId + '/' + 'meetings'
+    url = settings.ZOOM_API_URL_USERS + userId + '/' + 'meetings'
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
