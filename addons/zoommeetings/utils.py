@@ -59,15 +59,13 @@ def api_create_zoom_meeting(requestData, account):
         'Content-Type': 'application/json'
     }
     requestBody = json.dumps(requestData)
-    logger.info('requestData:::' +str(requestData))
-    logger.info('requestBody:::' +str(requestBody))
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-
+    logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_create_meeting(node, account, createdData):
+def grdm_create_zoom_meeting(node, account, createdData):
 
     subject = createdData['topic']
     organizer = createdData['host_email']
