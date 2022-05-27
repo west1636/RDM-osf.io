@@ -51,7 +51,7 @@ def get_user_info(user_id, jwt_token):
 def api_create_zoom_meeting(requestData, account):
 
     userId = account.oauth_key
-
+    token = account.oauth_secret
     url = settings.ZOOM_API_URL_USERS + 'users' + '/' + userId + '/' + 'meetings'
     requestToken = 'Bearer ' + token
     requestHeaders = {
