@@ -8,6 +8,7 @@ from django.core import serializers
 import logging
 from datetime import timedelta
 import dateutil.parser
+from django.db import transaction
 logger = logging.getLogger(__name__)
 
 # widget: ここから
@@ -96,3 +97,4 @@ def grdm_create_zoom_meeting(node, account, createdData):
         createData.save()
 
     return {}
+
