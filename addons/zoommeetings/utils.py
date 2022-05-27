@@ -68,7 +68,7 @@ def api_create_zoom_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_create_zoom_meeting(node, account, createdData):
+def grdm_create_zoom_meeting(addon, account, createdData):
 
     subject = createdData['topic']
     organizer = createdData['host_email']
@@ -92,9 +92,8 @@ def grdm_create_zoom_meeting(node, account, createdData):
             content=content,
             join_url=joinUrl,
             meetingid=meetingId,
-            node_settings_id=node.id,
+            node_settings_id=addon.id,
         )
         createData.save()
 
     return {}
-

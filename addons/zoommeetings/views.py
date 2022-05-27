@@ -186,7 +186,7 @@ def zoommeetings_request_api(**kwargs):
     if action == 'create':
         createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
         #synchronize data
-        utils.grdm_create_zoom_meeting(node, account, createdMeetings)
+        utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
     return {}
 
