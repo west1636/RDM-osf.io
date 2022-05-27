@@ -182,6 +182,7 @@ def zoommeetings_request_api(**kwargs):
         provider='zoommeetings', id=account_id
     )
     logger.info('requestDataJsonLoads::' +str(requestDataJsonLoads))
+    logger.info('requestBody:views::' +str(requestBody))
     if action == 'create':
         createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
         #synchronize data

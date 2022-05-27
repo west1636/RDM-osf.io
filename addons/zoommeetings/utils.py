@@ -48,7 +48,7 @@ def get_user_info(user_id, jwt_token):
 
     return userInfo
 
-def api_create_zoom_meeting(requestBody, account):
+def api_create_zoom_meeting(requestData, account):
 
     userId = account.oauth_key
     token = account.oauth_secret
@@ -58,7 +58,9 @@ def api_create_zoom_meeting(requestBody, account):
         'Authorization': requestToken,
         'Content-Type': 'application/json'
     }
-    logger.info('requestBody::' +str(requestBody))
+    requestBody = json.dumps(requestData)
+    logger.info('requestData:::' +str(requestData))
+    logger.info('requestBody:::' +str(requestBody))
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
