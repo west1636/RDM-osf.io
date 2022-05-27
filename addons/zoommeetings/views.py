@@ -174,16 +174,16 @@ def zoommeetings_request_api(**kwargs):
     account_id = addon.external_account_id
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
-    action = requestDataJsonLoads['action']
+    action = requestDataJsonLoads['actionType']
 
     account = ExternalAccount.objects.get(
         provider='zoommeetings', id=account_id
     )
 
     if action == 'create':
-        createdMeetings = api_create_zoom_meeting(requestDataJsonLoads, account)
+        createdMeetings = utils.api_create_zoom_meeting(requestDataJsonLoads, account)
         #synchronize data
-        grdm_create_zoom_meeting(node, account, createdMeetings)
+        utils.grdm_create_zoom_meeting(node, account, createdMeetings)
 
     return {}
 
