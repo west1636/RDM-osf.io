@@ -6,6 +6,8 @@ from addons.zoommeetings import models
 from addons.zoommeetings import settings
 from django.core import serializers
 import logging
+from datetime import timedelta
+import dateutil.parser
 logger = logging.getLogger(__name__)
 
 # widget: ここから
@@ -70,7 +72,8 @@ def grdm_create_zoom_meeting(node, account, createdData):
     subject = createdData['topic']
     organizer = createdData['host_email']
     startDatetime = createdData['start_time']
-    endDatetime = startDatetime + createdData['duration']
+    startDatetime = dateutil.parser.parse(startDatetime)
+    endDatetime = startDatetime + timedelta(minutes=60)
     content = createdData['agenda']
     joinUrl = createdData['join_url']
     meetingId = createdData['id']
