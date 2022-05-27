@@ -48,7 +48,7 @@ def get_user_info(user_id, jwt_token):
 
     return userInfo
 
-def zoom_create_meeting(requestData, account):
+def api_zoom_create_meeting(requestData, account):
 
     userId = account.oauth_key
 
@@ -79,7 +79,7 @@ def grdm_create_meeting(node, account, createdData):
 
     with transaction.atomic():
 
-        data = models.ZoomMeetings(
+        createData = models.ZoomMeetings(
             subject=subject,
             organizer=organizer,
             organizer_fullname=organizer_fullname,
@@ -90,6 +90,6 @@ def grdm_create_meeting(node, account, createdData):
             meetingid=meetingId,
             node_settings_id=node.id,
         )
-        data.save()
+        createData.save()
 
-    return responseData
+    return {}
