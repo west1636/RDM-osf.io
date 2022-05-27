@@ -48,7 +48,7 @@ def get_user_info(user_id, jwt_token):
 
     return userInfo
 
-def api_zoom_create_meeting(requestData, account):
+def api_create_zoom_meeting(requestData, account):
 
     userId = account.oauth_key
 
