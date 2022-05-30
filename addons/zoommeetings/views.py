@@ -141,6 +141,7 @@ def zoommeetings_get_config_ember(**kwargs):
                          'all_zoom_meetings': allZoomMeetingsJson,
                          'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
                          'previous_zoom_meetings': previousZoomMeetingsJson,
+                         'app_name_zoom_meetings': settings.ZOOM_MEETINGS,
                      }}}
 
 @must_be_valid_project
