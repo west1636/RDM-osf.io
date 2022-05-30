@@ -97,3 +97,23 @@ def grdm_create_zoom_meeting(addon, account, createdData):
         createData.save()
 
     return {}
+
+def api_delete_zoom_meeting(meetingId, account):
+
+    token = account.oauth_secret
+    url = settings.ZOOM_API_BASE_URL + '/' + 'meetings' + '/' + meetingId
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    response = requests.delete(url, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    return {}
+
+def grdm_delete_zoom_meeting(meetingId):
+
+    deleteData = models.ZoomMeetings.objects.get(meetingid=meetingId)
+    deleteData.delete()
+
+    return {}

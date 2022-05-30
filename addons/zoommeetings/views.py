@@ -188,6 +188,10 @@ def zoommeetings_request_api(**kwargs):
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
+    if action == 'delete':
+        utils.api_delete_zoom_meeting(meetingId, account)
+        #synchronize data
+        utils.grdm_delete_zoom_meeting(meetingId)
     return {}
 
 @must_be_valid_project
