@@ -122,7 +122,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     duration = requestData['duration']
     startDatetime = dateutil.parser.parse(startDatetime)
     endDatetime = startDatetime + timedelta(minutes=duration)
-    content = requestData['content']
+    content = requestData['agenda']
 
     updateData = models.ZoomMeetings.objects.get(meetingid=meetingId)
 
