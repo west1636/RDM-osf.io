@@ -73,8 +73,9 @@ def grdm_create_zoom_meeting(addon, account, createdData):
     subject = createdData['topic']
     organizer = createdData['host_email']
     startDatetime = createdData['start_time']
+    duration = createdData['duration']
     startDatetime = dateutil.parser.parse(startDatetime)
-    endDatetime = startDatetime + timedelta(minutes=60)
+    endDatetime = startDatetime + timedelta(minutes=duration)
     content = createdData['agenda']
     joinUrl = createdData['join_url']
     meetingId = createdData['id']
@@ -116,9 +117,11 @@ def api_update_zoom_meeting(meetingId, requestData, account):
 
 def grdm_update_zoom_meeting(meetingId, requestData):
 
-    subject = requestData['subject']
-    startDatetime = requestData['start_date']
-    endDatetime = requestData['end_date']
+    subject = requestData['topic']
+    startDatetime = requestData['start_time']
+    duration = requestData['duration']
+    startDatetime = dateutil.parser.parse(startDatetime)
+    endDatetime = startDatetime + timedelta(minutes=duration)
     content = requestData['content']
 
     updateData = models.ZoomMeetings.objects.get(meetingid=meetingId)
@@ -128,7 +131,6 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     updateData.end_datetime = endDatetime
     updateData.content = content
     updateData.save()
-    logger.info('meetingId:::' + str(meetingId))
     logger.info('updateData:::' + str(updateData))
 
     return {}
