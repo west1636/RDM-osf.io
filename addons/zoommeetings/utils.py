@@ -108,6 +108,7 @@ def api_update_zoom_meeting(meetingId, requestData, account):
         'Authorization': requestToken,
         'Content-Type': 'application/json'
     }
+    requestBody = json.dumps(requestData)
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
