@@ -190,6 +190,11 @@ def zoommeetings_request_api(**kwargs):
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
+    if action == 'update':
+        utils.api_update_zoom_meeting(meetingId, requestBody, account)
+        #synchronize data
+        utils.grdm_update_zoom_meeting(meetingId, requestBody)
+
     if action == 'delete':
         utils.api_delete_zoom_meeting(deleteMeetingId, account)
         #synchronize data
