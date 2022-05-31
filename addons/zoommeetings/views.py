@@ -176,7 +176,7 @@ def zoommeetings_request_api(**kwargs):
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
     action = requestDataJsonLoads['actionType']
-    meetingId = requestDataJsonLoads['meetingId']
+    updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
     requestBody = requestDataJsonLoads['body']
 
@@ -191,9 +191,9 @@ def zoommeetings_request_api(**kwargs):
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
     if action == 'update':
-        utils.api_update_zoom_meeting(meetingId, requestBody, account)
+        utils.api_update_zoom_meeting(updateMeetingId, requestBody, account)
         #synchronize data
-        utils.grdm_update_zoom_meeting(meetingId, requestBody)
+        utils.grdm_update_zoom_meeting(updateMeetingId, requestBody)
 
     if action == 'delete':
         utils.api_delete_zoom_meeting(deleteMeetingId, account)
