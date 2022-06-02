@@ -98,5 +98,9 @@
     "zoommeetings": {
         "fullName": "Zoom Meetings",
         "externalView": false
-    }
+    },
+    "microsoftteams": {
+        "fullName": "Zoom Meetings",
+        "externalView": false
+    },
 }
