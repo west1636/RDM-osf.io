@@ -80,18 +80,6 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     def after_delete(self, user):
         self.deauthorize(Auth(user=user), log=True)
 
-class Attendees(ObjectIDMixin, BaseModel):
-
-    user_guid = models.CharField(max_length=255, default=None)
-    fullname = models.CharField(max_length=255)
-    microsoft_teams_mail = models.CharField(max_length=254, blank=True, null=True)
-    microsoft_teams_user_name = models.CharField(max_length=255, blank=True, null=True)
-    is_guest = models.BooleanField(default=False)
-    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
-
-    class Meta:
-        unique_together = (('user_guid', 'node_settings'), ('microsoft_teams_mail', 'node_settings'))
-
 class MicrosoftTeams(ObjectIDMixin, BaseModel):
 
     subject = models.CharField(max_length=255)
@@ -104,3 +92,15 @@ class MicrosoftTeams(ObjectIDMixin, BaseModel):
     join_url = models.TextField(max_length=512)
     meetingid = models.TextField(max_length=512)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+class Attendees(ObjectIDMixin, BaseModel):
+
+    user_guid = models.CharField(max_length=255, default=None)
+    fullname = models.CharField(max_length=255)
+    microsoft_teams_mail = models.CharField(max_length=254, blank=True, null=True)
+    microsoft_teams_user_name = models.CharField(max_length=255, blank=True, null=True)
+    is_guest = models.BooleanField(default=False)
+    node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
+
+    class Meta:
+        unique_together = (('user_guid', 'node_settings'), ('microsoft_teams_mail', 'node_settings'))
