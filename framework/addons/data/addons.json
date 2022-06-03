@@ -709,36 +709,6 @@
                 "status": "none",
                 "text": "Zoom Meetings information will not be registered."
             }
-        },
-        "Microsoft Teams": {
-            "Permissions": {
-                "status": "none",
-                "text": "The GakuNin RDM does not affect the permissions of Microsoft Teams."
-            },
-            "View / download file versions": {
-                "status": "none",
-                "text": "The Microsoft Teams add-on does not provide Storage Features."
-            },
-            "Add / update files": {
-                "status": "none",
-                "text": "The Microsoft Teams add-on does not provide Storage Features."
-            },
-            "Delete files": {
-                "status": "none",
-                "text": "The Microsoft Teams add-on does not provide Storage Features."
-            },
-            "Logs": {
-                "status": "none",
-                "text": "The Microsoft Teams add-on does not provide Storage Features."
-            },
-            "Forking": {
-                "status": "partial",
-                "text": "Forking a project or component copies information about linked Microsoft Teams but the GakuNin RDM does not affect authentication of Microsoft Teams."
-            },
-            "Registering": {
-                "status": "none",
-                "text": "Microsoft Teams information will not be registered."
-            }
         }
     },
     "disclaimers": [
