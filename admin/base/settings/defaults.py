@@ -176,7 +176,7 @@ MIGRATION_MODULES = {
     'addons_ociinstitutions': None,
     'addons_onedrivebusiness': None,
     'addons_zoom': None,
-    'microsoftteams': None,
+    'addons_microsoftteams': None,
 }
 
 UNSUPPORTED_FORCE_TO_USE_ADDONS = [
