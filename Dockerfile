@@ -177,6 +177,7 @@ COPY ./addons/iqbrims/static/ ./addons/iqbrims/static/
 COPY ./addons/binderhub/static/ ./addons/binderhub/static/
 COPY ./addons/metadata/static/ ./addons/metadata/static/
 COPY ./addons/zoommeetings/static/ ./addons/zoommeetings/static/
+COPY ./addons/microsoftteams/static/ ./addons/microsoftteams/static/
 RUN \
     # OSF
     yarn install --frozen-lockfile \
