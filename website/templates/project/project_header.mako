@@ -43,7 +43,7 @@
                         <!-- Add-on tabs  -->
                         % for addon in addons_enabled:
 
-                            % if addon != 'zoommeetings' and addon != 'binderhub' and addons[addon]['has_page']:
+                            % if addon != 'microsoftteams' and addon != 'zoommeetings' and addon != 'binderhub' and addons[addon]['has_page']:
                                 <li>
                                     <a href="${node['url']}${addons[addon]['short_name']}">
 
@@ -92,6 +92,17 @@
                                 <a href="${node['url']}${addons['zoommeetings']['short_name']}">
                                     % if addons['zoommeetings']['icon'] and addons['zoommeetings']['has_page_icon']:
                                         <img src="${addons['zoommeetings']['icon']}" class="addon-logo"/>
+                                    % endif
+                                    ${addons[addon]['full_name']}
+                                </a>
+                            </li>
+                        % endif
+
+                        % if 'microsoftteams' in addons_enabled and addons['microsoftteams']['has_page']:
+                            <li>
+                                <a href="${node['url']}${addons['microsoftteams']['short_name']}">
+                                    % if addons['microsoftteams']['icon'] and addons['microsoftteams']['has_page_icon']:
+                                        <img src="${addons['microsoftteams']['icon']}" class="addon-logo"/>
                                     % endif
                                     ${addons[addon]['full_name']}
                                 </a>

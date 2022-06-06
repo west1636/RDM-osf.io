@@ -475,7 +475,7 @@
             <!-- Show widgets in left column if present -->
             % for addon in addons_enabled:
                 % if addons[addon]['has_widget']:
-                    %if addon != 'wiki' and addon != 'iqbrims' and addon != 'zoommeetings': ## We already show the wiki widget at the top
+                    %if addon != 'wiki' and addon != 'iqbrims' and addon != 'zoommeetings' and addon != 'microsoftteams': ## We already show the wiki widget at the top
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %endif
                 % endif
@@ -495,6 +495,9 @@
                     %if addon == 'iqbrims':
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %elif addon == 'zoommeetings':
+                        ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
+                    %endif
+                    %elif addon == 'microsoftteams':
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %endif
                 % endif

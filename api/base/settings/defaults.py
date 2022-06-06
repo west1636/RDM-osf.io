@@ -376,6 +376,9 @@ ADDONS_OAUTH.append('nextcloud')
 INSTALLED_APPS += ('addons.zoommeetings',)
 ADDONS_FOLDER_CONFIGURABLE.append('zoommeetings')
 ADDONS_OAUTH.append('zoommeetings')
+INSTALLED_APPS += ('addons.microsoftteams',)
+ADDONS_FOLDER_CONFIGURABLE.append('microsoftteams')
+ADDONS_OAUTH.append('microsoftteams')
 
 TST_COMMAND_DELIMITER = ' '
 # RSA key generation settings
