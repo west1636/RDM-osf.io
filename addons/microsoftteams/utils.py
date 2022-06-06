@@ -46,7 +46,7 @@ def get_organization_info(microsoftteams_tenant, access_token):
             logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.message)
     else:
         organizationInfo['id'] = microsoftteams_tenant
-        organizationInfo['displayName'] = responseData['displayName']
+        organizationInfo['displayName'] = responseData['value']['displayName']
 
     return organizationInfo
 
