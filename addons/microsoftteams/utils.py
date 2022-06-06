@@ -29,11 +29,11 @@ def get_organization_info(microsoftteams_tenant, access_token):
     url = settings.MICROSOFT_GRAPH_API_URL_ORGANIZATION
     payload = {}
     token = 'Bearer ' + access_token
-    headers = {
+    requestHeaders = {
         'Authorization': token,
     }
 
-    response = requests.request('POST', url, data=payload)
+    response = requests.request('POST', url, headers=requestHeaders, data=payload)
     status_code = response.status_code
     responseData = response.json()
     organizationInfo = {}
@@ -43,7 +43,7 @@ def get_organization_info(microsoftteams_tenant, access_token):
 
     if status_code != 200:
         if status_code == 401:
-            logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.error_description)
+            logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.message)
     else:
         organizationInfo['id'] = microsoftteams_tenant
         organizationInfo['displayName'] = responseData['displayName']
@@ -70,7 +70,7 @@ def get_access_token(microsoftteams_tenant, microsoftteams_client_id, microsoftt
 
     if status_code != 200:
         if status_code == 400:
-            logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.error_description)
+            logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.message)
     else:
         accessToken = responseData['access_token']
 
