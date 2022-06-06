@@ -33,7 +33,7 @@ def get_organization_info(microsoftteams_tenant, access_token):
         'Authorization': token,
     }
 
-    response = requests.request('POST', url, headers=requestHeaders, data=payload)
+    response = requests.request('GET', url, headers=requestHeaders, data=payload)
     status_code = response.status_code
     responseData = response.json()
     organizationInfo = {}
