@@ -14,7 +14,7 @@ class MicrosoftTeamsAddonConfig(BaseAddonAppConfig):
     label = 'addons_{}'.format(SHORT_NAME)
     short_name = SHORT_NAME
     full_name = FULL_NAME
-    views = ['page']
+    views = ['widget', 'page']
     categories = ['web apps']
     owners = ['user', 'node']
     configs = ['accounts', 'node']
