@@ -496,7 +496,6 @@
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %elif addon == 'zoommeetings':
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
-                    %endif
                     %elif addon == 'microsoftteams':
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %endif
