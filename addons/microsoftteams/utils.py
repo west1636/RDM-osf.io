@@ -45,8 +45,10 @@ def get_organization_info(microsoftteams_tenant, access_token):
         if status_code == 401:
             logger.info('Failed to authenticate Microsoft 365 account' + '[' + str(status_code) + ']' + ':' + response.message)
     else:
-        organizationInfo['id'] = microsoftteams_tenant
-        organizationInfo['displayName'] = responseData['value']['displayName']
+        for value in responseData['value']:
+            if value['id'] == microsoftteams_tenant:
+                organizationInfo['id'] = value['id']
+                organizationInfo['displayName'] = value['displayName']
 
     return organizationInfo
 
