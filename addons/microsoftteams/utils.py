@@ -57,7 +57,7 @@ def get_access_token(microsoftteams_tenant, microsoftteams_client_id, microsoftt
         'client_id': microsoftteams_client_id,
         'client_secret': microsoftteams_client_secret,
         'grant_type':'client_credentials',
-        'scope': settings.MICROSOFT_DEFAULT_SCOPE,
+        'scope': settings.MICROSOFT_GRAPH_DEFAULT_SCOPE,
     }
 
     response = requests.request('POST', url, data=payload)
