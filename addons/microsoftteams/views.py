@@ -95,8 +95,8 @@ def microsoftteams_add_user_account(auth, **kwargs):
             provider=SHORT_NAME,
             provider_name=FULL_NAME,
             display_name=displayName,
-            oauth_key=microsoftteams_client_id,
-            oauth_secret=microsoftteams_client_secret,
+            oauth_key='{}\t{}'.format(microsoftteams_client_id, microsoftteams_client_secret),
+            oauth_secret=access_token,
             provider_id=microsoft_tenant_id,
         )
         account.save()
