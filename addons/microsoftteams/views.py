@@ -72,7 +72,7 @@ def microsoftteams_add_user_account(auth, **kwargs):
         }, http_status.HTTP_400_BAD_REQUEST
 
     access_token = utils.get_access_token(microsoftteams_tenant, microsoftteams_client_id, microsoftteams_client_secret)
-    if not get_access_token:
+    if not access_token:
         return {
             'message': ('Unable to access account.\n'
                 'Check to make sure that the above credentials are valid.')
