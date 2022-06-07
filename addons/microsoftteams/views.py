@@ -132,6 +132,8 @@ def project_microsoftteams(**kwargs):
 def microsoftteams_get_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
+    auth = kwargs['auth']
+    user = auth.user
 
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
