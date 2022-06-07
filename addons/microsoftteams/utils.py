@@ -78,3 +78,17 @@ def get_access_token(microsoftteams_tenant, microsoftteams_client_id, microsoftt
 
     return accessToken
 
+def makeInstitutionUserList(users):
+
+    institutionUsers = []
+    userInfo = {}
+    for user in users:
+        userInfo = {}
+        userInfo['guid'] = user._id
+        userInfo['fullname'] = user.fullname
+        userInfo['username'] = user.username
+        institutionUsers.append(userInfo)
+
+    ret = json.dumps(institutionUsers)
+
+    return ret
