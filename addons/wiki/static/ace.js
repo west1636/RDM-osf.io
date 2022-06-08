@@ -30,9 +30,6 @@
 
     switch (delta.action) {
       case 'insertText':
-        console.log('case insertText 1');
-        console.log(pos);
-        console.log(delta.text);
         doc.insert(pos, delta.text);
         break;
       case 'removeText':
@@ -71,10 +68,6 @@
 
         editorText = editorDoc.getValue();
         otText = doc.get(); // gfodor
-        console.log('check 1');
-        console.log(editorText);
-        console.log(otText);
-
         if (editorText.length !== 0  && typeof otText !== 'undefined' && editorText !== otText ) {
           console.error('Text does not match!');
           console.error('editor: ' + editorText);
@@ -90,9 +83,9 @@
     } else {
       editorDoc.setValue(doc.get()); // gfodor
     }
-    console.log('checkbefore');
+
     check();
-    console.log('checkafter');
+
     // When we apply ops from sharejs, ace emits edit events.
     // These must be ignored to prevent infinite looping.
     suppress = false;
@@ -101,11 +94,6 @@
       if (suppress) {
         return;
       }
-        console.log('editorListener 1');
-        console.log(editorDoc);
-        console.log(change);
-        console.log(change.data);
-        console.log(doc);
       applyToShareJS(editorDoc, change.data, doc);
       return check();
     };
