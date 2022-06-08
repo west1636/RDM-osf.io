@@ -33,7 +33,8 @@
         "onedrivebusiness",
         "metadata",
         "zoommeetings",
-        "microsoftteams"
+        "microsoftteams",
+        "webexmeetings"
     ],
     "addons_default": [
         "osfstorage",
@@ -69,7 +70,8 @@
         "dropboxbusiness": "partial",
         "onedrivebusiness": "partial",
         "zoommeetings": "partial",
-        "microsoftteams": "partial"
+        "microsoftteams": "partial",
+        "webexmeetings": "partial"
     },
     "addons_commentable": [
         "osfstorage",
@@ -98,7 +100,8 @@
         "dropboxbusiness",
         "onedrivebusiness",
         "zoommeetings",
-        "microsoftteams"
+        "microsoftteams",
+        "webexmeetings"
     ],
     "addons_based_on_ids": [
         "osfstorage",
@@ -142,7 +145,8 @@
         "onedrivebusiness": "OneDrive for Office365 is a file storage add-on. Connect your Microsoft OneDrive account to a GakuNin RDM project to interact with files hosted on Microsoft OneDrive via the GakuNin RDM.",
         "metadata": "Metadata addon is ...",
         "zoommeetings": "Zoom Meetings is a web meeting service. Connect your Zoom Meetings account to a GakuNin RDM project to manage web meeting information on GakuNin RDM.",
-        "microsoftteams": "Microsoft Teams has the function to hold web meeting. Connect your Microsoft 365 tenant to a GakuNin RDM project to manage web meeting information on GakuNin RDM."
+        "microsoftteams": "Microsoft Teams has the function to hold web meeting. Connect your Microsoft 365 tenant to a GakuNin RDM project to manage web meeting information on GakuNin RDM.",
+        "webexmeetings": "Webex Meetings is a web meeting service. Connect your Webex Meetings account to a GakuNin RDM project to manage web meeting information on GakuNin RDM."
     },
     "addons_url": {
         "box": "http://www.box.com",
@@ -171,6 +175,7 @@
         "onedrivebusiness": "https://onedrive.live.com",
         "metadata": "https://dummy.nii.ac.jp/metadata",
         "zoommeetings": "https://zoom.us/",
-        "microsoftteams": "https://www.office.com/"
+        "microsoftteams": "https://www.office.com/",
+        "webexmeetings": "https://www.webex.com/"
     }
 }

@@ -379,6 +379,9 @@ ADDONS_OAUTH.append('zoommeetings')
 INSTALLED_APPS += ('addons.microsoftteams',)
 ADDONS_FOLDER_CONFIGURABLE.append('microsoftteams')
 ADDONS_OAUTH.append('microsoftteams')
+INSTALLED_APPS += ('addons.webexmeetings',)
+ADDONS_FOLDER_CONFIGURABLE.append('webexmeetings')
+ADDONS_OAUTH.append('webexmeetings')
 
 TST_COMMAND_DELIMITER = ' '
 # RSA key generation settings
