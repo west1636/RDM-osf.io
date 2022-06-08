@@ -98,7 +98,7 @@ class WebexMeetings(ObjectIDMixin, BaseModel):
     organizer = models.CharField(max_length=255)
     organizer_fullname = models.CharField(max_length=255)
     attendees = models.ManyToManyField(Attendees, related_name='attendees_meetings')
-    attendees_specific = models.ManyToManyField(Attendees, related_name='attendees_specific_meetings', through='AllMeetingInformationAttendeesRelation')
+    attendees_specific = models.ManyToManyField(Attendees, related_name='attendees_specific_meetings', through='WebexMeetingsAttendeesRelation')
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     content = models.TextField(blank=True, null=True, max_length=10000)
