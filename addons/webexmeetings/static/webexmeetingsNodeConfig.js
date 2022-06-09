@@ -44,6 +44,11 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         $osf.block();
 
         window.open(self.urls().auth);
+
+        $osf.unblock();
+        self.clearModal();
+        $('#webexmeetingsCredentialsModal').modal('hide');
+
     },
 
     /** Reset all fields from Webex Meetings credentials input modal */
