@@ -7,7 +7,7 @@ class WebexMeetingsProvider(object):
     short_name = SHORT_NAME
     serializer = WebexMeetingsSerializer
 
-    callback_url = '{}{}'.format(settings.API_BASE_URL, 'v1/access_token')
+    callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
 
     def __init__(self, account=None):
