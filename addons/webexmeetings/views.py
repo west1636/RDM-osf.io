@@ -32,6 +32,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
+from admin.rdm_addons.utils import validate_rdm_addons_allowed
+from addons.webexmeetings import SHORT_NAME
 logger = logging.getLogger(__name__)
 
 webexmeetings_account_list = generic_views.account_list(
@@ -53,25 +55,20 @@ webexmeetings_deauthorize_node = generic_views.deauthorize_node(
     SHORT_NAME
 )
 
+# Overrides oauth_connect
 @must_be_logged_in
 @must_be_rdm_addons_allowed(SHORT_NAME)
-def webexmeetings_add_user_account(auth, **kwargs):
-    """Verifies new external account credentials and adds to user's list"""
+def webexmeetings_oauth_connect(service_name, auth):
 
-    try:
-        webex_client_id = request.json.get('webexmeetings_client_id')
-        webex_client_secret = request.json.get('webexmeetings_client_secret')
-        webex_oauth_url = request.json.get('webexmeetings_oauth_url')
+    webex_client_id = request.json.get('webexmeetings_client_id')
+    webex_client_secret = request.json.get('webexmeetings_client_secret')
+    webex_oauth_url = request.json.get('webexmeetings_oauth_url')
 
-    except KeyError:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
+    provider = get_service(SHORT_NAME)
+    provider.client_id = webexmeetings_client_id
+    provider.client_secret = webex_client_secret
 
-    if not (webex_client_id and webex_client_secret and webex_oauth_url):
-        return {
-            'message': 'All the fields above are required.'
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    return {}
+    return redirect(webex_oauth_url)
 
 # ember: ここから
 @must_be_valid_project

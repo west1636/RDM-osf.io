@@ -33,9 +33,9 @@ api_routes = {
     'rules': [
 
         Rule(
-            '/settings/webexmeetings/accounts/',
-            'post',
-            views.webexmeetings_add_user_account,
+            '/oauth/connect/webexmeetings',
+            'get',
+            views.webexmeetings_oauth_connect,
             json_renderer,
         ),
 

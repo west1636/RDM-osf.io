@@ -14,9 +14,9 @@ class WebexMeetingsSerializer(StorageAddonSerializer):
         user_settings = self.node_settings.user_settings or self.user_settings
 
         result = {
+            'auth': api_url_for('{}_oauth_connect'.format(SHORT_NAME), service_name='webexmeetings'),
             'accounts': node.api_url_for('{}_account_list'.format(SHORT_NAME)),
             'importAuth': node.api_url_for('{}_import_auth'.format(SHORT_NAME)),
-            'create': node.api_url_for('{}_add_user_account'.format(SHORT_NAME)),
             'deauthorize': node.api_url_for('{}_deauthorize_node'.format(SHORT_NAME)),
         }
         if user_settings:

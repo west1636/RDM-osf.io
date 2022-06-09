@@ -43,35 +43,7 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
 
         $osf.block();
 
-        return $osf.postJSON(
-            self.urls().create, {
-                webexmeetings_client_id: self.webexmeetingsClientId(),
-                webexmeetings_client_secret: self.webexmeetingsClientSecret(),
-                webexmeetings_oauth_url: self.webexmeetingsOAuthUrl(),
-            }
-        ).done(function(response) {
-            $osf.unblock();
-            self.clearModal();
-            $('#webexmeetingsCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Webex Meetings credentials.'), 'text-success', null, true);
-            self.updateFromData(response);
-            self.importAuth();
-        }).fail(function(xhr, status, error) {
-            $osf.unblock();
-            var message = '';
-            var response = JSON.parse(xhr.responseText);
-            if (response && response.message) {
-                message = response.message;
-            }
-            self.changeMessage(message, 'text-danger');
-            Raven.captureMessage(_('Could not add Webex Meetings credentials'), {
-                extra: {
-                    url: self.urls().importAuth,
-                    textStatus: status,
-                    error: error
-                }
-            });
-        });
+        window.open(self.urls().auth);
     },
 
     /** Reset all fields from Webex Meetings credentials input modal */
