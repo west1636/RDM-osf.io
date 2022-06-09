@@ -43,11 +43,34 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
 
         $osf.block();
 
-        window.open(self.urls().auth);
-
-        $osf.unblock();
-        self.clearModal();
-        $('#webexmeetingsCredentialsModal').modal('hide');
+        return $osf.postJSON(
+            self.urls().auth, {
+                webexmeetings_client_id: self.webexmeetingsClientId(),
+                webexmeetings_client_secret: self.webexmeetingsClientSecret(),
+                webexmeetings_oauth_url: self.webexmeetingsOAuthUrl(),
+            }
+        ).done(function(response) {
+            $osf.unblock();
+            self.clearModal();
+            $('#webexmeetingsCredentialsModal').modal('hide');
+            self.changeMessage(_('Successfully added Webex Meetings credentials.'), 'text-success', null, true);
+                window.open(response);
+        }).fail(function(xhr, status, error) {
+            $osf.unblock();
+            var message = '';
+            var response = JSON.parse(xhr.responseText);
+            if (response && response.message) {
+                message = response.message;
+            }
+            self.changeMessage(message, 'text-danger');
+            Raven.captureMessage(_('Could not add Zoom Meetings credentials'), {
+                extra: {
+                    url: self.urls().importAuth,
+                    textStatus: status,
+                    error: error
+                }
+            });
+        });
 
     },
 

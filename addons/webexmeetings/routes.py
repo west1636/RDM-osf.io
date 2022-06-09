@@ -34,7 +34,7 @@ api_routes = {
 
         Rule(
             '/oauth/connect/webexmeetings',
-            'get',
+            'post',
             views.webexmeetings_oauth_connect,
             json_renderer,
         ),

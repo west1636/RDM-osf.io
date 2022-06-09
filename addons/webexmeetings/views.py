@@ -34,6 +34,7 @@ from admin.rdm import utils as rdm_utils
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 from admin.rdm_addons.utils import validate_rdm_addons_allowed
 from addons.webexmeetings import SHORT_NAME
+from flask import redirect
 logger = logging.getLogger(__name__)
 
 webexmeetings_account_list = generic_views.account_list(
