@@ -58,7 +58,7 @@ webexmeetings_deauthorize_node = generic_views.deauthorize_node(
 # Overrides oauth_connect
 @must_be_logged_in
 @must_be_rdm_addons_allowed(SHORT_NAME)
-def webexmeetings_oauth_connect(service_name, auth):
+def webexmeetings_oauth_connect():
 
     webex_client_id = request.json.get('webexmeetings_client_id')
     webex_client_secret = request.json.get('webexmeetings_client_secret')
