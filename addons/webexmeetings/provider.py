@@ -8,19 +8,18 @@ class WebexMeetingsProvider(ExternalProvider):
     short_name = SHORT_NAME
     serializer = WebexMeetingsSerializer
 
+    client_id = settings.CLIENT_ID
+    client_secret = settings.CLIENT_SECRET
+    auth_url_base = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/authorize')
     callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
 
-    def __init__(self, account=None):
-        super(WebexMeetingsProvider, self).__init__()  # this does exactly nothing...
-        # provide an unauthenticated session by default
-        self.account = account
-
-    def __repr__(self):
-        return '<{name}: {status}>'.format(
-            name=self.__class__.__name__,
-            status=self.account.display_name if self.account else 'anonymous'
-        )
+    def handle_callback(self, response):
+        return {
+            'provider_id': 'xxx',
+            'display_name': 'yyy',
+            'profile_url': 'zzz'
+        }
 
     def fetch_access_token(self, force_refresh=False):
         self.refresh_oauth_key(force=force_refresh)
