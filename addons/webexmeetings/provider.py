@@ -1,6 +1,7 @@
 from addons.webexmeetings.serializer import WebexMeetingsSerializer
 from addons.webexmeetings import SHORT_NAME, FULL_NAME
 from addons.webexmeetings import settings
+from osf.models.external import ExternalProvider
 
 class WebexMeetingsProvider(ExternalProvider):
     name = FULL_NAME
