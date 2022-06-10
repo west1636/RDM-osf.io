@@ -70,7 +70,7 @@ def webexmeetings_oauth_connect(auth, **kwargs):
     provider.client_id = webex_client_id
     provider.client_secret = webex_client_secret
 
-    return redirect(webex_oauth_url)
+    return webex_oauth_url
 
 # ember: ここから
 @must_be_valid_project
