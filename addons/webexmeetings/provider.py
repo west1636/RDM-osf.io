@@ -2,7 +2,7 @@ from addons.webexmeetings.serializer import WebexMeetingsSerializer
 from addons.webexmeetings import SHORT_NAME, FULL_NAME
 from addons.webexmeetings import settings
 
-class WebexMeetingsProvider(object):
+class WebexMeetingsProvider(ExternalProvider):
     name = FULL_NAME
     short_name = SHORT_NAME
     serializer = WebexMeetingsSerializer
