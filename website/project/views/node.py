@@ -62,6 +62,8 @@ from addons.dataverse.utils import serialize_dataverse_widget
 from addons.forward.utils import serialize_forward_widget
 from addons.jupyterhub.utils import serialize_jupyterhub_widget
 from addons.iqbrims.utils import serialize_iqbrims_widget
+from addons.zoommeetings.utils import serialize_zoommeetings_widget
+from addons.microsoftteams.utils import serialize_microsoftteams_widget
 from admin.rdm_addons.utils import validate_rdm_addons_allowed
 from api.base import settings as api_settings
 from website.util import quota
@@ -529,7 +531,9 @@ def view_project(auth, node, **kwargs):
         'zotero': None,
         'forward': None,
         'dataverse': None,
-        'jupyterhub': None
+        'jupyterhub': None,
+        'zoommeetings': None,
+        'microsoftteams': None
     }
 
     if 'wiki' in ret['addons']:
@@ -556,6 +560,12 @@ def view_project(auth, node, **kwargs):
 
     if 'iqbrims' in ret['addons']:
         addons_widget_data['iqbrims'] = serialize_iqbrims_widget(node)
+
+    if 'zoommeetings' in ret['addons']:
+        addons_widget_data['zoommeetings'] = serialize_zoommeetings_widget(node)
+
+    if 'microsoftteams' in ret['addons']:
+        addons_widget_data['microsoftteams'] = serialize_microsoftteams_widget(node)
 
     ret.update({'addons_widget_data': addons_widget_data})
     try:
