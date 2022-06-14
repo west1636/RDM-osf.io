@@ -12,6 +12,8 @@ from website.oauth.utils import get_service
 from website.oauth.signals import oauth_complete
 from admin.rdm_addons.utils import validate_rdm_addons_allowed
 
+import logging
+logger = logging.getLogger(__name__)
 
 @must_be_logged_in
 def oauth_disconnect(external_account_id, auth):
@@ -93,6 +95,8 @@ def oauth_callback(service_name, auth):
     elif service._oauth_version == 2:
         session_key_name = 'state'
         request_key_name = 'state'
+
+    logger.info('session data::' + str(session.data))
 
     try:
         session_oauth_state = session.data['oauth_states'][service_name][session_key_name]
