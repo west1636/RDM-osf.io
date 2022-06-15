@@ -4,6 +4,7 @@ from addons.webexmeetings import settings
 from oauthlib.common import generate_token
 from website.util import web_url_for
 import urllib.parse
+from framework.sessions import session
 from osf.models.external import ExternalProvider
 
 OAUTH2 = 2
