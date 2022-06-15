@@ -269,6 +269,8 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             if cached_credentials.get('state') != state:
                 raise PermissionsError('Request token does not match')
 
+            logger.info('auth_callback 1')
+
             try:
                 # Quirk: Similarly to the `oauth2/authorize` endpoint, the `oauth2/access_token`
                 #        endpoint of Bitbucket would fail if a not-none or non-empty `redirect_uri`
@@ -281,6 +283,7 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                         service_name=self.short_name,
                         _absolute=True
                     )
+                logger.info('auth_callback 2')
                 response = OAuth2Session(
                     self.client_id,
                     redirect_uri=redirect_uri,
@@ -289,7 +292,9 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                     client_secret=self.client_secret,
                     code=request.args.get('code'),
                 )
+                logger.info('auth_callback 3')
             except (MissingTokenError, RequestsHTTPError):
+                logger.info('auth_callback 4')
                 raise HTTPError(http_status.HTTP_503_SERVICE_UNAVAILABLE)
         # pre-set as many values as possible for the ``ExternalAccount``
         info = self._default_handle_callback(response)

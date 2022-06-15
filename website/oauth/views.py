@@ -54,6 +54,7 @@ def oauth_connect(service_name, auth):
 
 @must_be_logged_in
 def osf_oauth_callback(service_name, auth):
+    logger.info('osf_oauth_callback 1')
     try:
         validate_rdm_addons_allowed(auth, service_name)
     except PermissionsError as e:
@@ -65,16 +66,20 @@ def osf_oauth_callback(service_name, auth):
     user = auth.user
     provider = get_service(service_name)
 
+    logger.info('osf_oauth_callback 2')
     # Retrieve permanent credentials from provider
     if not provider.auth_callback(user=user):
         return {}
 
+    logger.info('osf_oauth_callback 3')
     if provider.account and not user.external_accounts.filter(id=provider.account.id).exists():
         user.external_accounts.add(provider.account)
         user.save()
 
+    logger.info('osf_oauth_callback 4')
     oauth_complete.send(provider, account=provider.account, user=user)
 
+    logger.info('osf_oauth_callback 5')
     return {}
 
 @must_be_logged_in
