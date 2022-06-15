@@ -56,7 +56,7 @@ class WebexMeetingsProvider(ExternalProvider):
         oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&scope={}&state={}'.format(settings.WEBEX_API_BASE_URL, client_id, response_type, redirect_uri_encoded, scope_encoded, state)
 
         # save state token to the session for confirmation in the callback
-        session.data['oauth_states'][short_name] = {'state': state}
+        session.data['oauth_states'][self.short_name] = {'state': state}
 
         session.save()
         return oauth_authorization_url
