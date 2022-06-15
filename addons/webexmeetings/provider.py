@@ -20,10 +20,6 @@ class WebexMeetingsProvider(ExternalProvider):
     callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
 
-    response_type = 'code'
-    scope_encoded = urllib.parse.quote(settings.WEBEX_API_SCOPE, safe="*")
-    state = generate_token()
-
     def handle_callback(self, response):
         return {
             'provider_id': 'xxx',
@@ -53,7 +49,7 @@ class WebexMeetingsProvider(ExternalProvider):
         scope_encoded = urllib.parse.quote(settings.WEBEX_API_SCOPE, safe="*")
         state = generate_token()
 
-        oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&scope={}&state={}'.format(settings.WEBEX_API_BASE_URL, client_id, response_type, redirect_uri_encoded, scope_encoded, state)
+        oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&scope={}&state={}'.format(self.auth_url_base, client_id, response_type, redirect_uri_encoded, scope_encoded, state)
 
         # save state token to the session for confirmation in the callback
         session.data['oauth_states'][self.short_name] = {'state': state}
