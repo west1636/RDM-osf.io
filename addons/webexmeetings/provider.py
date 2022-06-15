@@ -19,12 +19,6 @@ class WebexMeetingsProvider(ExternalProvider):
     callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
 
-    redirect_uri = web_url_for(
-        'oauth_callback',
-        service_name=short_name,
-        _absolute=True
-    )
-    redirect_uri_encoded = urllib.parse.quote(redirect_uri, safe="*")
     response_type = 'code'
     scope_encoded = urllib.parse.quote(settings.WEBEX_API_SCOPE, safe="*")
     state = generate_token()
@@ -47,6 +41,13 @@ class WebexMeetingsProvider(ExternalProvider):
             session.data['oauth_states'] = {}
 
         assert self._oauth_version == OAUTH2
+
+        redirect_uri = web_url_for(
+            'oauth_callback',
+            service_name=short_name,
+            _absolute=True
+        )
+        redirect_uri_encoded = urllib.parse.quote(redirect_uri, safe="*")
 
         oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&scope={}&state={}'.format(settings.WEBEX_API_BASE_URL, client_id, response_type, redirect_uri_encoded, scope_encoded, state)
 
