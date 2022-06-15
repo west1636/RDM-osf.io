@@ -64,13 +64,14 @@ def webexmeetings_oauth_connect(auth, **kwargs):
 
     webex_client_id = request.json.get('webexmeetings_client_id')
     webex_client_secret = request.json.get('webexmeetings_client_secret')
-    webex_oauth_url = request.json.get('webexmeetings_oauth_url')
 
     provider = get_service(SHORT_NAME)
     provider.client_id = webex_client_id
     provider.client_secret = webex_client_secret
 
-    return webex_oauth_url
+    authorization_url = provider.get_authorization_url(webex_client_id)
+
+    return authorization_url
 
 # ember: ここから
 @must_be_valid_project
