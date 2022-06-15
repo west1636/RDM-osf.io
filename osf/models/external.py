@@ -284,6 +284,8 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                         _absolute=True
                     )
                 logger.info('auth_callback 2')
+                logger.info('self client_id::' + str(self.client_id))
+                logger.info('self client_secret::' + str(self.client_secret))
                 response = OAuth2Session(
                     self.client_id,
                     redirect_uri=redirect_uri,
