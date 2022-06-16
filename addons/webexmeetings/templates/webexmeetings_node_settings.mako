@@ -1,8 +1,5 @@
 <div id="${addon_short_name}Scope" class="scripted" >
     <div>
-        <!-- Add credentials modal -->
-        <%include file="webexmeetings_credentials_modal.mako"/>
-
         <h4 class="addon-title">
             <img class="addon-icon" src=${addon_icon_url}>
             ${addon_full_name}
