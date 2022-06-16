@@ -31,8 +31,8 @@
 
                 <!-- Oauth Start Button -->
                 <span data-bind="if: showTokenCreateButton">
-                    <a data-bind="click: connectAccount" class="text-primary pull-right addon-auth">
-                      ${_("Connect Account")}
+                    <a href="#webexmeetingsCredentialsModal" data-toggle="modal" class="pull-right text-primary addon-auth">
+                        ${_("Connect  Account")}
                     </a>
                 </span>
             </small>
