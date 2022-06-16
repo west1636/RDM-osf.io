@@ -62,12 +62,9 @@ webexmeetings_deauthorize_node = generic_views.deauthorize_node(
 @must_be_rdm_addons_allowed(SHORT_NAME)
 def webexmeetings_oauth_connect(auth, **kwargs):
 
-    webex_client_id = request.json.get('webexmeetings_client_id')
-    webex_client_secret = request.json.get('webexmeetings_client_secret')
-
     provider = get_service(SHORT_NAME)
-
-    authorization_url = provider.get_authorization_url(webex_client_id)
+    logger.info(str(provider.client_id))
+    authorization_url = provider.get_authorization_url(provider.client_id)
 
     return authorization_url
 
