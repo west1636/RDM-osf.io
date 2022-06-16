@@ -66,9 +66,6 @@ def webexmeetings_oauth_connect(auth, **kwargs):
     webex_client_secret = request.json.get('webexmeetings_client_secret')
 
     provider = get_service(SHORT_NAME)
-    provider.client_id = webex_client_id
-    provider.client_secret = webex_client_secret
-    provider.save()
 
     authorization_url = provider.get_authorization_url(webex_client_id)
 

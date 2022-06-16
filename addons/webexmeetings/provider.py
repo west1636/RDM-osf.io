@@ -14,8 +14,8 @@ class WebexMeetingsProvider(ExternalProvider):
     short_name = SHORT_NAME
     serializer = WebexMeetingsSerializer
 
-    client_id = settings.CLIENT_ID
-    client_secret = settings.CLIENT_SECRET
+    client_id = settings.WEBEX_MEETINGS_KEY
+    client_secret = settings.WEBEX_MEETINGS_SECRET
     auth_url_base = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/authorize')
     callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
