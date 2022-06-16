@@ -3,6 +3,8 @@
      data-addon-short-name="${ addon_short_name }"
      data-addon-name="${ addon_full_name }">
 
+    <%include file="webexmeetings_credentials_modal.mako"/>
+
     <h4 class="addon-title">
         <img class="addon-icon" src=${addon_icon_url}>
         <span data-bind="text: properName"></span>
