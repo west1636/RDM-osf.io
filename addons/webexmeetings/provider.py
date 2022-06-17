@@ -28,7 +28,8 @@ class WebexMeetingsProvider(ExternalProvider):
             'Authorization': requestToken,
             'Content-Type': 'application/json'
         }
-        info = requests.post(url, headers=requestHeaders, timeout=60)
+        response = requests.get(url, headers=requestHeaders, timeout=60)
+        info = response.json()
         return {
             'provider_id': info['id'],
             'display_name': info['displayName'],
