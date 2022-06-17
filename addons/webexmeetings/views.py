@@ -141,6 +141,11 @@ def webexmeetings_request_api(**kwargs):
     logger.info('requestDataJsonLoads::' +str(requestDataJsonLoads))
     logger.info('requestBody:views::' +str(requestBody))
 
+    if action == 'create':
+        createdMeetings = utils.api_create_webex_meeting(requestBody, account)
+        #synchronize data
+        utils.grdm_create_webex_meeting(addon, account, createdMeetings)
+
     return {}
 
 @must_be_valid_project
