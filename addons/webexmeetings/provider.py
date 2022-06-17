@@ -21,10 +21,16 @@ class WebexMeetingsProvider(ExternalProvider):
     auto_refresh_url = callback_url
 
     def handle_callback(self, response):
+        url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/people/me')
+        requestToken = 'Bearer ' + response['access_token']
+        requestHeaders = {
+            'Authorization': requestToken,
+            'Content-Type': 'application/json'
+        }
+        info = requests.post(url, headers=requestHeaders, timeout=60)
         return {
-            'provider_id': 'xxx',
-            'display_name': 'yyy',
-            'profile_url': 'zzz'
+            'provider_id': info['id'],
+            'display_name': info['displayName'],
         }
 
     def fetch_access_token(self, force_refresh=False):
