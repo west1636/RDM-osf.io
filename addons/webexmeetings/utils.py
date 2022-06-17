@@ -54,7 +54,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
 
     with transaction.atomic():
 
-        createData = models.ZoomMeetings(
+        createData = models.WebexMeetings(
             subject=subject,
             organizer=organizer,
             organizer_fullname=organizer_fullname,
