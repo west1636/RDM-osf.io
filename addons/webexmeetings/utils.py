@@ -40,7 +40,7 @@ def api_create_webex_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_create_zoom_meeting(addon, account, createdData):
+def grdm_create_webex_meeting(addon, account, createdData):
 
     subject = createdData['title']
     organizer = createdData['hostEmail']
@@ -63,6 +63,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
             content=content,
             join_url=joinUrl,
             meetingid=meetingId,
+            meeting_password=password,
             node_settings_id=addon.id,
         )
         createData.save()
