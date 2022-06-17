@@ -1,3 +1,4 @@
+import requests
 from addons.webexmeetings.serializer import WebexMeetingsSerializer
 from addons.webexmeetings import SHORT_NAME, FULL_NAME
 from addons.webexmeetings import settings
