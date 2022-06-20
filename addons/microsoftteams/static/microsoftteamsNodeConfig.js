@@ -44,7 +44,7 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         $osf.block();
 
         return $osf.postJSON(
-            self.urls().create, {
+            self.urls().auth, {
                 microsoftteams_tenant: self.microsoftteamsTenant(),
                 microsoftteams_client_id: self.microsoftteamsClientId(),
                 microsoftteams_client_secret: self.microsoftteamsClientSecret(),
