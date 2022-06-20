@@ -10,7 +10,7 @@ class MicrosoftTeamsProvider(object):
     client_id = settings.MICROSOFT_365_KEY
     client_secret = settings.MICROSOFT_365_SECRET
     auth_url_base = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, MICROSOFT_TENANT, '/auth2/v2.0/authorize')
-    callback_url = '{}{}'.format(settings.MICROSOFT_API_BASE_URL, '')
+    callback_url = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, MICROSOFT_TENANT, '/oauth2/v2.0/token')
     auto_refresh_url = callback_url
 
     def handle_callback(self, response):
