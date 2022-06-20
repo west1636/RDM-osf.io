@@ -2,7 +2,7 @@ from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from addons.microsoftteams import SHORT_NAME, FULL_NAME
 from addons.microsoftteams import settings
 
-class MicrosoftTeamsProvider(object):
+class MicrosoftTeamsProvider(ExternalProvider):
 
     name = FULL_NAME
     short_name = SHORT_NAME
