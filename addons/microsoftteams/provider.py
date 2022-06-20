@@ -1,6 +1,6 @@
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from addons.microsoftteams import SHORT_NAME, FULL_NAME
-
+from addons.microsoftteams import settings
 
 class MicrosoftTeamsProvider(object):
 
