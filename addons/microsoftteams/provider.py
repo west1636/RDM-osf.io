@@ -1,6 +1,11 @@
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from addons.microsoftteams import SHORT_NAME, FULL_NAME
 from addons.microsoftteams import settings
+from oauthlib.common import generate_token
+from website.util import web_url_for
+import urllib.parse
+from framework.sessions import session
+from osf.models.external import ExternalProvider
 
 class MicrosoftTeamsProvider(ExternalProvider):
 
