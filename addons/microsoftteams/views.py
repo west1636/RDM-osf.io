@@ -55,72 +55,13 @@ microsoftteams_deauthorize_node = generic_views.deauthorize_node(
 
 @must_be_logged_in
 @must_be_rdm_addons_allowed(SHORT_NAME)
-def microsoftteams_add_user_account(auth, **kwargs):
-    """Verifies new external account credentials and adds to user's list"""
+def microsoftteams_oauth_connect(auth, **kwargs):
 
-    try:
-        microsoftteams_tenant = request.json.get('microsoftteams_tenant')
-        microsoftteams_client_id = request.json.get('microsoftteams_client_id')
-        microsoftteams_client_secret = request.json.get('microsoftteams_client_secret')
+    provider = get_service(SHORT_NAME)
+    logger.info(str(provider.client_id))
+    authorization_url = provider.get_authorization_url(provider.client_id)
 
-    except KeyError:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
-
-    if not (microsoftteams_tenant and microsoftteams_client_id and microsoftteams_client_secret):
-        return {
-            'message': 'All the fields above are required.'
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    access_token = utils.get_access_token(microsoftteams_tenant, microsoftteams_client_id, microsoftteams_client_secret)
-    if not access_token:
-        return {
-            'message': ('Unable to access account.\n'
-                'Check to make sure that the above credentials are valid.')
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    organization_info = utils.get_organization_info(microsoftteams_tenant, access_token)
-    if not organization_info:
-        return {
-            'message': ('Unable to access account.\n'
-                'Check to make sure that the above credentials are valid.')
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    account = None
-
-    displayName = organization_info['displayName']
-    microsoft_tenant_id = organization_info['id']
-
-    try:
-        account = ExternalAccount(
-            provider=SHORT_NAME,
-            provider_name=FULL_NAME,
-            display_name=displayName,
-            oauth_key='{}\t{}'.format(microsoftteams_client_id, microsoftteams_client_secret),
-            oauth_secret=access_token,
-            provider_id=microsoft_tenant_id,
-        )
-        account.save()
-    except ValidationError:
-        # ... or get the old one
-        account = ExternalAccount.objects.get(
-            provider='microsoftteams', provider_id=microsoft_tenant_id
-        )
-        if account.oauth_key != microsoftteams_client_id or account.oauth_secret != microsoftteams_client_secret:
-            account.oauth_key = microsoftteams_client_id
-            account.oauth_secret = microsoftteams_client_secret
-            account.save()
-
-    assert account is not None
-
-    if not auth.user.external_accounts.filter(id=account.id).exists():
-        auth.user.external_accounts.add(account)
-
-    # Ensure My microsoftteams is enabled.
-    auth.user.get_or_add_addon('microsoftteams', auth=auth)
-    auth.user.save()
-
-    return {}
-
+    return authorization_url
 # ember: ここから
 @must_be_valid_project
 @must_have_addon(SHORT_NAME, 'node')

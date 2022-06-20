@@ -33,9 +33,9 @@ api_routes = {
     'rules': [
 
         Rule(
-            '/settings/microsoftteams/accounts/',
+            '/oauth/connect/microsoftteams',
             'post',
-            views.microsoftteams_add_user_account,
+            views.microsoftteams_oauth_connect,
             json_renderer,
         ),
 

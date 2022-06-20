@@ -53,9 +53,8 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
             $osf.unblock();
             self.clearModal();
             $('#microsoftteamsCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Microsoft 365 credentials.'), 'text-success', null, true);
-            self.updateFromData(response);
-            self.importAuth();
+            self.changeMessage(_('Successfully added Microsoft credentials.'), 'text-success', null, true);
+                window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
