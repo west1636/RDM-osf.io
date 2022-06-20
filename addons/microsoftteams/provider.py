@@ -7,6 +7,8 @@ import urllib.parse
 from framework.sessions import session
 from osf.models.external import ExternalProvider
 
+OAUTH2 = 2
+
 class MicrosoftTeamsProvider(ExternalProvider):
 
     name = FULL_NAME
