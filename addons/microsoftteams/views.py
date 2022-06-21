@@ -89,18 +89,12 @@ def microsoftteams_get_config_ember(**kwargs):
     previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
-    institutionId = rdm_utils.get_institution_id(user)
-    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
-    institutionUsers = utils.makeInstitutionUserList(users)
-
     return {'data': {'id': node._id, 'type': 'microsoftteams-config',
                      'attributes': {
                          'all_microsoft_teams': allMicrosoftTeamsJson,
                          'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
                          'app_name_microsoft_teams': settings.MICROSOFT_TEAMS,
-                         'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
-                         'institution_users': institutionUsers
                      }}}
 
 @must_be_valid_project
@@ -145,19 +139,10 @@ def microsoftteams_request_api(**kwargs):
     logger.info('requestDataJsonLoads::' +str(requestDataJsonLoads))
     logger.info('requestBody:views::' +str(requestBody))
     if action == 'create':
-        createdMeetings = utils.api_create_microsoft_teams_meeting(requestBody, account)
+        createdMeetings = utils.api_create_teams_meeting(requestBody, account)
         #synchronize data
-        utils.grdm_create_microsoft_teams_meeting(addon, account, createdMeetings)
+        utils.grdm_create_teams_meeting(addon, account, createdMeetings)
 
-    if action == 'update':
-        utils.api_update_microsoft_teams_meeting(updateMeetingId, requestBody, account)
-        #synchronize data
-        utils.grdm_update_microsoft_teams_meeting(updateMeetingId, requestBody)
-
-    if action == 'delete':
-        utils.api_delete_microsoft_teams_meeting(deleteMeetingId, account)
-        #synchronize data
-        utils.grdm_delete_microsoft_teams_meeting(deleteMeetingId)
     return {}
 
 @must_be_valid_project
