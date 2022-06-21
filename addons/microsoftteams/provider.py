@@ -50,7 +50,7 @@ class MicrosoftTeamsProvider(ExternalProvider):
         scope_encoded = urllib.parse.quote(settings.MICROSOFT_API_SCOPE, safe="*")
         state = generate_token()
 
-        oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&response_mode={}&scope={}&state={}'.format(self.auth_url_base, client_id, response_type, response_mode, redirect_uri_encoded, scope_encoded, state)
+        oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&response_mode={}&scope={}&state={}'.format(self.auth_url_base, client_id, response_type, redirect_uri_encoded, response_mode, scope_encoded, state)
 
         # save state token to the session for confirmation in the callback
         session.data['oauth_states'][self.short_name] = {'state': state}
