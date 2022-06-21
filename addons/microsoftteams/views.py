@@ -13,7 +13,7 @@ from framework.auth.decorators import must_be_logged_in
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
-from framework.exceptions import HTTPError
+from framework.exceptions import HTTPError, InvalidAuthError
 from rest_framework import status as http_status
 from osf.utils.permissions import ADMIN, WRITE, READ
 from website.project.decorators import (
@@ -95,7 +95,7 @@ def microsoftteams_get_config_ember(**kwargs):
 
     try:
         access_token = addon.fetch_access_token()
-    except exceptions.InvalidAuthError:
+    except InvalidAuthError:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
     return {'data': {'id': node._id, 'type': 'microsoftteams-config',
