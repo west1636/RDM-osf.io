@@ -89,12 +89,18 @@ def microsoftteams_get_config_ember(**kwargs):
     previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
+
     return {'data': {'id': node._id, 'type': 'microsoftteams-config',
                      'attributes': {
                          'all_microsoft_teams': allMicrosoftTeamsJson,
                          'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
                          'app_name_microsoft_teams': settings.MICROSOFT_TEAMS,
+                         'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
+                         'institution_users': institutionUsers
                      }}}
 
 @must_be_valid_project
