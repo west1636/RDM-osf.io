@@ -80,6 +80,9 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     def after_delete(self, user):
         self.deauthorize(Auth(user=user), log=True)
 
+    def fetch_access_token(self):
+        return self.api.fetch_access_token()
+
 class Attendees(ObjectIDMixin, BaseModel):
 
     user_guid = models.CharField(max_length=255, default=None)
