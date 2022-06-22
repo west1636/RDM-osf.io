@@ -25,6 +25,15 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     folder_name = models.TextField(blank=True, null=True)
     folder_location = models.TextField(blank=True, null=True)
 
+    _api = None
+
+    @property
+    def api(self):
+        """Authenticated ExternalProvider instance"""
+        if self._api is None:
+            self._api = MicrosoftTeamsProvider(self.external_account)
+        return self._api
+
     @property
     def folder_path(self):
         return self.folder_name
