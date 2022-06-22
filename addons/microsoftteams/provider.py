@@ -17,7 +17,7 @@ class MicrosoftTeamsProvider(ExternalProvider):
     client_id = settings.MICROSOFT_365_KEY
     client_secret = settings.MICROSOFT_365_SECRET
     auth_url_base = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, settings.MICROSOFT_TENANT, '/oauth2/v2.0/authorize')
-    callback_url = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, settings.MICROSOFT_TENANT, '/oauth2/v2.0/token')
+    callback_url = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, 'common', '/oauth2/v2.0/token')
     auto_refresh_url = callback_url
     refresh_time = settings.REFRESH_TIME
     expiry_time = settings.EXPIRY_TIME
