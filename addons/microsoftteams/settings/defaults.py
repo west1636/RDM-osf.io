@@ -9,3 +9,6 @@ MICROSOFT_TENANT = 'organizations'
 MICROSOFT_API_SCOPE = 'user.read.all calendars.readwrite'
 
 MICROSOFT_TEAMS = 'Microsoft Teams'
+
+EXPIRY_TIME = 60 * 60 * 24 * 90  # 90 days
+REFRESH_TIME = 5 * 60  # 5 minutes

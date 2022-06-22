@@ -19,6 +19,8 @@ class MicrosoftTeamsProvider(ExternalProvider):
     auth_url_base = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, settings.MICROSOFT_TENANT, '/oauth2/v2.0/authorize')
     callback_url = '{}{}{}'.format(settings.MICROSOFT_ONLINE_BASE_URL, settings.MICROSOFT_TENANT, '/oauth2/v2.0/token')
     auto_refresh_url = callback_url
+    refresh_time = settings.REFRESH_TIME
+    expiry_time = settings.EXPIRY_TIME
 
     def handle_callback(self, response):
 
@@ -28,7 +30,8 @@ class MicrosoftTeamsProvider(ExternalProvider):
         }
 
     def fetch_access_token(self, force_refresh=False):
-        self.refresh_oauth_key(force=force_refresh)
+        refreshed = self.refresh_oauth_key(force=force_refresh)
+        logger.info('refresh_oauth_key returns {}'.format(refreshed))
         return self.account.oauth_key
 
     def get_authorization_url(self, client_id):
