@@ -389,6 +389,8 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             expires_at = data.get('expires_at')
             scopes = data.get('scope')
 
+            logger.info('data:::' +str(data))
+
             values = {}
 
             if key:
