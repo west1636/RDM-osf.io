@@ -82,3 +82,23 @@ def grdm_create_teams_meeting(addon, account, createdData):
         createData.save()
 
     return {}
+
+def api_delete_teams_meeting(meetingId, account):
+
+    token = account.oauth_secret
+    url = '{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'v1.0/me/events/', meetingId)
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    response = requests.delete(url, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    return {}
+
+def grdm_delete_teams_meeting(meetingId):
+
+    deleteData = models.ZoomMeetings.objects.get(meetingid=meetingId)
+    deleteData.delete()
+
+    return {}

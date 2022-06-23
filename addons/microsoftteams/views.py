@@ -155,6 +155,11 @@ def microsoftteams_request_api(**kwargs):
         #synchronize data
         utils.grdm_create_teams_meeting(addon, account, createdMeetings)
 
+    if action == 'delete':
+        utils.api_delete_teams_meeting(deleteMeetingId, account)
+        #synchronize data
+        utils.grdm_delete_teams_meeting(deleteMeetingId)
+
     return {}
 
 @must_be_valid_project
