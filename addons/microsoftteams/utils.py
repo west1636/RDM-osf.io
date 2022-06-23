@@ -42,7 +42,7 @@ def makeInstitutionUserList(users):
 
 def api_get_microsoft_username(account, email):
     token = account.oauth_key
-    url = '{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, email)
+    url = '{}{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'v1.0/users/', email)
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
