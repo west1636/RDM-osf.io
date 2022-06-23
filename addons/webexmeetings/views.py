@@ -146,6 +146,16 @@ def webexmeetings_request_api(**kwargs):
         #synchronize data
         utils.grdm_create_webex_meeting(addon, account, createdMeetings)
 
+    if action == 'update':
+        updatedMeetings = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
+        #synchronize data
+        utils.grdm_update_webex_meeting(updateMeetingId, updatedMeetings)
+
+    if action == 'delete':
+        utils.api_delete_webex_meeting(deleteMeetingId, account)
+        #synchronize data
+        utils.grdm_delete_webex_meeting(deleteMeetingId)
+
     return {}
 
 @must_be_valid_project

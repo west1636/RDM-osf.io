@@ -69,3 +69,58 @@ def grdm_create_webex_meeting(addon, account, createdData):
         createData.save()
 
     return {}
+
+def api_update_webex_meeting(meetingId, requestData, account):
+
+    token = account.oauth_key
+    url = '{}{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetings/', meetingId)
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    requestBody = json.dumps(requestData)
+    response = requests.put(url, data=requestBody, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    responseData = response.json()
+    logger.info('responseData::' + str(responseData))
+    return responseData
+
+def grdm_update_webex_meeting(meetingId, updatedData):
+
+    subject = createdData['title']
+    startDatetime = createdData['start']
+    endDatetime = createdData['end']
+    content = createdData['agenda']
+    meetingId = createdData['id']
+
+    updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
+
+    updateData.subject = subject
+    updateData.start_datetime = startDatetime
+    updateData.end_datetime = endDatetime
+    updateData.content = content
+    updateData.save()
+    logger.info('updateData:::' + str(updateData))
+
+    return {}
+
+def api_delete_webex_meeting(meetingId, account):
+
+    token = account.oauth_key
+    url = '{}{}{}'.format(settings.WEBEX_API_BASE_URL, '/v1/meetings/', meetingId)
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    response = requests.delete(url, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    return {}
+
+def grdm_delete_webex_meeting(meetingId):
+
+    deleteData = models.WebexMeetings.objects.get(meetingid=meetingId)
+    deleteData.delete()
+
+    return {}
