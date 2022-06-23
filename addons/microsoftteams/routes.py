@@ -90,6 +90,16 @@ api_routes = {
 
         Rule(
             [
+                '/project/<pid>/microsoftteams/register_teams_email',
+                '/project/<pid>/node/<nid>/microsoftteams/register_teams_email',
+            ],
+            'post',
+            views.microsoftteams_register_teams_email,
+            json_renderer,
+        ),
+
+        Rule(
+            [
                 '/project/<pid>/microsoftteams/get_meetings',
                 '/project/<pid>/node/<nid>/microsoftteams/get_meetings',
             ],
