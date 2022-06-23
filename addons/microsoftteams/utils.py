@@ -83,7 +83,7 @@ def grdm_create_teams_meeting(addon, account, createdData):
     organizer_fullname = account.display_name
 
     for attendeeMail in attendees:
-        attendeeObj = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
+        attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=attendeeMail)
         attendeeId = attendeeObj.id
         attendeeIds.append(attendeeId)
 
