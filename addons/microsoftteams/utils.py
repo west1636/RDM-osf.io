@@ -95,8 +95,9 @@ def api_update_teams_meeting(meetingId, requestData, account):
     requestBody = json.dumps(requestData)
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
-    logger.info('response::' + str(response))
-    return {}
+    responseData = response.json()
+    logger.info('responseData::' + str(responseData))
+    return responseData
 
 def grdm_update_teams_meeting(meetingId, updatedData):
 
