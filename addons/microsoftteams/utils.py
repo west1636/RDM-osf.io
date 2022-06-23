@@ -98,7 +98,7 @@ def api_delete_teams_meeting(meetingId, account):
 
 def grdm_delete_teams_meeting(meetingId):
 
-    deleteData = models.ZoomMeetings.objects.get(meetingid=meetingId)
+    deleteData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
     deleteData.delete()
 
     return {}
