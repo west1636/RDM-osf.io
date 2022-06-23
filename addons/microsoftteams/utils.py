@@ -9,6 +9,7 @@ import logging
 from datetime import timedelta
 import dateutil.parser
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 logger = logging.getLogger(__name__)
 
 # widget: ここから
@@ -83,7 +84,11 @@ def grdm_create_teams_meeting(addon, account, createdData):
     organizer_fullname = account.display_name
 
     for attendeeMail in attendees:
-        attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=attendeeMail)
+        address = attendeeMail['emailAddress']['address']
+        try:
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=address)
+        except ObjectDoesNotExist:
+            continue
         attendeeId = attendeeObj.id
         attendeeIds.append(attendeeId)
 

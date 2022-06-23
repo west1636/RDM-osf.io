@@ -136,6 +136,8 @@ def microsoftteams_set_config_ember(**kwargs):
                          'all_microsoft_teams': allMicrosoftTeamsJson,
                          'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
+                         'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
+                         'institution_users': institutionUsers
                      }}}
 
 @must_be_valid_project
