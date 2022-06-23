@@ -123,6 +123,12 @@ def microsoftteams_set_config_ember(**kwargs):
     upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
     previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
 
+    nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
+
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
+
     return {'data': {'id': node._id, 'type': 'microsoftteams-config',
                      'attributes': {
                          'all_microsoft_teams': allMicrosoftTeamsJson,
