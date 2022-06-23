@@ -83,11 +83,13 @@ def microsoftteams_get_config_ember(**kwargs):
     allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
     previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
+    nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
     institutionId = rdm_utils.get_institution_id(user)
@@ -105,6 +107,7 @@ def microsoftteams_get_config_ember(**kwargs):
                          'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
                          'app_name_microsoft_teams': settings.MICROSOFT_TEAMS,
+                         'node_attendees_all': nodeAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'institution_users': institutionUsers
                      }}}
@@ -209,7 +212,7 @@ def microsoftteams_register_teams_email(**kwargs):
     else:
         if not is_guest:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            username = utils.getMicrosoftUserName(account, email)
+            username = utils.api_get_microsoft_username(account, email)
 
         attendeeInfo = models.Attendees(
             user_guid=guid,
