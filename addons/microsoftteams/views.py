@@ -168,6 +168,47 @@ def microsoftteams_request_api(**kwargs):
     return {}
 
 @must_be_valid_project
+@must_have_permission(WRITE)
+@must_have_addon(SHORT_NAME, 'node')
+def microsoftteams_register_teams_email(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+
+    requestData = request.get_data()
+    requestDataJson = json.loads(requestData)
+    logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
+    _id = requestDataJson['_id']
+    guid = requestDataJson['guid']
+    fullname = requestDataJson['fullname']
+    email = requestDataJson['email']
+    is_guest = requestDataJson['is_guest']
+
+    nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    nodeId = nodeSettings.id
+
+    if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
+        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+        if not is_guest:
+            attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+        attendee.microsoft_teams_mail = email
+        attendee.save()
+    else:
+        if not is_guest:
+            fullname = OSFUser.objects.get(guids___id=guid).fullname
+
+        attendeeInfo = models.Attendees(
+            user_guid=guid,
+            fullname=fullname,
+            is_guest=is_guest,
+            microsoft_teams_mail=email,
+            node_settings=nodeSettings,
+        )
+        attendeeInfo.save()
+
+    return {}
+
+@must_be_valid_project
 @must_have_permission(READ)
 @must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_get_meetings(**kwargs):
