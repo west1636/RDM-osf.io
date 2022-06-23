@@ -75,10 +75,17 @@ def grdm_create_teams_meeting(addon, account, createdData):
     organizer = createdData['organizer']['emailAddress']['address']
     startDatetime = createdData['start']['dateTime']
     endDatetime = createdData['end']['dateTime']
+    attendees = createdData['attendees']
+    attendeeIds = []
     content = createdData['bodyPreview']
     joinUrl = createdData['onlineMeeting']['joinUrl']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
+
+    for attendeeMail in attendees:
+        attendeeObj = models.Attendees.objects.get(node_settings_id=node.id, microsoft_teams_mail=attendeeMail)
+        attendeeId = attendeeObj.id
+        attendeeIds.append(attendeeId)
 
     with transaction.atomic():
 
@@ -93,6 +100,8 @@ def grdm_create_teams_meeting(addon, account, createdData):
             meetingid=meetingId,
             node_settings_id=addon.id,
         )
+        createData.save()
+        createData.attendees = attendeeIds
         createData.save()
 
     return {}
