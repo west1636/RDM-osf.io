@@ -85,7 +85,7 @@ def grdm_create_teams_meeting(addon, account, createdData):
 
 def api_update_teams_meeting(meetingId, requestData, account):
 
-    token = account.oauth_secret
+    token = account.oauth_key
     url = '{}{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'v1.0/me/events', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
@@ -119,7 +119,7 @@ def grdm_update_teams_meeting(meetingId, updatedData):
 
 def api_delete_teams_meeting(meetingId, account):
 
-    token = account.oauth_secret
+    token = account.oauth_key
     url = '{}{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'v1.0/me/events/', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
