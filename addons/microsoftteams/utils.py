@@ -101,7 +101,6 @@ def api_update_teams_meeting(meetingId, requestData, account):
 def grdm_update_teams_meeting(meetingId, updatedData):
 
     subject = updatedData['subject']
-    organizer = updatedData['organizer']['emailAddress']['address']
     startDatetime = updatedData['start']['dateTime']
     endDatetime = updatedData['end']['dateTime']
     content = updatedData['bodyPreview']
