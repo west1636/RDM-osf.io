@@ -180,7 +180,10 @@ def microsoftteams_register_teams_email(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
-
+    account_id = addon.external_account_id
+    account = ExternalAccount.objects.get(
+        provider='microsoftteams', id=account_id
+    )
     requestData = request.get_data()
     requestDataJson = json.loads(requestData)
     logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
@@ -202,12 +205,14 @@ def microsoftteams_register_teams_email(**kwargs):
     else:
         if not is_guest:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
+            username = utils.getMicrosoftUserName(account, email)
 
         attendeeInfo = models.Attendees(
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
             microsoft_teams_mail=email,
+            microsoft_teams_user_name=username,
             node_settings=nodeSettings,
         )
         attendeeInfo.save()
