@@ -83,6 +83,40 @@ def grdm_create_teams_meeting(addon, account, createdData):
 
     return {}
 
+def api_update_teams_meeting(meetingId, requestData, account):
+
+    token = account.oauth_secret
+    url = '{}{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'v1.0/me/events', meetingId)
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    requestBody = json.dumps(requestData)
+    response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    logger.info('response::' + str(response))
+    return {}
+
+def grdm_update_teams_meeting(meetingId, updatedData):
+
+    subject = updatedData['subject']
+    organizer = updatedData['organizer']['emailAddress']['address']
+    startDatetime = updatedData['start']['dateTime']
+    endDatetime = updatedData['end']['dateTime']
+    content = updatedData['bodyPreview']
+
+    updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
+
+    updateData.subject = subject
+    updateData.start_datetime = startDatetime
+    updateData.end_datetime = endDatetime
+    updateData.content = content
+    updateData.save()
+    logger.info('updateData:::' + str(updateData))
+
+    return {}
+
 def api_delete_teams_meeting(meetingId, account):
 
     token = account.oauth_secret
