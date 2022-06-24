@@ -217,6 +217,8 @@ def microsoftteams_register_teams_email(**kwargs):
         if not is_guest:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             username = utils.api_get_microsoft_username(account, email)
+        else:
+            username = email
 
         attendeeInfo = models.Attendees(
             user_guid=guid,
