@@ -199,6 +199,7 @@ def microsoftteams_register_teams_email(**kwargs):
     fullname = requestDataJson['fullname']
     email = requestDataJson['email']
     is_guest = requestDataJson['is_guest']
+    username = ''
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     nodeId = nodeSettings.id
