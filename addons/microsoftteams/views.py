@@ -123,11 +123,13 @@ def microsoftteams_set_config_ember(**kwargs):
     allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
     previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
+    nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
     institutionId = rdm_utils.get_institution_id(user)
@@ -139,6 +141,7 @@ def microsoftteams_set_config_ember(**kwargs):
                          'all_microsoft_teams': allMicrosoftTeamsJson,
                          'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
+                         'node_attendees_all': nodeAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'institution_users': institutionUsers
                      }}}
