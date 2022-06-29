@@ -70,7 +70,7 @@ def api_create_teams_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_create_teams_meeting(addon, account, createdData):
+def grdm_create_teams_meeting(addon, account, requestData, createdData):
 
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
@@ -78,10 +78,11 @@ def grdm_create_teams_meeting(addon, account, createdData):
     endDatetime = createdData['end']['dateTime']
     attendees = createdData['attendees']
     attendeeIds = []
-    content = createdData['body']['content']
+    content = createdData['bodyPreview']
     joinUrl = createdData['onlineMeeting']['joinUrl']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
+    contentExtract = requestData['contentExtract']
 
     logger.info('createdData:utils::' +str(createdData))
 
@@ -93,6 +94,9 @@ def grdm_create_teams_meeting(addon, account, createdData):
             continue
         attendeeId = attendeeObj.id
         attendeeIds.append(attendeeId)
+
+    if contentExtract in content:
+        content = contentExtract
 
     with transaction.atomic():
 

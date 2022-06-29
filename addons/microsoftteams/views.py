@@ -169,7 +169,7 @@ def microsoftteams_request_api(**kwargs):
     if action == 'create':
         createdMeetings = utils.api_create_teams_meeting(requestBody, account)
         #synchronize data
-        utils.grdm_create_teams_meeting(addon, account, createdMeetings)
+        utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings)
 
     if action == 'update':
         updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
