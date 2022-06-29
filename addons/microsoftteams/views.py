@@ -211,7 +211,11 @@ def microsoftteams_register_teams_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
         if not is_guest:
             attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+            username = utils.api_get_microsoft_username(account, email)
+        else:
+            username = email
         attendee.microsoft_teams_mail = email
+        attendee.microsoft_teams_user_name = username
         attendee.save()
     else:
         if not is_guest:
