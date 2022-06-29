@@ -79,6 +79,8 @@ def project_webexmeetings(**kwargs):
 def webexmeetings_get_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
+    auth = kwargs['auth']
+    user = auth.user
 
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
@@ -86,10 +88,18 @@ def webexmeetings_get_config_ember(**kwargs):
     allWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
+    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     upcomingWebexMeetingsJson = serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)
     previousWebexMeetingsJson = serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)
+    nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
+
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
@@ -97,6 +107,9 @@ def webexmeetings_get_config_ember(**kwargs):
                          'upcoming_webex_meetings': upcomingWebexMeetingsJson,
                          'previous_webex_meetings': previousWebexMeetingsJson,
                          'app_name_webex_meetings': settings.WEBEX_MEETINGS,
+                         'node_attendees_all': nodeAttendeesAllJson,
+                         'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
+                         'institution_users': institutionUsers
                      }}}
 
 @must_be_valid_project
@@ -108,16 +121,23 @@ def webexmeetings_set_config_ember(**kwargs):
     allWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
+    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     upcomingWebexMeetingsJson = serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)
     previousWebexMeetingsJson = serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)
+    nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
                          'all_webex_meetings': allWebexMeetingsJson,
                          'upcoming_webex_meetings': upcomingWebexMeetingsJson,
                          'previous_webex_meetings': previousWebexMeetingsJson,
+                         'node_attendees_all': nodeAttendeesAllJson,
+                         'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
+                         'institution_users': institutionUsers
                      }}}
 
 @must_be_valid_project
