@@ -78,7 +78,7 @@ def grdm_create_teams_meeting(addon, account, createdData):
     endDatetime = createdData['end']['dateTime']
     attendees = createdData['attendees']
     attendeeIds = []
-    content = createdData['bodyPreview']
+    content = createdData['body']['content']
     joinUrl = createdData['onlineMeeting']['joinUrl']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
