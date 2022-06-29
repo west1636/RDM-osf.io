@@ -83,6 +83,8 @@ def grdm_create_teams_meeting(addon, account, createdData):
     meetingId = createdData['id']
     organizer_fullname = account.display_name
 
+    logger.info('createdData:utils::' +str(createdData))
+
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
         try:
