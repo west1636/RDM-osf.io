@@ -90,6 +90,16 @@ api_routes = {
 
         Rule(
             [
+                '/project/<pid>/webexmeetings/register_teams_email',
+                '/project/<pid>/node/<nid>/webexmeetings/register_teams_email',
+            ],
+            'post',
+            views.webexmeetings_register_webex_email,
+            json_renderer,
+        ),
+
+        Rule(
+            [
                 '/project/<pid>/webexmeetings/get_meetings',
                 '/project/<pid>/node/<nid>/webexmeetings/get_meetings',
             ],

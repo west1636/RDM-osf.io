@@ -39,6 +39,20 @@ def makeInstitutionUserList(users):
 
     return ret
 
+def api_get_webex_meetings_username(account, email):
+    token = account.oauth_key
+    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/people/me')
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    response = requests.get(url, headers=requestHeaders, timeout=60)
+    responseData = response.json()
+    logger.info('responseData::' +str(responseData))
+    username = responseData['displayName']
+    return username
+
 def api_create_webex_meeting(requestData, account):
 
     token = account.oauth_key

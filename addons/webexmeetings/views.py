@@ -117,6 +117,8 @@ def webexmeetings_get_config_ember(**kwargs):
 def webexmeetings_set_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
+    auth = kwargs['auth']
+    user = auth.user
 
     allWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
@@ -179,6 +181,59 @@ def webexmeetings_request_api(**kwargs):
         utils.api_delete_webex_meeting(deleteMeetingId, account)
         #synchronize data
         utils.grdm_delete_webex_meeting(deleteMeetingId)
+
+    return {}
+
+@must_be_valid_project
+@must_have_permission(WRITE)
+@must_have_addon(SHORT_NAME, 'node')
+def webexmeetings_register_webex_email(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+    account_id = addon.external_account_id
+    account = ExternalAccount.objects.get(
+        provider='webexmeetings', id=account_id
+    )
+    requestData = request.get_data()
+    requestDataJson = json.loads(requestData)
+    logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
+    _id = requestDataJson['_id']
+    guid = requestDataJson['guid']
+    fullname = requestDataJson['fullname']
+    email = requestDataJson['email']
+    is_guest = requestDataJson['is_guest']
+    username = ''
+
+    nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    nodeId = nodeSettings.id
+
+    if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
+        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+        if not is_guest:
+            attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+            username = utils.api_get_webex_meetings_username(account, email)
+        else:
+            username = email
+        attendee.webex_meetings_mail = email
+        attendee.webex_meetings_user_name = username
+        attendee.save()
+    else:
+        if not is_guest:
+            fullname = OSFUser.objects.get(guids___id=guid).fullname
+            username = utils.api_get_webex_meetings_username(account, email)
+        else:
+            username = email
+
+        attendeeInfo = models.Attendees(
+            user_guid=guid,
+            fullname=fullname,
+            is_guest=is_guest,
+            webex_meetings_mail=email,
+            webex_meetings_user_name=username,
+            node_settings=nodeSettings,
+        )
+        attendeeInfo.save()
 
     return {}
 
