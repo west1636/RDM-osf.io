@@ -130,6 +130,10 @@ def webexmeetings_set_config_ember(**kwargs):
     nodeAttendeesAllJson = serializers.serialize('json', nodeAttendeesAll, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
+
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
                          'all_webex_meetings': allWebexMeetingsJson,
