@@ -8,6 +8,8 @@ MICROSOFT_ONLINE_BASE_URL = 'https://login.microsoftonline.com/'
 MICROSOFT_TENANT = 'organizations'
 MICROSOFT_API_SCOPE = 'offline_access user.read.all calendars.readwrite'
 
+MICROSOFT_TEAMS_SIGNATURE = '{1}<br><a href="{2}">会議に参加するにはここをクリック</a>'
+
 MICROSOFT_TEAMS = 'Microsoft Teams'
 
 EXPIRY_TIME = 60 * 60 * 24 * 90  # 90 days

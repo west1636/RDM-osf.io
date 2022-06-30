@@ -109,7 +109,8 @@ def microsoftteams_get_config_ember(**kwargs):
                          'app_name_microsoft_teams': settings.MICROSOFT_TEAMS,
                          'node_attendees_all': nodeAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
-                         'institution_users': institutionUsers
+                         'institution_users': institutionUsers,
+                         'microsoft_teams_signature': settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
 
 @must_be_valid_project
@@ -174,7 +175,7 @@ def microsoftteams_request_api(**kwargs):
     if action == 'update':
         updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
         #synchronize data
-        utils.grdm_update_teams_meeting(updateMeetingId, updatedMeetings)
+        utils.grdm_update_teams_meeting(updateMeetingId, requestDataJsonLoads, updatedMeetings)
 
     if action == 'delete':
         utils.api_delete_teams_meeting(deleteMeetingId, account)

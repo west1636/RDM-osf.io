@@ -133,18 +133,33 @@ def api_update_teams_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_teams_meeting(meetingId, updatedData):
+def grdm_update_teams_meeting(meetingId, requestData, updatedData):
 
     subject = updatedData['subject']
     startDatetime = updatedData['start']['dateTime']
     endDatetime = updatedData['end']['dateTime']
+    attendees = updatedData['attendees']
+    attendeeIds = []
     content = updatedData['bodyPreview']
+    contentExtract = requestData['contentExtract']
+    if contentExtract in content:
+        content = contentExtract
+
+    for attendeeMail in attendees:
+        address = attendeeMail['emailAddress']['address']
+        try:
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=address)
+        except ObjectDoesNotExist:
+            continue
+        attendeeId = attendeeObj.id
+        attendeeIds.append(attendeeId)
 
     updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
     updateData.end_datetime = endDatetime
+    updateData.attendees = attendeeIds
     updateData.content = content
     updateData.save()
     logger.info('updateData:::' + str(updateData))
