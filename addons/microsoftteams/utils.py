@@ -133,7 +133,7 @@ def api_update_teams_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_teams_meeting(meetingId, requestData, updatedData):
+def grdm_update_teams_meeting(addon, meetingId, requestData, updatedData):
 
     subject = updatedData['subject']
     startDatetime = updatedData['start']['dateTime']
