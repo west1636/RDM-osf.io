@@ -175,7 +175,7 @@ def microsoftteams_request_api(**kwargs):
     if action == 'update':
         updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
         #synchronize data
-        utils.grdm_update_teams_meeting(updateMeetingId, requestDataJsonLoads, updatedMeetings)
+        utils.grdm_update_teams_meeting(addon, updateMeetingId, requestDataJsonLoads, updatedMeetings)
 
     if action == 'delete':
         utils.api_delete_teams_meeting(deleteMeetingId, account)
