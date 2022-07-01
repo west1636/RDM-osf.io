@@ -117,11 +117,11 @@ def api_update_webex_meeting(meetingId, requestData, account):
 
 def grdm_update_webex_meeting(meetingId, updatedData):
 
-    subject = createdData['title']
-    startDatetime = createdData['start']
-    endDatetime = createdData['end']
-    content = createdData['agenda']
-    meetingId = createdData['id']
+    subject = updatedData['title']
+    startDatetime = updatedData['start']
+    endDatetime = updatedData['end']
+    content = updatedData['agenda']
+    meetingId = updatedData['id']
 
     updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
 
