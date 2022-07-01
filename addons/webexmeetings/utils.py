@@ -78,7 +78,6 @@ def get_invitees(account):
         'Authorization': requestToken,
         'Content-Type': 'application/json'
     }
-    requestBody = json.dumps(requestData)
     response = requests.get(url, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     invitees = response.json()
