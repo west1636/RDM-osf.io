@@ -69,6 +69,23 @@ def api_create_webex_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
+def get_invitees(account):
+
+    token = account.oauth_key
+    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees')
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    requestBody = json.dumps(requestData)
+    response = requests.get(url, headers=requestHeaders, timeout=60)
+    response.raise_for_status()
+    invitees = response.json()
+    logger.info('invitees::' + str(invitees))
+
+    return invitees
+
 def grdm_create_webex_meeting(addon, account, createdData):
 
     subject = createdData['title']
@@ -80,6 +97,8 @@ def grdm_create_webex_meeting(addon, account, createdData):
     meetingId = createdData['id']
     password = createdData['password']
     organizer_fullname = account.display_name
+
+    invitees = get_invitees(account)
 
     with transaction.atomic():
 
@@ -95,7 +114,23 @@ def grdm_create_webex_meeting(addon, account, createdData):
             meeting_password=password,
             node_settings_id=addon.id,
         )
+
+        for invitee in invitees:
+
+            attendeeObj = models.Attendees.objects.get(node_settings_id=node.id, webex_meetings_mail=invitee['email'])
+            attendeeId = attendeeObj.id
+            attendeeIds.append(attendeeId)
+
+            relation = models.AllMeetingInformationAttendeesRelation(
+                attendees_id=attendeeId,
+                all_meeting_information_id=createData.id,
+                webex_meetings_invitee_id=invitee['id']
+                )
+
         createData.save()
+        createData.attendees = attendeeIds
+        createData.save()
+        relation.save()
 
     return {}
 
