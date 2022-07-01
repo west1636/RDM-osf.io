@@ -203,7 +203,6 @@ def webexmeetings_register_webex_email(**kwargs):
     fullname = requestDataJson['fullname']
     email = requestDataJson['email']
     is_guest = requestDataJson['is_guest']
-    username = ''
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     nodeId = nodeSettings.id
@@ -212,25 +211,17 @@ def webexmeetings_register_webex_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
         if not is_guest:
             attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-            username = utils.api_get_webex_meetings_username(account, email)
-        else:
-            username = email
         attendee.webex_meetings_mail = email
-        attendee.webex_meetings_display_name = username
         attendee.save()
     else:
         if not is_guest:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            username = utils.api_get_webex_meetings_username(account, email)
-        else:
-            username = email
 
         attendeeInfo = models.Attendees(
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
             webex_meetings_mail=email,
-            webex_meetings_display_name=username,
             node_settings=nodeSettings,
         )
         attendeeInfo.save()
