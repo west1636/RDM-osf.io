@@ -72,7 +72,7 @@ def api_create_webex_meeting(requestData, account):
 def get_invitees(account, meetingId):
 
     token = account.oauth_key
-    url = '{}{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees?', meetingId)
+    url = '{}{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees?meetingId=', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
