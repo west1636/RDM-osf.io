@@ -27,9 +27,17 @@ class MicrosoftTeamsProvider(ExternalProvider):
 
     def handle_callback(self, response):
 
+        url = '{}{}'.format(settings.MICROSOFT_GRAPH_API_BASE_URL, 'me')
+        requestToken = 'Bearer ' + response['access_token']
+        requestHeaders = {
+            'Authorization': requestToken,
+            'Content-Type': 'application/json'
+        }
+        response = requests.get(url, headers=requestHeaders, timeout=60)
+        info = response.json()
         return {
-            'provider_id': 'aa',
-            'display_name': 'bb',
+            'provider_id': info['id'],
+            'display_name': info['displayName'],
         }
 
     def fetch_access_token(self, force_refresh=False):
