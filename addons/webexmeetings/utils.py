@@ -69,10 +69,10 @@ def api_create_webex_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def get_invitees(account):
+def get_invitees(account, meetingId):
 
     token = account.oauth_key
-    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees')
+    url = '{}{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees?', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
@@ -97,7 +97,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
     password = createdData['password']
     organizer_fullname = account.display_name
 
-    invitees = get_invitees(account)
+    invitees = get_invitees(account, meetingId)
 
     with transaction.atomic():
 
