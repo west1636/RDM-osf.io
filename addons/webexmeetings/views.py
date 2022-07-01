@@ -216,7 +216,7 @@ def webexmeetings_register_webex_email(**kwargs):
         else:
             username = email
         attendee.webex_meetings_mail = email
-        attendee.webex_meetings_user_name = username
+        attendee.webex_meetings_display_name = username
         attendee.save()
     else:
         if not is_guest:
@@ -230,7 +230,7 @@ def webexmeetings_register_webex_email(**kwargs):
             fullname=fullname,
             is_guest=is_guest,
             webex_meetings_mail=email,
-            webex_meetings_user_name=username,
+            webex_meetings_display_name=username,
             node_settings=nodeSettings,
         )
         attendeeInfo.save()
