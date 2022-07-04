@@ -220,8 +220,8 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
             attendeeIdsFormer.append(craetedAttendeeId)
 
             craeteRelation = models.WebexMeetingsAttendeesRelation(
-                attendees_id=attendeeId,
-                all_meeting_information_id=updateData.id,
+                attendees_id=craetedAttendeeId,
+                webex_meetings_id=updateData.id,
                 webex_meetings_invitee_id=createdInvitee['id']
             )
             craeteRelation.save()
