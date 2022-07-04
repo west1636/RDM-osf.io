@@ -170,7 +170,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
     updateData.content = content
 
     token = account.oauth_key
-    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingsInvitees/')
+    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees/')
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
