@@ -123,7 +123,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
 
             relation = models.WebexMeetingsAttendeesRelation(
                 attendees_id=attendeeId,
-                all_meeting_information_id=createData.id,
+                webex_meetings_id=createData.id,
                 webex_meetings_invitee_id=invitee['id']
                 )
             relation.save()
