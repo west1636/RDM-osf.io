@@ -161,7 +161,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, account):
     createInvitees = requestData['createInvitees']
     deleteInvitees = requestData['deleteInvitees']
 
-    updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
+    updateData = models.WebexMeetings.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
