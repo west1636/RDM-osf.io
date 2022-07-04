@@ -115,6 +115,8 @@ def grdm_create_webex_meeting(addon, account, createdData):
             node_settings_id=addon.id,
         )
 
+        createData.save()
+
         for invitee in invitees:
 
             attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, webex_meetings_mail=invitee['email'])
@@ -128,7 +130,6 @@ def grdm_create_webex_meeting(addon, account, createdData):
                 )
             relation.save()
 
-        createData.save()
         createData.attendees = attendeeIds
         createData.save()
 
@@ -181,11 +182,11 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, account):
     deletedInvitees = []
     attendeeIdsFormer = []
 
-    for createInvitee in requestBody['createInvitees']:
+    for createInvitee in createInvitees:
         createdResponse = requests.post(url, data=createInvitee, headers=requestHeaders, timeout=60)
         cRes = createdResponse.json()
         createdInvitees.append(cRes)
-    for deleteInvitee in requestBody['deleteInvitees']:
+    for deleteInvitee in deleteInvitees:
         deletedResponse = requests.delete('{}{}'.format(url, deleteInvitee), headers=requestHeaders, timeout=60)
         if deletedResponse.status_code == 200:
             deletedInvitees.append(deleteInvitee)
