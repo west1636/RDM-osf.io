@@ -151,7 +151,7 @@ def api_update_webex_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_webex_meeting(meetingId, requestData, updatedData, account):
+def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, account):
 
     subject = updatedData['title']
     startDatetime = updatedData['start']
@@ -203,7 +203,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, account):
         for createdInvitee in createdInvitees:
 
             craeteRelation = None
-            createdAttendeeObj = models.Attendees.objects.get(node_settings_id=node.id, webex_meetings_mail=createdInvitee['email'])
+            createdAttendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, webex_meetings_mail=createdInvitee['email'])
             craetedAttendeeId = createdAttendeeObj.id
             attendeeIdsFormer.append(craetedAttendeeId)
 

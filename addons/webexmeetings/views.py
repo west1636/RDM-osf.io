@@ -178,7 +178,7 @@ def webexmeetings_request_api(**kwargs):
     if action == 'update':
         updatedMeetings = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
         #synchronize data
-        utils.grdm_update_webex_meeting(updateMeetingId, requestDataJsonLoads, updatedMeetings, account)
+        utils.grdm_update_webex_meeting(updateMeetingId, requestDataJsonLoads, updatedMeetings, addon, account)
 
     if action == 'delete':
         utils.api_delete_webex_meeting(deleteMeetingId, account)
