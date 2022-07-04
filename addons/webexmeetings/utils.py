@@ -149,7 +149,7 @@ def api_update_webex_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_webex_meeting(meetingId, updatedData):
+def grdm_update_webex_meeting(meetingId, requestData, updatedData, account):
 
     subject = updatedData['title']
     startDatetime = updatedData['start']
@@ -157,13 +157,73 @@ def grdm_update_webex_meeting(meetingId, updatedData):
     content = updatedData['agenda']
     meetingId = updatedData['id']
 
+    createInvitees = requestData['createInvitees']
+    deleteInvitees = requestData['deleteInvitees']
+
     updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
     updateData.end_datetime = endDatetime
     updateData.content = content
-    updateData.save()
+
+    token = account.oauth_key
+    url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingsInvitees/')
+    requestToken = 'Bearer ' + token
+    requestHeaders = {
+        'Authorization': requestToken,
+        'Content-Type': 'application/json'
+    }
+    requestBody = json.dumps(requestData)
+
+    createdInvitees = []
+    deletedInvitees = []
+    attendeeIdsFormer = []
+
+    for createInvitee in requestBody['createInvitees']:
+        createdResponse = requests.post(url, data=createInvitee, headers=requestHeaders, timeout=60)
+        cRes = createdResponse.json()
+        createdInvitees.append(cRes)
+    for deleteInvitee in requestBody['deleteInvitees']:
+        deletedResponse = requests.delete('{}{}'.format(url, deleteInvitee), headers=requestHeaders, timeout=60)
+        if deletedResponse.status_code == 200:
+            deletedInvitees.append(deleteInvitee)
+
+    qsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__meetingid=meetingId)
+
+    for qsAttendeesRelation in qsAttendeesRelation:
+
+        attendeeIdsFormer.append(qsAttendeesRelation.attendees)
+
+
+    with transaction.atomic():
+
+        for createdInvitee in createdInvitees:
+
+            craeteRelation = None
+            createdAttendeeObj = models.Attendees.objects.get(node_settings_id=node.id, webex_meetings_mail=createdInvitee['email'])
+            craetedAttendeeId = createdAttendeeObj.id
+            attendeeIdsFormer.append(craetedAttendeeId)
+
+            craeteRelation = models.WebexMeetingsAttendeesRelation(
+                attendees_id=attendeeId,
+                all_meeting_information_id=updateData.id,
+                webex_meetings_invitee_id=createdInvitee['id']
+            )
+            craeteRelation.save()
+
+        for deletedInviteeId in deletedInvitees:
+
+            deleteRelation = models.WebexMeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
+            deletedAttendeeId = deletedAttendeeObj.attendees
+            attendeeIdsFormer.remove(deletedAttendeeId)
+            deleteRelation.delete()
+        attendeeIds = attendeeIdsFormer
+
+        updateData.save()
+        updateData.attendees = attendeeIds
+        updateData.save()
+
     logger.info('updateData:::' + str(updateData))
 
     return {}
