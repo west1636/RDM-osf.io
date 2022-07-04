@@ -83,7 +83,7 @@ def get_invitees(account, meetingId):
     invitees = response.json()
     logger.info('invitees::' + str(invitees))
 
-    return invitees
+    return invitees['items']
 
 def grdm_create_webex_meeting(addon, account, createdData):
 
