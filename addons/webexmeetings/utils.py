@@ -98,6 +98,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
     organizer_fullname = account.display_name
 
     invitees = get_invitees(account, meetingId)
+    attendeeIds = []
 
     with transaction.atomic():
 
@@ -125,11 +126,11 @@ def grdm_create_webex_meeting(addon, account, createdData):
                 all_meeting_information_id=createData.id,
                 webex_meetings_invitee_id=invitee['id']
                 )
+            relation.save()
 
         createData.save()
         createData.attendees = attendeeIds
         createData.save()
-        relation.save()
 
     return {}
 
