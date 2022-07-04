@@ -195,7 +195,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
         deletedResponse = requests.delete('{}{}'.format(url, deleteInvitee), headers=requestHeaders, timeout=60)
         logger.info('deletedResponse status::' + str(deletedResponse))
         logger.info('deletedResponse status::' + str(deletedResponse.status_code))
-        if deletedResponse.status_code == 200:
+        if deletedResponse.ok:
             deletedInvitees.append(deleteInvitee)
 
     logger.info('createdInvitees::' + str(createdInvitees))
