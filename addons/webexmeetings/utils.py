@@ -116,7 +116,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
 
         for invitee in invitees:
 
-            attendeeObj = models.Attendees.objects.get(node_settings_id=node.id, webex_meetings_mail=invitee['email'])
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, webex_meetings_mail=invitee['email'])
             attendeeId = attendeeObj.id
             attendeeIds.append(attendeeId)
 
