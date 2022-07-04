@@ -183,18 +183,23 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
     attendeeIdsFormer = []
 
     logger.info('createInvitees::' + str(createInvitees))
+    logger.info('deleteInvitees::' + str(deleteInvitees))
 
     for createInvitee in createInvitees:
         logger.info('webex1::' + str(createInvitee))
+        createInvitee = json.dumps(createInvitee)
         createdResponse = requests.post(url, data=createInvitee, headers=requestHeaders, timeout=60)
         cRes = createdResponse.json()
         createdInvitees.append(cRes)
     for deleteInvitee in deleteInvitees:
         deletedResponse = requests.delete('{}{}'.format(url, deleteInvitee), headers=requestHeaders, timeout=60)
+        logger.info('deletedResponse status::' + str(deletedResponse))
+        logger.info('deletedResponse status::' + str(deletedResponse.status_code))
         if deletedResponse.status_code == 200:
             deletedInvitees.append(deleteInvitee)
 
     logger.info('createdInvitees::' + str(createdInvitees))
+    logger.info('deletedInvitees::' + str(deletedInvitees))
 
     qsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__meetingid=meetingId)
 
@@ -224,7 +229,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
         for deletedInviteeId in deletedInvitees:
 
             deleteRelation = models.WebexMeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
-            deletedAttendeeId = deletedAttendeeObj.attendees
+            deletedAttendeeId = deleteRelation.attendees
             attendeeIdsFormer.remove(deletedAttendeeId)
             deleteRelation.delete()
         attendeeIds = attendeeIdsFormer
