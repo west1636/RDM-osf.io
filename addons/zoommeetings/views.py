@@ -33,7 +33,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
 from oauthlib.common import generate_token
-from framework.sessions import session
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 logger = logging.getLogger(__name__)
 
