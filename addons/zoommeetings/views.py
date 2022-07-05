@@ -66,7 +66,6 @@ def zoommeetings_oauth_connect(auth, **kwargs):
 
     return authorization_url
 
-@must_be_logged_in
 def zoommeetings_add_your_app(auth, **kwargs):
 
     state = generate_token()
