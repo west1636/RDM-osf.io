@@ -23,7 +23,6 @@ from website.project.decorators import (
 )
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from website.ember_osf_web.views import use_ember_app
-from website.oauth.views import oauth_callback
 from api.base.utils import waterbutler_api_url_for
 from addons.zoommeetings import settings
 from addons.zoommeetings import models
@@ -32,7 +31,6 @@ from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
-from oauthlib.common import generate_token
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 logger = logging.getLogger(__name__)
 
@@ -64,17 +62,6 @@ def zoommeetings_oauth_connect(auth, **kwargs):
     authorization_url = provider.get_authorization_url(provider.client_id)
 
     return authorization_url
-
-@must_be_logged_in
-def zoommeetings_add_your_app(auth, **kwargs):
-
-    state = generate_token()
-    if session.data.get('oauth_states') is None:
-        session.data['oauth_states'] = {}
-    # save state token to the session for confirmation in the callback
-    session.data['oauth_states'][SHORT_NAME] = {'state': state}
-
-    return oauth_callback(SHORT_NAME, auth)
 
 # ember: ここから
 @must_be_valid_project
