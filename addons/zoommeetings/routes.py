@@ -33,9 +33,9 @@ api_routes = {
     'rules': [
 
         Rule(
-            '/settings/zoommeetings/accounts/',
+            '/oauth/connect/zoommeetings',
             'post',
-            views.zoommeetings_add_user_account,
+            views.zoommeetings_oauth_connect,
             json_renderer,
         ),
 

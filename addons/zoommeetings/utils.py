@@ -55,7 +55,7 @@ def api_create_zoom_meeting(requestData, account):
 
     userId = account.oauth_key
     token = account.oauth_secret
-    url = settings.ZOOM_API_URL_USERS + userId + '/' + 'meetings'
+    url = '{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/users/me/meetings')
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
@@ -103,7 +103,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
 def api_update_zoom_meeting(meetingId, requestData, account):
 
     token = account.oauth_secret
-    url = settings.ZOOM_API_BASE_URL + 'meetings' + '/' + meetingId
+    url = '{}{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/meeting/', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,
@@ -138,7 +138,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
 def api_delete_zoom_meeting(meetingId, account):
 
     token = account.oauth_secret
-    url = settings.ZOOM_API_BASE_URL + '/' + 'meetings' + '/' + meetingId
+    url = '{}{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/meeting/', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
         'Authorization': requestToken,

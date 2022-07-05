@@ -55,63 +55,13 @@ zoommeetings_deauthorize_node = generic_views.deauthorize_node(
 
 @must_be_logged_in
 @must_be_rdm_addons_allowed(SHORT_NAME)
-def zoommeetings_add_user_account(auth, **kwargs):
-    """Verifies new external account credentials and adds to user's list"""
+def zoommeetings_oauth_connect(auth, **kwargs):
 
-    try:
-        zoom_email = request.json.get('zoommeetings_email')
-        jwt_token = request.json.get('zoommeetings_jwt_token')
+    provider = get_service(SHORT_NAME)
+    logger.info(str(provider.client_id))
+    authorization_url = provider.get_authorization_url(provider.client_id)
 
-    except KeyError:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST)
-
-    if not (zoom_email and jwt_token):
-        return {
-            'message': 'All the fields above are required.'
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    user_info = utils.get_user_info(zoom_email, jwt_token)
-    if not user_info:
-        return {
-            'message': ('Unable to access account.\n'
-                'Check to make sure that the above credentials are valid.')
-        }, http_status.HTTP_400_BAD_REQUEST
-
-    account = None
-
-    displayName = user_info['first_name'] + user_info['last_name']
-    zoom_user_id = user_info['id']
-
-    try:
-        account = ExternalAccount(
-            provider=SHORT_NAME,
-            provider_name=FULL_NAME,
-            display_name=displayName,
-            oauth_key=zoom_email,
-            oauth_secret=jwt_token,
-            provider_id=zoom_user_id,
-        )
-        account.save()
-    except ValidationError:
-        # ... or get the old one
-        account = ExternalAccount.objects.get(
-            provider='zoommeetings', provider_id=zoom_user_id
-        )
-        if account.oauth_key != zoom_email or account.oauth_secret != jwt_token:
-            account.oauth_key = zoom_email
-            account.oauth_secret = jwt_token
-            account.save()
-
-    assert account is not None
-
-    if not auth.user.external_accounts.filter(id=account.id).exists():
-        auth.user.external_accounts.add(account)
-
-    # Ensure My Zoom Meetings is enabled.
-    auth.user.get_or_add_addon('zoommeetings', auth=auth)
-    auth.user.save()
-
-    return {}
+    return authorization_url
 
 # ember: ここから
 @must_be_valid_project

@@ -39,7 +39,7 @@ var ZoomMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         $osf.block();
 
         return $osf.postJSON(
-            self.urls().create, {
+            self.urls().auth, {
                 zoommeetings_email: self.zoommeetingsEmail(),
                 zoommeetings_jwt_token: self.zoommeetingsJwtToken(),
             }
@@ -48,8 +48,7 @@ var ZoomMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
             self.clearModal();
             $('#zoommeetingsCredentialsModal').modal('hide');
             self.changeMessage(_('Successfully added Zoom Meetings credentials.'), 'text-success', null, true);
-            self.updateFromData(response);
-            self.importAuth();
+            window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
