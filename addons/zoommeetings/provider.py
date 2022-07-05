@@ -5,6 +5,7 @@ from website.util import web_url_for
 import urllib.parse
 from framework.sessions import session
 from osf.models.external import ExternalProvider
+from addons.zoommeetings import settings
 import logging
 logger = logging.getLogger(__name__)
 
