@@ -40,7 +40,7 @@ api_routes = {
         ),
 
         Rule(
-            '/oauth/connect/zoommeetings/add_your_app',
+            '/oauth/callback/zoommeetings/add_your_app',
             'get',
             views.zoommeetings_add_your_app,
             json_renderer,
