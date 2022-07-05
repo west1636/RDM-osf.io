@@ -66,7 +66,7 @@ def zoommeetings_oauth_connect(auth, **kwargs):
 
     return authorization_url
 
-def zoommeetings_add_your_app(auth, **kwargs):
+def zoommeetings_add_your_app(**kwargs):
 
     state = generate_token()
     if session.data.get('oauth_states') is None:
@@ -74,7 +74,7 @@ def zoommeetings_add_your_app(auth, **kwargs):
     # save state token to the session for confirmation in the callback
     session.data['oauth_states'][SHORT_NAME] = {'state': state}
 
-    return oauth_callback(SHORT_NAME, auth)
+    return oauth_callback(SHORT_NAME)
 
 # ember: ここから
 @must_be_valid_project
