@@ -17,15 +17,15 @@ class ZoomMeetingsProvider(ExternalProvider):
     serializer = ZoomMeetingsSerializer
     client_id = settings.ZOOM_MEETINGS_KEY
     client_secret = settings.ZOOM_MEETINGS_SECRET
-    auth_url_base = '{}{}'.format(settings.ZOOM_OAUTH_URL, '/oauth/authorize')
-    callback_url = '{}{}'.format(settings., '/oauth/token')
+    auth_url_base = '{}{}'.format(settings.ZOOM_BASE_URL, 'oauth/authorize')
+    callback_url = '{}{}'.format(settings.ZOOM_BASE_URL, 'oauth/token')
     auto_refresh_url = callback_url
     refresh_time = settings.REFRESH_TIME
     expiry_time = settings.EXPIRY_TIME
 
     def handle_callback(self, response):
 
-        url = '{}{}'.format(settings., 'v2/users/me')
+        url = '{}{}'.format(settings.ZOOM_API_BASE_URL, 'v2/users/me')
         requestToken = 'Bearer ' + response['access_token']
         requestHeaders = {
             'Authorization': requestToken,
