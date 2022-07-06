@@ -54,7 +54,12 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
             self.clearModal();
             $('#webexmeetingsCredentialsModal').modal('hide');
             self.changeMessage(_('Successfully added Webex Meetings credentials.'), 'text-success', null, true);
-                window.open(response);
+            window.oauthComplete = function(res) {
+                // Update view model based on response
+                self.updateFromData(response);
+                self.importAuth();
+            };
+            window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
