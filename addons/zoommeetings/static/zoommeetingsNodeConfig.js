@@ -19,35 +19,34 @@ var ZoomMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         self.super.super.constructor.call(self, addonName, url, selector, folderPicker, tbOpts);
         self.super.construct.call(self, addonName, url, selector, folderPicker, opts, tbOpts);
 
-        // Non-OAuth fields
-        self.zoommeetingsEmail = ko.observable();
-        self.zoommeetingsJwtToken = ko.observable();
-
     },
 
     connectAccount: function() {
         var self = this;
-        if (!self.zoommeetingsEmail() ){
-            self.changeMessage(_('Please enter an API token.'), 'text-danger');
-            return;
-        }
-        if (!self.zoommeetingsJwtToken() ){
-            self.changeMessage(_('Please enter an API token.'), 'text-danger');
-            return;
-        }
-
-        $osf.block();
 
         return $osf.postJSON(
-            self.urls().auth, {
-                zoommeetings_email: self.zoommeetingsEmail(),
-                zoommeetings_jwt_token: self.zoommeetingsJwtToken(),
-            }
+            self.urls().auth, {}
         ).done(function(response) {
-            $osf.unblock();
-            self.clearModal();
-            $('#zoommeetingsCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Zoom Meetings credentials.'), 'text-success', null, true);
+
+            window.oauthComplete = function(res) {
+                // Update view model based on response
+                self.updateAccounts().then(function() {
+                    try{
+                        $osf.putJSON(
+                            self.urls().importAuth, {
+                                external_account_id: self.accounts()[0].id
+                            }
+                        ).done(self.onImportSuccess.bind(self)
+                        ).fail(self.onImportError.bind(self));
+
+                        self.changeMessage(self.messages.connectAccountSuccess(), 'text-success', 3000);
+                    }
+                    catch(err){
+                        self.changeMessage(self.messages.connectAccountDenied(), 'text-danger', 6000);
+                    }
+                });
+            };
+
             window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
@@ -65,15 +64,6 @@ var ZoomMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 }
             });
         });
-    },
-
-    /** Reset all fields from Zoom Meetings credentials input modal */
-    clearModal: function() {
-        var self = this;
-        self.message('');
-        self.messageClass('text-info');
-        self.zoommeetingsEmail(null);
-        self.zoommeetingsJwtToken(null);
     },
 });
 

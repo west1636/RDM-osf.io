@@ -18,57 +18,24 @@ var ExternalAccount = addonSettings.ExternalAccount;
 var _ = require('js/rdmGettext')._;
 var sprintf = require('agh.sprintf').sprintf;
 
-var $modal = $('#zoommeetingsCredentialsModal');
-
 function ViewModel(url) {
     var self = this;
 
     self.properName = 'Zoom Meetings';
     self.accessKey = ko.observable();
     self.secretKey = ko.observable();
-    self.account_url = '/api/v1/settings/zoommeetings/accounts/';
+    self.account_url = '/api/v1/oauth/connect/zoommeetings';
     self.accounts = ko.observableArray();
-
-    self.zoommeetingsEmail = ko.observable();
-    self.zoommeetingsJwtToken = ko.observable();
-
-    self.userGuid = ko.observable();
-    self.microsoftTeamsUserName = ko.observable();
-    self.microsoftTeamsMail = ko.observable();
-    self.webexMeetingsDisplayName = ko.observable();
-    self.webexMeetingsMail = ko.observable();
-    self.userGuidToDelete = ko.observable();
 
     ChangeMessageMixin.call(self);
 
-    /** Reset all fields from Zoom Meetings credentials input modal */
-    self.clearModal = function() {
-        self.message('');
-        self.messageClass('text-info');
-        self.zoommeetingsJwtToken(null);
-    };
     /** Send POST request to authorize Zoom Meetings */
     self.connectAccount = function() {
-        // Selection should not be empty
-        if (!self.zoommeetingsJwtToken() ){
-            self.changeMessage('Please enter an API token.', 'text-danger');
-            return;
-        }
-        if (!self.zoommeetingsJwtToken() ){
-            self.changeMessage('Please enter an API token.', 'text-danger');
-            return;
-        }
-
 
         return osfHelpers.postJSON(
-            self.account_url,
-            ko.toJS({
-                zoommeetings_email: self.zoommeetingsEmail(),
-                zoommeetings_jwt_token: self.zoommeetingsJwtToken(),
-            })
-        ).done(function() {
-            self.clearModal();
-            $modal.modal('hide');
+            self.account_url, {}
+        ).done(function(response) {
+            window.open(response);
             self.updateAccounts();
 
         }).fail(function(xhr, textStatus, error) {
@@ -92,8 +59,6 @@ function ViewModel(url) {
         }).done(function (data) {
             self.accounts($.map(data.accounts, function(account) {
                 var externalAccount =  new ExternalAccount(account);
-                externalAccount.zoommeetingsEmail = account.zoommeetingsEmail;
-                externalAccount.zoommeetingsJwtToken = account.zoommeetings_jwt_token;
                 return externalAccount;
             }));
             $('#zoommeetings-header').osfToggleHeight({height: 160});
