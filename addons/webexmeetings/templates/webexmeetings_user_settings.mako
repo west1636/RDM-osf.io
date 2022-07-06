@@ -3,13 +3,11 @@
      data-addon-short-name="${ addon_short_name }"
      data-addon-name="${ addon_full_name }">
 
-    <%include file="webexmeetings_credentials_modal.mako"/>
-
     <h4 class="addon-title">
         <img class="addon-icon" src=${addon_icon_url}>
         <span data-bind="text: properName"></span>
         <small>
-            <a href="#webexmeetingsCredentialsModal" data-toggle="modal" class="pull-right text-primary">${_("Connect or Reauthorize Account")}</a>
+            <a data-bind="click: connectAccount" class="text-primary pull-right addon-auth">${_("Connect or Reauthorize Account")}</a>
         </small>
     </h4>
 

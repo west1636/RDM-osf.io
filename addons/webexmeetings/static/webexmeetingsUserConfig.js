@@ -18,8 +18,6 @@ var ExternalAccount = addonSettings.ExternalAccount;
 var _ = require('js/rdmGettext')._;
 var sprintf = require('agh.sprintf').sprintf;
 
-var $modal = $('#webexmeetingsCredentialsModal');
-
 function ViewModel(url) {
     var self = this;
 
@@ -36,9 +34,8 @@ function ViewModel(url) {
 
         return osfHelpers.postJSON(
             self.account_url
-        ).done(function() {
-            self.clearModal();
-            $modal.modal('hide');
+        ).done(function(response) {
+            window.open(response);
             self.updateAccounts();
 
         }).fail(function(xhr, textStatus, error) {

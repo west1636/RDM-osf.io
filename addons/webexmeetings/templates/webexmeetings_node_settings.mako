@@ -1,7 +1,5 @@
 <div id="${addon_short_name}Scope" class="scripted" >
     <div>
-        <!-- Add credentials modal -->
-        <%include file="webexmeetings_credentials_modal.mako"/>
 
         <h4 class="addon-title">
             <img class="addon-icon" src=${addon_icon_url}>
@@ -31,7 +29,7 @@
 
                 <!-- Oauth Start Button -->
                 <span data-bind="if: showTokenCreateButton">
-                    <a href="#webexmeetingsCredentialsModal" data-toggle="modal" class="pull-right text-primary addon-auth">
+                    <a data-bind="click: connectAccount" class="text-primary pull-right addon-auth">
                         ${_("Connect  Account")}
                     </a>
                 </span>
