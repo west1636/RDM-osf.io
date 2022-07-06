@@ -53,8 +53,7 @@ def get_user_info(user_id, jwt_token):
 
 def api_create_zoom_meeting(requestData, account):
 
-    userId = account.oauth_key
-    token = account.oauth_secret
+    token = account.oauth_key
     url = '{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/users/me/meetings')
     requestToken = 'Bearer ' + token
     requestHeaders = {
@@ -102,7 +101,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
 
 def api_update_zoom_meeting(meetingId, requestData, account):
 
-    token = account.oauth_secret
+    token = account.oauth_key
     url = '{}{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/meeting/', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
@@ -137,7 +136,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
 
 def api_delete_zoom_meeting(meetingId, account):
 
-    token = account.oauth_secret
+    token = account.oauth_key
     url = '{}{}{}'.format(settings.ZOOM_API_BASE_URL, '/v2/meeting/', meetingId)
     requestToken = 'Bearer ' + token
     requestHeaders = {
