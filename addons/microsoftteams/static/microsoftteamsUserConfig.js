@@ -34,7 +34,7 @@ function ViewModel(url) {
 
         return osfHelpers.postJSON(
             self.account_url, {}
-        ).done(function() {
+        ).done(function(response) {
             window.open(response);
             self.updateAccounts();
 
