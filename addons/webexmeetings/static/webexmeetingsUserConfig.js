@@ -24,7 +24,7 @@ function ViewModel(url) {
     self.properName = 'Webex Meetings';
     self.accessKey = ko.observable();
     self.secretKey = ko.observable();
-    self.account_url = '/api/v1/oauth/connect/webexmeetings/';
+    self.account_url = '/api/v1/oauth/connect/webexmeetings';
     self.accounts = ko.observableArray();
 
     ChangeMessageMixin.call(self);
@@ -33,7 +33,7 @@ function ViewModel(url) {
     self.connectAccount = function() {
 
         return osfHelpers.postJSON(
-            self.account_url
+            self.account_url, {}
         ).done(function(response) {
             window.open(response);
             self.updateAccounts();
