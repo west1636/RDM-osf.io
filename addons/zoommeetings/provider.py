@@ -1,3 +1,4 @@
+import requests
 from addons.zoommeetings.serializer import ZoomMeetingsSerializer
 from addons.zoommeetings import SHORT_NAME, FULL_NAME
 from oauthlib.common import generate_token
