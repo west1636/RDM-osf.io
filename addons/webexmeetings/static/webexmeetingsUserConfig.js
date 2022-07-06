@@ -29,45 +29,13 @@ function ViewModel(url) {
     self.account_url = '/api/v1/settings/webexmeetings/accounts/';
     self.accounts = ko.observableArray();
 
-    self.webexmeetingsClientId = ko.observable();
-    self.webexmeetingsClientSecret = ko.observable();
-    self.webexmeetingsOAuthUrl = ko.observable();
-
-    self.userGuid = ko.observable();
-    self.microsoftTeamsUserName = ko.observable();
-    self.microsoftTeamsMail = ko.observable();
-    self.webexMeetingsDisplayName = ko.observable();
-    self.webexMeetingsMail = ko.observable();
-    self.userGuidToDelete = ko.observable();
-
     ChangeMessageMixin.call(self);
 
-    /** Reset all fields from Webex Meetings credentials input modal */
-    self.clearModal = function() {
-        self.message('');
-        self.messageClass('text-info');
-        self.webexmeetingsClientSecret(null);
-    };
     /** Send POST request to authorize Webex Meetings */
     self.connectAccount = function() {
-        // Selection should not be empty
-        if (!self.webexmeetingsClientSecret() ){
-            self.changeMessage('Please enter an API token.', 'text-danger');
-            return;
-        }
-        if (!self.webexmeetingsClientSecret() ){
-            self.changeMessage('Please enter an API token.', 'text-danger');
-            return;
-        }
-
 
         return osfHelpers.postJSON(
-            self.account_url,
-            ko.toJS({
-                webexmeetings_client_id: self.webexmeetingsClientId(),
-                webexmeetings_client_secret: self.webexmeetingsClientSecret(),
-                webexmeetings_oauth_url: self.webexmeetingsOAuthUrl(),
-            })
+            self.account_url
         ).done(function() {
             self.clearModal();
             $modal.modal('hide');
@@ -94,9 +62,6 @@ function ViewModel(url) {
         }).done(function (data) {
             self.accounts($.map(data.accounts, function(account) {
                 var externalAccount =  new ExternalAccount(account);
-                externalAccount.webexmeetingsClientId = account.webexmeetings_client_id;
-                externalAccount.webexmeetingsClientSecret = account.webexmeetings_client_secret;
-                externalAccount.webexmeetingsOAuthUrl = account.webexmeetings_oauth_url;
                 return externalAccount;
             }));
             $('#webexmeetings-header').osfToggleHeight({height: 160});

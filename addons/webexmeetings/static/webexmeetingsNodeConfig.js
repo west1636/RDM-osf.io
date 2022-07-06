@@ -19,41 +19,15 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         self.super.super.constructor.call(self, addonName, url, selector, folderPicker, tbOpts);
         self.super.construct.call(self, addonName, url, selector, folderPicker, opts, tbOpts);
 
-        // Non-OAuth fields
-        self.webexmeetingsClientId = ko.observable();
-        self.webexmeetingsClientSecret = ko.observable();
-        self.webexmeetingsOAuthUrl = ko.observable();
-
     },
 
     connectAccount: function() {
         var self = this;
-        if (!self.webexmeetingsClientId() ){
-            self.changeMessage(_('Please enter an API token.'), 'text-danger');
-            return;
-        }
-        if (!self.webexmeetingsClientSecret() ){
-            self.changeMessage(_('Please enter an API token.'), 'text-danger');
-            return;
-        }
-        if (!self.webexmeetingsOAuthUrl() ){
-            self.changeMessage(_('Please enter an API token.'), 'text-danger');
-            return;
-        }
-
-        $osf.block();
 
         return $osf.postJSON(
-            self.urls().auth, {
-                webexmeetings_client_id: self.webexmeetingsClientId(),
-                webexmeetings_client_secret: self.webexmeetingsClientSecret(),
-                webexmeetings_oauth_url: self.webexmeetingsOAuthUrl(),
-            }
+            self.urls().auth, {}
         ).done(function(response) {
-            $osf.unblock();
-            self.clearModal();
-            $('#webexmeetingsCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Webex Meetings credentials.'), 'text-success', null, true);
+
             window.oauthComplete = function(res) {
                 // Update view model based on response
                 self.updateAccounts().then(function() {
@@ -90,16 +64,6 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
             });
         });
 
-    },
-
-    /** Reset all fields from Webex Meetings credentials input modal */
-    clearModal: function() {
-        var self = this;
-        self.message('');
-        self.messageClass('text-info');
-        self.webexmeetingsClientId(null);
-        self.webexmeetingsClientSecret(null);
-        self.webexmeetingsOAuthUrl(null);
     },
 });
 
