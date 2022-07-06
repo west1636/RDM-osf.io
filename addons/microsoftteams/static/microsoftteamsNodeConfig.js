@@ -19,42 +19,35 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
         self.super.super.constructor.call(self, addonName, url, selector, folderPicker, tbOpts);
         self.super.construct.call(self, addonName, url, selector, folderPicker, opts, tbOpts);
 
-        // Non-OAuth fields
-        self.microsoftteamsTenant = ko.observable();
-        self.microsoftteamsClientId = ko.observable();
-        self.microsoftteamsClientSecret = ko.observable();
-
     },
 
     connectAccount: function() {
         var self = this;
-        if (!self.microsoftteamsTenant() ){
-            self.changeMessage('Please enter a Microsoft 365 Tenant ID', 'text-danger');
-            return;
-        }
-        if (!self.microsoftteamsClientId() ){
-            self.changeMessage('Please enter an Application(Client) ID.', 'text-danger');
-            return;
-        }
-        if (!self.microsoftteamsClientSecret() ){
-            self.changeMessage('Please enter a Client Secret.', 'text-danger');
-            return;
-        }
-
-        $osf.block();
 
         return $osf.postJSON(
-            self.urls().auth, {
-                microsoftteams_tenant: self.microsoftteamsTenant(),
-                microsoftteams_client_id: self.microsoftteamsClientId(),
-                microsoftteams_client_secret: self.microsoftteamsClientSecret(),
-            }
+            self.urls().auth, {}
         ).done(function(response) {
-            $osf.unblock();
-            self.clearModal();
-            $('#microsoftteamsCredentialsModal').modal('hide');
-            self.changeMessage(_('Successfully added Microsoft credentials.'), 'text-success', null, true);
-                window.open(response);
+
+            window.oauthComplete = function(res) {
+                // Update view model based on response
+                self.updateAccounts().then(function() {
+                    try{
+                        $osf.putJSON(
+                            self.urls().importAuth, {
+                                external_account_id: self.accounts()[0].id
+                            }
+                        ).done(self.onImportSuccess.bind(self)
+                        ).fail(self.onImportError.bind(self));
+
+                        self.changeMessage(self.messages.connectAccountSuccess(), 'text-success', 3000);
+                    }
+                    catch(err){
+                        self.changeMessage(self.messages.connectAccountDenied(), 'text-danger', 6000);
+                    }
+                });
+            };
+
+            window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
@@ -71,16 +64,6 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 }
             });
         });
-    },
-
-    /** Reset all fields from Microsoft 365 credentials input modal */
-    clearModal: function() {
-        var self = this;
-        self.message('');
-        self.messageClass('text-info');
-        self.microsoftteamsTenant(null);
-        self.microsoftteamsClientId(null);
-        self.microsoftteamsClientSecret(null);
     },
 });
 

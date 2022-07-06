@@ -18,64 +18,24 @@ var ExternalAccount = addonSettings.ExternalAccount;
 var _ = require('js/rdmGettext')._;
 var sprintf = require('agh.sprintf').sprintf;
 
-var $modal = $('#microsoftteamsCredentialsModal');
-
 function ViewModel(url) {
     var self = this;
 
     self.properName = 'Microsoft 365';
     self.accessKey = ko.observable();
     self.secretKey = ko.observable();
-    self.account_url = '/api/v1/settings/microsoftteams/accounts/';
+    self.account_url = '/api/v1/oauth/connect/microsoftteams';
     self.accounts = ko.observableArray();
-
-    self.microsoftteamsTenant = ko.observable();
-    self.microsoftteamsClientId = ko.observable();
-    self.microsoftteamsClientSecret = ko.observable();
-	
-    self.userGuid = ko.observable();
-    self.microsoftTeamsUserName = ko.observable();
-    self.microsoftTeamsMail = ko.observable();
-    self.webexMeetingsDisplayName = ko.observable();
-    self.webexMeetingsMail = ko.observable();
-    self.userGuidToDelete = ko.observable();
 
     ChangeMessageMixin.call(self);
 
-    /** Reset all fields from Microsoft 365 credentials input modal */
-    self.clearModal = function() {
-        self.message('');
-        self.messageClass('text-info');
-        self.microsoftteamsTenant(null);
-        self.microsoftteamsClientId(null);
-        self.microsoftteamsClientSecret(null);
-    };
     /** Send POST request to authorize Microsoft 365 */
     self.connectAccount = function() {
-        // Selection should not be empty
-        if (!self.microsoftteamsTenant() ){
-            self.changeMessage('Please enter a Microsoft 365 Tenant ID', 'text-danger');
-            return;
-        }
-        if (!self.microsoftteamsClientId() ){
-            self.changeMessage('Please enter an Application(Client) ID.', 'text-danger');
-            return;
-        }
-        if (!self.microsoftteamsClientSecret() ){
-            self.changeMessage('Please enter a Client Secret.', 'text-danger');
-            return;
-        }
 
         return osfHelpers.postJSON(
-            self.account_url,
-            ko.toJS({
-                microsoftteams_tenant: self.microsoftteamsTenant(),
-                microsoftteams_client_id: self.microsoftteamsClientId(),
-                microsoftteams_client_secret: self.microsoftteamsClientSecret(),
-            })
+            self.account_url, {}
         ).done(function() {
-            self.clearModal();
-            $modal.modal('hide');
+            window.open(response);
             self.updateAccounts();
 
         }).fail(function(xhr, textStatus, error) {
@@ -99,9 +59,6 @@ function ViewModel(url) {
         }).done(function (data) {
             self.accounts($.map(data.accounts, function(account) {
                 var externalAccount =  new ExternalAccount(account);
-                externalAccount.microsoftteamsTenant = account.microsoftteamsTenant;
-                externalAccount.microsoftteamsClientId = account.microsoftteamsClientId;
-                externalAccount.microsoftteamsClientSecret = account.microsoftteamsClientSecret;
                 return externalAccount;
             }));
             $('#microsoftteams-header').osfToggleHeight({height: 160});
