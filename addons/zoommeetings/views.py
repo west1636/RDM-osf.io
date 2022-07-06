@@ -32,6 +32,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from framework.auth.core import Auth
 from admin.rdm import utils as rdm_utils
 from osf.models import AbstractNode, BaseFileNode, Guid, Comment
+from website.oauth.utils import get_service
 logger = logging.getLogger(__name__)
 
 zoommeetings_account_list = generic_views.account_list(
