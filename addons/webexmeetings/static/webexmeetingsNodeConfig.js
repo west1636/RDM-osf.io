@@ -56,8 +56,21 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
             self.changeMessage(_('Successfully added Webex Meetings credentials.'), 'text-success', null, true);
             window.oauthComplete = function(res) {
                 // Update view model based on response
-                self.updateFromData(response);
-                self.importAuth();
+                self.updateAccounts().then(function() {
+                    try{
+                        $osf.putJSON(
+                            self.urls().importAuth, {
+                                external_account_id: self.accounts()[0].id
+                            }
+                        ).done(self.onImportSuccess.bind(self)
+                        ).fail(self.onImportError.bind(self));
+
+                        self.changeMessage(self.messages.connectAccountSuccess(), 'text-success', 3000);
+                    }
+                    catch(err){
+                        self.changeMessage(self.messages.connectAccountDenied(), 'text-danger', 6000);
+                    }
+                });
             };
             window.open(response);
         }).fail(function(xhr, status, error) {
