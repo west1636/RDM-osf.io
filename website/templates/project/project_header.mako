@@ -43,7 +43,7 @@
                         <!-- Add-on tabs  -->
                         % for addon in addons_enabled:
 
-                            % if addon not in ['binderhub', 'metadata', 'zoommeetings', 'microsoftteams'] and addons[addon]['has_page']:
+                            % if addon not in ['binderhub', 'metadata', 'zoommeetings', 'microsoftteams', 'webexmeetings'] and addons[addon]['has_page']:
                                 <li>
                                     <a href="${node['url']}${addons[addon]['short_name']}">
 
@@ -104,7 +104,7 @@
                                     % if addons['zoommeetings']['icon'] and addons['zoommeetings']['has_page_icon']:
                                         <img src="${addons['zoommeetings']['icon']}" class="addon-logo"/>
                                     % endif
-                                    ${addons[addon]['full_name']}
+                                    ${addons['zoommeetings']['full_name']}
                                 </a>
                             </li>
                         % endif
@@ -115,7 +115,18 @@
                                     % if addons['microsoftteams']['icon'] and addons['microsoftteams']['has_page_icon']:
                                         <img src="${addons['microsoftteams']['icon']}" class="addon-logo"/>
                                     % endif
-                                    ${addons[addon]['full_name']}
+                                    ${addons['microsoftteams']['full_name']}
+                                </a>
+                            </li>
+                        % endif
+
+                        % if 'webexmeetings' in addons_enabled and addons['webexmeetings']['has_page']:
+                            <li>
+                                <a href="${node['url']}${addons['webexmeetings']['short_name']}">
+                                    % if addons['webexmeetings']['icon'] and addons['webexmeetings']['has_page_icon']:
+                                        <img src="${addons['webexmeetings']['icon']}" class="addon-logo"/>
+                                    % endif
+                                    ${addons['webexmeetings']['full_name']}
                                 </a>
                             </li>
                         % endif
