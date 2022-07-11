@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from addons.microsoftteams import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from addons.base import generic_views
-from framework.auth.decorators import must_be_logged_in
+from framework.auth.decorators import collect_auth, must_be_logged_in
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
