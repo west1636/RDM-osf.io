@@ -65,12 +65,12 @@ def microsoftteams_oauth_connect(auth, **kwargs):
     return authorization_url
 # ember: ここから
 @must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
+#@must_have_addon(SHORT_NAME, 'node')
 def project_microsoftteams(**kwargs):
     return use_ember_app()
 
 @must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
+#@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_get_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -114,7 +114,7 @@ def microsoftteams_get_config_ember(**kwargs):
                      }}}
 
 @must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
+#@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_set_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
