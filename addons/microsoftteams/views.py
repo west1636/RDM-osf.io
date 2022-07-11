@@ -77,6 +77,8 @@ def microsoftteams_get_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
+    logger.info('node.external_accounts::' + str(node.external_accounts))
+
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
@@ -120,8 +122,6 @@ def microsoftteams_set_config_ember(**kwargs):
     addon = node.get_addon(SHORT_NAME)
     auth = kwargs['auth']
     user = auth.user
-
-    logger.info('user.external_accounts::' + str(auth.user.external_accounts))
 
     allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
