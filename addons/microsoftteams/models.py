@@ -3,6 +3,7 @@ import logging
 
 from django.db import models
 from osf.models.base import BaseModel, ObjectIDMixin
+from osf.models.external import ExternalAccount
 from addons.base.models import (BaseOAuthNodeSettings, BaseOAuthUserSettings,
                                 BaseStorageAddon)
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
