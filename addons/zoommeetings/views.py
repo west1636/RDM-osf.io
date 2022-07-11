@@ -87,6 +87,11 @@ def zoommeetings_get_config_ember(**kwargs):
     upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
     previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
 
+    try:
+        access_token = addon.fetch_access_token()
+    except InvalidAuthError:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
     return {'data': {'id': node._id, 'type': 'zoommeetings-config',
                      'attributes': {
                          'all_zoom_meetings': allZoomMeetingsJson,

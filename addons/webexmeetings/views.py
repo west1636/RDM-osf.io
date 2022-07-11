@@ -101,6 +101,11 @@ def webexmeetings_get_config_ember(**kwargs):
     users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
     institutionUsers = utils.makeInstitutionUserList(users)
 
+    try:
+        access_token = addon.fetch_access_token()
+    except InvalidAuthError:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
                          'all_webex_meetings': allWebexMeetingsJson,
