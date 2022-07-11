@@ -69,6 +69,7 @@ def microsoftteams_oauth_connect(auth, **kwargs):
 def project_microsoftteams(**kwargs):
     return use_ember_app()
 
+@collect_auth
 @must_be_valid_project
 #@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_get_config_ember(**kwargs):
@@ -115,6 +116,7 @@ def microsoftteams_get_config_ember(**kwargs):
                          'microsoft_teams_signature': settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
 
+@collect_auth
 @must_be_valid_project
 #@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_set_config_ember(**kwargs):
