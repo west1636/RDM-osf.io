@@ -105,7 +105,6 @@ class WebexMeetings(ObjectIDMixin, BaseModel):
     join_url = models.TextField(max_length=512)
     meetingid = models.TextField(max_length=512)
     meeting_password = EncryptedTextField(blank=True, null=True)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
 class WebexMeetingsAttendeesRelation(ObjectIDMixin, BaseModel):
