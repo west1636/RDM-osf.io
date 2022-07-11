@@ -80,7 +80,7 @@ def microsoftteams_get_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
-    logger.info('node::' + str(node))
+    logger.info('addon.external_id::' + str(addon.external_account_id))
 
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
