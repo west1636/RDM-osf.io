@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from addons.microsoftteams import SHORT_NAME, FULL_NAME
 from django.db import transaction
 from addons.base import generic_views
-from framework.auth.decorators import collect_auth, must_be_logged_in
+from framework.auth.decorators import must_be_logged_in
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
@@ -69,16 +69,18 @@ def microsoftteams_oauth_connect(auth, **kwargs):
 def project_microsoftteams(**kwargs):
     return use_ember_app()
 
-@collect_auth
+@must_be_logged_in
 @must_be_valid_project
 #@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_get_config_ember(**kwargs):
+    logger.info('kwargs::' + str(kwargs))
+
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
     auth = kwargs['auth']
     user = auth.user
 
-    logger.info('node.external_accounts::' + str(node.external_accounts))
+    logger.info('node::' + str(node))
 
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
@@ -116,7 +118,7 @@ def microsoftteams_get_config_ember(**kwargs):
                          'microsoft_teams_signature': settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
 
-@collect_auth
+@must_be_logged_in
 @must_be_valid_project
 #@must_have_addon(SHORT_NAME, 'node')
 def microsoftteams_set_config_ember(**kwargs):
