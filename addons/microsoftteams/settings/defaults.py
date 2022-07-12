@@ -6,7 +6,7 @@ MICROSOFT_GRAPH_API_URL_ORGANIZATION = 'https://graph.microsoft.com/v1.0/organiz
 MICROSOFT_GRAPH_DEFAULT_SCOPE = 'https://graph.microsoft.com/.default'
 MICROSOFT_ONLINE_BASE_URL = 'https://login.microsoftonline.com/'
 MICROSOFT_TENANT = 'common'
-MICROSOFT_API_SCOPE = 'offline_access user.read.all calendars.readwrite'
+MICROSOFT_API_SCOPE = 'openid profile offline_access user.read.all calendars.readwrite'
 
 MICROSOFT_TEAMS_SIGNATURE = '{1}<br><a href="{2}">会議に参加するにはここをクリック</a>'
 
