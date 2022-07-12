@@ -36,6 +36,7 @@ class MicrosoftTeamsProvider(ExternalProvider):
         }
         response = requests.get(url, headers=requestHeaders, timeout=60)
         info = response.json()
+        logger.info('info:' + str(info))
         return {
             'provider_id': info['id'],
             'display_name': info['displayName'],
