@@ -85,9 +85,9 @@ def microsoftteams_get_config_ember(**kwargs):
     if not addon.complete:
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
-    allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id).order_by('start_datetime').reverse()
+    upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 
@@ -127,9 +127,9 @@ def microsoftteams_set_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
-    allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    allMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id).order_by('start_datetime').reverse()
+    upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
     nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 

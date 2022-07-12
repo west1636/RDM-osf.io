@@ -109,6 +109,7 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData):
             content=content,
             join_url=joinUrl,
             meetingid=meetingId,
+            external_account_id=addon.external_account_id,
             node_settings_id=addon.id,
         )
         createData.save()
