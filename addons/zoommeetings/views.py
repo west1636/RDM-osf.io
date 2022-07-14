@@ -14,6 +14,7 @@ from addons.zoommeetings.serializer import ZoomMeetingsSerializer
 from osf.models import ExternalAccount, OSFUser
 from django.core.exceptions import ValidationError
 from framework.exceptions import HTTPError
+from addons.base.exceptions import InvalidAuthError
 from rest_framework import status as http_status
 from osf.utils.permissions import ADMIN, WRITE, READ
 from website.project.decorators import (
