@@ -36,6 +36,14 @@ from framework.routing import json_renderer, proxy_url
 from framework.transactions.handlers import no_auto_transaction
 from website import mails
 from website import settings
+from addons.microsoftteams import settings as microsoft_teams_settings
+from addons.webexmeetings import settings as webex_meetings_settings
+from addons.zoommeetings import settings as zoom_meetings_settings
+
+from addons.microsoftteams import models as microsoft_teams
+from addons.webexmeetings import models as webex_meetings
+from addons.zoommeetings import models as zoom_meetings
+
 from addons.base import signals as file_signals
 from addons.base.utils import format_last_known_metadata, get_mfr_url
 from osf import features
@@ -1043,3 +1051,184 @@ def get_archived_from_url(node, file_node):
         if not trashed:
             return node.registered_from.web_url_for('addon_view_or_download_file', provider=file_node.provider, path=file_node.copied_from._id)
     return None
+
+@must_be_valid_project
+def project_webmeetings(**kwargs):
+    return use_ember_app()
+
+@must_be_valid_project
+def webmeetings_get_config_ember(**kwargs):
+    node = kwargs['node'] or kwargs['project']
+    microsoft_teams_addon = node.get_addon('microsoftteams')
+    webex_meetings_addon = node.get_addon('webexmeetings')
+    zoom_meetings_addon = node.get_addon('zoommeetings')
+    auth = kwargs['auth']
+    user = auth.user
+
+    if not addon.complete:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
+    allMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id).order_by('start_datetime').reverse()
+    allWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id).order_by('start_datetime').reverse()
+    allZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id).order_by('start_datetime').reverse()
+    
+    upcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    upcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    upcomingZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    
+    previousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    previousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    previousZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    
+    nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
+    nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
+    nodeZoomMeetingsAttendeesAll = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id)
+    
+    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeZoomMeetingsAttendees = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+
+    nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
+
+    allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
+    allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
+    allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
+
+    upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
+    upcomingWebexMeetingsJson = serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)
+    upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
+
+    previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
+    previousWebexMeetingsJson = serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)
+    previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
+
+    nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False
+    nodeZoomMeetingsAttendeesAllJson = serializers.serialize('json', nodeZoomMeetingsAttendeesAll, ensure_ascii=False)
+
+    nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
+    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
+
+    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
+
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
+
+    try:
+        access_token = microsoft_teams_addon.fetch_access_token()
+    except InvalidAuthError:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
+    try:
+        access_token = webex_meetings_addon.fetch_access_token()
+    except InvalidAuthError:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
+    try:
+        access_token = zoom_meetings_addon.fetch_access_token()
+    except InvalidAuthError:
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
+    return {'data': {'id': node._id, 'type': 'webexmeetings-config',
+                     'attributes': {
+                         'all_microsoft_teams': allMicrosoftTeamsJson,
+                         'all_webex_meetings': allWebexMeetingsJson,
+                         'all_zoom_meetings': allZoomMeetingsJson,
+                         'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
+                         'upcoming_webex_meetings': upcomingWebexMeetingsJson,
+                         'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
+                         'previous_microsoft_teams': previousMicrosoftTeamsJson,
+                         'previous_webex_meetings': previousWebexMeetingsJson,
+                         'previous_zoom_meetings': previousZoomMeetingsJson,
+                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS
+                         'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
+                         'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
+                         'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
+                         'node_webex_meetings_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
+                         'node_zoom_meetings_attendees_all': nodeWebexMeetingsAttendeesAllJson,
+                         'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
+                         'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
+                         'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
+                         'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
+                         'institution_users': institutionUsers
+                     }}}
+
+@must_be_valid_project
+def webmeetings_set_config_ember(**kwargs):
+    node = kwargs['node'] or kwargs['project']
+    webex_meetings_addon = node.get_addon('webexmeetings')
+    auth = kwargs['auth']
+    user = auth.user
+
+    allMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id).order_by('start_datetime').reverse()
+    allWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id).order_by('start_datetime').reverse()
+    allZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id).order_by('start_datetime').reverse()
+    
+    upcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    upcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    upcomingZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
+    
+    previousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    previousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    previousZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
+    
+    nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
+    nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
+    nodeZoomMeetingsAttendeesAll = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id)
+    
+    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeZoomMeetingsAttendees = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+
+    nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
+
+    allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
+    allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
+    allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
+
+    upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
+    upcomingWebexMeetingsJson = serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)
+    upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
+
+    previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
+    previousWebexMeetingsJson = serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)
+    previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
+
+    nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False
+    nodeZoomMeetingsAttendeesAllJson = serializers.serialize('json', nodeZoomMeetingsAttendeesAll, ensure_ascii=False)
+
+    nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
+    nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
+    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
+
+    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
+    institutionId = rdm_utils.get_institution_id(user)
+    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
+    institutionUsers = utils.makeInstitutionUserList(users)
+
+    return {'data': {'id': node._id, 'type': 'webexmeetings-config',
+                     'attributes': {
+                         'all_microsoft_teams': allMicrosoftTeamsJson,
+                         'all_webex_meetings': allWebexMeetingsJson,
+                         'all_zoom_meetings': allZoomMeetingsJson,
+                         'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
+                         'upcoming_webex_meetings': upcomingWebexMeetingsJson,
+                         'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
+                         'previous_microsoft_teams': previousMicrosoftTeamsJson,
+                         'previous_webex_meetings': previousWebexMeetingsJson,
+                         'previous_zoom_meetings': previousZoomMeetingsJson,
+                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS
+                         'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
+                         'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
+                         'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
+                         'node_webex_meetings_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
+                         'node_zoom_meetings_attendees_all': nodeWebexMeetingsAttendeesAllJson,
+                         'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
+                         'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
+                         'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
+                         'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
+                         'institution_users': institutionUsers
+                     }}}
