@@ -1082,11 +1082,9 @@ def webmeetings_get_config_ember(**kwargs):
     
     nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
     nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
-    nodeZoomMeetingsAttendeesAll = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id)
     
     nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
-    nodeZoomMeetingsAttendees = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
 
@@ -1104,11 +1102,9 @@ def webmeetings_get_config_ember(**kwargs):
 
     nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
     nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False
-    nodeZoomMeetingsAttendeesAllJson = serializers.serialize('json', nodeZoomMeetingsAttendeesAll, ensure_ascii=False)
 
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
-    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
 
     nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
@@ -1147,10 +1143,8 @@ def webmeetings_get_config_ember(**kwargs):
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
                          'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
                          'node_webex_meetings_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
-                         'node_zoom_meetings_attendees_all': nodeWebexMeetingsAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
-                         'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
                          'institution_users': institutionUsers
                      }}}
@@ -1176,11 +1170,9 @@ def webmeetings_set_config_ember(**kwargs):
     
     nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
     nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
-    nodeZoomMeetingsAttendeesAll = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id)
     
     nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
-    nodeZoomMeetingsAttendees = zoom_meetings.Attendees.objects.filter(node_settings_id=zoom_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
 
@@ -1198,11 +1190,9 @@ def webmeetings_set_config_ember(**kwargs):
 
     nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
     nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False
-    nodeZoomMeetingsAttendeesAllJson = serializers.serialize('json', nodeZoomMeetingsAttendeesAll, ensure_ascii=False)
 
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
-    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeZoomMeetingsAttendees, ensure_ascii=False)
 
     nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
     institutionId = rdm_utils.get_institution_id(user)
@@ -1225,10 +1215,8 @@ def webmeetings_set_config_ember(**kwargs):
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
                          'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
                          'node_webex_meetings_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
-                         'node_zoom_meetings_attendees_all': nodeWebexMeetingsAttendeesAllJson,
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
-                         'node_zoom_meetings_attendees': nodeZoomMeetingsAttendeesJson,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
                          'institution_users': institutionUsers
                      }}}
