@@ -1138,7 +1138,7 @@ def webmeetings_get_config_ember(**kwargs):
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
                          'previous_webex_meetings': previousWebexMeetingsJson,
                          'previous_zoom_meetings': previousZoomMeetingsJson,
-                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS
+                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
                          'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
@@ -1210,7 +1210,7 @@ def webmeetings_set_config_ember(**kwargs):
                          'previous_microsoft_teams': previousMicrosoftTeamsJson,
                          'previous_webex_meetings': previousWebexMeetingsJson,
                          'previous_zoom_meetings': previousZoomMeetingsJson,
-                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS
+                         'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
                          'node_microsoft_teams_attendees_all': nodeMicrosoftTeamsAttendeesAllJson,
