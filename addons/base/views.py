@@ -1189,7 +1189,7 @@ def webmeetings_set_config_ember(**kwargs):
     previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
 
     nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
-    nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False
+    nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False)
 
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
