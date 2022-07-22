@@ -57,6 +57,7 @@ from website.profile.utils import get_profile_image_url
 from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project, check_contributor_auth
 from website.ember_osf_web.decorators import ember_flag_is_active
+from website.ember_osf_web.views import use_ember_app
 from website.project.utils import serialize_node
 from website.util import rubeus, timestamp
 
