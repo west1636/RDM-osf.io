@@ -31,7 +31,7 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     def api(self):
         """Authenticated ExternalProvider instance"""
         if self._api is None:
-            self._api = ZoomMeetingsProvider(self.external_account)
+            self._api = WebexMeetingsProvider(self.external_account)
         return self._api
 
     @property
