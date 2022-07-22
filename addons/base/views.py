@@ -1058,6 +1058,7 @@ def project_webmeetings(**kwargs):
     logger.info('1')
     return use_ember_app()
 
+@must_be_logged_in
 @must_be_valid_project
 def webmeetings_get_config_ember(**kwargs):
     logger.info('2')
@@ -1152,6 +1153,7 @@ def webmeetings_get_config_ember(**kwargs):
                          'institution_users': institutionUsers
                      }}}
 
+@must_be_logged_in
 @must_be_valid_project
 def webmeetings_set_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
