@@ -1055,10 +1055,12 @@ def get_archived_from_url(node, file_node):
 
 @must_be_valid_project
 def project_webmeetings(**kwargs):
+    logger.info('1')
     return use_ember_app()
 
 @must_be_valid_project
 def webmeetings_get_config_ember(**kwargs):
+    logger.info('2')
     node = kwargs['node'] or kwargs['project']
     microsoft_teams_addon = node.get_addon('microsoftteams')
     webex_meetings_addon = node.get_addon('webexmeetings')
