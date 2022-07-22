@@ -25,6 +25,15 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
     folder_name = models.TextField(blank=True, null=True)
     folder_location = models.TextField(blank=True, null=True)
 
+    _api = None
+
+    @property
+    def api(self):
+        """Authenticated ExternalProvider instance"""
+        if self._api is None:
+            self._api = ZoomMeetingsProvider(self.external_account)
+        return self._api
+
     @property
     def folder_path(self):
         return self.folder_name
@@ -79,6 +88,9 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
 
     def after_delete(self, user):
         self.deauthorize(Auth(user=user), log=True)
+
+    def fetch_access_token(self):
+        return self.api.fetch_access_token()
 
 class Attendees(ObjectIDMixin, BaseModel):
 
