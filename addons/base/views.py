@@ -1069,7 +1069,7 @@ def webmeetings_get_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
-    if not addon.complete:
+    if not (microsoft_teams_addon.complete or webex_meetings_addon.complete or zoom_meetings_addon.complete):
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
     allMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id).order_by('start_datetime').reverse()
