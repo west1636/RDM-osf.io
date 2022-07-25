@@ -1088,7 +1088,7 @@ def webmeetings_get_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
     nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
     
-    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
