@@ -1119,6 +1119,8 @@ def webmeetings_get_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
+    nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
+
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
@@ -1205,6 +1207,8 @@ def webmeetings_set_config_ember(**kwargs):
 
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
+
+    nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
