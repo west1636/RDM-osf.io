@@ -45,7 +45,7 @@ from addons.webexmeetings import models as webex_meetings
 from addons.zoommeetings import models as zoom_meetings
 
 from addons.base import signals as file_signals
-from addons.base.utils import format_last_known_metadata, get_mfr_url
+from addons.base.utils import format_last_known_metadata, get_mfr_url, getInstitutionUsers
 from osf import features
 from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         OSFUser, AbstractNode, Preprint,
@@ -60,7 +60,6 @@ from website.ember_osf_web.decorators import ember_flag_is_active
 from website.ember_osf_web.views import use_ember_app
 from website.project.utils import serialize_node
 from website.util import rubeus, timestamp
-from admin.rdm import utils as rdm_utils
 
 from osf.features import (
     SLOAN_COI_DISPLAY,
@@ -1055,13 +1054,11 @@ def get_archived_from_url(node, file_node):
 
 @must_be_valid_project
 def project_webmeetings(**kwargs):
-    logger.info('1')
     return use_ember_app()
 
 @must_be_logged_in
 @must_be_valid_project
 def webmeetings_get_config_ember(**kwargs):
-    logger.info('2')
     node = kwargs['node'] or kwargs['project']
     microsoft_teams_addon = node.get_addon('microsoftteams')
     webex_meetings_addon = node.get_addon('webexmeetings')
@@ -1069,10 +1066,19 @@ def webmeetings_get_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
+    # Check auth addons
     if not (microsoft_teams_addon.complete or webex_meetings_addon.complete or zoom_meetings_addon.complete):
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
-    # Get Info about Web Meetigns
+    # Refresh tokens
+    try:
+        if microsoft_teams_addon.complete: access_token = microsoft_teams_addon.fetch_access_token()
+        if webex_meetings_addon.complete: access_token = webex_meetings_addon.fetch_access_token()
+        if zoom_meetings_addon.complete: access_token = zoom_meetings_addon.fetch_access_token()
+    except InvalidAuthError:
+        pass
+
+    # Get information about Web Meetigns
     allMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id).order_by('start_datetime').reverse()
     allWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id).order_by('start_datetime').reverse()
     allZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id).order_by('start_datetime').reverse()
@@ -1093,7 +1099,7 @@ def webmeetings_get_config_ember(**kwargs):
 
     nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
-    #Make Json
+    #Make json
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
@@ -1112,26 +1118,8 @@ def webmeetings_get_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
-    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
-
-    institutionId = rdm_utils.get_institution_id(user)
-    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
-    institutionUsers = utils.makeInstitutionUserList(users)
-
-    try:
-        access_token = microsoft_teams_addon.fetch_access_token()
-    except InvalidAuthError:
-        pass
-
-    try:
-        access_token = webex_meetings_addon.fetch_access_token()
-    except InvalidAuthError:
-        pass
-
-    try:
-        access_token = zoom_meetings_addon.fetch_access_token()
-    except InvalidAuthError:
-        pass
+    #Get the institution users
+    institutionUsers = getInstitutionUsers(user)
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
@@ -1159,10 +1147,25 @@ def webmeetings_get_config_ember(**kwargs):
 @must_be_valid_project
 def webmeetings_set_config_ember(**kwargs):
     node = kwargs['node'] or kwargs['project']
+    microsoft_teams_addon = node.get_addon('microsoftteams')
     webex_meetings_addon = node.get_addon('webexmeetings')
+    zoom_meetings_addon = node.get_addon('zoommeetings')
     auth = kwargs['auth']
     user = auth.user
 
+    # Check auth addons
+    if not (microsoft_teams_addon.complete or webex_meetings_addon.complete or zoom_meetings_addon.complete):
+        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+
+    # Refresh tokens
+    try:
+        if microsoft_teams_addon.complete: access_token = microsoft_teams_addon.fetch_access_token()
+        if webex_meetings_addon.complete: access_token = webex_meetings_addon.fetch_access_token()
+        if zoom_meetings_addon.complete: access_token = zoom_meetings_addon.fetch_access_token()
+    except InvalidAuthError:
+        pass
+
+    # Get information about Web Meetigns
     allMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id).order_by('start_datetime').reverse()
     allWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id).order_by('start_datetime').reverse()
     allZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id).order_by('start_datetime').reverse()
@@ -1178,11 +1181,12 @@ def webmeetings_set_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
     nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
     
-    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
     nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
+    #Make json
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
@@ -1201,9 +1205,8 @@ def webmeetings_set_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
-    institutionId = rdm_utils.get_institution_id(user)
-    users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
-    institutionUsers = utils.makeInstitutionUserList(users)
+    #Get the institution users
+    institutionUsers = getInstitutionUsers(user)
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
