@@ -98,7 +98,7 @@
                             <li><a href="${node['url']}addons/">${ _("Add-ons") }</a></li>
                         % endif
 
-                        % if permissions.WRITE in user['permissions'] and not node['is_registration']:
+                        % if 'microsoftteams' in addons_enabled or 'webexmeetings' in addons_enabled or 'zoommeetings' in addons_enabled:
                             <li><a href="${node['url']}webmeetings/">${ _("Web Meetings") }</a></li>
                         % endif
 

@@ -1091,7 +1091,7 @@ def webmeetings_get_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
-    nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
+    nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
     #Make Json
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
@@ -1181,7 +1181,7 @@ def webmeetings_set_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
-    nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
+    nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
@@ -1201,7 +1201,6 @@ def webmeetings_set_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
     nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
 
-    nodeZoomMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
     institutionId = rdm_utils.get_institution_id(user)
     users = OSFUser.objects.filter(affiliated_institutions__id=institutionId)
     institutionUsers = utils.makeInstitutionUserList(users)
