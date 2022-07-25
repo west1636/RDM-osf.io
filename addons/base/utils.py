@@ -71,7 +71,7 @@ def getInstitutionUsers(user):
         info['guid'] = user._id
         info['fullname'] = user.fullname
         info['username'] = user.username
-        institutionUsers.append(info)å
+        institutionUsers.append(info)
 
     ret = json.dumps(institutionUsers)
 
