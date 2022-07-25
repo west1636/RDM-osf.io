@@ -1,5 +1,4 @@
 import datetime
-import json
 from rest_framework import status as http_status
 import os
 import uuid
