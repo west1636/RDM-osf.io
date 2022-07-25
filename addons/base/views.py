@@ -20,6 +20,7 @@ from elasticsearch import exceptions as es_exceptions
 
 from api.base.settings.defaults import SLOAN_ID_COOKIE_NAME
 
+from addons.base.exceptions import InvalidAuthError
 from addons.base.models import BaseStorageAddon
 from addons.osfstorage.models import OsfStorageFile
 from addons.osfstorage.models import OsfStorageFileNode
