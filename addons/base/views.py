@@ -60,7 +60,7 @@ from website.ember_osf_web.decorators import ember_flag_is_active
 from website.ember_osf_web.views import use_ember_app
 from website.project.utils import serialize_node
 from website.util import rubeus, timestamp
-
+from admin.rdm import utils as rdm_utils
 
 from osf.features import (
     SLOAN_COI_DISPLAY,
@@ -1091,7 +1091,7 @@ def webmeetings_get_config_ember(**kwargs):
     nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
     nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
 
-    nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
+    nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
 
     #Make Json
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
@@ -1121,17 +1121,17 @@ def webmeetings_get_config_ember(**kwargs):
     try:
         access_token = microsoft_teams_addon.fetch_access_token()
     except InvalidAuthError:
-        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+        pass
 
     try:
         access_token = webex_meetings_addon.fetch_access_token()
     except InvalidAuthError:
-        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+        pass
 
     try:
         access_token = zoom_meetings_addon.fetch_access_token()
     except InvalidAuthError:
-        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
+        pass
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
