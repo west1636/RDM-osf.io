@@ -5,7 +5,7 @@ import uuid
 import markupsafe
 from future.moves.urllib.parse import quote
 from django.utils import timezone
-
+from django.core import serializers
 from distutils.util import strtobool
 from flask import make_response
 from flask import redirect
