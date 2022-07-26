@@ -1105,13 +1105,13 @@ def webmeetings_get_config_ember(**kwargs):
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
 
-    upcomingMicrosoftTeamsJson = { name: microsoft_teams_settings.MICROSOFT_TEAMS, webMeetings: serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False) }
-    upcomingWebexMeetingsJson = { name: webex_meetings_settings.WEBEX_MEETINGS, webMeetings: serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)}
-    upcomingZoomMeetingsJson = { name: zoom_meetings_settings.ZOOM_MEETINGS, webMeetings: serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)}
+    upcomingMicrosoftTeamsJson = json.dumps({ "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False) })
+    upcomingWebexMeetingsJson = json.dumps({ "name": webex_meetings_settings.WEBEX_MEETINGS, "webMeetings": serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)})
+    upcomingZoomMeetingsJson = json.dumps({ "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)})
 
-    previousMicrosoftTeamsJson = { name: microsoft_teams_settings.MICROSOFT_TEAMS, webMeetings: serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)}
-    previousWebexMeetingsJson = { name: webex_meetings_settings.WEBEX_MEETINGS, webMeetings: serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)}
-    previousZoomMeetingsJson = { name: zoom_meetings_settings.ZOOM_MEETINGS, webMeetings: serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)}
+    previousMicrosoftTeamsJson = json.dumps({ "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)})
+    previousWebexMeetingsJson = json.dumps({ "name": webex_meetings_settings.WEBEX_MEETINGS, "webMeetings": serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)})
+    previousZoomMeetingsJson = json.dumps({ "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)})
 
     nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
     nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False)
