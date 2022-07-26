@@ -1105,13 +1105,13 @@ def webmeetings_get_config_ember(**kwargs):
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
     allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
 
-    upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
-    upcomingWebexMeetingsJson = serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)
-    upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
+    upcomingMicrosoftTeamsJson = { name: microsoft_teams_settings.MICROSOFT_TEAMS, webMeetings: serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False) }
+    upcomingWebexMeetingsJson = { name: webex_meetings_settings.WEBEX_MEETINGS, webMeetings: serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)}
+    upcomingZoomMeetingsJson = { name: zoom_meetings_settings.ZOOM_MEETINGS, webMeetings: serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)}
 
-    previousMicrosoftTeamsJson = serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)
-    previousWebexMeetingsJson = serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)
-    previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
+    previousMicrosoftTeamsJson = { name: microsoft_teams_settings.MICROSOFT_TEAMS, webMeetings: serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)}
+    previousWebexMeetingsJson = { name: webex_meetings_settings.WEBEX_MEETINGS, webMeetings: serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)}
+    previousZoomMeetingsJson = { name: zoom_meetings_settings.ZOOM_MEETINGS, webMeetings: serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)}
 
     nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
     nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False)
@@ -1121,20 +1121,17 @@ def webmeetings_get_config_ember(**kwargs):
 
     nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
+    #All Apps Meetings
+    allUpcomingMeetingsJson = [upcomingMicrosoftTeamsJson, upcomingWebexMeetingsJson, upcomingZoomMeetingsJson]
+    allpreviousMeetingsJson = [previousMicrosoftTeamsJson, previousWebexMeetingsJson, previousZoomMeetingsJson]
+
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
-                         'all_microsoft_teams': allMicrosoftTeamsJson,
-                         'all_webex_meetings': allWebexMeetingsJson,
-                         'all_zoom_meetings': allZoomMeetingsJson,
-                         'upcoming_microsoft_teams': upcomingMicrosoftTeamsJson,
-                         'upcoming_webex_meetings': upcomingWebexMeetingsJson,
-                         'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
-                         'previous_microsoft_teams': previousMicrosoftTeamsJson,
-                         'previous_webex_meetings': previousWebexMeetingsJson,
-                         'previous_zoom_meetings': previousZoomMeetingsJson,
+                         'all_upcoming_web_meetings': allUpcomingMeetingsJson,
+                         'all_previous_web_meetings': allpreviousMeetingsJson,
                          'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
