@@ -102,5 +102,6 @@ class ZoomMeetings(ObjectIDMixin, BaseModel):
     content = models.TextField(blank=True, null=True, max_length=10000)
     join_url = models.TextField(max_length=512)
     meetingid = models.TextField(max_length=512)
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
