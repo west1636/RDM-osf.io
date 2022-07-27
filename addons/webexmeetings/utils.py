@@ -63,6 +63,8 @@ def api_create_webex_meeting(requestData, account):
         'Content-Type': 'application/json'
     }
     requestBody = json.dumps(requestData)
+    logger.info('requestBody::' +str(requestBody))
+    logger.info('requestHeaders::' +str(requestHeaders))
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
@@ -112,6 +114,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
             join_url=joinUrl,
             meetingid=meetingId,
             meeting_password=password,
+            external_account_id=addon.external_account_id,
             node_settings_id=addon.id,
         )
 
