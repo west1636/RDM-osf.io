@@ -1201,8 +1201,8 @@ def webmeetings_set_config_ember(**kwargs):
         nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
         nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingMicrosoftTeamsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousMicrosoftTeamsJson)
+        allUpcomingMeetings.append(upcomingMicrosoftTeamsJson)
+        allpreviousMeetings.append(previousMicrosoftTeamsJson)
 
     if webex_meetings_addon.complete:
         # Get information about Meetigns
@@ -1219,8 +1219,8 @@ def webmeetings_set_config_ember(**kwargs):
         nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
         nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingWebexMeetingsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousWebexMeetingsJson)
+        allUpcomingMeetings.append(upcomingWebexMeetingsJson)
+        allpreviousMeetings.append(previousWebexMeetingsJson)
 
     if zoom_meetings_addon.complete:
         # Get information about Meetigns
@@ -1230,8 +1230,8 @@ def webmeetings_set_config_ember(**kwargs):
         upcomingZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)}
         previousZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)}
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingZoomMeetingsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousZoomMeetingsJson)
+        allUpcomingMeetings.append(upcomingZoomMeetingsJson)
+        allpreviousMeetings.append(previousZoomMeetingsJson)
 
     #All Apps Meetings
     allUpcomingMeetingsJson = json.dumps(allUpcomingMeetings)
