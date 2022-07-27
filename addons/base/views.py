@@ -1131,8 +1131,8 @@ def webmeetings_get_config_ember(**kwargs):
 
     return {'data': {'id': node._id, 'type': 'webexmeetings-config',
                      'attributes': {
-                         'all_upcoming_web_meetings': allUpcomingMeetingsJson,
-                         'all_previous_web_meetings': allpreviousMeetingsJson,
+                         'all_upcoming_web_meetings': str(allUpcomingMeetingsJson),
+                         'all_previous_web_meetings': str(allpreviousMeetingsJson),
                          'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
