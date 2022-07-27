@@ -92,6 +92,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
             content=content,
             join_url=joinUrl,
             meetingid=meetingId,
+            external_account_id=addon.external_account_id,
             node_settings_id=addon.id,
         )
         createData.save()
