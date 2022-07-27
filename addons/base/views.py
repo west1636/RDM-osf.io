@@ -1100,8 +1100,8 @@ def webmeetings_get_config_ember(**kwargs):
         nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
         nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingMicrosoftTeamsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousMicrosoftTeamsJson)
+        allUpcomingMeetings.append(upcomingMicrosoftTeamsJson)
+        allpreviousMeetings.append(previousMicrosoftTeamsJson)
 
     if webex_meetings_addon.complete:
         try:
@@ -1123,8 +1123,8 @@ def webmeetings_get_config_ember(**kwargs):
         nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
         nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingWebexMeetingsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousWebexMeetingsJson)
+        allUpcomingMeetings.append(upcomingWebexMeetingsJson)
+        allpreviousMeetings.append(previousWebexMeetingsJson)
 
     if zoom_meetings_addon.complete:
         try:
@@ -1139,8 +1139,8 @@ def webmeetings_get_config_ember(**kwargs):
         upcomingZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)}
         previousZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)}
 
-        allUpcomingMeetings = allUpcomingMeetings.append(upcomingZoomMeetingsJson)
-        allpreviousMeetings = allpreviousMeetings.append(previousZoomMeetingsJson)
+        allUpcomingMeetings.append(upcomingZoomMeetingsJson)
+        allpreviousMeetings.append(previousZoomMeetingsJson)
 
     #All Apps Meetings
     allUpcomingMeetingsJson = json.dumps(allUpcomingMeetings)
@@ -1196,7 +1196,7 @@ def webmeetings_set_config_ember(**kwargs):
         nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 
         #Make json
-        upcomingMicrosoftTeamsJson = { "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False) }
+        upcomingMicrosoftTeamsJson = { "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)}
         previousMicrosoftTeamsJson = { "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)}
         nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
         nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
