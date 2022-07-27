@@ -1129,10 +1129,10 @@ def webmeetings_get_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
-    return {'data': {'id': node._id, 'type': 'webexmeetings-config',
+    return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
-                         'all_upcoming_web_meetings': str(allUpcomingMeetingsJson),
-                         'all_previous_web_meetings': str(allpreviousMeetingsJson),
+                         'all_upcoming_web_meetings': allUpcomingMeetingsJson,
+                         'all_previous_web_meetings': allpreviousMeetingsJson,
                          'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
@@ -1211,7 +1211,7 @@ def webmeetings_set_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
-    return {'data': {'id': node._id, 'type': 'webexmeetings-config',
+    return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
                          'all_microsoft_teams': allMicrosoftTeamsJson,
                          'all_webex_meetings': allWebexMeetingsJson,
