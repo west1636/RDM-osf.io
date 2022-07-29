@@ -1161,7 +1161,8 @@ def webmeetings_get_config_ember(**kwargs):
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
-                         'institution_users': institutionUsers
+                         'institution_users': institutionUsers,
+                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
 
 @must_be_logged_in
