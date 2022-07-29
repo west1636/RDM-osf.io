@@ -629,6 +629,7 @@ def save_s3compat_credentials(institution_id, storage_name, host_url, access_key
     }
     wb_settings = {
         'storage': {
+            'folder': '',
             'encrypt_uploads': server_side_encryption,
             'bucket': bucket,
             'provider': 's3compat',
