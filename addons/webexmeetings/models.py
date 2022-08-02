@@ -12,8 +12,6 @@ from addons.webexmeetings.provider import WebexMeetingsProvider
 from framework.auth.core import Auth
 from osf.utils.fields import EncryptedTextField
 
-from addons.webexmeetings import settings
-
 logger = logging.getLogger(__name__)
 
 class UserSettings(BaseOAuthUserSettings):
