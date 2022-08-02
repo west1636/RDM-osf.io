@@ -9,6 +9,8 @@ from addons.base.models import (BaseOAuthNodeSettings, BaseOAuthUserSettings,
 from addons.zoommeetings.serializer import ZoomMeetingsSerializer
 from addons.zoommeetings.provider import ZoomMeetingsProvider
 
+from addons.zoommeetings import settings
+
 from framework.auth.core import Auth
 from osf.utils.fields import EncryptedTextField
 
