@@ -34,7 +34,10 @@
                            "bucketLocations": {
                              "sailingship": {"name": "sailingship", "host": "hssgws3.riken.jp:443"},
                              "": {"name": "sailingship"}},
-                           "serverSideEncryption": false}
+                           "serverSideEncryption": false},
+                          {"name": "StorageGRID",
+                           "host": "150.249.240.65:10443",
+                           "bucketLocations": {"us-east-1": {"name": "nii001"}}}
                            ],
     "encryptUploads": true
 }
