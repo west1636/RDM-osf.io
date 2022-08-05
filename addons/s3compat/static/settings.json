@@ -37,7 +37,8 @@
                            "serverSideEncryption": false},
                           {"name": "StorageGRID",
                            "host": "150.249.240.65:10443",
-                           "bucketLocations": {"us-east-1": {"name": "nii001"}}}
+                           "bucketLocations": {"us-east-1": {"name": "nii001"}},
+                           "serverSideEncryption": false}
                            ],
     "encryptUploads": true
 }
