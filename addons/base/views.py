@@ -1142,8 +1142,8 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingMeetings += upcomingZoomMeetings
         allpreviousMeetings += previousZoomMeetings
 
-    allUpcomingMeetings = sorted(allUpcomingMeetings, key=lambda x: x['start_datetime'])
-    allpreviousMeetings = sorted(allpreviousMeetings, key=lambda x: x['start_datetime'], reverse=True)
+    allUpcomingMeetings = json.loads(sorted(allUpcomingMeetings, key=lambda x: x['fields']['start_datetime']))
+    allpreviousMeetings = json.loads(sorted(allpreviousMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True))
 
     #All Apps Meetings
     allUpcomingMeetingsJson = json.dumps(allUpcomingMeetings)
