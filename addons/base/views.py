@@ -1117,8 +1117,8 @@ def webmeetings_get_config_ember(**kwargs):
         nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
-        upcomingWebexMeetings = json.loadsserializers.serialize('json', qsUpcomingWebexMeetings, ensure_ascii=False))
-        previousWebexMeetings = json.loadsserializers.serialize('json', qsPreviousWebexMeetings, ensure_ascii=False))
+        upcomingWebexMeetings = json.loads(serializers.serialize('json', qsUpcomingWebexMeetings, ensure_ascii=False))
+        previousWebexMeetings = json.loads(serializers.serialize('json', qsPreviousWebexMeetings, ensure_ascii=False))
         nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False)
         nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
         nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
@@ -1189,62 +1189,77 @@ def webmeetings_set_config_ember(**kwargs):
     nodeWebexMeetingsAttendeesJson = ''
     nodeWebexMeetingsAttendeesRelationJson = ''
 
-    if microsoft_teams_addon.complete:
+    if microsoft_teams_addon or microsoft_teams_addon.complete:
+        try:
+            access_token = microsoft_teams_addon.fetch_access_token()
+        except InvalidAuthError:
+            logger.info('Failed to refresh token for Microsoft Teams.')
+
         # Get information about Meetigns
-        upcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
-        previousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
+        qsUpcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
+        qsPpreviousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
         nodeMicrosoftTeamsAttendeesAll = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
         nodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
 
         #Make json
-        upcomingMicrosoftTeamsJson = { "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)}
-        previousMicrosoftTeamsJson = { "name": microsoft_teams_settings.MICROSOFT_TEAMS, "webMeetings": serializers.serialize('json', previousMicrosoftTeams, ensure_ascii=False)}
+        upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
+        previousMicrosoftTeams = json.loads(serializers.serialize('json', qsPpreviousMicrosoftTeams, ensure_ascii=False))
         nodeMicrosoftTeamsAttendeesAllJson = serializers.serialize('json', nodeMicrosoftTeamsAttendeesAll, ensure_ascii=False)
         nodeMicrosoftTeamsAttendeesJson = serializers.serialize('json', nodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
-        allUpcomingWebMeetings.append(upcomingMicrosoftTeamsJson)
-        allpreviousWebMeetings.append(previousMicrosoftTeamsJson)
+        allUpcomingWebMeetings += upcomingMicrosoftTeams
+        allpreviousWebMeetings += previousMicrosoftTeams
 
-    if webex_meetings_addon.complete:
+    if webex_meetings_addon and webex_meetings_addon.complete:
+        try:
+            access_token = webex_meetings_addon.fetch_access_token()
+        except InvalidAuthError:
+            logger.info('Failed to refresh token for Webex Meetings')
+
         # Get information about Meetigns
-        upcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
-        previousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
+        qsUpcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
+        qsPreviousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
         nodeWebexMeetingsAttendeesAll = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
         nodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
         nodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
-        upcomingWebexMeetingsJson = { "name": webex_meetings_settings.WEBEX_MEETINGS, "webMeetings": serializers.serialize('json', upcomingWebexMeetings, ensure_ascii=False)}
-        previousWebexMeetingsJson = { "name": webex_meetings_settings.WEBEX_MEETINGS, "webMeetings": serializers.serialize('json', previousWebexMeetings, ensure_ascii=False)}
+        upcomingWebexMeetings = json.loads(serializers.serialize('json', qsUpcomingWebexMeetings, ensure_ascii=False))
+        previousWebexMeetings = json.loads(serializers.serialize('json', qsPreviousWebexMeetings, ensure_ascii=False))
         nodeWebexMeetingsAttendeesAllJson = serializers.serialize('json', nodeWebexMeetingsAttendeesAll, ensure_ascii=False)
         nodeWebexMeetingsAttendeesJson = serializers.serialize('json', nodeWebexMeetingsAttendees, ensure_ascii=False)
         nodeWebexMeetingsAttendeesRelationJson = serializers.serialize('json', nodeWebexMeetingsAttendeesRelation, ensure_ascii=False)
 
-        allUpcomingWebMeetings.append(upcomingWebexMeetingsJson)
-        allpreviousWebMeetings.append(previousWebexMeetingsJson)
+        allUpcomingWebMeetings += upcomingWebexMeetings
+        allpreviousWebMeetings += previousWebexMeetings
 
-    if zoom_meetings_addon.complete:
+    if zoom_meetings_addon and zoom_meetings_addon.complete:
+        try:
+            access_token = zoom_meetings_addon.fetch_access_token()
+        except InvalidAuthError:
+            logger.info('Failed to refresh token for Zoom Meetings.')
+
         # Get information about Meetigns
-        upcomingZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
-        previousZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
+        qsUpcomingZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
+        qsPreviousZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
         #Make json
-        upcomingZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)}
-        previousZoomMeetingsJson = { "name": zoom_meetings_settings.ZOOM_MEETINGS, "webMeetings": serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)}
+        upcomingZoomMeetings = json.loads(serializers.serialize('json', qsUpcomingZoomMeetings, ensure_ascii=False))
+        previousZoomMeetings = json.loads(serializers.serialize('json', qsPreviousZoomMeetings, ensure_ascii=False))
 
-        allUpcomingWebMeetings.append(upcomingZoomMeetingsJson)
-        allpreviousWebMeetings.append(previousZoomMeetingsJson)
+        allUpcomingWebMeetings += upcomingZoomMeetings
+        allpreviousWebMeetings += previousZoomMeetings
 
     #All Apps Meetings
-    allUpcomingWebMeetingsJson = json.dumps(allUpcomingWebMeetings)
-    allpreviousWebMeetingsJson = json.dumps(allpreviousWebMeetings)
+    allUpcomingWebMeetings = sorted(allUpcomingWebMeetings, key=lambda x: x['fields']['start_datetime'])
+    allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
 
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
-                         'all_upcoming_web_meetings': allUpcomingWebMeetingsJson,
-                         'all_previous_web_meetings': allpreviousWebMeetingsJson,
+                         'all_upcoming_web_meetings': allUpcomingWebMeetings,
+                         'all_previous_web_meetings': allpreviousWebMeetings,
                          'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
@@ -1253,5 +1268,6 @@ def webmeetings_set_config_ember(**kwargs):
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendeesJson,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendeesJson,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelationJson,
-                         'institution_users': institutionUsers
+                         'institution_users': institutionUsers,
+                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
