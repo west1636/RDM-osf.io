@@ -42,7 +42,7 @@ class ZoomMeetingsProvider(ExternalProvider):
 
     def fetch_access_token(self, force_refresh=False):
         refreshed = self.refresh_oauth_key(force=force_refresh)
-        logger.info('refresh_oauth_key returns {}'.format(refreshed))
+        logger.info('{} refresh_oauth_key returns {}'.format(settings.ZOOM_MEETINGS, refreshed))
         return self.account.oauth_key
 
     def get_authorization_url(self, client_id):

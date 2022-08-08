@@ -20,6 +20,8 @@ class WebexMeetingsProvider(ExternalProvider):
     auth_url_base = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/authorize')
     callback_url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/access_token')
     auto_refresh_url = callback_url
+    refresh_time = settings.REFRESH_TIME
+    expiry_time = settings.EXPIRY_TIME
 
     def handle_callback(self, response):
         url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/people/me')
@@ -37,6 +39,7 @@ class WebexMeetingsProvider(ExternalProvider):
 
     def fetch_access_token(self, force_refresh=False):
         self.refresh_oauth_key(force=force_refresh)
+        logger.info('{} refresh_oauth_key returns {}'.format(settings.WEBEX_MEETINGS, refreshed))
         return self.account.oauth_key
 
     def get_authorization_url(self, client_id):
