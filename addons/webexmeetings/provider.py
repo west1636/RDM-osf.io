@@ -40,7 +40,7 @@ class WebexMeetingsProvider(ExternalProvider):
         }
 
     def fetch_access_token(self, force_refresh=False):
-        self.refresh_oauth_key(force=force_refresh)
+        refreshed = self.refresh_oauth_key(force=force_refresh)
         logger.info('{} refresh_oauth_key returns {}'.format(settings.WEBEX_MEETINGS, refreshed))
         return self.account.oauth_key
 
