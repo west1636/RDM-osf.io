@@ -1253,13 +1253,15 @@ def webmeetings_set_config_ember(**kwargs):
     allUpcomingWebMeetings = sorted(allUpcomingWebMeetings, key=lambda x: x['fields']['start_datetime'])
     allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
 
+    logger.info(str(allUpcomingWebMeetings))
+
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
-                         'all_upcoming_web_meetings': allUpcomingWebMeetings,
-                         'all_previous_web_meetings': allpreviousWebMeetings,
+                         'all_upcoming_web_meetings': str(allUpcomingWebMeetings),
+                         'all_previous_web_meetings': str(allpreviousWebMeetings),
                          'app_name_microsoft_teams': microsoft_teams_settings.MICROSOFT_TEAMS,
                          'app_name_webex_meetings': webex_meetings_settings.WEBEX_MEETINGS,
                          'app_name_zoom_meetings': zoom_meetings_settings.ZOOM_MEETINGS,
