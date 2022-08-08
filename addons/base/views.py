@@ -1147,6 +1147,7 @@ def webmeetings_get_config_ember(**kwargs):
     allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
 
     allUpcomingWebMeetings = json.dumps(allUpcomingWebMeetings)
+    allpreviousWebMeetings = json.dumps(allpreviousWebMeetings)
 
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
@@ -1256,6 +1257,7 @@ def webmeetings_set_config_ember(**kwargs):
     allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
 
     allUpcomingWebMeetings = json.dumps(allUpcomingWebMeetings)
+    allpreviousWebMeetings = json.dumps(allpreviousWebMeetings)
 
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
