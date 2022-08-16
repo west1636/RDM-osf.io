@@ -487,7 +487,7 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             if not force:
                 logger.info('5')
                 import traceback
-                traceback.print_exec()
+                traceback.print_exc()
                 return False
             else:
                 raise
