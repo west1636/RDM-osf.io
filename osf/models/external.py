@@ -442,17 +442,21 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
         extra = extra or {}
         # Ensure this is an authenticated Provider that uses token refreshing
         if not (self.account and self.auto_refresh_url):
+            logger.info('1')
             return False
 
         # Ensure this Provider is for a valid addon
         if not (self.client_id and self.client_secret):
+            logger.info('2')
             return False
 
         # Ensure a refresh is needed
         if not (force or self._needs_refresh()):
+            logger.info('3')
             return False
 
         if self.has_expired_credentials and not force:
+            logger.info('4')
             return False
 
         resp_expiry_fn = resp_expiry_fn or (
@@ -481,6 +485,9 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             )
         except (AccessDeniedError, InvalidGrantError, TokenExpiredError):
             if not force:
+                logger.info('5')
+                import traceback
+                traceback.print_exec()
                 return False
             else:
                 raise
