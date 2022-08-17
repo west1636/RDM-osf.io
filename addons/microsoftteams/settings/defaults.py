@@ -12,5 +12,5 @@ MICROSOFT_TEAMS_SIGNATURE = '{1}<br><a href="{2}">会議に参加するにはこ
 
 MICROSOFT_TEAMS = 'Microsoft Teams'
 
-EXPIRY_TIME = 60 * 60 * 24 * 90  # 90 days
+EXPIRY_TIME = 60 * 60 * 24 * 365  # 1 year
 REFRESH_TIME = 5 * 60  # 5 minutes
