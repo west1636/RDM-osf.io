@@ -38,6 +38,10 @@
                           {"name": "StorageGRID",
                            "host": "150.249.240.65:10443",
                            "bucketLocations": {"us-east-1": {"name": "nii001"}},
+                           "serverSideEncryption": false},
+                          {"name": "ONTAP S3",
+                           "host": "https://150.249.240.65:11443",
+                           "bucketLocations": {"us-east-1": {"name": "ontpbk1"}},
                            "serverSideEncryption": false}
                            ],
     "encryptUploads": true
