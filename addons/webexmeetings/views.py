@@ -217,7 +217,7 @@ def webexmeetings_register_email(**kwargs):
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     nodeId = nodeSettings.id
 
-    if actionType === 'update':
+    if actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
             if not is_guest:
