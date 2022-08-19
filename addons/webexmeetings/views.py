@@ -196,7 +196,7 @@ def webexmeetings_request_api(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def webexmeetings_register_webex_email(**kwargs):
+def webexmeetings_register_email(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -212,28 +212,37 @@ def webexmeetings_register_webex_email(**kwargs):
     fullname = requestDataJson['fullname']
     email = requestDataJson['email']
     is_guest = requestDataJson['is_guest']
+    actionType = requestDataJson['actionType']
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     nodeId = nodeSettings.id
 
-    if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
-        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
-        if not is_guest:
-            attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-        attendee.webex_meetings_mail = email
-        attendee.save()
+    if actionType === 'update':
+        if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
+            attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+            if not is_guest:
+                attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+            attendee.webex_meetings_mail = email
+            attendee.save()
     else:
-        if not is_guest:
-            fullname = OSFUser.objects.get(guids___id=guid).fullname
+        if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
+            attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+            if not is_guest:
+                attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+            attendee.webex_meetings_mail = email
+            attendee.save()
+        else:
+            if not is_guest:
+                fullname = OSFUser.objects.get(guids___id=guid).fullname
 
-        attendeeInfo = models.Attendees(
-            user_guid=guid,
-            fullname=fullname,
-            is_guest=is_guest,
-            webex_meetings_mail=email,
-            node_settings=nodeSettings,
-        )
-        attendeeInfo.save()
+            attendeeInfo = models.Attendees(
+                user_guid=guid,
+                fullname=fullname,
+                is_guest=is_guest,
+                webex_meetings_mail=email,
+                node_settings=nodeSettings,
+            )
+            attendeeInfo.save()
 
     return {}
 

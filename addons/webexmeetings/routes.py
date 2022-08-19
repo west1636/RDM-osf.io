@@ -90,11 +90,11 @@ api_routes = {
 
         Rule(
             [
-                '/project/<pid>/webexmeetings/register_webex_email',
-                '/project/<pid>/node/<nid>/webexmeetings/register_webex_email',
+                '/project/<pid>/webexmeetings/register_email',
+                '/project/<pid>/node/<nid>/webexmeetings/register_email',
             ],
             'post',
-            views.webexmeetings_register_webex_email,
+            views.webexmeetings_register_email,
             json_renderer,
         ),
 
