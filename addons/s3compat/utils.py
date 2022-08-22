@@ -148,7 +148,10 @@ def get_user_info(host, access_key, secret_key):
         return None
 
     try:
-        return connect_s3compat(host, access_key, secret_key).get_all_buckets().owner
+#        return connect_s3compat(host, access_key, secret_key).get_all_buckets().owner
+         connection = connect_s3compat(host, access_key, secret_key)
+         logger.info('get_user_info connection:' + str(vars(connection)))
+         return connection.get_all_buckets().owner
     except exception.S3ResponseError:
         logger.info('get_user_info 2')
         import traceback
