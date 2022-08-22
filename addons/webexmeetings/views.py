@@ -224,6 +224,9 @@ def webexmeetings_register_email(**kwargs):
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
             attendee.webex_meetings_mail = email
             attendee.save()
+    elif actionType == 'delete':
+        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+        attendee.delete()
     else:
         if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
