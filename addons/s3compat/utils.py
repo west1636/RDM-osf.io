@@ -47,6 +47,8 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     if m is not None:
         host = m.group(1)
         port = int(m.group(2))
+    logger.info('connect_s3compat host:' + str(host))
+    logger.info('connect_s3compat port:' + str(port))
     return S3CompatConnection(access_key, secret_key,
                               calling_format=OrdinaryCallingFormat(),
                               host=host,
@@ -138,6 +140,9 @@ def can_list(host, access_key, secret_key):
 def get_user_info(host, access_key, secret_key):
     """Returns an S3 Compatible Storage User with .display_name and .id, or None
     """
+    logger.info('get_user_info:host' + str(host))
+    logger.info('get_user_info:access_key' + str(access_key))
+    logger.info('get_user_info:secret_key' + str(secret_key))
     if not (access_key and secret_key):
         logger.info('get_user_info 1')
         return None
