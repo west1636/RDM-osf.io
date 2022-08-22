@@ -9,6 +9,8 @@ import addons.s3compat.settings as settings
 from framework.exceptions import HTTPError
 from addons.base.exceptions import InvalidAuthError, InvalidFolderError
 
+import logging
+logger = logging.getLogger(__name__)
 
 class S3CompatConnection(S3Connection):
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
@@ -137,11 +139,15 @@ def get_user_info(host, access_key, secret_key):
     """Returns an S3 Compatible Storage User with .display_name and .id, or None
     """
     if not (access_key and secret_key):
+        logger.info('get_user_info 1')
         return None
 
     try:
         return connect_s3compat(host, access_key, secret_key).get_all_buckets().owner
     except exception.S3ResponseError:
+        logger.info('get_user_info 2')
+        import traceback
+        traceback.print_exc()
         return None
     return None
 
