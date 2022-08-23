@@ -1101,7 +1101,7 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingMicrosoftTeams
         allpreviousWebMeetings += previousMicrosoftTeams
 
-        webMeetingsApps += microsoft_teams_settings.MICROSOFT_TEAMS
+        webMeetingsApps.append(microsoft_teams_settings.MICROSOFT_TEAMS)
 
     if webex_meetings_addon and webex_meetings_addon.complete:
         try:
@@ -1124,7 +1124,7 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingWebexMeetings
         allpreviousWebMeetings += previousWebexMeetings
 
-        webMeetingsApps += webex_meetings_settings.WEBEX_MEETINGS
+        webMeetingsApps.append(webex_meetings_settings.WEBEX_MEETINGS)
 
     if zoom_meetings_addon and zoom_meetings_addon.complete:
         try:
@@ -1142,7 +1142,7 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingZoomMeetings
         allpreviousWebMeetings += previousZoomMeetings
 
-        webMeetingsApps += zoom_meetings_settings.ZOOM_MEETINGS
+        webMeetingsApps.append(zoom_meetings_settings.ZOOM_MEETINGS)
 
     #All Apps Meetings
     allUpcomingWebMeetings = sorted(allUpcomingWebMeetings, key=lambda x: x['fields']['start_datetime'])
