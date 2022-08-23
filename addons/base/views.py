@@ -1076,6 +1076,8 @@ def webmeetings_get_config_ember(**kwargs):
     allUpcomingWebMeetings = []
     allpreviousWebMeetings = []
 
+    webMeetingsApps = []
+
     nodeMicrosoftTeamsAttendees = ''
     nodeWebexMeetingsAttendees = ''
     nodeWebexMeetingsAttendeesRelation = ''
@@ -1099,6 +1101,8 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingMicrosoftTeams
         allpreviousWebMeetings += previousMicrosoftTeams
 
+        webMeetingsApps += microsoft_teams_settings.MICROSOFT_TEAMS
+
     if webex_meetings_addon and webex_meetings_addon.complete:
         try:
             access_token = webex_meetings_addon.fetch_access_token()
@@ -1120,6 +1124,8 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingWebexMeetings
         allpreviousWebMeetings += previousWebexMeetings
 
+        webMeetingsApps += webex_meetings_settings.WEBEX_MEETINGS
+
     if zoom_meetings_addon and zoom_meetings_addon.complete:
         try:
             access_token = zoom_meetings_addon.fetch_access_token()
@@ -1136,6 +1142,8 @@ def webmeetings_get_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingZoomMeetings
         allpreviousWebMeetings += previousZoomMeetings
 
+        webMeetingsApps += zoom_meetings_settings.ZOOM_MEETINGS
+
     #All Apps Meetings
     allUpcomingWebMeetings = sorted(allUpcomingWebMeetings, key=lambda x: x['fields']['start_datetime'])
     allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
@@ -1146,7 +1154,7 @@ def webmeetings_get_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
-    webMeetingsApps = json.dumps([microsoft_teams_settings.MICROSOFT_TEAMS, webex_meetings_settings.WEBEX_MEETINGS, zoom_meetings_settings.ZOOM_MEETINGS])
+    webMeetingsApps = json.dumps(webMeetingsApps)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
