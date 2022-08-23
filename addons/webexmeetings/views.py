@@ -211,7 +211,7 @@ def webexmeetings_register_email(**kwargs):
     guid = requestDataJson['guid']
     fullname = ''
     email = requestDataJson['email']
-    is_guest = requestDataJson['is_guest']
+    is_guest = requestDataJson.get('is_guest', true)
     actionType = requestDataJson['actionType']
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
