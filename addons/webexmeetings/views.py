@@ -209,7 +209,7 @@ def webexmeetings_register_email(**kwargs):
     logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
     _id = requestDataJson['_id']
     guid = requestDataJson['guid']
-    fullname = requestDataJson['fullname']
+    fullname = ''
     email = requestDataJson['email']
     is_guest = requestDataJson['is_guest']
     actionType = requestDataJson['actionType']
