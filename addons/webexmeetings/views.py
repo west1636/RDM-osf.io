@@ -89,7 +89,7 @@ def webexmeetings_get_config_ember(**kwargs):
     allWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
     upcomingWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
-    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(email_address__exact='').exclude(email_address__isnull=True)
     nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
 
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
@@ -130,7 +130,7 @@ def webexmeetings_set_config_ember(**kwargs):
     upcomingWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousWebexMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
-    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(webex_meetings_mail__exact='').exclude(webex_meetings_mail__isnull=True)
+    nodeWebexMeetingsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(email_address__exact='').exclude(email_address__isnull=True)
     nodeWebexMeetingsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=addon.id)
 
     allWebexMeetingsJson = serializers.serialize('json', allWebexMeetings, ensure_ascii=False)
@@ -224,7 +224,7 @@ def webexmeetings_register_email(**kwargs):
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
-            webex_meetings_mail=email,
+            email_address=email,
             node_settings=nodeSettings,
         )
         attendee.save()
@@ -233,7 +233,7 @@ def webexmeetings_register_email(**kwargs):
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if not is_guest:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-            attendee.webex_meetings_mail = email
+            attendee.email_address = email
             attendee.save()
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
@@ -243,7 +243,7 @@ def webexmeetings_register_email(**kwargs):
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if not is_guest:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-            attendee.webex_meetings_mail = email
+            attendee.email_address = email
             attendee.save()
         else:
             if not is_guest:
@@ -253,7 +253,7 @@ def webexmeetings_register_email(**kwargs):
                 user_guid=guid,
                 fullname=fullname,
                 is_guest=is_guest,
-                webex_meetings_mail=email,
+                email_address=email,
                 node_settings=nodeSettings,
             )
             attendeeInfo.save()

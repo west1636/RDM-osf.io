@@ -99,8 +99,8 @@ class Attendees(ObjectIDMixin, BaseModel):
 
     user_guid = models.CharField(max_length=255, default=None)
     fullname = models.CharField(max_length=255)
-    webex_meetings_mail = models.CharField(max_length=254, blank=True, null=True)
-    webex_meetings_display_name = models.CharField(max_length=255, blank=True, null=True)
+    email_address = models.CharField(max_length=254, blank=True, null=True)
+    display_name = models.CharField(max_length=255, blank=True, null=True)
     is_guest = models.BooleanField(default=False)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 

@@ -89,7 +89,7 @@ def microsoftteams_get_config_ember(**kwargs):
     upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
-    nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
+    nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(email_address__exact='').exclude(email_address__isnull=True)
 
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
@@ -131,7 +131,7 @@ def microsoftteams_set_config_ember(**kwargs):
     upcomingMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__gte=datetime.today()).order_by('start_datetime')
     previousMicrosoftTeams = models.MicrosoftTeams.objects.filter(node_settings_id=addon.id, external_account_id=addon.external_account_id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
     nodeAttendeesAll = models.Attendees.objects.filter(node_settings_id=addon.id)
-    nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(microsoft_teams_mail__exact='').exclude(microsoft_teams_mail__isnull=True)
+    nodeMicrosoftTeamsAttendees = models.Attendees.objects.filter(node_settings_id=addon.id).exclude(email_address__exact='').exclude(email_address__isnull=True)
 
     allMicrosoftTeamsJson = serializers.serialize('json', allMicrosoftTeams, ensure_ascii=False)
     upcomingMicrosoftTeamsJson = serializers.serialize('json', upcomingMicrosoftTeams, ensure_ascii=False)
@@ -221,7 +221,7 @@ def microsoftteams_register_teams_email(**kwargs):
             username = utils.api_get_microsoft_username(account, email)
         else:
             username = email
-        attendee.microsoft_teams_mail = email
+        attendee.email_address = email
         attendee.microsoft_teams_user_name = username
         attendee.save()
     else:
@@ -235,7 +235,7 @@ def microsoftteams_register_teams_email(**kwargs):
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
-            microsoft_teams_mail=email,
+            email_address=email,
             microsoft_teams_user_name=username,
             node_settings=nodeSettings,
         )
