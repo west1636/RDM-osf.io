@@ -209,27 +209,38 @@ def webexmeetings_register_email(**kwargs):
     logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
     _id = requestDataJson['_id']
     guid = requestDataJson.get('guid', '')
-    fullname = ''
+    fullname = requestDataJson.get('fullname', '')
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
     actionType = requestDataJson.get('actionType', '')
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
-    nodeId = nodeSettings.id
 
-    if actionType == 'update':
-        if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
-            attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+    if actionType == 'create':
+        if not is_guest:
+            fullname = OSFUser.objects.get(guids___id=guid).fullname
+
+        attendee = models.Attendees(
+            user_guid=guid,
+            fullname=fullname,
+            is_guest=is_guest,
+            webex_meetings_mail=email,
+            node_settings=nodeSettings,
+        )
+        attendee.save()
+    elif actionType == 'update':
+        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
+            attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if not is_guest:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
             attendee.webex_meetings_mail = email
             attendee.save()
     elif actionType == 'delete':
-        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+        attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.delete()
     else:
-        if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
-            attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
+        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
+            attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if not is_guest:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
             attendee.webex_meetings_mail = email
