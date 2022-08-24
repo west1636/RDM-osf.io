@@ -105,7 +105,7 @@ class Attendees(ObjectIDMixin, BaseModel):
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
     class Meta:
-        unique_together = (('user_guid', 'node_settings'), ('webex_meetings_mail', 'node_settings'))
+        unique_together = (('user_guid', 'node_settings'), ('email_address', 'node_settings'))
 
 class WebexMeetings(ObjectIDMixin, BaseModel):
 
