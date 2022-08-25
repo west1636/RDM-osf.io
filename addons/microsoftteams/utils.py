@@ -89,7 +89,7 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData):
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=address)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address)
         except ObjectDoesNotExist:
             continue
         attendeeId = attendeeObj.id
@@ -149,7 +149,7 @@ def grdm_update_teams_meeting(addon, meetingId, requestData, updatedData):
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, microsoft_teams_mail=address)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address)
         except ObjectDoesNotExist:
             continue
         attendeeId = attendeeObj.id

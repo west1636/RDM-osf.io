@@ -222,7 +222,7 @@ def microsoftteams_register_teams_email(**kwargs):
         else:
             username = email
         attendee.email_address = email
-        attendee.microsoft_teams_user_name = username
+        attendee.display_name = username
         attendee.save()
     else:
         if not is_guest:
@@ -236,7 +236,7 @@ def microsoftteams_register_teams_email(**kwargs):
             fullname=fullname,
             is_guest=is_guest,
             email_address=email,
-            microsoft_teams_user_name=username,
+            display_name=username,
             node_settings=nodeSettings,
         )
         attendeeInfo.save()
