@@ -193,7 +193,7 @@ def microsoftteams_request_api(**kwargs):
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')
-def microsoftteams_register_teams_email(**kwargs):
+def microsoftteams_register_email(**kwargs):
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
