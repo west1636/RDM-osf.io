@@ -1100,7 +1100,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, microsoft_teams_addon.external_account_id)
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
@@ -1121,7 +1121,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, webex_meetings_addon.external_account_id)
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id)
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
@@ -1221,7 +1221,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, microsoft_teams_addon.external_account_id)
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
@@ -1242,7 +1242,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, webex_meetings_addon.external_account_id)
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id)
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
