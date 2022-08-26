@@ -219,9 +219,12 @@ def webexmeetings_register_email(**kwargs):
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
 
     if actionType == 'create':
-        if not is_guest:
+        if is_guest:
+            if emailType:
+                displayName = utils.api_get_webex_meetings_username(account, email)
+        else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            displayName = api_get_webex_meetings_username(account, email)
+            displayName = utils.api_get_webex_meetings_username(account, email)
 
         attendee = models.Attendees(
             user_guid=guid,
@@ -237,31 +240,12 @@ def webexmeetings_register_email(**kwargs):
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if not is_guest:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-                attendee.displayName = api_get_webex_meetings_username(account, email)
+                attendee.displayName = utils.api_get_webex_meetings_username(account, email)
             attendee.email_address = email
             attendee.save()
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.delete()
-    else:
-        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
-            attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
-            if not is_guest:
-                attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-            attendee.email_address = email
-            attendee.save()
-        else:
-            if not is_guest:
-                fullname = OSFUser.objects.get(guids___id=guid).fullname
-
-            attendeeInfo = models.Attendees(
-                user_guid=guid,
-                fullname=fullname,
-                is_guest=is_guest,
-                email_address=email,
-                node_settings=nodeSettings,
-            )
-            attendeeInfo.save()
 
     return {}
 
