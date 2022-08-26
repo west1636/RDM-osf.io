@@ -101,6 +101,7 @@ class Attendees(ObjectIDMixin, BaseModel):
     email_address = models.CharField(max_length=254, blank=True, null=True)
     display_name = models.CharField(max_length=255, blank=True, null=True)
     is_guest = models.BooleanField(default=False)
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
     class Meta:

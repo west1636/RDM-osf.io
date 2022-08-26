@@ -18,6 +18,7 @@ import waffle
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from elasticsearch import exceptions as es_exceptions
+from website.project.views.contributor import get_contributors
 
 from api.base.settings.defaults import SLOAN_ID_COOKIE_NAME
 
@@ -1077,6 +1078,10 @@ def webmeetings_get_config_ember(**kwargs):
     auth = kwargs['auth']
     user = auth.user
 
+    # get contributors
+    contributors = get_contributors(auth, node)
+    logger.info('contributors::' + str(contributors))
+
     allUpcomingWebMeetings = []
     allpreviousWebMeetings = []
 
@@ -1095,7 +1100,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
@@ -1116,7 +1121,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, webex_meetings_addon.external_account_id)
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
@@ -1183,15 +1188,25 @@ def webmeetings_set_config_ember(**kwargs):
     webex_meetings_addon = node.get_addon('webexmeetings')
     zoom_meetings_addon = node.get_addon('zoommeetings')
 
+    microsoft_teams_auth = microsoft_teams_addon.complete if microsoft_teams_addon else None
+    webex_meetings_auth = webex_meetings_addon.complete if webex_meetings_addon else None
+    zoom_meetings_auth = zoom_meetings_addon.complete if zoom_meetings_addon else None
+
     # Check auth addons
-    if not (microsoft_teams_addon.complete or webex_meetings_addon.complete or zoom_meetings_addon.complete):
+    if not (microsoft_teams_auth or webex_meetings_auth or zoom_meetings_auth):
         raise HTTPError(http_status.HTTP_403_FORBIDDEN)
 
     auth = kwargs['auth']
     user = auth.user
 
+    # get contributors
+    contributors = get_contributors(auth, node)
+    logger.info('contributors::' + str(contributors))
+
     allUpcomingWebMeetings = []
     allpreviousWebMeetings = []
+
+    webMeetingsApps = []
 
     nodeMicrosoftTeamsAttendees = ''
     nodeWebexMeetingsAttendees = ''
@@ -1206,7 +1221,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id)
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
@@ -1215,6 +1230,8 @@ def webmeetings_set_config_ember(**kwargs):
 
         allUpcomingWebMeetings += upcomingMicrosoftTeams
         allpreviousWebMeetings += previousMicrosoftTeams
+
+        webMeetingsApps.append(microsoft_teams_settings.MICROSOFT_TEAMS)
 
     if webex_meetings_addon and webex_meetings_addon.complete:
         try:
@@ -1225,7 +1242,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id)
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(node_settings_id=webex_meetings_addon.id, webex_meetings_addon.external_account_id)
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__node_settings_id=webex_meetings_addon.id)
 
         #Make json
@@ -1236,6 +1253,8 @@ def webmeetings_set_config_ember(**kwargs):
 
         allUpcomingWebMeetings += upcomingWebexMeetings
         allpreviousWebMeetings += previousWebexMeetings
+
+        webMeetingsApps.append(webex_meetings_settings.WEBEX_MEETINGS)
 
     if zoom_meetings_addon and zoom_meetings_addon.complete:
         try:
@@ -1253,6 +1272,8 @@ def webmeetings_set_config_ember(**kwargs):
         allUpcomingWebMeetings += upcomingZoomMeetings
         allpreviousWebMeetings += previousZoomMeetings
 
+        webMeetingsApps.append(zoom_meetings_settings.ZOOM_MEETINGS)
+
     #All Apps Meetings
     allUpcomingWebMeetings = sorted(allUpcomingWebMeetings, key=lambda x: x['fields']['start_datetime'])
     allpreviousWebMeetings = sorted(allpreviousWebMeetings, key=lambda x: x['fields']['start_datetime'], reverse=True)
@@ -1263,7 +1284,7 @@ def webmeetings_set_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
-    webMeetingsApps = json.dumps([microsoft_teams_settings.MICROSOFT_TEAMS, webex_meetings_settings.WEBEX_MEETINGS, zoom_meetings_settings.ZOOM_MEETINGS])
+    webMeetingsApps = json.dumps(webMeetingsApps)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
                      'attributes': {
