@@ -204,42 +204,45 @@ def microsoftteams_register_teams_email(**kwargs):
     requestData = request.get_data()
     requestDataJson = json.loads(requestData)
     logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
-    _id = requestDataJson['_id']
-    guid = requestDataJson['guid']
-    fullname = requestDataJson['fullname']
-    email = requestDataJson['email']
-    is_guest = requestDataJson['is_guest']
-    username = ''
+    _id = requestDataJson.get('_id', '')
+    guid = requestDataJson.get('guid', '')
+    fullname = requestDataJson.get('fullname', '')
+    email = requestDataJson.get('email', '')
+    is_guest = requestDataJson.get('is_guest', True)
+    actionType = requestDataJson.get('actionType', '')
+    emailType = requestDataJson.get('emailType', False)
+    displayName = ''
 
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
-    nodeId = nodeSettings.id
 
-    if models.Attendees.objects.filter(node_settings_id=nodeId, _id=_id).exists():
-        attendee = models.Attendees.objects.get(node_settings_id=nodeId, _id=_id)
-        if not is_guest:
-            attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-            username = utils.api_get_microsoft_username(account, email)
+    if actionType == 'create':
+        if is_guest:
+            if emailType:
+                displayName = utils.api_get_microsoft_username(account, email)
         else:
-            username = email
-        attendee.email_address = email
-        attendee.display_name = username
-        attendee.save()
-    else:
-        if not is_guest:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            username = utils.api_get_microsoft_username(account, email)
-        else:
-            username = email
+            displayName = utils.api_get_microsoft_username(account, email)
 
-        attendeeInfo = models.Attendees(
+        attendee = models.Attendees(
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
             email_address=email,
-            display_name=username,
+            display_name=displayName,
             node_settings=nodeSettings,
         )
-        attendeeInfo.save()
+        attendee.save()
+    elif actionType == 'update':
+        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
+            attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
+            if not is_guest:
+                attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+                attendee.displayName = utils.api_get_microsoft_username(account, email)
+            attendee.email_address = email
+            attendee.save()
+    elif actionType == 'delete':
+        attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
+        attendee.delete()
 
     return {}
 
