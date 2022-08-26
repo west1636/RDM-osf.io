@@ -1066,9 +1066,9 @@ def webmeetings_get_config_ember(**kwargs):
     webex_meetings_addon = node.get_addon('webexmeetings')
     zoom_meetings_addon = node.get_addon('zoommeetings')
 
-    microsoft_teams_auth = microsoft_teams_addon.complete if microsoft_teams_addon.complete else None
-    webex_meetings_auth = webex_meetings_addon.complete if webex_meetings_addon.complete else None
-    zoom_meetings_auth = zoom_meetings_addon.complete if zoom_meetings_addon.complete else None
+    microsoft_teams_auth = microsoft_teams_addon.complete if microsoft_teams_addon else None
+    webex_meetings_auth = webex_meetings_addon.complete if webex_meetings_addon else None
+    zoom_meetings_auth = zoom_meetings_addon.complete if zoom_meetings_addon else None
 
     # Check auth addons
     if not (microsoft_teams_auth or webex_meetings_auth or zoom_meetings_auth):
