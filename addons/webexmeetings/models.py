@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from addons.webexmeetings import SHORT_NAME
+
 from django.db import models
 from osf.models.base import BaseModel, ObjectIDMixin
 from osf.models.external import ExternalAccount
@@ -102,7 +102,7 @@ class Attendees(ObjectIDMixin, BaseModel):
     email_address = models.CharField(max_length=254, blank=True, null=True)
     display_name = models.CharField(max_length=255, blank=True, null=True)
     is_guest = models.BooleanField(default=False)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_attendees'.format(SHORT_NAME))
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
     class Meta:
@@ -122,7 +122,7 @@ class WebexMeetings(ObjectIDMixin, BaseModel):
     meetingid = models.TextField(max_length=512)
     meeting_password = EncryptedTextField(blank=True, null=True)
     app_name = models.CharField(max_length=128, default=settings.WEBEX_MEETINGS)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_meetings'.format(SHORT_NAME))
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
 class WebexMeetingsAttendeesRelation(ObjectIDMixin, BaseModel):
