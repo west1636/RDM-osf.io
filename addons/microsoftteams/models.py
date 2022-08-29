@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-
+from addons.microsoftteams import SHORT_NAME
 from django.db import models
 from osf.models.base import BaseModel, ObjectIDMixin
 from osf.models.external import ExternalAccount
@@ -101,7 +101,7 @@ class Attendees(ObjectIDMixin, BaseModel):
     email_address = models.CharField(max_length=254, blank=True, null=True)
     display_name = models.CharField(max_length=255, blank=True, null=True)
     is_guest = models.BooleanField(default=False)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_attendees'.format(SHORT_NAME))
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
     class Meta:
@@ -119,5 +119,5 @@ class MicrosoftTeams(ObjectIDMixin, BaseModel):
     join_url = models.TextField(max_length=512)
     meetingid = models.TextField(max_length=512)
     app_name = models.CharField(max_length=128, default=settings.MICROSOFT_TEAMS)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None)
+    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_meetings'.format(SHORT_NAME))
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
