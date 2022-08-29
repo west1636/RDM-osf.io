@@ -229,7 +229,7 @@ def microsoftteams_register_email(**kwargs):
             is_guest=is_guest,
             email_address=email,
             display_name=displayName,
-            external_account=addon.external_account_id,
+            external_account=account,
             node_settings=nodeSettings,
         )
         attendee.save()
