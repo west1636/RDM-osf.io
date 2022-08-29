@@ -1079,8 +1079,8 @@ def webmeetings_get_config_ember(**kwargs):
     user = auth.user
 
     # get contributors
-    contributors = get_contributors(auth, node)
-    logger.info('contributors::' + str(contributors))
+#    contributors = get_contributors(auth, node)
+#    logger.info('contributors::' + str(contributors))
 
     allUpcomingWebMeetings = []
     allpreviousWebMeetings = []
