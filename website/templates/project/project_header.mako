@@ -102,39 +102,6 @@
                             <li><a href="${node['url']}webmeetings/">${ _("Web Meetings") }</a></li>
                         % endif
 
-                        % if 'zoommeetings' in addons_enabled and addons['zoommeetings']['has_page']:
-                            <li>
-                                <a href="${node['url']}${addons['zoommeetings']['short_name']}">
-                                    % if addons['zoommeetings']['icon'] and addons['zoommeetings']['has_page_icon']:
-                                        <img src="${addons['zoommeetings']['icon']}" class="addon-logo"/>
-                                    % endif
-                                    ${addons['zoommeetings']['full_name']}
-                                </a>
-                            </li>
-                        % endif
-
-                        % if 'microsoftteams' in addons_enabled and addons['microsoftteams']['has_page']:
-                            <li>
-                                <a href="${node['url']}${addons['microsoftteams']['short_name']}">
-                                    % if addons['microsoftteams']['icon'] and addons['microsoftteams']['has_page_icon']:
-                                        <img src="${addons['microsoftteams']['icon']}" class="addon-logo"/>
-                                    % endif
-                                    ${addons['microsoftteams']['full_name']}
-                                </a>
-                            </li>
-                        % endif
-
-                        % if 'webexmeetings' in addons_enabled and addons['webexmeetings']['has_page']:
-                            <li>
-                                <a href="${node['url']}${addons['webexmeetings']['short_name']}">
-                                    % if addons['webexmeetings']['icon'] and addons['webexmeetings']['has_page_icon']:
-                                        <img src="${addons['webexmeetings']['icon']}" class="addon-logo"/>
-                                    % endif
-                                    ${addons['webexmeetings']['full_name']}
-                                </a>
-                            </li>
-                        % endif
-
                         % if user['has_read_permissions'] and not node['is_registration'] or (node['is_registration'] and permissions.WRITE in user['permissions']):
                             <li><a href="${node['url']}settings/">${ _("Settings") }</a></li>
                         % endif
