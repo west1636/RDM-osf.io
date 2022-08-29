@@ -1091,7 +1091,7 @@ def webmeetings_get_config_ember(**kwargs):
     nodeWebexMeetingsAttendees = ''
     nodeWebexMeetingsAttendeesRelation = ''
 
-    if microsoft_teams_addon or microsoft_teams_addon.complete:
+    if microsoft_teams_auth:
         try:
             access_token = microsoft_teams_addon.fetch_access_token()
         except InvalidAuthError:
@@ -1112,7 +1112,7 @@ def webmeetings_get_config_ember(**kwargs):
 
         webMeetingsApps.append(microsoft_teams_settings.MICROSOFT_TEAMS)
 
-    if webex_meetings_addon and webex_meetings_addon.complete:
+    if webex_meetings_auth:
         try:
             access_token = webex_meetings_addon.fetch_access_token()
         except InvalidAuthError:
@@ -1135,7 +1135,7 @@ def webmeetings_get_config_ember(**kwargs):
 
         webMeetingsApps.append(webex_meetings_settings.WEBEX_MEETINGS)
 
-    if zoom_meetings_addon and zoom_meetings_addon.complete:
+    if zoom_meetings_auth:
         try:
             access_token = zoom_meetings_addon.fetch_access_token()
         except InvalidAuthError:
@@ -1200,8 +1200,8 @@ def webmeetings_set_config_ember(**kwargs):
     user = auth.user
 
     # get contributors
-    contributors = get_contributors(auth, node)
-    logger.info('contributors::' + str(contributors))
+#    contributors = get_contributors(auth, node)
+#    logger.info('contributors::' + str(contributors))
 
     allUpcomingWebMeetings = []
     allpreviousWebMeetings = []
