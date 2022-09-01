@@ -56,6 +56,7 @@ from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         Guid, FileVersionUserMetadata, FileVersion)
 from osf.metrics import PreprintView, PreprintDownload
 from osf.utils import permissions
+from osf.utils.permissions import ADMIN, WRITE, READ
 from website.profile.utils import get_profile_image_url
 from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project, check_contributor_auth, must_have_permission
