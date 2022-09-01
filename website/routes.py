@@ -1587,6 +1587,10 @@ def make_url_map(app):
             '/project/<pid>/webmeetings/config',
             '/project/<pid>/node/<nid>/webmeetings/config',
         ], 'patch', addon_views.webmeetings_set_config_ember, json_renderer),
+        Rule([
+            '/project/<pid>/webmeetings/get_meetings',
+            '/project/<pid>/node/<nid>/webmeetings/get_meetings',
+        ], 'get', addon_views.webmeetings_get_meetings, json_renderer),
     ], prefix='/api/v1')
 
     # API

@@ -88,16 +88,6 @@ api_routes = {
             json_renderer,
         ),
 
-        Rule(
-            [
-                '/project/<pid>/zoommeetings/get_meetings',
-                '/project/<pid>/node/<nid>/zoommeetings/get_meetings',
-            ],
-            'get',
-            views.zoommeetings_get_meetings,
-            json_renderer,
-        ),
-
         # ember: ここから
         Rule([
             '/project/<pid>/zoommeetings/config',

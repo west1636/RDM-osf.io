@@ -13,7 +13,7 @@ require('./microsoftteams.css');
 
 function MicrosoftTeamsWidget() {
     var self = this;
-    self.baseUrl = window.contextVars.node.urls.api + 'microsoftteams/';
+    self.baseUrl = window.contextVars.node.urls.api + 'webmeetings/';
     self.loading = ko.observable(true);
     self.loadFailed = ko.observable(false);
     self.loadCompleted = ko.observable(false);
@@ -81,5 +81,5 @@ function MicrosoftTeamsWidget() {
 }
 
 var w = new MicrosoftTeamsWidget();
-osfHelpers.applyBindings(w, '#microsoftteams-content');
+osfHelpers.applyBindings(w, '#webmeetings-content');
 w.loadConfig();

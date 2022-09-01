@@ -1300,3 +1300,34 @@ def webmeetings_set_config_ember(**kwargs):
                          'institution_users': institutionUsers,
                          'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE
                      }}}
+
+@must_be_valid_project
+@must_have_permission(READ)
+def webmeetings_get_meetings(**kwargs):
+
+    node = kwargs['node'] or kwargs['project']
+    node = kwargs['node'] or kwargs['project']
+    microsoft_teams_addon = node.get_addon('microsoftteams')
+    webex_meetings_addon = node.get_addon('webexmeetings')
+    zoom_meetings_addon = node.get_addon('zoommeetings')
+
+    allRecentWebMeetings = []
+    tz = pytz.timezone('utc')
+    sToday = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
+    sYesterday = sToday + timedelta(days=-1)
+    sTomorrow = sToday + timedelta(days=1)
+
+    qsRecentMicrosoftTeams = models.microsoft_teams.objects.filter(node_settings_id=microsoft_teams_addon.id, microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
+    qsRecentWebexMeetings = models.webex_meetings.objects.filter(node_settings_id=webex_meetings_addon.id, webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
+    qsRecentZoomMeetings = models.zoom_meetings.objects.filter(node_settings_id=zoom_meetings_addon.id, zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
+    recentMicrosoftTeams = serializers.serialize('json', qsRecentMicrosoftTeams, ensure_ascii=False)
+    recentWebexMeetings = serializers.serialize('json', qsRecentWebexMeetings, ensure_ascii=False)
+    recentZoomMeetings = serializers.serialize('json', qsRecentZoomMeetings, ensure_ascii=False)
+
+    allRecentWebMeetings = allRecentWebMeetings + recentWebexMeetings + recentZoomMeetings
+    allRecentWebMeetings = sorted(allRecentWebMeetings, key=lambda x: x['fields']['start_datetime'])
+    allRecentWebMeetings = json.dumps(allRecentWebMeetings)
+
+    return {
+        'recentMeetings': allRecentWebMeetings,
+    }

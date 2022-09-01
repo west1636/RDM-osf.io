@@ -98,16 +98,6 @@ api_routes = {
             json_renderer,
         ),
 
-        Rule(
-            [
-                '/project/<pid>/webexmeetings/get_meetings',
-                '/project/<pid>/node/<nid>/webexmeetings/get_meetings',
-            ],
-            'get',
-            views.webexmeetings_get_meetings,
-            json_renderer,
-        ),
-
         # ember: ここから
         Rule([
             '/project/<pid>/webexmeetings/config',

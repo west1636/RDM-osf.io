@@ -98,16 +98,6 @@ api_routes = {
             json_renderer,
         ),
 
-        Rule(
-            [
-                '/project/<pid>/microsoftteams/get_meetings',
-                '/project/<pid>/node/<nid>/microsoftteams/get_meetings',
-            ],
-            'get',
-            views.microsoftteams_get_meetings,
-            json_renderer,
-        ),
-
         # ember: ここから
         Rule([
             '/project/<pid>/microsoftteams/config',

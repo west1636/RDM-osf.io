@@ -250,23 +250,3 @@ def webexmeetings_register_email(**kwargs):
 
     return {}
 
-@must_be_valid_project
-@must_have_permission(READ)
-@must_have_addon(SHORT_NAME, 'node')
-def webexmeetings_get_meetings(**kwargs):
-
-    node = kwargs['node'] or kwargs['project']
-    addon = node.get_addon(SHORT_NAME)
-
-    tz = pytz.timezone('utc')
-    sToday = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
-    sYesterday = sToday + timedelta(days=-1)
-    sTomorrow = sToday + timedelta(days=1)
-
-    recentMeetings = models.WebexMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
-    recentMeetingsJson = serializers.serialize('json', recentMeetings, ensure_ascii=False)
-    recentMeetingsDict = json.loads(recentMeetingsJson)
-
-    return {
-        'recentMeetings': recentMeetingsDict,
-    }

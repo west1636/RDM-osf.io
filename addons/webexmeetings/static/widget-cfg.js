@@ -13,7 +13,7 @@ require('./webexmeetings.css');
 
 function WebexMeetingsWidget() {
     var self = this;
-    self.baseUrl = window.contextVars.node.urls.api + 'webexmeetings/';
+    self.baseUrl = window.contextVars.node.urls.api + 'webmeetings/';
     self.loading = ko.observable(true);
     self.loadFailed = ko.observable(false);
     self.loadCompleted = ko.observable(false);
@@ -81,5 +81,5 @@ function WebexMeetingsWidget() {
 }
 
 var w = new WebexMeetingsWidget();
-osfHelpers.applyBindings(w, '#webexmeetings-content');
+osfHelpers.applyBindings(w, '#webmeetings-content');
 w.loadConfig();

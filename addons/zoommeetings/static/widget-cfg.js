@@ -13,7 +13,7 @@ require('./zoommeetings.css');
 
 function ZoomMeetingsWidget() {
     var self = this;
-    self.baseUrl = window.contextVars.node.urls.api + 'zoommeetings/';
+    self.baseUrl = window.contextVars.node.urls.api + 'webmeetings/';
     self.loading = ko.observable(true);
     self.loadFailed = ko.observable(false);
     self.loadCompleted = ko.observable(false);
@@ -81,5 +81,5 @@ function ZoomMeetingsWidget() {
 }
 
 var w = new ZoomMeetingsWidget();
-osfHelpers.applyBindings(w, '#zoommeetings-content');
+osfHelpers.applyBindings(w, '#webmeetings-content');
 w.loadConfig();
