@@ -81,5 +81,5 @@ function ZoomMeetingsWidget() {
 }
 
 var w = new ZoomMeetingsWidget();
-osfHelpers.applyBindings(w, '#webmeetings-content');
+osfHelpers.applyBindings(w, '#webmeetings-content-z');
 w.loadConfig();

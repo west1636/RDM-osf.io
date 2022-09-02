@@ -81,5 +81,5 @@ function MicrosoftTeamsWidget() {
 }
 
 var w = new MicrosoftTeamsWidget();
-osfHelpers.applyBindings(w, '#webmeetings-content');
+osfHelpers.applyBindings(w, '#webmeetings-content-m');
 w.loadConfig();

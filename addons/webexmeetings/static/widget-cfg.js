@@ -81,5 +81,5 @@ function WebexMeetingsWidget() {
 }
 
 var w = new WebexMeetingsWidget();
-osfHelpers.applyBindings(w, '#webmeetings-content');
+osfHelpers.applyBindings(w, '#webmeetings-content-w');
 w.loadConfig();
