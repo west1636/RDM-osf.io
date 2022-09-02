@@ -247,7 +247,7 @@
                 % endif
 
                 % if addon_name == 'microsoftteams' or addon_name == 'webexmeetings' or addon_name == 'zoommeetings':
-                    <div id="webmeeting-content" class="scripted">
+                    <div id="webmeetings-content" class="scripted">
                         <!-- ko if: loading -->
                         <div>${_("Loading")}</div>
                         <!-- /ko -->
