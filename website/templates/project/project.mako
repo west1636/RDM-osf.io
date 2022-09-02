@@ -498,7 +498,7 @@
                     %if addon == 'iqbrims':
                         ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                     %elif addons[addon]['categories'] == 'web meetings':
-                        %if addons[addon]['complete'] and canDisp:
+                        %if addons_widget_data[addon]['complete'] and canDisp:
                             ${ render_addon_widget.render_addon_widget(addon, addons_widget_data[addon]) }
                             <% canDisp = False%>
                         %endif
