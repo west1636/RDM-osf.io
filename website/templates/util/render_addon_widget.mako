@@ -2,7 +2,7 @@
 
     % if addon_data['complete'] or permissions.WRITE in user['permissions']:
         <div class="panel panel-default" name="${addon_data['short_name']}">
-            %if addon_name == 'microsoftteams' or addon == 'webexmeetings' or addon == 'zoommeetings':
+            %if addon_name == 'microsoftteams' or addon_name == 'webexmeetings' or addon_name == 'zoommeetings':
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title">Web Meetings</h3>
                     <div class="pull-right">
