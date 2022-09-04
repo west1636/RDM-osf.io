@@ -2,6 +2,7 @@ import datetime
 from rest_framework import status as http_status
 import os
 import json
+import pytz
 import uuid
 import markupsafe
 from future.moves.urllib.parse import quote
@@ -1314,13 +1315,13 @@ def webmeetings_get_meetings(**kwargs):
 
     allRecentWebMeetings = []
     tz = pytz.timezone('utc')
-    sToday = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
-    sYesterday = sToday + timedelta(days=-1)
-    sTomorrow = sToday + timedelta(days=1)
+    sToday = datetime.datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
+    sYesterday = sToday + datetime.timedelta(days=-1)
+    sTomorrow = sToday + datetime.timedelta(days=1)
 
-    qsRecentMicrosoftTeams = models.microsoft_teams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
-    qsRecentWebexMeetings = models.webex_meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
-    qsRecentZoomMeetings = models.zoom_meetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + timedelta(days=1)).order_by('start_datetime')
+    qsRecentMicrosoftTeams = models.microsoft_teams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+    qsRecentWebexMeetings = models.webex_meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+    qsRecentZoomMeetings = models.zoom_meetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
     recentMicrosoftTeams = serializers.serialize('json', qsRecentMicrosoftTeams, ensure_ascii=False)
     recentWebexMeetings = serializers.serialize('json', qsRecentWebexMeetings, ensure_ascii=False)
     recentZoomMeetings = serializers.serialize('json', qsRecentZoomMeetings, ensure_ascii=False)
@@ -1328,6 +1329,8 @@ def webmeetings_get_meetings(**kwargs):
     allRecentWebMeetings = allRecentWebMeetings + recentWebexMeetings + recentZoomMeetings
     allRecentWebMeetings = sorted(allRecentWebMeetings, key=lambda x: x['fields']['start_datetime'])
     allRecentWebMeetings = json.dumps(allRecentWebMeetings)
+
+    logger.info('get_meetigs:allmeetings:' + str(allRecentWebMeetings))
 
     return {
         'recentMeetings': allRecentWebMeetings,
