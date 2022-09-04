@@ -1319,9 +1319,9 @@ def webmeetings_get_meetings(**kwargs):
     sYesterday = sToday + datetime.timedelta(days=-1)
     sTomorrow = sToday + datetime.timedelta(days=1)
 
-    qsRecentMicrosoftTeams = models.microsoft_teams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
-    qsRecentWebexMeetings = models.webex_meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
-    qsRecentZoomMeetings = models.zoom_meetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+    qsRecentMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+    qsRecentWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+    qsRecentZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
     recentMicrosoftTeams = serializers.serialize('json', qsRecentMicrosoftTeams, ensure_ascii=False)
     recentWebexMeetings = serializers.serialize('json', qsRecentWebexMeetings, ensure_ascii=False)
     recentZoomMeetings = serializers.serialize('json', qsRecentZoomMeetings, ensure_ascii=False)
