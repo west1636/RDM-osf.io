@@ -1328,7 +1328,6 @@ def webmeetings_get_meetings(**kwargs):
 
     allRecentWebMeetings = allRecentWebMeetings + recentWebexMeetings + recentZoomMeetings
     allRecentWebMeetings = sorted(allRecentWebMeetings, key=lambda x: x['fields']['start_datetime'])
-    allRecentWebMeetings = json.dumps(allRecentWebMeetings)
 
     logger.info('get_meetigs:allmeetings:' + str(allRecentWebMeetings))
 
