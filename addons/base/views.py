@@ -1313,20 +1313,31 @@ def webmeetings_get_meetings(**kwargs):
     webex_meetings_addon = node.get_addon('webexmeetings')
     zoom_meetings_addon = node.get_addon('zoommeetings')
 
+    microsoft_teams_auth = microsoft_teams_addon.complete if microsoft_teams_addon else None
+    webex_meetings_auth = webex_meetings_addon.complete if webex_meetings_addon else None
+    zoom_meetings_auth = zoom_meetings_addon.complete if zoom_meetings_addon else None
+
     allRecentWebMeetings = []
     tz = pytz.timezone('utc')
     sToday = datetime.datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
     sYesterday = sToday + datetime.timedelta(days=-1)
     sTomorrow = sToday + datetime.timedelta(days=1)
 
-    qsRecentMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
-    qsRecentWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
-    qsRecentZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
-    recentMicrosoftTeams = json.loads(serializers.serialize('json', qsRecentMicrosoftTeams, ensure_ascii=False))
-    recentWebexMeetings = json.loads(serializers.serialize('json', qsRecentWebexMeetings, ensure_ascii=False))
-    recentZoomMeetings = json.loads(serializers.serialize('json', qsRecentZoomMeetings, ensure_ascii=False))
+    if microsoft_teams_auth:
+        qsRecentMicrosoftTeams = microsoft_teams.MicrosoftTeams.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+        recentMicrosoftTeams = json.loads(serializers.serialize('json', qsRecentMicrosoftTeams, ensure_ascii=False))
+        allRecentWebMeetings += recentMicrosoftTeams
 
-    allRecentWebMeetings = allRecentWebMeetings + recentWebexMeetings + recentZoomMeetings
+    if webex_meetings_auth:
+        qsRecentWebexMeetings = webex_meetings.WebexMeetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+        recentWebexMeetings = json.loads(serializers.serialize('json', qsRecentWebexMeetings, ensure_ascii=False))
+        allRecentWebMeetings += recentWebexMeetings
+
+    if zoom_meetings_auth:
+        qsRecentZoomMeetings = zoom_meetings.ZoomMeetings.objects.filter(node_settings_id=zoom_meetings_addon.id, external_account_id=zoom_meetings_addon.external_account_id, start_datetime__gte=sYesterday, start_datetime__lt=sTomorrow + datetime.timedelta(days=1)).order_by('start_datetime')
+        recentZoomMeetings = json.loads(serializers.serialize('json', qsRecentZoomMeetings, ensure_ascii=False))
+        allRecentWebMeetings += recentZoomMeetings
+
     allRecentWebMeetings = sorted(allRecentWebMeetings, key=lambda x: x['fields']['start_datetime'])
 
     logger.info('get_meetigs:allmeetings:' + str(allRecentWebMeetings))
