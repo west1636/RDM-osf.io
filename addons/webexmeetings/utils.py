@@ -204,7 +204,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
     logger.info('createdInvitees::' + str(createdInvitees))
     logger.info('deletedInvitees::' + str(deletedInvitees))
 
-    qsAttendeesRelation = models.MeetingsAttendeesRelation.objects.filter(webex_meetings__meetingid=meetingId)
+    qsAttendeesRelation = models.MeetingsAttendeesRelation.objects.filter(meeting__meetingid=meetingId)
 
     for qsAttendeesRelation in qsAttendeesRelation:
 
