@@ -31,7 +31,7 @@ class WebexMeetingsAddonConfig(BaseAddonAppConfig):
     @property
     def routes(self):
         from . import routes
-        return [routes.page_routes, routes.api_routes]
+        return [routes.api_routes]
 
     @property
     def user_settings(self):
