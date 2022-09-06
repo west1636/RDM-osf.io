@@ -7,27 +7,6 @@ from website.routes import notemplate
 
 from addons.zoommeetings import views
 
-TEMPLATE_DIR = './addons/zoommeetings/templates/'
-
-# HTML endpoints
-page_routes = {
-
-    'rules': [
-
-        # Home (Base) | GET
-        Rule(
-            [
-                '/<pid>/zoommeetings',
-                '/<pid>/node/<nid>/zoommeetings',
-            ],
-            'get',
-            views.project_zoommeetings,
-            notemplate
-        ),
-
-    ]
-}
-
 # JSON endpoints
 api_routes = {
     'rules': [
@@ -87,17 +66,6 @@ api_routes = {
             views.zoommeetings_request_api,
             json_renderer,
         ),
-
-        # ember: ここから
-        Rule([
-            '/project/<pid>/zoommeetings/config',
-            '/project/<pid>/node/<nid>/zoommeetings/config',
-        ], 'get', views.zoommeetings_get_config_ember, json_renderer),
-        Rule([
-            '/project/<pid>/zoommeetings/config',
-            '/project/<pid>/node/<nid>/zoommeetings/config',
-        ], 'patch', views.zoommeetings_set_config_ember, json_renderer),
-        # ember: ここまで
 
     ],
     'prefix': '/api/v1'

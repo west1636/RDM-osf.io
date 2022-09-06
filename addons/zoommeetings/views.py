@@ -65,63 +65,6 @@ def zoommeetings_oauth_connect(auth, **kwargs):
 
     return authorization_url
 
-# ember: ここから
-@must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
-def project_zoommeetings(**kwargs):
-    return use_ember_app()
-
-@must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
-def zoommeetings_get_config_ember(**kwargs):
-    node = kwargs['node'] or kwargs['project']
-    addon = node.get_addon(SHORT_NAME)
-
-    if not addon.complete:
-        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
-
-    allZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
-
-    allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
-    upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
-    previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
-
-    try:
-        access_token = addon.fetch_access_token()
-    except InvalidAuthError:
-        raise HTTPError(http_status.HTTP_403_FORBIDDEN)
-
-    return {'data': {'id': node._id, 'type': 'zoommeetings-config',
-                     'attributes': {
-                         'all_zoom_meetings': allZoomMeetingsJson,
-                         'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
-                         'previous_zoom_meetings': previousZoomMeetingsJson,
-                         'app_name_zoom_meetings': settings.ZOOM_MEETINGS,
-                     }}}
-
-@must_be_valid_project
-@must_have_addon(SHORT_NAME, 'node')
-def zoommeetings_set_config_ember(**kwargs):
-    node = kwargs['node'] or kwargs['project']
-    addon = node.get_addon(SHORT_NAME)
-
-    allZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id).order_by('start_datetime').reverse()
-    upcomingZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id, start_datetime__gte=datetime.today()).order_by('start_datetime')
-    previousZoomMeetings = models.ZoomMeetings.objects.filter(node_settings_id=addon.id, start_datetime__lt=datetime.today()).order_by('start_datetime').reverse()
-
-    allZoomMeetingsJson = serializers.serialize('json', allZoomMeetings, ensure_ascii=False)
-    upcomingZoomMeetingsJson = serializers.serialize('json', upcomingZoomMeetings, ensure_ascii=False)
-    previousZoomMeetingsJson = serializers.serialize('json', previousZoomMeetings, ensure_ascii=False)
-
-    return {'data': {'id': node._id, 'type': 'zoommeetings-config',
-                     'attributes': {
-                         'all_zoom_meetings': allZoomMeetingsJson,
-                         'upcoming_zoom_meetings': upcomingZoomMeetingsJson,
-                         'previous_zoom_meetings': previousZoomMeetingsJson,
-                     }}}
-
 @must_be_valid_project
 @must_have_permission(WRITE)
 @must_have_addon(SHORT_NAME, 'node')

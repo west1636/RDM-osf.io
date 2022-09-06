@@ -104,7 +104,7 @@ def grdm_create_webex_meeting(addon, account, createdData):
 
     with transaction.atomic():
 
-        createData = models.WebexMeetings(
+        createData = models.Meetings(
             subject=subject,
             organizer=organizer,
             organizer_fullname=organizer_fullname,
@@ -126,9 +126,9 @@ def grdm_create_webex_meeting(addon, account, createdData):
             attendeeId = attendeeObj.id
             attendeeIds.append(attendeeId)
 
-            relation = models.WebexMeetingsAttendeesRelation(
-                attendees_id=attendeeId,
-                webex_meetings_id=createData.id,
+            relation = models.MeetingsAttendeesRelation(
+                attendee_id=attendeeId,
+                meeting_id=createData.id,
                 webex_meetings_invitee_id=invitee['id']
                 )
             relation.save()
@@ -165,7 +165,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
     createInvitees = requestData['createInvitees']
     deleteInvitees = requestData['deleteInvitees']
 
-    updateData = models.WebexMeetings.objects.get(meetingid=meetingId)
+    updateData = models.Meetings.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
@@ -204,7 +204,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
     logger.info('createdInvitees::' + str(createdInvitees))
     logger.info('deletedInvitees::' + str(deletedInvitees))
 
-    qsAttendeesRelation = models.WebexMeetingsAttendeesRelation.objects.filter(webex_meetings__meetingid=meetingId)
+    qsAttendeesRelation = models.MeetingsAttendeesRelation.objects.filter(webex_meetings__meetingid=meetingId)
 
     for qsAttendeesRelation in qsAttendeesRelation:
 
@@ -222,16 +222,16 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
             craetedAttendeeId = createdAttendeeObj.id
             attendeeIdsFormer.append(craetedAttendeeId)
 
-            craeteRelation = models.WebexMeetingsAttendeesRelation(
-                attendees_id=craetedAttendeeId,
-                webex_meetings_id=updateData.id,
+            craeteRelation = models.MeetingsAttendeesRelation(
+                attendee_id=craetedAttendeeId,
+                meeting_id=updateData.id,
                 webex_meetings_invitee_id=createdInvitee['id']
             )
             craeteRelation.save()
 
         for deletedInviteeId in deletedInvitees:
 
-            deleteRelation = models.WebexMeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
+            deleteRelation = models.MeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
             deletedAttendeeId = deleteRelation.attendees
             attendeeIdsFormer.remove(deletedAttendeeId)
             deleteRelation.delete()
@@ -260,7 +260,7 @@ def api_delete_webex_meeting(meetingId, account):
 
 def grdm_delete_webex_meeting(meetingId):
 
-    deleteData = models.WebexMeetings.objects.get(meetingid=meetingId)
+    deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
 
     return {}

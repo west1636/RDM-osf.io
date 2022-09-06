@@ -107,7 +107,7 @@ class Attendees(ObjectIDMixin, BaseModel):
     class Meta:
         unique_together = ('email_address', 'node_settings')
 
-class MicrosoftTeams(ObjectIDMixin, BaseModel):
+class Meetings(ObjectIDMixin, BaseModel):
 
     subject = models.CharField(max_length=255)
     organizer = models.CharField(max_length=255)

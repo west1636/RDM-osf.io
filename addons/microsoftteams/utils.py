@@ -100,7 +100,7 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData):
 
     with transaction.atomic():
 
-        createData = models.MicrosoftTeams(
+        createData = models.Meetings(
             subject=subject,
             organizer=organizer,
             organizer_fullname=organizer_fullname,
@@ -155,7 +155,7 @@ def grdm_update_teams_meeting(addon, meetingId, requestData, updatedData):
         attendeeId = attendeeObj.id
         attendeeIds.append(attendeeId)
 
-    updateData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
+    updateData = models.Meetings.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
@@ -182,7 +182,7 @@ def api_delete_teams_meeting(meetingId, account):
 
 def grdm_delete_teams_meeting(meetingId):
 
-    deleteData = models.MicrosoftTeams.objects.get(meetingid=meetingId)
+    deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
 
     return {}

@@ -7,27 +7,6 @@ from website.routes import notemplate
 
 from addons.webexmeetings import views
 
-TEMPLATE_DIR = './addons/webexmeetings/templates/'
-
-# HTML endpoints
-page_routes = {
-
-    'rules': [
-
-        # Home (Base) | GET
-        Rule(
-            [
-                '/<pid>/webexmeetings',
-                '/<pid>/node/<nid>/webexmeetings',
-            ],
-            'get',
-            views.project_webexmeetings,
-            notemplate
-        ),
-
-    ]
-}
-
 # JSON endpoints
 api_routes = {
     'rules': [
@@ -97,17 +76,6 @@ api_routes = {
             views.webexmeetings_register_email,
             json_renderer,
         ),
-
-        # ember: ここから
-        Rule([
-            '/project/<pid>/webexmeetings/config',
-            '/project/<pid>/node/<nid>/webexmeetings/config',
-        ], 'get', views.webexmeetings_get_config_ember, json_renderer),
-        Rule([
-            '/project/<pid>/webexmeetings/config',
-            '/project/<pid>/node/<nid>/webexmeetings/config',
-        ], 'patch', views.webexmeetings_set_config_ember, json_renderer),
-        # ember: ここまで
 
     ],
     'prefix': '/api/v1'

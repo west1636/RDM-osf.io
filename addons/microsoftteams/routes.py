@@ -7,27 +7,6 @@ from website.routes import notemplate
 
 from addons.microsoftteams import views
 
-TEMPLATE_DIR = './addons/microsoftteams/templates/'
-
-# HTML endpoints
-page_routes = {
-
-    'rules': [
-
-        # Home (Base) | GET
-        Rule(
-            [
-                '/<pid>/microsoftteams',
-                '/<pid>/node/<nid>/microsoftteams',
-            ],
-            'get',
-            views.project_microsoftteams,
-            notemplate
-        ),
-
-    ]
-}
-
 # JSON endpoints
 api_routes = {
     'rules': [
@@ -97,17 +76,6 @@ api_routes = {
             views.microsoftteams_register_email,
             json_renderer,
         ),
-
-        # ember: ここから
-        Rule([
-            '/project/<pid>/microsoftteams/config',
-            '/project/<pid>/node/<nid>/microsoftteams/config',
-        ], 'get', views.microsoftteams_get_config_ember, json_renderer),
-        Rule([
-            '/project/<pid>/microsoftteams/config',
-            '/project/<pid>/node/<nid>/microsoftteams/config',
-        ], 'patch', views.microsoftteams_set_config_ember, json_renderer),
-        # ember: ここまで
 
     ],
     'prefix': '/api/v1'

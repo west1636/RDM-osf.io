@@ -14,7 +14,7 @@ class ZoomMeetingsAddonConfig(BaseAddonAppConfig):
     label = 'addons_{}'.format(SHORT_NAME)
     short_name = SHORT_NAME
     full_name = FULL_NAME
-    views = ['widget', 'page']
+    views = ['widget']
     categories = ['web meetings']
     owners = ['user', 'node']
     configs = ['accounts', 'node']

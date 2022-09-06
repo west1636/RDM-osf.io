@@ -108,13 +108,13 @@ class Attendees(ObjectIDMixin, BaseModel):
     class Meta:
         unique_together = ('email_address', 'node_settings')
 
-class WebexMeetings(ObjectIDMixin, BaseModel):
+class Meetings(ObjectIDMixin, BaseModel):
 
     subject = models.CharField(max_length=255)
     organizer = models.CharField(max_length=255)
     organizer_fullname = models.CharField(max_length=255)
     attendees = models.ManyToManyField(Attendees, related_name='attendees_meetings')
-    attendees_specific = models.ManyToManyField(Attendees, related_name='attendees_specific_meetings', through='WebexMeetingsAttendeesRelation')
+    attendees_specific = models.ManyToManyField(Attendees, related_name='attendees_specific_meetings', through='MeetingsAttendeesRelation')
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     content = models.TextField(blank=True, null=True, max_length=10000)
@@ -125,8 +125,8 @@ class WebexMeetings(ObjectIDMixin, BaseModel):
     external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_meetings'.format(SHORT_NAME))
     node_settings = models.ForeignKey(NodeSettings, null=False, blank=False, default=None)
 
-class WebexMeetingsAttendeesRelation(ObjectIDMixin, BaseModel):
+class MeetingsAttendeesRelation(ObjectIDMixin, BaseModel):
 
-    webex_meetings = models.ForeignKey(WebexMeetings)
-    attendees = models.ForeignKey(Attendees)
+    meeting = models.ForeignKey(Meetings)
+    attendee = models.ForeignKey(Attendees)
     webex_meetings_invitee_id = models.TextField(blank=True, null=True, max_length=512)

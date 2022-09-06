@@ -83,7 +83,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
 
     with transaction.atomic():
 
-        createData = models.ZoomMeetings(
+        createData = models.Meetings(
             subject=subject,
             organizer=organizer,
             organizer_fullname=organizer_fullname,
@@ -124,7 +124,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     endDatetime = startDatetime + timedelta(minutes=duration)
     content = requestData['agenda']
 
-    updateData = models.ZoomMeetings.objects.get(meetingid=meetingId)
+    updateData = models.Meetings.objects.get(meetingid=meetingId)
 
     updateData.subject = subject
     updateData.start_datetime = startDatetime
@@ -150,7 +150,7 @@ def api_delete_zoom_meeting(meetingId, account):
 
 def grdm_delete_zoom_meeting(meetingId):
 
-    deleteData = models.ZoomMeetings.objects.get(meetingid=meetingId)
+    deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
 
     return {}
