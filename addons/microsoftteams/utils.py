@@ -177,7 +177,8 @@ def api_delete_teams_meeting(meetingId, account):
         'Content-Type': 'application/json'
     }
     response = requests.delete(url, headers=requestHeaders, timeout=60)
-    response.raise_for_status()
+    if response.status_code != 404:
+        response.raise_for_status()
     return {}
 
 def grdm_delete_teams_meeting(meetingId):
