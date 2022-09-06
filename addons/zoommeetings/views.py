@@ -80,6 +80,9 @@ def zoommeetings_request_api(**kwargs):
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
     requestBody = requestDataJsonLoads['body']
 
+    logger.info('updateMeetingId::' + str(updateMeetingId))
+    logger.info('deleteMeetingId::' + str(deleteMeetingId))
+
     account = ExternalAccount.objects.get(
         provider='zoommeetings', id=account_id
     )
