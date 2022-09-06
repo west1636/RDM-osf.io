@@ -208,7 +208,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
 
     for qsAttendeesRelation in qsAttendeesRelation:
 
-        attendeeIdsFormer.append(qsAttendeesRelation.attendees)
+        attendeeIdsFormer.append(qsAttendeesRelation.attendee)
 
 
     with transaction.atomic():
@@ -232,7 +232,7 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
         for deletedInviteeId in deletedInvitees:
 
             deleteRelation = models.MeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
-            deletedAttendeeId = deleteRelation.attendees
+            deletedAttendeeId = deleteRelation.attendee
             attendeeIdsFormer.remove(deletedAttendeeId)
             deleteRelation.delete()
         attendeeIds = attendeeIdsFormer
