@@ -147,7 +147,7 @@ def webexmeetings_register_email(**kwargs):
             is_guest=is_guest,
             email_address=email,
             display_name=displayName,
-            external_account=account,
+            external_account=None if is_guest else account,
             node_settings=nodeSettings,
         )
         attendee.save()
