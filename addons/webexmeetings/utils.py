@@ -154,23 +154,7 @@ def api_update_webex_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, account):
-
-    subject = updatedData['title']
-    startDatetime = updatedData['start']
-    endDatetime = updatedData['end']
-    content = updatedData['agenda']
-    meetingId = updatedData['id']
-
-    createInvitees = requestData['createInvitees']
-    deleteInvitees = requestData['deleteInvitees']
-
-    updateData = models.Meetings.objects.get(meetingid=meetingId)
-
-    updateData.subject = subject
-    updateData.start_datetime = startDatetime
-    updateData.end_datetime = endDatetime
-    updateData.content = content
+def api_update_webex_meeting_attendees(requestData, account):
 
     token = account.oauth_key
     url = '{}{}'.format(settings.WEBEX_API_BASE_URL, 'v1/meetingInvitees/')
@@ -180,6 +164,9 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
         'Content-Type': 'application/json'
     }
     requestBody = json.dumps(requestData)
+
+    createInvitees = requestData['createInvitees']
+    deleteInvitees = requestData['deleteInvitees']
 
     createdInvitees = []
     deletedInvitees = []
@@ -203,6 +190,26 @@ def grdm_update_webex_meeting(meetingId, requestData, updatedData, addon, accoun
 
     logger.info('createdInvitees::' + str(createdInvitees))
     logger.info('deletedInvitees::' + str(deletedInvitees))
+
+    updatedAttendees = {'created': createdInvitees, 'deleted': deletedInvitees}
+
+    return updatedAttendees
+
+def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
+
+    subject = updatedMeeting['title']
+    startDatetime = updatedMeeting['start']
+    endDatetime = updatedMeeting['end']
+    content = updatedMeeting['agenda']
+    meetingId = updatedMeeting['id']
+    createdInvitees = updatedAttendees['created']
+    deletedInvitees = updatedAttendees['deleted']
+
+    updateData = models.Meetings.objects.get(meetingid=meetingId)
+    updateData.subject = subject
+    updateData.start_datetime = startDatetime
+    updateData.end_datetime = endDatetime
+    updateData.content = content
 
     qsAttendeesRelation = models.MeetingsAttendeesRelation.objects.filter(meeting__meetingid=meetingId)
 
