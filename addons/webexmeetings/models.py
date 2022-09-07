@@ -130,4 +130,3 @@ class MeetingsAttendeesRelation(ObjectIDMixin, BaseModel):
     meeting = models.ForeignKey(Meetings)
     attendee = models.ForeignKey(Attendees)
     webex_meetings_invitee_id = models.TextField(blank=True, null=True, max_length=512)
-    external_account = models.ForeignKey(ExternalAccount, null=True, blank=True, default=None, related_name='{}_meetings_attendees_relation'.format(SHORT_NAME))
