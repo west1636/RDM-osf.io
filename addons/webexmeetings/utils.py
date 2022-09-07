@@ -129,7 +129,8 @@ def grdm_create_webex_meeting(addon, account, createdData):
             relation = models.MeetingsAttendeesRelation(
                 attendee_id=attendeeId,
                 meeting_id=createData.id,
-                webex_meetings_invitee_id=invitee['id']
+                webex_meetings_invitee_id=invitee['id'],
+                external_account_id=addon.external_account_id,
                 )
             relation.save()
 
@@ -235,7 +236,8 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
             craeteRelation = models.MeetingsAttendeesRelation(
                 attendee_id=craetedAttendeeId,
                 meeting_id=updateData.id,
-                webex_meetings_invitee_id=createdInvitee['id']
+                webex_meetings_invitee_id=createdInvitee['id'],
+                external_account_id=addon.external_account_id,
             )
             craeteRelation.save()
 
