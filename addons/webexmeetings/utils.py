@@ -211,12 +211,15 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
     updateData.end_datetime = endDatetime
     updateData.content = content
 
+    attendeeIdsFormer = []
+
     qsAttendeesRelation = models.MeetingsAttendeesRelation.objects.filter(meeting__meetingid=meetingId)
 
     for qsAttendeesRelation in qsAttendeesRelation:
 
         attendeeIdsFormer.append(qsAttendeesRelation.attendee)
 
+    attendeeIdsUpdate = attendeeIdsFormer
 
     with transaction.atomic():
 
@@ -227,7 +230,7 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
             craeteRelation = None
             createdAttendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=createdInvitee['email'])
             craetedAttendeeId = createdAttendeeObj.id
-            attendeeIdsFormer.append(craetedAttendeeId)
+            attendeeIdsUpdate.append(craetedAttendeeId)
 
             craeteRelation = models.MeetingsAttendeesRelation(
                 attendee_id=craetedAttendeeId,
@@ -240,9 +243,9 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
 
             deleteRelation = models.MeetingsAttendeesRelation.objects.get(webex_meetings_invitee_id=deletedInviteeId)
             deletedAttendeeId = deleteRelation.attendee
-            attendeeIdsFormer.remove(deletedAttendeeId)
+            attendeeIdsUpdate.remove(deletedAttendeeId)
             deleteRelation.delete()
-        attendeeIds = attendeeIdsFormer
+        attendeeIds = attendeeIdsUpdate
 
         updateData.save()
         updateData.attendees = attendeeIds
