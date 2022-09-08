@@ -125,7 +125,7 @@ def grdm_create_webex_meeting(addon, account, createdData, guestInfo):
 
             if invitee['email'] in guestInfo:
                 guestFlg = guestInfo[invitee['email']]
-            else 
+            else:
                 continue
 
             attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=invitee['email'], is_guest=guestFlg)
@@ -236,7 +236,7 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestInfo, addon
 
             if createdInvitee['email'] in guestInfo:
                 guestFlg = guestInfo[createdInvitee['email']]
-            else 
+            else:
                 continue
 
             craeteRelation = None
