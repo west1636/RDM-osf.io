@@ -137,6 +137,7 @@ def webexmeetings_register_email(**kwargs):
         if is_guest:
             if emailType:
                 displayName = utils.api_get_webex_meetings_username(account, email)
+                fullname = fullname if fullname else displayName
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             displayName = utils.api_get_webex_meetings_username(account, email)
