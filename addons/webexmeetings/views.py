@@ -82,7 +82,7 @@ def webexmeetings_request_api(**kwargs):
     action = requestDataJsonLoads['actionType']
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
-    guestInfo = requestDataJsonLoads['guestInfo']
+    guestOrNot = requestDataJsonLoads['guestOrNot']
     requestBody = requestDataJsonLoads['body']
 
     account = ExternalAccount.objects.get(
@@ -94,13 +94,13 @@ def webexmeetings_request_api(**kwargs):
     if action == 'create':
         createdMeeting = utils.api_create_webex_meeting(requestBody, account)
         #synchronize data
-        utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestInfo)
+        utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestOrNot)
 
     if action == 'update':
         updatedMeeting = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
         updatedAttendees = utils.api_update_webex_meeting_attendees(requestDataJsonLoads, account)
         #synchronize data
-        utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestInfo, addon)
+        utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon)
 
     if action == 'delete':
         utils.api_delete_webex_meeting(deleteMeetingId, account)

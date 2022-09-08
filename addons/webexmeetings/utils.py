@@ -87,7 +87,7 @@ def get_invitees(account, meetingId):
 
     return invitees['items']
 
-def grdm_create_webex_meeting(addon, account, createdData, guestInfo):
+def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
 
     subject = createdData['title']
     organizer = createdData['hostEmail']
@@ -98,7 +98,7 @@ def grdm_create_webex_meeting(addon, account, createdData, guestInfo):
     meetingId = createdData['id']
     password = createdData['password']
     organizer_fullname = account.display_name
-    guestFlg = False
+    isGuest = False
 
     invitees = get_invitees(account, meetingId)
     attendeeIds = []
@@ -123,12 +123,12 @@ def grdm_create_webex_meeting(addon, account, createdData, guestInfo):
 
         for invitee in invitees:
 
-            if invitee['email'] in guestInfo:
-                guestFlg = guestInfo[invitee['email']]
+            if invitee['email'] in guestOrNot:
+                isGuest = guestOrNot[invitee['email']]
             else:
                 continue
 
-            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=invitee['email'], is_guest=guestFlg)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=invitee['email'], is_guest=isGuest)
             attendeeId = attendeeObj.id
             attendeeIds.append(attendeeId)
 
@@ -201,7 +201,7 @@ def api_update_webex_meeting_attendees(requestData, account):
 
     return updatedAttendees
 
-def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestInfo, addon):
+def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon):
 
     subject = updatedMeeting['title']
     startDatetime = updatedMeeting['start']
@@ -210,7 +210,7 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestInfo, addon
     meetingId = updatedMeeting['id']
     createdInvitees = updatedAttendees['created']
     deletedInvitees = updatedAttendees['deleted']
-    guestFlg = False
+    isGuest = False
 
     updateData = models.Meetings.objects.get(meetingid=meetingId)
     updateData.subject = subject
@@ -234,13 +234,13 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestInfo, addon
 
             logger.info('createdInvitee::' + str(createdInvitee))
 
-            if createdInvitee['email'] in guestInfo:
-                guestFlg = guestInfo[createdInvitee['email']]
+            if createdInvitee['email'] in guestOrNot:
+                isGuest = guestOrNot[createdInvitee['email']]
             else:
                 continue
 
             craeteRelation = None
-            createdAttendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=createdInvitee['email'], is_guest=guestFlg)
+            createdAttendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=createdInvitee['email'], is_guest=isGuest)
             craetedAttendeeId = createdAttendeeObj.id
             attendeeIdsUpdate.append(craetedAttendeeId)
 
