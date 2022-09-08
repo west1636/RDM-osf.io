@@ -70,7 +70,7 @@ def api_create_teams_meeting(requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_create_teams_meeting(addon, account, requestData, createdData):
+def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrNot):
 
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
@@ -83,13 +83,20 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData):
     meetingId = createdData['id']
     organizer_fullname = account.display_name
     contentExtract = requestData['contentExtract']
+    isGuest = False
 
     logger.info('createdData:utils::' +str(createdData))
 
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
+
+        if address in guestOrNot:
+            isGuest = guestOrNot[address]
+        else:
+            continue
+
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address, is_guest=isGuest)
         except ObjectDoesNotExist:
             continue
         attendeeId = attendeeObj.id
@@ -134,8 +141,9 @@ def api_update_teams_meeting(meetingId, requestData, account):
     logger.info('responseData::' + str(responseData))
     return responseData
 
-def grdm_update_teams_meeting(addon, meetingId, requestData, updatedData):
+def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
 
+    meetingId = updatedData['id']
     subject = updatedData['subject']
     startDatetime = updatedData['start']['dateTime']
     endDatetime = updatedData['end']['dateTime']
@@ -143,13 +151,21 @@ def grdm_update_teams_meeting(addon, meetingId, requestData, updatedData):
     attendeeIds = []
     content = updatedData['bodyPreview']
     contentExtract = requestData['contentExtract']
+    isGuest = False
+
     if contentExtract in content:
         content = contentExtract
 
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
+
+        if address in guestOrNot:
+            isGuest = guestOrNot[address]
+        else:
+            continue
+
         try:
-            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address)
+            attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address, is_guest=isGuest)
         except ObjectDoesNotExist:
             continue
         attendeeId = attendeeObj.id

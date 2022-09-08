@@ -78,6 +78,7 @@ def microsoftteams_request_api(**kwargs):
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
     requestBody = requestDataJsonLoads['body']
+    guestOrNot = requestDataJsonLoads['guestOrNot']
 
     account = ExternalAccount.objects.get(
         provider='microsoftteams', id=account_id
@@ -87,12 +88,12 @@ def microsoftteams_request_api(**kwargs):
     if action == 'create':
         createdMeetings = utils.api_create_teams_meeting(requestBody, account)
         #synchronize data
-        utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings)
+        utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings, guestOrNot)
 
     if action == 'update':
         updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
         #synchronize data
-        utils.grdm_update_teams_meeting(addon, updateMeetingId, requestDataJsonLoads, updatedMeetings)
+        utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings, guestOrNot)
 
     if action == 'delete':
         utils.api_delete_teams_meeting(deleteMeetingId, account)
