@@ -17,8 +17,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('osf', '0221_ensure_schema_and_reports'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
