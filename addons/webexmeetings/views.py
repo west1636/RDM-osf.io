@@ -164,6 +164,6 @@ def webexmeetings_register_email(**kwargs):
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
-
+        attendee.save()
     return {}
 
