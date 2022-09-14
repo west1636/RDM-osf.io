@@ -156,6 +156,6 @@ def microsoftteams_register_email(**kwargs):
             attendee.save()
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
-        attendee.delete()
+            attendee.is_active = False
 
     return {}
