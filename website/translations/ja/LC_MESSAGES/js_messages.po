@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.6.0\n"
 "Report-Msgid-Bugs-To: rocs-office@nii.ac.jp\n"
-"POT-Creation-Date: 2022-09-27 17:34+0900\n"
+"POT-Creation-Date: 2022-09-27 18:31+0900\n"
 "PO-Revision-Date: 2020-11-23 09:30+0900\n"
 "Last-Translator: Hidetoshi Yoshimoto\n"
 "Language: ja\n"
@@ -229,7 +229,9 @@ msgid ""
 "<p class=\"overflow\">Are you sure you want to disconnect the Microsoft "
 "Teams account <strong>%1$s</strong>? This will revoke access to Microsoft"
 " Teams for all projects associated with this account.</p>"
-msgstr "Microsoft Teamsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ これにより、このアカウントに関連付けられているすべてのプロジェクトのMicrosoft Teamsへのアクセスが取り消されます。"
+msgstr ""
+"Microsoft Teamsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ "
+"これにより、このアカウントに関連付けられているすべてのプロジェクトのMicrosoft Teamsへのアクセスが取り消されます。"
 
 #: addons/microsoftteams/static/microsoftteamsUserConfig.js:89
 #: addons/webexmeetings/static/webexmeetingsUserConfig.js:89
@@ -320,7 +322,9 @@ msgid ""
 "<p class=\"overflow\">Are you sure you want to disconnect the Webex "
 "Meetings account <strong>%1$s</strong>? This will revoke access to Webex "
 "Meetings for all projects associated with this account.</p>"
-msgstr "Webex Meetingsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ これにより、このアカウントに関連付けられているすべてのプロジェクトのWebex Meetingsへのアクセスが取り消されます。"
+msgstr ""
+"Webex Meetingsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ "
+"これにより、このアカウントに関連付けられているすべてのプロジェクトのWebex Meetingsへのアクセスが取り消されます。"
 
 #: addons/wiki/static/WikiEditor.js:86
 msgid "Live editing mode"
@@ -455,7 +459,9 @@ msgid ""
 "<p class=\"overflow\">Are you sure you want to disconnect the Zoom "
 "Meetings account <strong>%1$s</strong>? This will revoke access to Zoom "
 "Meetings for all projects associated with this account.</p>"
-msgstr "Zoom Meetingsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ これにより、このアカウントに関連付けられているすべてのプロジェクトのZoom Meetingsへのアクセスが取り消されます。"
+msgstr ""
+"Zoom Meetingsアカウント(<strong>%1$s</strong>)を切断しても良いですか？ "
+"これにより、このアカウントに関連付けられているすべてのプロジェクトのZoom Meetingsへのアクセスが取り消されます。"
 
 #: admin/static/js/collection_providers/collectionProviders.js:9
 msgid "Hide Form"
@@ -5318,10 +5324,6 @@ msgstr "無効なフォルダです。"
 #: website/static/js/js_messages.js:35
 msgid "Credentials are valid"
 msgstr "有効な認証情報が設定されています。"
-
-#: website/static/js/js_messages.js:37
-msgid "Web meetings"
-msgstr "Web会議"
 
 #: website/static/js/keen.js:114
 msgid "Error sending Keen data to %1$s:<%2$s>"

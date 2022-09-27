@@ -33,5 +33,3 @@ var pageTitleWikiComment = _('home');
 var dropbusinessConnectionMsg = [_('No tokens.'),_('Invalid tokens.')];
 
 var ownCloudConnectionMsg = [_('Invalid folder.'),_('Credentials are valid')];
-
-var categories = [_('Web meetings')];

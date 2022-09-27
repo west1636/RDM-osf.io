@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-09-27 17:34+0900\n"
+"POT-Creation-Date: 2022-09-27 18:31+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4104,10 +4104,6 @@ msgstr ""
 
 #: website/static/js/js_messages.js:35
 msgid "Credentials are valid"
-msgstr ""
-
-#: website/static/js/js_messages.js:37
-msgid "Web meetings"
 msgstr ""
 
 #: website/static/js/keen.js:114
