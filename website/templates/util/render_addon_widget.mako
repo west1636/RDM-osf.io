@@ -4,7 +4,7 @@
         <div class="panel panel-default" name="${addon_data['short_name']}">
             %if addon_name == 'microsoftteams' or addon_name == 'webexmeetings' or addon_name == 'zoommeetings':
                 <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Web Meetings</h3>
+                    <h3 class="panel-title">${_("Web Meetings")}</h3>
                     <div class="pull-right">
                         % if addon_data['has_page']:
                             <a href="${node['url']}webmeetings"><i class="fa fa-external-link"></i></a>
@@ -261,7 +261,7 @@
                         <div class="text-danger">${_("Error occurred")}</div>
                         <!-- /ko -->
                         <!-- ko if: loadCompleted -->
-                        <h5>${_("Application Information")}</h5>
+                        <h5>${_("Web Meeting Information")}</h5>
                         <h5 data-bind="visible: !(todaysMeetings().length)" style="padding-top: 0.2em; padding-left: 1.0em;">${_("No Today's Meeting")}</h5>
                         <div style="padding-left: 1.0em;" data-bind="if: todaysMeetings().length">
                         <h5 style="display: inline;">${_("Today's Meeting")}</h5>(<h5 style="display: inline;" data-bind="text: today"></h5>)
