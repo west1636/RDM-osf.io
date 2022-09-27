@@ -6,12 +6,8 @@
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title">${_("Web Meetings")}</h3>
                     <div class="pull-right">
-                        % if addon_data['has_page']:
-                            <a href="${node['url']}webmeetings"><i class="fa fa-external-link"></i></a>
-                        % endif
-                        % if 'can_expand' in addon_data and addon_data['can_expand']:
-                            <button class="btn btn-link project-toggle"><i class="fa fa-angle-down"></i></button>
-                        % endif
+                        <a href="${node['url']}webmeetings"><i class="fa fa-external-link"></i></a>
+                        <button class="btn btn-link project-toggle"><i class="fa fa-angle-down"></i></button>
                     </div>
                 </div>
             % else:
