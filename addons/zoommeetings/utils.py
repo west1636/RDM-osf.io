@@ -75,7 +75,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
     duration = createdData['duration']
     startDatetime = dateutil.parser.parse(startDatetime)
     endDatetime = startDatetime + timedelta(minutes=duration)
-    content = createdData['agenda']
+    content = createdData.get('agenda', '')
     joinUrl = createdData['join_url']
     meetingId = createdData['id']
     host_id = createdData['host_id']

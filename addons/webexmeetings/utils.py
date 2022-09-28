@@ -93,7 +93,7 @@ def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
     organizer = createdData['hostEmail']
     startDatetime = createdData['start']
     endDatetime = createdData['end']
-    content = createdData['agenda']
+    content = createdData.get('agenda', '')
     joinUrl = createdData['webLink']
     meetingId = createdData['id']
     password = createdData['password']
