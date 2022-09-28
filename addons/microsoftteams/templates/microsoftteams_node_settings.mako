@@ -29,8 +29,8 @@
 
                 <!-- Oauth Start Button -->
                 <span data-bind="if: showTokenCreateButton">
-                    <a id="microsoftTeamsCreateToken" class="text-primary pull-right addon-auth">
-                        ${_("Connect Account")}
+                    <a data-bind="click: connectAccount" class="text-primary pull-right addon-auth">
+                        ${_("Connect  Account")}
                     </a>
                 </span>
             </small>

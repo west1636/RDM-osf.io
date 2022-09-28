@@ -21,7 +21,7 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
 
     },
 
-    $('#microsoftTeamsCreateToken').on('click', function() {
+    connectAccount: function() {
         var self = this;
 
         return $osf.postJSON(
@@ -47,8 +47,7 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 });
             };
 
-            window.open(response);
-
+            setTimeout(window.open(response), 200);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
