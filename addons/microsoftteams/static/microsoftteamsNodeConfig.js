@@ -65,7 +65,7 @@ var MicrosoftTeamsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 }
             });
         });
-    },
+    }),
 });
 
 // Public API
