@@ -46,7 +46,7 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                     }
                 });
             };
-            setTimeout(window.open(response), 200);
+            window.open(response);
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
