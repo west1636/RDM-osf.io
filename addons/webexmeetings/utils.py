@@ -133,7 +133,7 @@ def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
 
         createData.attendees = attendeeIds
         createData.save()
-    logger.info(' A {} meeting information on GRDM was created with following attributes => '.format(settings.WEBEX_MEETINGS) + str(createData))
+    logger.info(' A {} meeting information on GRDM was created with following attributes => '.format(settings.WEBEX_MEETINGS) + str(vars(createData)))
     return {}
 
 def api_update_webex_meeting(meetingId, requestData, account):
@@ -243,7 +243,7 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addo
         updateData.save()
         updateData.attendees = attendeeIds
         updateData.save()
-    logger.info(' A {} meeting information on GRDM was updated with following attributes => '.format(settings.WEBEX_MEETINGS) + str(updateData))
+    logger.info(' A {} meeting information on GRDM was updated with following attributes => '.format(settings.WEBEX_MEETINGS) + str(vars(updateData)))
     return {}
 
 def api_delete_webex_meeting(meetingId, account):
@@ -258,7 +258,7 @@ def api_delete_webex_meeting(meetingId, account):
     response = requests.delete(url, headers=requestHeaders, timeout=60)
     if response.status_code != 404:
         response.raise_for_status()
-    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.WEBEX_MEETINGS, str(response.status_code)))
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}'.format(settings.WEBEX_MEETINGS, str(response.status_code)))
     return {}
 
 def grdm_delete_webex_meeting(meetingId):

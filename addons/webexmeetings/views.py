@@ -150,6 +150,6 @@ def webexmeetings_register_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
-    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(attendee))
+    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
     return {}
 

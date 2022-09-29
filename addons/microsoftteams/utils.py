@@ -115,7 +115,7 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
         createData.save()
         createData.attendees = attendeeIds
         createData.save()
-    logger.info(' A {} meeting on GRDM was created with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(createData))
+    logger.info(' A {} meeting on GRDM was created with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(vars(createData)))
     return {}
 
 def api_update_teams_meeting(meetingId, requestData, account):
@@ -172,7 +172,7 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
     updateData.attendees = attendeeIds
     updateData.content = content
     updateData.save()
-    logger.info('A meeting information on GRDM was updated with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(updateData))
+    logger.info('A meeting information on GRDM was updated with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(vars(updateData)))
     return {}
 
 def api_delete_teams_meeting(meetingId, account):
@@ -188,7 +188,7 @@ def api_delete_teams_meeting(meetingId, account):
     if response.status_code != 404:
         response.raise_for_status()
 
-    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.MICROSOFT_TEAMS, str(response.status_code)))
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}'.format(settings.MICROSOFT_TEAMS, str(response.status_code)))
     return {}
 
 def grdm_delete_teams_meeting(meetingId):

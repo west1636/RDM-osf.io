@@ -90,7 +90,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
             node_settings_id=addon.id,
         )
         createData.save()
-    logger.info(' A {} meeting information on GRDM was created with following attributes => '.format(settings.ZOOM_MEETINGS) + str(createData))
+    logger.info(' A {} meeting information on GRDM was created with following attributes => '.format(settings.ZOOM_MEETINGS) + str(vars(createData)))
     return {}
 
 
@@ -125,7 +125,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     updateData.end_datetime = endDatetime
     updateData.content = content
     updateData.save()
-    logger.info(' A {} meeting information on GRDM was updated with following attributes => '.format(settings.ZOOM_MEETINGS) + str(updateData))
+    logger.info(' A {} meeting information on GRDM was updated with following attributes => '.format(settings.ZOOM_MEETINGS) + str(vars(updateData)))
     return {}
 
 def api_delete_zoom_meeting(meetingId, account):
@@ -140,7 +140,7 @@ def api_delete_zoom_meeting(meetingId, account):
     response = requests.delete(url, headers=requestHeaders, timeout=60)
     if response.status_code != 404:
         response.raise_for_status()
-    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.ZOOM_MEETINGS, str(response.status_code)))
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}'.format(settings.ZOOM_MEETINGS, str(response.status_code)))
     return {}
 
 def grdm_delete_zoom_meeting(meetingId):
