@@ -258,7 +258,7 @@ def api_delete_webex_meeting(meetingId, account):
     response = requests.delete(url, headers=requestHeaders, timeout=60)
     if response.status_code != 404:
         response.raise_for_status()
-    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.WEBEX_MEETINGS) + str(response.status_code))
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.WEBEX_MEETINGS, response.status_code))
     return {}
 
 def grdm_delete_webex_meeting(meetingId):

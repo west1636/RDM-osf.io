@@ -53,9 +53,10 @@ def zoommeetings_oauth_connect(auth, **kwargs):
 def zoommeetings_request_api(**kwargs):
 
     auth = kwargs['auth']
+    user = auth.user
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
-    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(auth)) + str(requestDataJsonLoads))
+    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.ZOOM_MEETINGS, str(user)) + str(requestDataJsonLoads))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)

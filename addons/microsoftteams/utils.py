@@ -188,7 +188,7 @@ def api_delete_teams_meeting(meetingId, account):
     if response.status_code != 404:
         response.raise_for_status()
 
-    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.MICROSOFT_TEAMS) + str(response.status_code))
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.MICROSOFT_TEAMS, str(response.status_code))
     return {}
 
 def grdm_delete_teams_meeting(meetingId):

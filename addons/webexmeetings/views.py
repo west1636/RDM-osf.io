@@ -55,9 +55,10 @@ def webexmeetings_oauth_connect(auth, **kwargs):
 def webexmeetings_request_api(**kwargs):
 
     auth = kwargs['auth']
+    user = auth.user
     requestData = request.get_data()
     requestDataJsonLoads = json.loads(requestData)
-    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(auth)) + str(requestDataJsonLoads))
+    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(user)) + str(requestDataJsonLoads))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -96,10 +97,11 @@ def webexmeetings_request_api(**kwargs):
 def webexmeetings_register_email(**kwargs):
 
     auth = kwargs['auth']
+    user = auth.user
     requestData = request.get_data()
     requestDataJson = json.loads(requestData)
     actionType = requestDataJson.get('actionType', '')
-    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(requestDataJson))
+    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(requestDataJson))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -148,6 +150,6 @@ def webexmeetings_register_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
-    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(attendee))
+    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(attendee))
     return {}
 
