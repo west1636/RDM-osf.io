@@ -6,6 +6,7 @@ from addons.webexmeetings import SHORT_NAME
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.webexmeetings.serializer import WebexMeetingsSerializer
+from addons.webexmeetings import settings
 from osf.models import ExternalAccount, OSFUser
 from osf.utils.permissions import WRITE
 from website.project.decorators import (
@@ -53,11 +54,14 @@ def webexmeetings_oauth_connect(auth, **kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def webexmeetings_request_api(**kwargs):
 
+    auth = kwargs['auth']
+    requestData = request.get_data()
+    requestDataJsonLoads = json.loads(requestData)
+    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(auth)) + str(requestDataJsonLoads))
+
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
     account_id = addon.external_account_id
-    requestData = request.get_data()
-    requestDataJsonLoads = json.loads(requestData)
     action = requestDataJsonLoads['actionType']
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
@@ -91,21 +95,23 @@ def webexmeetings_request_api(**kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def webexmeetings_register_email(**kwargs):
 
+    auth = kwargs['auth']
+    requestData = request.get_data()
+    requestDataJson = json.loads(requestData)
+    actionType = requestDataJson.get('actionType', '')
+    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(requestDataJson))
+
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
     account_id = addon.external_account_id
     account = ExternalAccount.objects.get(
         provider=SHORT_NAME, id=account_id
     )
-    requestData = request.get_data()
-    requestDataJson = json.loads(requestData)
-    logger.info('Register or Update Web Meeting Email: ' + str(requestDataJson))
     _id = requestDataJson.get('_id', '')
     guid = requestDataJson.get('guid', '')
     fullname = requestDataJson.get('fullname', '')
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
-    actionType = requestDataJson.get('actionType', '')
     emailType = requestDataJson.get('emailType', False)
     displayName = ''
 
@@ -142,5 +148,6 @@ def webexmeetings_register_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
+    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(attendee))
     return {}
 

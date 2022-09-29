@@ -115,7 +115,7 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
         createData.save()
         createData.attendees = attendeeIds
         createData.save()
-
+    logger.info(' A {} meeting on GRDM was created with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(createData))
     return {}
 
 def api_update_teams_meeting(meetingId, requestData, account):
@@ -172,7 +172,7 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
     updateData.attendees = attendeeIds
     updateData.content = content
     updateData.save()
-
+    logger.info('A meeting information on GRDM was updated with following attributes => '.format(settings.MICROSOFT_TEAMS) + str(updateData))
     return {}
 
 def api_delete_teams_meeting(meetingId, account):
@@ -195,5 +195,5 @@ def grdm_delete_teams_meeting(meetingId):
 
     deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
-
+    logger.info('A {} meeting information on GRDM was deleted.=> '.format(settings.MICROSOFT_TEAMS))
     return {}

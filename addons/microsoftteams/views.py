@@ -6,6 +6,7 @@ from addons.microsoftteams import SHORT_NAME
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.microsoftteams.serializer import MicrosoftTeamsSerializer
+from addons.microsoftteams import settings
 from osf.models import ExternalAccount, OSFUser
 from osf.utils.permissions import WRITE
 from website.project.decorators import (
@@ -94,7 +95,8 @@ def microsoftteams_register_email(**kwargs):
     auth = kwargs['auth']
     requestData = request.get_data()
     requestDataJson = json.loads(requestData)
-    logger.info('{} Email will be registered with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(auth)) + str(requestDataJson))
+    actionType = requestDataJson.get('actionType', '')
+    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(requestDataJson))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -107,7 +109,6 @@ def microsoftteams_register_email(**kwargs):
     fullname = requestDataJson.get('fullname', '')
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
-    actionType = requestDataJson.get('actionType', '')
     emailType = requestDataJson.get('emailType', False)
     displayName = ''
 
@@ -144,4 +145,5 @@ def microsoftteams_register_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
+    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(auth)) + str(attendee))
     return {}

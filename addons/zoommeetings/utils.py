@@ -59,6 +59,7 @@ def api_create_zoom_meeting(requestData, account):
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
+    logger.info('StatusCode:{} . A {} meeting was created with following attributes => '.format(str(response.status_code), settings.ZOOM_MEETINGS) + str(responseData))
     return responseData
 
 def grdm_create_zoom_meeting(addon, account, createdData):
@@ -89,7 +90,7 @@ def grdm_create_zoom_meeting(addon, account, createdData):
             node_settings_id=addon.id,
         )
         createData.save()
-
+    logger.info(' A {} meeting information on GRDM was created with following attributes => '.format(settings.ZOOM_MEETINGS) + str(createData))
     return {}
 
 
@@ -105,6 +106,7 @@ def api_update_zoom_meeting(meetingId, requestData, account):
     requestBody = json.dumps(requestData)
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
+    logger.info('StatusCode:{} . A {} meeting was updated with the folloing request body. => '.format(str(response.status_code), settings.ZOOM_MEETINGS) + str(requestBody))
     return {}
 
 def grdm_update_zoom_meeting(meetingId, requestData):
@@ -123,7 +125,7 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     updateData.end_datetime = endDatetime
     updateData.content = content
     updateData.save()
-
+    logger.info(' A {} meeting information on GRDM was updated with following attributes => '.format(settings.ZOOM_MEETINGS) + str(updateData))
     return {}
 
 def api_delete_zoom_meeting(meetingId, account):
@@ -136,12 +138,14 @@ def api_delete_zoom_meeting(meetingId, account):
         'Content-Type': 'application/json'
     }
     response = requests.delete(url, headers=requestHeaders, timeout=60)
-    response.raise_for_status()
+    if response.status_code != 404:
+        response.raise_for_status()
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.ZOOM_MEETINGS) + str(response.status_code))
     return {}
 
 def grdm_delete_zoom_meeting(meetingId):
 
     deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
-
+    logger.info('A {} meeting information on GRDM was deleted.=> '.format(settings.ZOOM_MEETINGS))
     return {}

@@ -6,6 +6,7 @@ from addons.zoommeetings import SHORT_NAME
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.zoommeetings.serializer import ZoomMeetingsSerializer
+from addons.zoommeetings import settings
 from osf.models import ExternalAccount
 from osf.utils.permissions import WRITE
 from website.project.decorators import (
@@ -51,11 +52,14 @@ def zoommeetings_oauth_connect(auth, **kwargs):
 @must_have_addon(SHORT_NAME, 'node')
 def zoommeetings_request_api(**kwargs):
 
+    auth = kwargs['auth']
+    requestData = request.get_data()
+    requestDataJsonLoads = json.loads(requestData)
+    logger.info('{} API will be requested with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(auth)) + str(requestDataJsonLoads))
+
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
     account_id = addon.external_account_id
-    requestData = request.get_data()
-    requestDataJsonLoads = json.loads(requestData)
     action = requestDataJsonLoads['actionType']
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
