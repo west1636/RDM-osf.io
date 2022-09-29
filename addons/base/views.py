@@ -20,7 +20,6 @@ from django.db import transaction
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from elasticsearch import exceptions as es_exceptions
-from website.project.views.contributor import get_contributors
 
 from api.base.settings.defaults import SLOAN_ID_COOKIE_NAME
 
@@ -58,7 +57,7 @@ from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         Guid, FileVersionUserMetadata, FileVersion)
 from osf.metrics import PreprintView, PreprintDownload
 from osf.utils import permissions
-from osf.utils.permissions import ADMIN, WRITE, READ
+from osf.utils.permissions import READ
 from website.profile.utils import get_profile_image_url
 from website.project import decorators
 from website.project.decorators import must_be_contributor_or_public, must_be_valid_project, check_contributor_auth, must_have_permission
@@ -1092,7 +1091,7 @@ def webmeetings_get_config_ember(**kwargs):
 
     if microsoft_teams_auth:
         try:
-            access_token = microsoft_teams_addon.fetch_access_token()
+            microsoft_teams_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Microsoft Teams.')
 
@@ -1113,7 +1112,7 @@ def webmeetings_get_config_ember(**kwargs):
 
     if webex_meetings_auth:
         try:
-            access_token = webex_meetings_addon.fetch_access_token()
+            webex_meetings_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Webex Meetings')
 
@@ -1136,7 +1135,7 @@ def webmeetings_get_config_ember(**kwargs):
 
     if zoom_meetings_auth:
         try:
-            access_token = zoom_meetings_addon.fetch_access_token()
+            zoom_meetings_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Zoom Meetings.')
 
@@ -1209,7 +1208,7 @@ def webmeetings_set_config_ember(**kwargs):
 
     if microsoft_teams_auth:
         try:
-            access_token = microsoft_teams_addon.fetch_access_token()
+            microsoft_teams_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Microsoft Teams.')
 
@@ -1230,7 +1229,7 @@ def webmeetings_set_config_ember(**kwargs):
 
     if webex_meetings_auth:
         try:
-            access_token = webex_meetings_addon.fetch_access_token()
+            webex_meetings_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Webex Meetings')
 
@@ -1253,7 +1252,7 @@ def webmeetings_set_config_ember(**kwargs):
 
     if zoom_meetings_auth:
         try:
-            access_token = zoom_meetings_addon.fetch_access_token()
+            zoom_meetings_addon.fetch_access_token()
         except InvalidAuthError:
             logger.info('Failed to refresh token for Zoom Meetings.')
 
@@ -1333,7 +1332,7 @@ def webmeetings_get_meetings(**kwargs):
 
     allRecentWebMeetings = sorted(allRecentWebMeetings, key=lambda x: x['fields']['start_datetime'])
 
-    logger.info('get_meetigs:allmeetings:' + str(allRecentWebMeetings))
+    logger.info('Got Meetings Info for Widget:' + str(allRecentWebMeetings))
 
     return {
         'recentMeetings': allRecentWebMeetings,
