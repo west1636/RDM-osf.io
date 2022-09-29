@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-from osf.models import ExternalAccount
 from addons.zoommeetings import models
 from addons.zoommeetings import settings
-from django.core import serializers
 import logging
 from datetime import timedelta
 import dateutil.parser
@@ -38,12 +36,9 @@ def get_user_info(user_id, jwt_token):
     responseData = response.json()
     userInfo = {}
 
-    logger.info(str(responseData))
-    logger.info(str(status_code))
-
     if status_code != 200:
         if status_code == 404:
-            logger.info('Failed to authenticate Zoom account' + '[' + str(status_code) + ']' + ':' + message)
+            logger.info('Failed to authenticate Zoom account' + '[' + str(status_code) + ']' + ':' + response.message)
     else:
         userInfo['id'] = responseData['id']
         userInfo['first_name'] = responseData['first_name']
@@ -64,7 +59,6 @@ def api_create_zoom_meeting(requestData, account):
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-    logger.info('responseData::' + str(responseData))
     return responseData
 
 def grdm_create_zoom_meeting(addon, account, createdData):
@@ -78,7 +72,6 @@ def grdm_create_zoom_meeting(addon, account, createdData):
     content = createdData.get('agenda', '')
     joinUrl = createdData['join_url']
     meetingId = createdData['id']
-    host_id = createdData['host_id']
     organizer_fullname = account.display_name
 
     with transaction.atomic():
@@ -112,7 +105,6 @@ def api_update_zoom_meeting(meetingId, requestData, account):
     requestBody = json.dumps(requestData)
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
-    logger.info('response::' + str(response))
     return {}
 
 def grdm_update_zoom_meeting(meetingId, requestData):
@@ -131,7 +123,6 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     updateData.end_datetime = endDatetime
     updateData.content = content
     updateData.save()
-    logger.info('updateData:::' + str(updateData))
 
     return {}
 

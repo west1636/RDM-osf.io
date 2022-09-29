@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-from osf.models import ExternalAccount
 from addons.microsoftteams import models
 from addons.microsoftteams import settings
-from django.core import serializers
 import logging
-from datetime import timedelta
-import dateutil.parser
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 logger = logging.getLogger(__name__)
@@ -50,7 +46,6 @@ def api_get_microsoft_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    logger.info('responseData::' +str(responseData))
     username = responseData['displayName']
     return username
 
@@ -67,7 +62,7 @@ def api_create_teams_meeting(requestData, account):
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-    logger.info('responseData::' + str(responseData))
+    logger.info('StatusCode:{} . A {} meeting was created with following attributes => '.format(str(response.status_code), settings.MICROSOFT_TEAMS) + str(responseData))
     return responseData
 
 def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrNot):
@@ -84,8 +79,6 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
     organizer_fullname = account.display_name
     contentExtract = requestData['contentExtract']
     isGuest = False
-
-    logger.info('createdData:utils::' +str(createdData))
 
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
@@ -138,7 +131,7 @@ def api_update_teams_meeting(meetingId, requestData, account):
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-    logger.info('responseData::' + str(responseData))
+    logger.info('StatusCode:{} . A {} meeting was updated with following attributes => '.format(str(response.status_code), settings.MICROSOFT_TEAMS) + str(responseData))
     return responseData
 
 def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
@@ -179,7 +172,6 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
     updateData.attendees = attendeeIds
     updateData.content = content
     updateData.save()
-    logger.info('updateData:::' + str(updateData))
 
     return {}
 
@@ -195,6 +187,8 @@ def api_delete_teams_meeting(meetingId, account):
     response = requests.delete(url, headers=requestHeaders, timeout=60)
     if response.status_code != 404:
         response.raise_for_status()
+
+    logger.info('A {} meeting was deleted or has been already deleted. StatusCode : {}=> '.format(settings.MICROSOFT_TEAMS) + str(response.status_code))
     return {}
 
 def grdm_delete_teams_meeting(meetingId):

@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-from osf.models import ExternalAccount
 from addons.webexmeetings import models
 from addons.webexmeetings import settings
-from django.core import serializers
 import logging
-from datetime import timedelta
-import dateutil.parser
 from django.db import transaction
 logger = logging.getLogger(__name__)
 
@@ -49,7 +45,6 @@ def api_get_webex_meetings_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    logger.info('responseData::' +str(responseData))
     displayName = responseData['items'][0]['displayName']
     return displayName
 
@@ -63,12 +58,9 @@ def api_create_webex_meeting(requestData, account):
         'Content-Type': 'application/json'
     }
     requestBody = json.dumps(requestData)
-    logger.info('requestBody::' +str(requestBody))
-    logger.info('requestHeaders::' +str(requestHeaders))
     response = requests.post(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-    logger.info('responseData::' + str(responseData))
     return responseData
 
 def get_invitees(account, meetingId):
@@ -83,7 +75,6 @@ def get_invitees(account, meetingId):
     response = requests.get(url, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     invitees = response.json()
-    logger.info('invitees::' + str(invitees))
 
     return invitees['items']
 
@@ -136,7 +127,7 @@ def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
                 attendee_id=attendeeId,
                 meeting_id=createData.id,
                 webex_meetings_invitee_id=invitee['id']
-                )
+            )
             relation.save()
 
         createData.attendees = attendeeIds
@@ -157,7 +148,6 @@ def api_update_webex_meeting(meetingId, requestData, account):
     response = requests.put(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     responseData = response.json()
-    logger.info('responseData::' + str(responseData))
     return responseData
 
 def api_update_webex_meeting_attendees(requestData, account):
@@ -169,33 +159,22 @@ def api_update_webex_meeting_attendees(requestData, account):
         'Authorization': requestToken,
         'Content-Type': 'application/json'
     }
-    requestBody = json.dumps(requestData)
 
     createInvitees = requestData['createInvitees']
     deleteInvitees = requestData['deleteInvitees']
 
     createdInvitees = []
     deletedInvitees = []
-    attendeeIdsFormer = []
-
-    logger.info('createInvitees::' + str(createInvitees))
-    logger.info('deleteInvitees::' + str(deleteInvitees))
 
     for createInvitee in createInvitees:
-        logger.info('webex1::' + str(createInvitee))
         createInvitee = json.dumps(createInvitee)
         createdResponse = requests.post(url, data=createInvitee, headers=requestHeaders, timeout=60)
         cRes = createdResponse.json()
         createdInvitees.append(cRes)
     for deleteInvitee in deleteInvitees:
         deletedResponse = requests.delete('{}{}'.format(url, deleteInvitee), headers=requestHeaders, timeout=60)
-        logger.info('deletedResponse status::' + str(deletedResponse))
-        logger.info('deletedResponse status::' + str(deletedResponse.status_code))
         if deletedResponse.ok:
             deletedInvitees.append(deleteInvitee)
-
-    logger.info('createdInvitees::' + str(createdInvitees))
-    logger.info('deletedInvitees::' + str(deletedInvitees))
 
     updatedAttendees = {'created': createdInvitees, 'deleted': deletedInvitees}
 
@@ -232,8 +211,6 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addo
 
         for createdInvitee in createdInvitees:
 
-            logger.info('createdInvitee::' + str(createdInvitee))
-
             if createdInvitee['email'] in guestOrNot:
                 isGuest = guestOrNot[createdInvitee['email']]
             else:
@@ -262,8 +239,6 @@ def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addo
         updateData.save()
         updateData.attendees = attendeeIds
         updateData.save()
-
-    logger.info('updateData:::' + str(updateData))
 
     return {}
 

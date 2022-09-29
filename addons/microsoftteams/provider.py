@@ -36,7 +36,6 @@ class MicrosoftTeamsProvider(ExternalProvider):
         }
         response = requests.get(url, headers=requestHeaders, timeout=60)
         info = response.json()
-        logger.info('info:' + str(info))
         return {
             'provider_id': info['id'],
             'display_name': info['displayName'],
@@ -62,8 +61,8 @@ class MicrosoftTeamsProvider(ExternalProvider):
             service_name=self.short_name,
             _absolute=True
         )
-        redirect_uri_encoded = urllib.parse.quote(redirect_uri, safe="*")
-        scope_encoded = urllib.parse.quote(settings.MICROSOFT_API_SCOPE, safe="*")
+        redirect_uri_encoded = urllib.parse.quote(redirect_uri, safe='*')
+        scope_encoded = urllib.parse.quote(settings.MICROSOFT_API_SCOPE, safe='*')
         state = generate_token()
 
         oauth_authorization_url = '{}?client_id={}&response_type={}&redirect_uri={}&response_mode={}&scope={}&state={}'.format(self.auth_url_base, client_id, response_type, redirect_uri_encoded, response_mode, scope_encoded, state)

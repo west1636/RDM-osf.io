@@ -1,38 +1,20 @@
 # -*- coding: utf-8 -*-
 from flask import request
 import logging
-import requests
 import json
-import time
-import pytz
-from datetime import datetime, timedelta
-from addons.zoommeetings import SHORT_NAME, FULL_NAME
-from django.db import transaction
+from addons.zoommeetings import SHORT_NAME
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
 from addons.zoommeetings.serializer import ZoomMeetingsSerializer
-from osf.models import ExternalAccount, OSFUser
-from django.core.exceptions import ValidationError
-from framework.exceptions import HTTPError
-from addons.base.exceptions import InvalidAuthError
-from rest_framework import status as http_status
-from osf.utils.permissions import ADMIN, WRITE, READ
+from osf.models import ExternalAccount
+from osf.utils.permissions import WRITE
 from website.project.decorators import (
     must_have_addon,
     must_be_valid_project,
     must_have_permission,
 )
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
-from website.ember_osf_web.views import use_ember_app
-from api.base.utils import waterbutler_api_url_for
-from addons.zoommeetings import settings
-from addons.zoommeetings import models
 from addons.zoommeetings import utils
-from django.core import serializers
-from django.core.exceptions import ObjectDoesNotExist
-from framework.auth.core import Auth
-from admin.rdm import utils as rdm_utils
-from osf.models import AbstractNode, BaseFileNode, Guid, Comment
 from website.oauth.utils import get_service
 logger = logging.getLogger(__name__)
 
@@ -60,7 +42,6 @@ zoommeetings_deauthorize_node = generic_views.deauthorize_node(
 def zoommeetings_oauth_connect(auth, **kwargs):
 
     provider = get_service(SHORT_NAME)
-    logger.info(str(provider.client_id))
     authorization_url = provider.get_authorization_url(provider.client_id)
 
     return authorization_url
@@ -80,14 +61,9 @@ def zoommeetings_request_api(**kwargs):
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
     requestBody = requestDataJsonLoads['body']
 
-    logger.info('updateMeetingId::' + str(updateMeetingId))
-    logger.info('deleteMeetingId::' + str(deleteMeetingId))
-
     account = ExternalAccount.objects.get(
         provider='zoommeetings', id=account_id
     )
-    logger.info('requestDataJsonLoads::' +str(requestDataJsonLoads))
-    logger.info('requestBody:views::' +str(requestBody))
     if action == 'create':
         createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
         #synchronize data
