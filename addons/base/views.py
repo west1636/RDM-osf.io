@@ -1179,7 +1179,7 @@ def webmeetings_get_config_ember(**kwargs):
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelation,
                          'institution_users': institutionUsers,
                          'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE,
-                         'project_contributor': projectContribs
+                         'project_contributors': projectContribs
                      }}}
 
 @must_be_logged_in
