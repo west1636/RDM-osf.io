@@ -49,7 +49,7 @@ from addons.webexmeetings import models as webex_meetings
 from addons.zoommeetings import models as zoom_meetings
 
 from addons.base import signals as file_signals
-from addons.base.utils import format_last_known_metadata, get_mfr_url, getInstitutionUsers
+from addons.base.utils import format_last_known_metadata, get_mfr_url, getInstitutionUsers, getProjectContribs
 from osf import features
 from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         OSFUser, AbstractNode, Preprint,
@@ -1161,6 +1161,9 @@ def webmeetings_get_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
+    #Get the contributors
+    projectContribs = getProjectContribs(node)
+
     webMeetingsApps = json.dumps(webMeetingsApps)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
@@ -1175,7 +1178,8 @@ def webmeetings_get_config_ember(**kwargs):
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendees,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelation,
                          'institution_users': institutionUsers,
-                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE
+                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE,
+                         'project_contributor': projectContribs
                      }}}
 
 @must_be_logged_in
@@ -1278,6 +1282,9 @@ def webmeetings_set_config_ember(**kwargs):
     #Get the institution users
     institutionUsers = getInstitutionUsers(user)
 
+    #Get the contributors
+    projectContribs = getProjectContribs(node)
+
     webMeetingsApps = json.dumps(webMeetingsApps)
 
     return {'data': {'id': node._id, 'type': 'webmeetings-config',
@@ -1292,7 +1299,8 @@ def webmeetings_set_config_ember(**kwargs):
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendees,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelation,
                          'institution_users': institutionUsers,
-                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE
+                         'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE,
+                         'project_contributors': projectContribs
                      }}}
 
 @must_be_valid_project

@@ -77,3 +77,15 @@ def getInstitutionUsers(user):
     ret = json.dumps(institutionUsers)
 
     return ret
+
+def getProjectContribs(node):
+
+    projectContribs = []
+    nodeContribs = node.contributors
+    logger.info('contrib:::::::::::::' + str(node.contributors[0]._id))
+
+    for nodeContrib in nodeContribs:
+        projectContribs.append(nodeContrib._id)
+
+    ret = json.dumps(projectContribs)
+    return ret
