@@ -77,6 +77,9 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
     joinUrl = createdData['onlineMeeting']['joinUrl']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
+    target = '('
+    idx = organizer_fullname.find(target)
+    organizer_fullname = organizer_fullname[idx+1:len(organizer_fullname)-1]
     contentExtract = requestData['contentExtract']
     isGuest = False
 
