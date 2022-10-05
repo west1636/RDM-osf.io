@@ -69,10 +69,10 @@ def api_create_teams_meeting(requestData, account):
 
 def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrNot):
 
-    timeZone = createdData['timeZone']
-    tz = pytz.timezone(timeZone)
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
+    timeZone = createdData['start']['timeZone']
+    tz = pytz.timezone(timeZone)
     startDatetime = createdData['start']['dateTime']
     startDatetime = (dateutil.parser.isoparse(startDatetime)).astimezone(tz)
     endDatetime = createdData['end']['dateTime']
