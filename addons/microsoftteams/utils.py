@@ -74,11 +74,8 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
     timeZone = createdData['start']['timeZone']
     tz = pytz.timezone(timeZone)
     startDatetime = createdData['start']['dateTime']
-    logger.info('startDatetime1::' + str(startDatetime))
     startDatetime = dateutil.parser.parse(startDatetime)
-    logger.info('startDatetime2::' + str(startDatetime))
     startDatetime = tz.localize(startDatetime)
-    logger.info('startDatetime3::' + str(startDatetime))
     endDatetime = createdData['end']['dateTime']
     endDatetime = dateutil.parser.parse(endDatetime)
     endDatetime = tz.localize(endDatetime)
@@ -152,8 +149,14 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
 
     meetingId = updatedData['id']
     subject = updatedData['subject']
+    timeZone = createdData['start']['timeZone']
+    tz = pytz.timezone(timeZone)
     startDatetime = updatedData['start']['dateTime']
+    startDatetime = dateutil.parser.parse(startDatetime)
+    startDatetime = tz.localize(startDatetime)
     endDatetime = updatedData['end']['dateTime']
+    endDatetime = dateutil.parser.parse(endDatetime)
+    endDatetime = tz.localize(endDatetime)
     attendees = updatedData['attendees']
     attendeeIds = []
     content = updatedData['bodyPreview']
