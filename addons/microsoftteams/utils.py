@@ -74,9 +74,9 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
     timeZone = createdData['start']['timeZone']
     tz = pytz.timezone(timeZone)
     startDatetime = createdData['start']['dateTime']
-    startDatetime = (dateutil.parser.isoparse(startDatetime)).astimezone(tz)
+    startDatetime = (dateutil.parser.parse(startDatetime)).astimezone(tz)
     endDatetime = createdData['end']['dateTime']
-    endDatetime = (dateutil.parser.isoparse(endDatetime)).astimezone(tz)
+    endDatetime = (dateutil.parser.parse(endDatetime)).astimezone(tz)
     attendees = createdData['attendees']
     attendeeIds = []
     content = createdData['bodyPreview']

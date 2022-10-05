@@ -109,16 +109,17 @@ def api_update_zoom_meeting(meetingId, requestData, account):
     requestBody = json.dumps(requestData)
     response = requests.patch(url, data=requestBody, headers=requestHeaders, timeout=60)
     response.raise_for_status()
-    logger.info('StatusCode1:{} . A {} meeting was updated with the folloing request body. => '.format(str(response.status_code), settings.ZOOM_MEETINGS) + str(response))
     logger.info('StatusCode:{} . A {} meeting was updated with the folloing request body. => '.format(str(response.status_code), settings.ZOOM_MEETINGS) + str(requestBody))
     return {}
 
 def grdm_update_zoom_meeting(meetingId, requestData):
 
     subject = requestData['topic']
+    timeZone = requestData['timezone']
+    tz = pytz.timezone(timeZone)
     startDatetime = requestData['start_time']
+    startDatetime = (dateutil.parser.parse(startDatetime)).astimezone(tz)
     duration = requestData['duration']
-    startDatetime = dateutil.parser.parse(startDatetime)
     endDatetime = startDatetime + timedelta(minutes=duration)
     content = requestData['agenda']
 
