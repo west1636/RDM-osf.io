@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
+import pytz
+import dateutil.parser
 from addons.microsoftteams import models
 from addons.microsoftteams import settings
 import logging
@@ -67,10 +69,14 @@ def api_create_teams_meeting(requestData, account):
 
 def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrNot):
 
+    timeZone = createdData['timeZone']
+    tz = pytz.timezone(timeZone)
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
     startDatetime = createdData['start']['dateTime']
+    startDatetime = (dateutil.parser.isoparse(startDatetime)).astimezone(tz)
     endDatetime = createdData['end']['dateTime']
+    endDatetime = (dateutil.parser.isoparse(endDatetime)).astimezone(tz)
     attendees = createdData['attendees']
     attendeeIds = []
     content = createdData['bodyPreview']
