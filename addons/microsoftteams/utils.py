@@ -77,7 +77,9 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
     logger.info('tz::' + str(tz))
     startDatetime = createdData['start']['dateTime']
     logger.info('startDatetime1::' + str(startDatetime))
-    startDatetime = (dateutil.parser.parse(startDatetime)).astimezone(tz)
+    dStart = dateutil.parser.parse(startDatetime)
+    logger.info('dStart::' + str(dStart))
+    startDatetime = dStart.astimezone(tz)
     logger.info('startDatetime2::' + str(startDatetime))
     endDatetime = createdData['end']['dateTime']
     endDatetime = (dateutil.parser.parse(endDatetime)).astimezone(tz)
