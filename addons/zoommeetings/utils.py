@@ -5,6 +5,7 @@ from addons.zoommeetings import models
 from addons.zoommeetings import settings
 import logging
 from datetime import timedelta
+import pytz
 import dateutil.parser
 from django.db import transaction
 logger = logging.getLogger(__name__)
