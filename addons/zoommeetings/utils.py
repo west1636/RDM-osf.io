@@ -119,7 +119,8 @@ def grdm_update_zoom_meeting(meetingId, requestData):
     timeZone = requestData['timezone']
     tz = pytz.timezone(timeZone)
     startDatetime = requestData['start_time']
-    startDatetime = (dateutil.parser.parse(startDatetime)).astimezone(tz)
+    startDatetime = dateutil.parser.parse(startDatetime)
+    startDatetime = tz.localize(startDatetime)
     duration = requestData['duration']
     endDatetime = startDatetime + timedelta(minutes=duration)
     content = requestData['agenda']
