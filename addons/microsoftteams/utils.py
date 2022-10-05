@@ -149,7 +149,7 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
 
     meetingId = updatedData['id']
     subject = updatedData['subject']
-    timeZone = createdData['start']['timeZone']
+    timeZone = updatedData['start']['timeZone']
     tz = pytz.timezone(timeZone)
     startDatetime = updatedData['start']['dateTime']
     startDatetime = dateutil.parser.parse(startDatetime)
