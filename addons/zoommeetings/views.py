@@ -70,7 +70,13 @@ def zoommeetings_request_api(**kwargs):
         provider='zoommeetings', id=account_id
     )
     if action == 'create':
-        createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
+        try:
+            createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
+        except: Exception as e:
+            logger.info(str(type(e)))
+            logger.info(str(e.args))
+            logger.info(str(e.message))
+            logger.info(str(e))
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
