@@ -70,7 +70,7 @@ def getProjectContribs(node):
             info['guid'] = nodeContrib._id
             info['fullname'] = nodeContrib.fullname
             info['username'] = nodeContrib.username
-            info['institution'] = nodeContrib.institution
+            info['institution'] = nodeContrib.jobs[0]['institution']
 
     ret = json.dumps(projectContribs)
     return ret
