@@ -123,7 +123,7 @@ def microsoftteams_register_email(**kwargs):
                 fullname = fullname if fullname else displayName
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            try
+            try:
                 displayName = utils.api_get_microsoft_username(account, email)
             except HTTPError as e1:
                 logger.info(str(type(e1)))
