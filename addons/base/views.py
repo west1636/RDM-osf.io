@@ -49,7 +49,7 @@ from addons.webexmeetings import models as webex_meetings
 from addons.zoommeetings import models as zoom_meetings
 
 from addons.base import signals as file_signals
-from addons.base.utils import format_last_known_metadata, get_mfr_url, getInstitutionUsers, getProjectContribs
+from addons.base.utils import format_last_known_metadata, get_mfr_url, getProjectContribs
 from osf import features
 from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         OSFUser, AbstractNode, Preprint,
