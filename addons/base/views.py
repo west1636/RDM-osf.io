@@ -1158,9 +1158,6 @@ def webmeetings_get_config_ember(**kwargs):
     allUpcomingWebMeetings = json.dumps(allUpcomingWebMeetings)
     allpreviousWebMeetings = json.dumps(allpreviousWebMeetings)
 
-    #Get the institution users
-    institutionUsers = getInstitutionUsers(user)
-
     #Get the contributors
     projectContribs = getProjectContribs(node)
 
@@ -1177,7 +1174,6 @@ def webmeetings_get_config_ember(**kwargs):
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendees,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendees,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelation,
-                         'institution_users': institutionUsers,
                          'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE,
                          'project_contributors': projectContribs
                      }}}
@@ -1279,9 +1275,6 @@ def webmeetings_set_config_ember(**kwargs):
     allUpcomingWebMeetings = json.dumps(allUpcomingWebMeetings)
     allpreviousWebMeetings = json.dumps(allpreviousWebMeetings)
 
-    #Get the institution users
-    institutionUsers = getInstitutionUsers(user)
-
     #Get the contributors
     projectContribs = getProjectContribs(node)
 
@@ -1298,7 +1291,6 @@ def webmeetings_set_config_ember(**kwargs):
                          'node_microsoft_teams_attendees': nodeMicrosoftTeamsAttendees,
                          'node_webex_meetings_attendees': nodeWebexMeetingsAttendees,
                          'node_webex_meetings_attendees_relation': nodeWebexMeetingsAttendeesRelation,
-                         'institution_users': institutionUsers,
                          'microsoft_teams_signature': microsoft_teams_settings.MICROSOFT_TEAMS_SIGNATURE,
                          'project_contributors': projectContribs
                      }}}
