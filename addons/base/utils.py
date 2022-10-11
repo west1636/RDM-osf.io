@@ -71,6 +71,7 @@ def getProjectContribs(node):
             info['fullname'] = nodeContrib.fullname
             info['username'] = nodeContrib.username
             info['institution'] = nodeContrib.jobs[0]['institution']
+            projectContribs.append(info)
 
     ret = json.dumps(projectContribs)
     return ret
