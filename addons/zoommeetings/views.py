@@ -17,6 +17,7 @@ from website.project.decorators import (
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from addons.zoommeetings import utils
 from website.oauth.utils import get_service
+from framework.exceptions import HTTPError
 logger = logging.getLogger(__name__)
 
 zoommeetings_account_list = generic_views.account_list(
