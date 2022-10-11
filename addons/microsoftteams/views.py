@@ -113,7 +113,7 @@ def microsoftteams_register_email(**kwargs):
     is_guest = requestDataJson.get('is_guest', True)
     emailType = requestDataJson.get('emailType', False)
     displayName = ''
-
+    result = ''
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
 
     if actionType == 'create':
@@ -123,8 +123,14 @@ def microsoftteams_register_email(**kwargs):
                 fullname = fullname if fullname else displayName
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
-            displayName = utils.api_get_microsoft_username(account, email)
-
+            try
+                displayName = utils.api_get_microsoft_username(account, email)
+            except HTTPError as e1:
+                logger.info(str(type(e1)))
+                logger.info(str(e1.args))
+                logger.info(str(e1.response.status_code))
+                logger.info(str(e1))
+                result = 'outside_email'
         attendee = models.Attendees(
             user_guid=guid,
             fullname=fullname,
@@ -148,4 +154,4 @@ def microsoftteams_register_email(**kwargs):
         attendee.is_active = False
         attendee.save()
     logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
-    return {}
+    return result
