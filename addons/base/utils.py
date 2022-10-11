@@ -65,7 +65,7 @@ def getProjectContribs(node):
     nodeContribs = node.contributors
 
     for nodeContrib in nodeContribs:
-        if not is_invited:
+        if not nodeContrib.is_invited:
             info = {}
             info['guid'] = nodeContrib._id
             info['fullname'] = nodeContrib.fullname
