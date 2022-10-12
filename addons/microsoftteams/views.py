@@ -125,7 +125,8 @@ def microsoftteams_register_email(**kwargs):
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             displayName = utils.api_get_microsoft_username(account, email)
-            result = {} if displayName else 'outside_email'
+            if not displayName:
+                return 'outside_email'
         attendee = models.Attendees(
             user_guid=guid,
             fullname=fullname,
