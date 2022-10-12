@@ -122,6 +122,8 @@ def microsoftteams_register_email(**kwargs):
             if emailType:
                 displayName = utils.api_get_microsoft_username(account, email)
                 fullname = fullname if fullname else displayName
+                if not displayName:
+                    return 'outside_email'
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             displayName = utils.api_get_microsoft_username(account, email)

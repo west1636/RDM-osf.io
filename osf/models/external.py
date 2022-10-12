@@ -486,8 +486,8 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                 self.auto_refresh_url,
                 **extra
             )
-            logger.info('token::' + str(token))
         except (AccessDeniedError, InvalidGrantError, TokenExpiredError):
+            logger.info('token::' + str(token))
             if not force:
                 logger.info('5')
                 import traceback
