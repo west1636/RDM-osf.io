@@ -440,6 +440,7 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
         `auto_refresh_url`. A default using 'expires_at' as a key is provided.
         """
         extra = extra or {}
+        logger.info('auto_refresh_url::' + str(self.auto_refresh_url))
         # Ensure this is an authenticated Provider that uses token refreshing
         if not (self.account and self.auto_refresh_url):
             logger.info('1')
@@ -473,6 +474,8 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             }
         )
 
+        logger.info('client::' + str(client))
+
         extra.update({
             'client_id': self.client_id,
             'client_secret': self.client_secret
@@ -483,6 +486,7 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                 self.auto_refresh_url,
                 **extra
             )
+            logger.info('token::' + str(token))
         except (AccessDeniedError, InvalidGrantError, TokenExpiredError):
             if not force:
                 logger.info('5')
