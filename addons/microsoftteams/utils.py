@@ -48,7 +48,8 @@ def api_get_microsoft_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    username = responseData['displayName']
+    logger.info(str(response.status_code))
+    username = responseData.get('displayName', '')
     return username
 
 def api_create_teams_meeting(requestData, account):
