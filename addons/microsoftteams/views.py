@@ -113,8 +113,9 @@ def microsoftteams_register_email(**kwargs):
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
     emailType = requestDataJson.get('emailType', False)
+    regType = requestDataJson.get('regType', False)
     displayName = ''
-    result = {}
+    result = ''
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
 
     if actionType == 'create':
@@ -152,4 +153,7 @@ def microsoftteams_register_email(**kwargs):
         attendee.is_active = False
         attendee.save()
     logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
-    return result
+    return {
+        'result': result,
+        'regType': regType,
+    }
