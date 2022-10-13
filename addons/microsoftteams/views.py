@@ -163,16 +163,16 @@ def microsoftteams_register_email(**kwargs):
         logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
 
     newAttendee = {
-        guid: guid,
-        dispName: fullname,
-        fullname: fullname,
-        email: '',
-        institution: '',
-        appUsername: displayName,
-        appEmail: email,
-        profile: '',
-        _id: '',
-        is_guest: is_guest,
+        'guid': guid,
+        'dispName': fullname,
+        'fullname': fullname,
+        'email': '',
+        'institution': '',
+        'appUsername': displayName,
+        'appEmail': email,
+        'profile': '',
+        '_id': '',
+        'is_guest': is_guest,
     }
 
     return {
