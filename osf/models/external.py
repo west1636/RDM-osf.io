@@ -487,7 +487,6 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
                 **extra
             )
         except (AccessDeniedError, InvalidGrantError, TokenExpiredError):
-            logger.info('token::' + str(token))
             if not force:
                 logger.info('5')
                 import traceback
