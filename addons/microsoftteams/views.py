@@ -122,12 +122,13 @@ def microsoftteams_register_email(**kwargs):
         if is_guest:
             if emailType:
                 displayName = utils.api_get_microsoft_username(account, email)
-                fullname = fullname if fullname else displayName
                 if not displayName:
                     return {
                         'result': 'outside_email',
                         'regType': regType,
                     }
+            else:
+                displayName = fullname
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             displayName = utils.api_get_microsoft_username(account, email)
