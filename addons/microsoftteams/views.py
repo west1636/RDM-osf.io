@@ -125,7 +125,7 @@ def microsoftteams_register_email(**kwargs):
                 fullname = fullname if fullname else displayName
                 if not displayName:
                     return {
-                        'result': result,
+                        'result': 'outside_email',
                         'regType': regType,
                     }
         else:
@@ -133,7 +133,7 @@ def microsoftteams_register_email(**kwargs):
             displayName = utils.api_get_microsoft_username(account, email)
             if not displayName:
                 return {
-                    'result': result,
+                    'result': 'outside_email',
                     'regType': regType,
                 }
         attendee = models.Attendees(
