@@ -148,14 +148,32 @@ def microsoftteams_register_email(**kwargs):
         )
         attendee.save()
         logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
+
     elif actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
-            if not is_guest:
+            if is_guest:
+                if emailType:
+                    displayName = utils.api_get_microsoft_username(account, email)
+                    if not displayName:
+                        return {
+                            'result': 'outside_email',
+                            'regType': regType,
+                        }
+                else:
+                    displayName = fullname
+            else:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-                attendee.display_name = utils.api_get_microsoft_username(account, email)
+                displayName = utils.api_get_microsoft_username(account, email)
+                if not displayName:
+                    return {
+                        'result': 'outside_email',
+                        'regType': regType,
+                    }
+            attendee.display_name = displayName
             attendee.email_address = email
             attendee.save()
+
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
