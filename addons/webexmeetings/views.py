@@ -149,7 +149,7 @@ def webexmeetings_register_email(**kwargs):
             node_settings=nodeSettings,
         )
         attendee.save()
-        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBWX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
+        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
 
     elif actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
@@ -181,7 +181,7 @@ def webexmeetings_register_email(**kwargs):
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
-        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBWX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
+        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
 
     newAttendee = {
         'guid': guid,
