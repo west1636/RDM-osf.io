@@ -115,19 +115,30 @@ def webexmeetings_register_email(**kwargs):
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
     emailType = requestDataJson.get('emailType', False)
+    regType = requestDataJson.get('regType', False)
     displayName = ''
-
+    result = ''
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
 
     if actionType == 'create':
         if is_guest:
             if emailType:
                 displayName = utils.api_get_webex_meetings_username(account, email)
-                fullname = fullname if fullname else displayName
+                if not displayName:
+                    return {
+                        'result': 'outside_email',
+                        'regType': regType,
+                    }
+            else:
+                displayName = fullname
         else:
             fullname = OSFUser.objects.get(guids___id=guid).fullname
             displayName = utils.api_get_webex_meetings_username(account, email)
-
+            if not displayName:
+                return {
+                    'result': 'outside_email',
+                    'regType': regType,
+                }
         attendee = models.Attendees(
             user_guid=guid,
             fullname=fullname,
@@ -138,18 +149,55 @@ def webexmeetings_register_email(**kwargs):
             node_settings=nodeSettings,
         )
         attendee.save()
+        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBWX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
+
     elif actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
-            if not is_guest:
+            if is_guest:
+                if emailType:
+                    displayName = utils.api_get_webex_meetings_username(account, email)
+                    if not displayName:
+                        return {
+                            'result': 'outside_email',
+                            'regType': regType,
+                        }
+                else:
+                    displayName = fullname
+            else:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-                attendee.display_name = utils.api_get_webex_meetings_username(account, email)
+                displayName = utils.api_get_webex_meetings_username(account, email)
+                if not displayName:
+                    return {
+                        'result': 'outside_email',
+                        'regType': regType,
+                    }
+            attendee.display_name = displayName
             attendee.email_address = email
+            attendee.is_guest = is_guest
             attendee.save()
+
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
         attendee.is_active = False
         attendee.save()
-    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
-    return {}
+        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBWX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
 
+    newAttendee = {
+        'guid': guid,
+        'dispName': fullname,
+        'fullname': fullname,
+        'email': '',
+        'institution': '',
+        'appUsername': displayName,
+        'appEmail': email,
+        'profile': '',
+        '_id': '',
+        'is_guest': is_guest,
+    }
+
+    return {
+        'result': result,
+        'regType': regType,
+        'newAttendee': newAttendee,
+    }
