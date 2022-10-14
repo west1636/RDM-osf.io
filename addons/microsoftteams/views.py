@@ -172,6 +172,7 @@ def microsoftteams_register_email(**kwargs):
                     }
             attendee.display_name = displayName
             attendee.email_address = email
+            attendee.is_guest = is_guest
             attendee.save()
 
     elif actionType == 'delete':
