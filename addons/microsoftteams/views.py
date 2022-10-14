@@ -161,6 +161,8 @@ def microsoftteams_register_email(**kwargs):
                             'regType': regType,
                         }
                 else:
+                    if not attendee.is_guest:
+                        attendee.user_guid = guid
                     displayName = fullname
             else:
                 attendee.fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
