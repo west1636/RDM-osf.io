@@ -73,7 +73,7 @@ def zoommeetings_request_api(**kwargs):
     if action == 'create':
         try:
             createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
-        except HTTPError as e1:
+        except Exception as e1:
             logger.info(str(type(e1)))
             logger.info(str(e1.args))
             logger.info(str(e1.response.status_code))
