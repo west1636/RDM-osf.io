@@ -71,13 +71,13 @@ def zoommeetings_request_api(**kwargs):
         provider='zoommeetings', id=account_id
     )
     errCode = ''
+    createdMeetings = None
     if action == 'create':
         try:
             createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
             utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
         except HTTPError as e1:
             errCode = e1.response.status_code
-            logger.info(str(e1))
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
