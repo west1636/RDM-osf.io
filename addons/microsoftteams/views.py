@@ -73,19 +73,40 @@ def microsoftteams_request_api(**kwargs):
         provider='microsoftteams', id=account_id
     )
     if action == 'create':
-        createdMeetings = utils.api_create_teams_meeting(requestBody, account)
-        #synchronize data
-        utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings, guestOrNot)
+        try:
+            createdMeetings = utils.api_create_teams_meeting(requestBody, account)
+            #synchronize data
+            utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings, guestOrNot)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'update':
-        updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
-        #synchronize data
-        utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings, guestOrNot)
+        try:
+            updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
+            #synchronize data
+            utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings, guestOrNot)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'delete':
-        utils.api_delete_teams_meeting(deleteMeetingId, account)
-        #synchronize data
-        utils.grdm_delete_teams_meeting(deleteMeetingId)
+        try:
+            utils.api_delete_teams_meeting(deleteMeetingId, account)
+            #synchronize data
+            utils.grdm_delete_teams_meeting(deleteMeetingId)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     return {}
 

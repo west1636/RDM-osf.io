@@ -74,20 +74,41 @@ def webexmeetings_request_api(**kwargs):
     )
 
     if action == 'create':
-        createdMeeting = utils.api_create_webex_meeting(requestBody, account)
-        #synchronize data
-        utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestOrNot)
+        try:
+            createdMeeting = utils.api_create_webex_meeting(requestBody, account)
+            #synchronize data
+            utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestOrNot)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'update':
-        updatedMeeting = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
-        updatedAttendees = utils.api_update_webex_meeting_attendees(requestDataJsonLoads, account)
-        #synchronize data
-        utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon)
+        try:
+            updatedMeeting = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
+            updatedAttendees = utils.api_update_webex_meeting_attendees(requestDataJsonLoads, account)
+            #synchronize data
+            utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'delete':
-        utils.api_delete_webex_meeting(deleteMeetingId, account)
-        #synchronize data
-        utils.grdm_delete_webex_meeting(deleteMeetingId)
+        try:
+            utils.api_delete_webex_meeting(deleteMeetingId, account)
+            #synchronize data
+            utils.grdm_delete_webex_meeting(deleteMeetingId)
+        except HTTPError as e1:
+            errCode = e1.response.status_code
+            logger.info(str(e1))
+            return {
+                'errCode': errCode,
+            }
 
     return {}
 
