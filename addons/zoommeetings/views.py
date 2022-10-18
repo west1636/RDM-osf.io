@@ -78,6 +78,9 @@ def zoommeetings_request_api(**kwargs):
             utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
         except HTTPError as e1:
             errCode = e1.response.status_code
+            return {
+                errCode: errCode,
+            }
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
 
@@ -90,6 +93,4 @@ def zoommeetings_request_api(**kwargs):
         utils.api_delete_zoom_meeting(deleteMeetingId, account)
         #synchronize data
         utils.grdm_delete_zoom_meeting(deleteMeetingId)
-    return {
-        errCode: errCode,
-    }
+    return {}
