@@ -474,7 +474,7 @@ class ExternalProvider(object, with_metaclass(ExternalProviderMeta)):
             }
         )
 
-        logger.info('client::' + str(client))
+        logger.info('client::' + str(vars(client)))
 
         extra.update({
             'client_id': self.client_id,
