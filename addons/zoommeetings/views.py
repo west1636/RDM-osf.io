@@ -79,7 +79,7 @@ def zoommeetings_request_api(**kwargs):
         except HTTPError as e1:
             errCode = e1.response.status_code
             return {
-                errCode: errCode,
+                'errCode': errCode,
             }
         #synchronize data
         utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
