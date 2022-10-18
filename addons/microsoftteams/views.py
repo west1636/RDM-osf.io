@@ -208,7 +208,7 @@ def microsoftteams_register_email(**kwargs):
         'guid': guid,
         'dispName': fullname,
         'fullname': fullname,
-        'email': '',
+        'email': email,
         'institution': '',
         'appUsername': displayName,
         'appEmail': email,
