@@ -45,7 +45,12 @@ def api_get_webex_meetings_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    displayName = responseData['items'][0]['displayName']
+    items = responseData.get('items', {})
+    logger.info('items:::' + str(items))
+    if items:
+        displayName = items[0].get('displayName', '')
+    else:
+        displayName = ''
     return displayName
 
 def api_create_webex_meeting(requestData, account):
