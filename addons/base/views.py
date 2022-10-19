@@ -1105,8 +1105,6 @@ def webmeetings_get_config_ember(**kwargs):
         previousMicrosoftTeams = json.loads(serializers.serialize('json', qsPpreviousMicrosoftTeams, ensure_ascii=False))
         nodeMicrosoftTeamsAttendees = serializers.serialize('json', qsnodeMicrosoftTeamsAttendees, ensure_ascii=False)
 
-        logger.info('get_config::' + str(nodeMicrosoftTeamsAttendees))
-
         allUpcomingWebMeetings += upcomingMicrosoftTeams
         allpreviousWebMeetings += previousMicrosoftTeams
 
@@ -1223,8 +1221,6 @@ def webmeetings_set_config_ember(**kwargs):
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
         previousMicrosoftTeams = json.loads(serializers.serialize('json', qsPpreviousMicrosoftTeams, ensure_ascii=False))
         nodeMicrosoftTeamsAttendees = serializers.serialize('json', qsnodeMicrosoftTeamsAttendees, ensure_ascii=False)
-
-        logger.info('set_config::' + str(nodeMicrosoftTeamsAttendees))
 
         allUpcomingWebMeetings += upcomingMicrosoftTeams
         allpreviousWebMeetings += previousMicrosoftTeams
