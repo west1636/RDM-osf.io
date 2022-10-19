@@ -50,12 +50,14 @@ def connect_s3compat(host=None, access_key=None, secret_key=None, node_settings=
     logger.info('connect_s3compat host:' + str(host))
     logger.info('connect_s3compat port:' + str(port))
     is_secure = True if port == 443 or port == 10443 or port == 11443 else False 
+    validate_certs = False port == 10443 or port == 11443 else True
     logger.info('is_secure:' + str(is_secure))
     return S3CompatConnection(access_key, secret_key,
                               calling_format=OrdinaryCallingFormat(),
                               host=host,
                               port=port,
-                              is_secure=is_secure)
+                              is_secure=is_secure
+                              validate_certs=validate_certs)
 
 
 def get_bucket_names(node_settings):
