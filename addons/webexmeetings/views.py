@@ -200,8 +200,10 @@ def webexmeetings_register_email(**kwargs):
                             'regType': regType,
                         }
                 else:
+                    if not attendee.is_guest:
+                        attendee.user_guid = guid
+                        attendee.external_account_id = None
                     displayName = fullname
-                    attendee.external_account_id = None
             else:
                 if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
                     return {
