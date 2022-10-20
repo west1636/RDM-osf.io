@@ -18,7 +18,7 @@ from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from addons.microsoftteams import models
 from addons.microsoftteams import utils
 from website.oauth.utils import get_service
-from framework.exceptions import HTTPError
+from requests.exceptions import HTTPError
 logger = logging.getLogger(__name__)
 
 microsoftteams_account_list = generic_views.account_list(
@@ -140,6 +140,11 @@ def microsoftteams_register_email(**kwargs):
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
 
     if actionType == 'create':
+        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
+            return {
+                'result': 'duplicated_email',
+                'regType': regType,
+            }
         if is_guest:
             if emailType:
                 displayName = utils.api_get_microsoft_username(account, email)
@@ -171,6 +176,11 @@ def microsoftteams_register_email(**kwargs):
         logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
 
     elif actionType == 'update':
+        if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
+            return {
+                'result': 'duplicated_email',
+                'regType': regType,
+            }
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if is_guest:
