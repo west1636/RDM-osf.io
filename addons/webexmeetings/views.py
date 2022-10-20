@@ -144,7 +144,7 @@ def webexmeetings_register_email(**kwargs):
 
     if actionType == 'create':
         if is_guest:
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
+            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
                 return {
                     'result': 'duplicated_email',
                     'regType': regType,
@@ -159,7 +159,7 @@ def webexmeetings_register_email(**kwargs):
             else:
                 displayName = fullname
         else:
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
+            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
                 return {
                     'result': 'duplicated_email',
                     'regType': regType,
@@ -187,7 +187,7 @@ def webexmeetings_register_email(**kwargs):
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
             if is_guest:
-                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
+                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
                     return {
                         'result': 'duplicated_email',
                         'regType': regType,
@@ -202,7 +202,7 @@ def webexmeetings_register_email(**kwargs):
                 else:
                     displayName = fullname
             else:
-                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
+                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
                     return {
                         'result': 'duplicated_email',
                         'regType': regType,
