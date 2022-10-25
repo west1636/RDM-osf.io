@@ -80,6 +80,8 @@ def zoommeetings_request_api(**kwargs):
         except HTTPError as e1:
             errCode = e1.response.status_code
             logger.info(str(e1))
+            logger.info(str(vars(e1)))
+            logger.info(str(vars(e1.response)))
             return {
                 'errCode': errCode,
             }
