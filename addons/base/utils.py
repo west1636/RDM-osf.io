@@ -67,13 +67,13 @@ def getProjectContribs(node):
     nodeContribs = node.contributors
 
     for nodeContrib in nodeContribs:
-        logger.info('nodeContrib::' + str(nodeContrib))
+        logger.info('nodeContrib::' + str(vars(nodeContrib)))
         if not nodeContrib.is_invited:
             info = {}
             info['guid'] = nodeContrib._id
             info['fullname'] = nodeContrib.fullname
             info['username'] = nodeContrib.username
-            info['institution'] = (nodeContrib.jobs[0]).get('institution', '') if nodeContrib.jobs[0] else ''
+            info['institution'] = (nodeContrib.jobs[0]).get('institution', '') if len(nodeContrib.jobs) else ''
             projectContribs.append(info)
 
     ret = json.dumps(projectContribs)
