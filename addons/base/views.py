@@ -1344,7 +1344,7 @@ def zoommeetings_deauthorize_notification(**kwargs):
     authorizationHeader = request.headers.get('authorization')
     logger.info('request header authorization:' + str(authorizationHeader))
     logger.info('zoom_meetings_secret_token:' + str(zoom_meetings_settings.ZOOM_MEETINGS_TOKEN))
-    if authorizationHeader == zoom_meetings_settings.ZOOM_MEETINGS_TOKEN:
+    if zoom_meetings_settings.ZOOM_MEETINGS_TOKEN in authorizationHeader:
         result = True
         logger.info('Recieved Zoom Meetings Webhook')
     else:
