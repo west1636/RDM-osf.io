@@ -79,6 +79,8 @@ def zoommeetings_request_api(**kwargs):
             utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
         except HTTPError as e1:
             logger.info(str(e1))
+            logger.info(str(e1.response))
+            logger.info(str(e1.response.status_code))
             errCode = e1.response.status_code if e1.response else str(e1)
             return {
                 'errCode': errCode,
