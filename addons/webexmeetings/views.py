@@ -81,7 +81,7 @@ def webexmeetings_request_api(**kwargs):
             utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestOrNot)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else e1
+            errCode = e1.response.status_code if e1.response else str(e1)
             return {
                 'errCode': errCode,
             }
@@ -94,7 +94,7 @@ def webexmeetings_request_api(**kwargs):
             utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else e1
+            errCode = e1.response.status_code if e1.response else str(e1)
             return {
                 'errCode': errCode,
             }
@@ -106,7 +106,7 @@ def webexmeetings_request_api(**kwargs):
             utils.grdm_delete_webex_meeting(deleteMeetingId)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else e1
+            errCode = e1.response.status_code if e1.response else str(e1)
             return {
                 'errCode': errCode,
             }
