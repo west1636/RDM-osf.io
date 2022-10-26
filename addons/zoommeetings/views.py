@@ -81,7 +81,7 @@ def zoommeetings_request_api(**kwargs):
             logger.info(str(e1))
             logger.info(str(e1.response))
             logger.info(str(e1.response.status_code))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }
@@ -93,7 +93,7 @@ def zoommeetings_request_api(**kwargs):
             utils.grdm_update_zoom_meeting(updateMeetingId, requestBody)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }
@@ -105,7 +105,7 @@ def zoommeetings_request_api(**kwargs):
             utils.grdm_delete_zoom_meeting(deleteMeetingId)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }

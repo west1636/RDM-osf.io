@@ -79,7 +79,7 @@ def microsoftteams_request_api(**kwargs):
             utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings, guestOrNot)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }
@@ -91,7 +91,7 @@ def microsoftteams_request_api(**kwargs):
             utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings, guestOrNot)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }
@@ -103,7 +103,7 @@ def microsoftteams_request_api(**kwargs):
             utils.grdm_delete_teams_meeting(deleteMeetingId)
         except HTTPError as e1:
             logger.info(str(e1))
-            errCode = e1.response.status_code if e1.response else str(e1)
+            errCode = str(e1) if e1.response is None else e1.response.status_code
             return {
                 'errCode': errCode,
             }
