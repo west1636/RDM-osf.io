@@ -180,7 +180,7 @@ def microsoftteams_register_email(**kwargs):
             has_grdm_account=has_grdm_account,
             email_address=email,
             display_name=displayName,
-            external_account=None if is_guest else account,
+            external_account=account if has_grdm_account else None,
             node_settings=nodeSettings,
         )
         attendee.save()
@@ -202,8 +202,7 @@ def microsoftteams_register_email(**kwargs):
                             'result': 'outside_email',
                             'regType': regType,
                         }
-                    if has_grdm_account:
-                        attendee.is_guest = False
+                    attendee.is_guest = False
                 else:
                     displayName = fullname
             else:
