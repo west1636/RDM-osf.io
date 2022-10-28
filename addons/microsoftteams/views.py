@@ -202,6 +202,8 @@ def microsoftteams_register_email(**kwargs):
                             'result': 'outside_email',
                             'regType': regType,
                         }
+                    if has_grdm_account:
+                        attendee.is_guest = False
                 else:
                     displayName = fullname
             else:
@@ -224,7 +226,6 @@ def microsoftteams_register_email(**kwargs):
                     }
             attendee.display_name = displayName
             attendee.email_address = email
-            attendee.is_guest = is_guest
             attendee.save()
 
     elif actionType == 'delete':
