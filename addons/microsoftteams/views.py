@@ -172,53 +172,6 @@ def microsoftteams_register_email(**kwargs):
             node_settings=nodeSettings,
         )
         attendee.save()
-    
-    '''
-        if is_guest:
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
-                return {
-                    'result': 'duplicated_email',
-                    'regType': regType,
-                }
-            if emailType:
-                displayName = utils.api_get_microsoft_username(account, email)
-                if not displayName:
-                    return {
-                        'result': 'outside_email',
-                        'regType': regType,
-                    }
-            else:
-                displayName = fullname
-        else:
-            logger.info(str(nodeSettings.id))
-            logger.info(str(account_id))
-            logger.info(str(email))
-            logger.info(str(is_guest))
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
-                return {
-                    'result': 'duplicated_email',
-                    'regType': regType,
-                }
-            fullname = OSFUser.objects.get(guids___id=guid).fullname
-            displayName = utils.api_get_microsoft_username(account, email)
-            if not displayName:
-                return {
-                    'result': 'outside_email',
-                    'regType': regType,
-                }
-        attendee = models.Attendees(
-            user_guid=guid,
-            fullname=fullname,
-            is_guest=is_guest,
-            has_grdm_account=has_grdm_account,
-            email_address=email,
-            display_name=displayName,
-            external_account=account if has_grdm_account else None,
-            node_settings=nodeSettings,
-        )
-        attendee.save()
-        logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
-    '''
     elif actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
