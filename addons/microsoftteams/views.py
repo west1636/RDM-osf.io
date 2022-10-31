@@ -133,6 +133,7 @@ def microsoftteams_register_email(**kwargs):
     fullname = requestDataJson.get('fullname', '')
     email = requestDataJson.get('email', '')
     is_guest = requestDataJson.get('is_guest', True)
+    has_grdm_account = requestDataJson.get('has_grdm_account', False)
     emailType = requestDataJson.get('emailType', False)
     regType = requestDataJson.get('regType', False)
     displayName = ''
@@ -176,9 +177,10 @@ def microsoftteams_register_email(**kwargs):
             user_guid=guid,
             fullname=fullname,
             is_guest=is_guest,
+            has_grdm_account=has_grdm_account,
             email_address=email,
             display_name=displayName,
-            external_account=None if is_guest else account,
+            external_account=account if has_grdm_account else None,
             node_settings=nodeSettings,
         )
         attendee.save()
@@ -200,10 +202,8 @@ def microsoftteams_register_email(**kwargs):
                             'result': 'outside_email',
                             'regType': regType,
                         }
+                    attendee.is_guest = False
                 else:
-                    if not attendee.is_guest:
-                        attendee.user_guid = guid
-                        attendee.external_account_id = None
                     displayName = fullname
             else:
                 logger.info(str(nodeSettings.id))
@@ -225,7 +225,6 @@ def microsoftteams_register_email(**kwargs):
                     }
             attendee.display_name = displayName
             attendee.email_address = email
-            attendee.is_guest = is_guest
             attendee.save()
 
     elif actionType == 'delete':
