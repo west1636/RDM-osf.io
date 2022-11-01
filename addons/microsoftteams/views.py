@@ -138,19 +138,10 @@ def microsoftteams_register_email(**kwargs):
     displayName = ''
     result = ''
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    newAttendee = {}
+
 
     if actionType == 'create':
-        if has_grdm_account:
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
-                return {
-                    'result': 'duplicated_email',
-                }
-        else:
-            if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
-                return {
-                    'result': 'duplicated_email',
-                }
-
         if is_guest:
             displayName = fullname
         else:
@@ -172,46 +163,41 @@ def microsoftteams_register_email(**kwargs):
             node_settings=nodeSettings,
         )
         attendee.save()
+
+        newAttendee = {
+            'guid': guid,
+            'dispName': fullname,
+            'fullname': fullname,
+            'email': email,
+            'institution': '',
+            'appUsername': displayName,
+            'appEmail': email,
+            'profile': '',
+            '_id': '',
+            'is_guest': is_guest,
+        }
+
     elif actionType == 'update':
         if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, _id=_id).exists():
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
-            if is_guest:
-                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, email_address=email, is_guest=is_guest).exists():
-                    return {
-                        'result': 'duplicated_email',
-                        'regAuto': regAuto,
-                    }
-                if emailType:
-                    displayName = utils.api_get_microsoft_username(account, email)
-                    if not displayName:
-                        return {
-                            'result': 'outside_email',
-                            'regAuto': regAuto,
-                        }
-                    attendee.is_guest = False
-                else:
-                    displayName = fullname
-            else:
-                logger.info(str(nodeSettings.id))
-                logger.info(str(account_id))
-                logger.info(str(email))
-                logger.info(str(is_guest))
-                if models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email, is_guest=is_guest).exists():
-                    return {
-                        'result': 'duplicated_email',
-                        'regAuto': regAuto,
-                    }
-                fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
-                attendee.fullname = fullname
-                displayName = utils.api_get_microsoft_username(account, email)
-                if not displayName:
-                    return {
-                        'result': 'outside_email',
-                        'regAuto': regAuto,
-                    }
-            attendee.display_name = displayName
-            attendee.email_address = email
-            attendee.save()
+
+        if is_guest:
+            displayName = fullname
+        else:
+            displayName = utils.api_get_microsoft_username(account, email)
+            if not displayName:
+                return {
+                    'result': 'outside_email',
+                    'regAuto': regAuto,
+                }
+        if has_grdm_account:
+            fullname = OSFUser.objects.get(guids___id=attendee.user_guid).fullname
+
+        attendee.fullname = fullname
+        attendee.email_address = email
+        attendee.display_name = displayName
+        attendee.is_guest = is_guest
+        attendee.save()
 
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
@@ -219,19 +205,6 @@ def microsoftteams_register_email(**kwargs):
         attendee.save()
 
     logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
-
-    newAttendee = {
-        'guid': guid,
-        'dispName': fullname,
-        'fullname': fullname,
-        'email': email,
-        'institution': '',
-        'appUsername': displayName,
-        'appEmail': email,
-        'profile': '',
-        '_id': '',
-        'is_guest': is_guest,
-    }
 
     return {
         'result': result,
