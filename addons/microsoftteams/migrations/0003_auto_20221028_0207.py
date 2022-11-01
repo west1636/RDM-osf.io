@@ -8,7 +8,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('osf', '0221_ensure_schema_and_reports'),
         ('addons_microsoftteams', '0002_auto_20221027_0604'),
     ]
 
