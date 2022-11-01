@@ -140,7 +140,7 @@ def microsoftteams_register_email(**kwargs):
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     newAttendee = {}
 
-    if actionType != 'delete':
+    if actionType != 'delete'
         duplicatedProjectContrib = models.Attendees.objects.filter(node_settings_id=nodeSettings.id, external_account_id=account_id, email_address=email).exists()
         duplicatedOutsideProjectContrib = models.Attendees.objects.filter(node_settings_id=nodeSettings.id, has_grdm_account=has_grdm_account, email_address=email).exists()
         if duplicatedProjectContrib or duplicatedOutsideProjectContrib:
