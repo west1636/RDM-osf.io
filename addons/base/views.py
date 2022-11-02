@@ -1119,7 +1119,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.Meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.Meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(Q(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id) | Q(node_settings_id=webex_meetings_addon.id, external_account_id=None)))
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(Q(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id) | Q(node_settings_id=webex_meetings_addon.id, external_account_id=None))
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.MeetingsAttendeesRelation.objects.filter(meeting__node_settings_id=webex_meetings_addon.id, meeting__external_account_id=webex_meetings_addon.external_account_id)
 
         #Make json
@@ -1236,7 +1236,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingWebexMeetings = webex_meetings.Meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPreviousWebexMeetings = webex_meetings.Meetings.objects.filter(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(Q(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id) | Q(node_settings_id=webex_meetings_addon.id, external_account_id=None)))
+        qsnodeWebexMeetingsAttendees = webex_meetings.Attendees.objects.filter(Q(node_settings_id=webex_meetings_addon.id, external_account_id=webex_meetings_addon.external_account_id) | Q(node_settings_id=webex_meetings_addon.id, external_account_id=None))
         qsNodeWebexMeetingsAttendeesRelation = webex_meetings.MeetingsAttendeesRelation.objects.filter(meeting__node_settings_id=webex_meetings_addon.id, meeting__external_account_id=webex_meetings_addon.external_account_id)
 
         #Make json
