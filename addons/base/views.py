@@ -1098,7 +1098,7 @@ def webmeetings_get_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.Meetings.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.Meetings.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(Q(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id) | Q(node_settings_id=microsoft_teams_addon.id, external_account_id=None))
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
@@ -1215,7 +1215,7 @@ def webmeetings_set_config_ember(**kwargs):
         # Get information about Meetigns
         qsUpcomingMicrosoftTeams = microsoft_teams.Meetings.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__gte=datetime.datetime.today()).order_by('start_datetime')
         qsPpreviousMicrosoftTeams = microsoft_teams.Meetings.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id, end_datetime__lt=datetime.datetime.today()).order_by('start_datetime').reverse()
-        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(Q(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id) | Q(node_settings_id=microsoft_teams_addon.id, external_account_id=None))
+        qsnodeMicrosoftTeamsAttendees = microsoft_teams.Attendees.objects.filter(node_settings_id=microsoft_teams_addon.id, external_account_id=microsoft_teams_addon.external_account_id)
 
         #Make json
         upcomingMicrosoftTeams = json.loads(serializers.serialize('json', qsUpcomingMicrosoftTeams, ensure_ascii=False))
