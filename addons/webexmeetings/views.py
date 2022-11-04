@@ -162,7 +162,7 @@ def webexmeetings_register_email(**kwargs):
             has_grdm_account=has_grdm_account,
             email_address=email,
             display_name=displayName,
-            external_account=account if has_grdm_account else None,
+            external_account=account,
             node_settings=nodeSettings,
         )
         attendee.save()
