@@ -242,9 +242,9 @@ def microsoftteams_register_contributors_email(**kwargs):
     canNotRegister = ''
 
     for unregisteredContrib in unregisteredContribs:
-        guid = requestDataJson.get('guid', '')
-        email = requestDataJson.get('email', '')
-        fullname = requestDataJson.get('fullname', '')
+        guid = unregisteredContrib.get('guid', '')
+        email = unregisteredContrib.get('email', '')
+        fullname = unregisteredContrib.get('fullname', '')
         try:
             attendee = models.Attendees(
                 user_guid=guid,
