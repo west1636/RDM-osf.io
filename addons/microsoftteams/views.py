@@ -227,7 +227,7 @@ def microsoftteams_register_contributors_email(**kwargs):
     user = auth.user
     requestData = request.get_data()
     requestDataJson = json.loads(requestData)
-    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(requestDataJson))
+    logger.info('{} Email will be created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(requestDataJson))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
@@ -257,11 +257,10 @@ def microsoftteams_register_contributors_email(**kwargs):
                 node_settings=nodeSettings,
             )
             attendee.save()
+            logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
         except:
             canNotRegister += fullname
             canNotRegister += ','
-
-    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
 
     return {
         'canNotRegister': canNotRegister[:-1],
