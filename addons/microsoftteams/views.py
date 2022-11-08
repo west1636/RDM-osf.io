@@ -240,6 +240,8 @@ def microsoftteams_register_contributors_email(**kwargs):
     result = ''
     nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
     canNotRegister = ''
+    registered = []
+    info = {}
 
     for unregisteredContrib in unregisteredContribs:
         guid = unregisteredContrib.get('guid', '')
@@ -258,10 +260,24 @@ def microsoftteams_register_contributors_email(**kwargs):
             )
             attendee.save()
             logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
+
+            info = {}
+            info['appEmail'] = email
+            info['appUsername'] = fullname
+            info['dispName'] = fullname
+            info['email'] = email
+            info['fullname'] = fullname
+            info['guid'] = guid
+            info['institution'] = ''
+            info['is_guest'] = True
+            info['profile'] = ''
+            info['_id'] = ''
+            registered.append(info)
         except:
             canNotRegister += fullname
             canNotRegister += ','
 
     return {
+        'result': registered,
         'canNotRegister': canNotRegister[:-1],
     }
