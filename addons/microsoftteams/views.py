@@ -268,16 +268,12 @@ def microsoftteams_register_contributors_email(**kwargs):
             info['email'] = email
             info['fullname'] = fullname
             info['guid'] = guid
-            info['institution'] = ''
-            info['is_guest'] = True
-            info['profile'] = ''
-            info['_id'] = ''
             registered.append(info)
         except:
             canNotRegister += fullname
             canNotRegister += ','
 
     return {
-        'result': registered,
+        'result': str(registered),
         'canNotRegister': canNotRegister[:-1],
     }
