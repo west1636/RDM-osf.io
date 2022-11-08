@@ -274,6 +274,6 @@ def microsoftteams_register_contributors_email(**kwargs):
             canNotRegister += ','
 
     return {
-        'result': str(registered),
+        'result': registered,
         'canNotRegister': canNotRegister[:-1],
     }
