@@ -226,8 +226,8 @@ def microsoftteams_register_contributors_email(**kwargs):
     auth = kwargs['auth']
     user = auth.user
     requestData = request.get_data()
-    requestDataJson = json.loads(requestData)
-    logger.info('{} Email will be created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(requestDataJson))
+    unregisteredContribs = json.loads(requestData)
+    logger.info('{} Email will be created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(unregisteredContribs))
 
     node = kwargs['node'] or kwargs['project']
     addon = node.get_addon(SHORT_NAME)
