@@ -275,6 +275,7 @@ def microsoftteams_register_contributors_email(**kwargs):
             'profile': '',
             '_id': '',
             'is_guest': true,
+        }
         logger.info('2')
         registered.append(newAttendee)
         logger.info('3')
