@@ -217,3 +217,52 @@ def microsoftteams_register_email(**kwargs):
         'regAuto': regAuto,
         'newAttendee': newAttendee,
     }
+
+@must_be_valid_project
+@must_have_permission(WRITE)
+@must_have_addon(SHORT_NAME, 'node')
+def microsoftteams_register_contributors_email(**kwargs):
+
+    auth = kwargs['auth']
+    user = auth.user
+    requestData = request.get_data()
+    requestDataJson = json.loads(requestData)
+    logger.info('{} Email will be {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(requestDataJson))
+
+    node = kwargs['node'] or kwargs['project']
+    addon = node.get_addon(SHORT_NAME)
+    account_id = addon.external_account_id
+    account = ExternalAccount.objects.get(
+        provider='microsoftteams', id=account_id
+    )
+
+    displayName = ''
+    result = ''
+    nodeSettings = models.NodeSettings.objects.get(_id=addon._id)
+    canNotRegister = ''
+
+    for unregisteredContrib in unregisteredContribs:
+        guid = requestDataJson.get('guid', '')
+        email = requestDataJson.get('email', '')
+        fullname = requestDataJson.get('fullname', '')
+        try:
+            attendee = models.Attendees(
+                user_guid=guid,
+                fullname=fullname,
+                is_guest=True,
+                has_grdm_account=True,
+                email_address=email,
+                display_name=fullname,
+                external_account=account,
+                node_settings=nodeSettings,
+            )
+            attendee.save()
+        except:
+            canNotRegister += fullname
+            canNotRegister += ','
+
+    logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(actionType), str(user)) + str(vars(attendee)))
+
+    return {
+        'canNotRegister': canNotRegister[:-1],
+    }
