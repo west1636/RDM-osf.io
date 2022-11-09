@@ -277,7 +277,7 @@ def microsoftteams_register_contributors_email(**kwargs):
                 registered.append(newAttendee)
                 logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
         except Exception as e:
-            logger.info(str(e1))
+            logger.info(str(e))
             canNotRegister += fullname
             canNotRegister += ','
     return {
