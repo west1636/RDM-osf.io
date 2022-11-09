@@ -19,6 +19,7 @@ from addons.microsoftteams import models
 from addons.microsoftteams import utils
 from website.oauth.utils import get_service
 from requests.exceptions import HTTPError
+from django.db import transaction
 logger = logging.getLogger(__name__)
 
 microsoftteams_account_list = generic_views.account_list(
