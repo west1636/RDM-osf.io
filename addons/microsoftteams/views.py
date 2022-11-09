@@ -260,6 +260,7 @@ def microsoftteams_register_contributors_email(**kwargs):
                     node_settings=nodeSettings,
                 )
                 attendee.save()
+                logger.info('1')
                 newAttendee = {
                     'guid': guid,
                     'dispName': fullname,
@@ -272,12 +273,13 @@ def microsoftteams_register_contributors_email(**kwargs):
                     '_id': '',
                     'is_guest': True,
                 }
+                logger.info('2')
                 registered.append(newAttendee)
                 logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
-        except:
+        except Exception as e:
+            logger.info(str(e1))
             canNotRegister += fullname
             canNotRegister += ','
-        logger.info('1')
     return {
         'result': registered,
         'canNotRegister': canNotRegister[:-1],
