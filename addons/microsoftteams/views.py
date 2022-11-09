@@ -248,37 +248,36 @@ def microsoftteams_register_contributors_email(**kwargs):
         email = unregisteredContrib.get('email', '')
         fullname = unregisteredContrib.get('fullname', '')
         try:
-            attendee = models.Attendees(
-                user_guid=guid,
-                fullname=fullname,
-                is_guest=True,
-                has_grdm_account=True,
-                email_address=email,
-                display_name=fullname,
-                external_account=account,
-                node_settings=nodeSettings,
-            )
-            attendee.save()
-            logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
+            with transaction.atomic():
+                attendee = models.Attendees(
+                    user_guid=guid,
+                    fullname=fullname,
+                    is_guest=True,
+                    has_grdm_account=True,
+                    email_address=email,
+                    display_name=fullname,
+                    external_account=account,
+                    node_settings=nodeSettings,
+                )
+                attendee.save()
+                newAttendee = {
+                    'guid': guid,
+                    'dispName': fullname,
+                    'fullname': fullname,
+                    'email': email,
+                    'institution': '',
+                    'appUsername': fullname,
+                    'appEmail': email,
+                    'profile': '',
+                    '_id': '',
+                    'is_guest': True,
+                }
+                registered.append(newAttendee)
+                logger.info('{} Email was created with following attribute by {}=> '.format(settings.MICROSOFT_TEAMS, str(user)) + str(vars(attendee)))
         except:
             canNotRegister += fullname
             canNotRegister += ','
         logger.info('1')
-        newAttendee = {
-            'guid': guid,
-            'dispName': fullname,
-            'fullname': fullname,
-            'email': email,
-            'institution': '',
-            'appUsername': fullname,
-            'appEmail': email,
-            'profile': '',
-            '_id': '',
-            'is_guest': true,
-        }
-        logger.info('2')
-        registered.append(newAttendee)
-        logger.info('3')
     return {
         'result': registered,
         'canNotRegister': canNotRegister[:-1],
