@@ -23,7 +23,7 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
 
     connectAccount: function() {
         var self = this;
-
+        var openWindow = window.open('', '_blank');
         return $osf.postJSON(
             self.urls().auth, {}
         ).done(function(response) {
@@ -46,7 +46,7 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                     }
                 });
             };
-            window.open(response);
+            openWindow.location.href = response;
         }).fail(function(xhr, status, error) {
             $osf.unblock();
             var message = '';
@@ -55,7 +55,7 @@ var WebexMeetingsFolderPickerViewModel = oop.extend(OauthAddonFolderPicker, {
                 message = response.message;
             }
             self.changeMessage(message, 'text-danger');
-            Raven.captureMessage(_('Could not add Webex Meetings credentials'), {
+            Raven.captureMessage(_('Could not add Zoom Meetings credentials'), {
                 extra: {
                     url: self.urls().importAuth,
                     textStatus: status,

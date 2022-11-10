@@ -45,7 +45,12 @@ def api_get_webex_meetings_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    displayName = responseData['items'][0]['displayName']
+    items = responseData.get('items', {})
+    logger.info('items:::' + str(items))
+    if items:
+        displayName = items[0].get('displayName', '')
+    else:
+        displayName = ''
     return displayName
 
 def api_create_webex_meeting(requestData, account):
@@ -90,6 +95,9 @@ def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
     meetingId = createdData['id']
     password = createdData['password']
     organizer_fullname = account.display_name
+    target = '('
+    idx = organizer_fullname.find(target)
+    organizer_fullname = organizer_fullname[idx+1:len(organizer_fullname)-1]
     isGuest = False
 
     invitees = get_invitees(account, meetingId)

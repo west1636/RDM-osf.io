@@ -17,6 +17,7 @@ from website.project.decorators import (
 from admin.rdm_addons.decorators import must_be_rdm_addons_allowed
 from addons.zoommeetings import utils
 from website.oauth.utils import get_service
+from requests.exceptions import HTTPError
 logger = logging.getLogger(__name__)
 
 zoommeetings_account_list = generic_views.account_list(
@@ -69,18 +70,43 @@ def zoommeetings_request_api(**kwargs):
     account = ExternalAccount.objects.get(
         provider='zoommeetings', id=account_id
     )
+    errCode = ''
+    createdMeetings = None
     if action == 'create':
-        createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
-        #synchronize data
-        utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
+        try:
+            createdMeetings = utils.api_create_zoom_meeting(requestBody, account)
+            #synchronize data
+            utils.grdm_create_zoom_meeting(addon, account, createdMeetings)
+        except HTTPError as e1:
+            logger.info(str(e1))
+            logger.info(str(e1.response))
+            logger.info(str(e1.response.status_code))
+            errCode = str(e1) if e1.response is None else e1.response.status_code
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'update':
-        utils.api_update_zoom_meeting(updateMeetingId, requestBody, account)
-        #synchronize data
-        utils.grdm_update_zoom_meeting(updateMeetingId, requestBody)
+        try:
+            utils.api_update_zoom_meeting(updateMeetingId, requestBody, account)
+            #synchronize data
+            utils.grdm_update_zoom_meeting(updateMeetingId, requestBody)
+        except HTTPError as e1:
+            logger.info(str(e1))
+            errCode = str(e1) if e1.response is None else e1.response.status_code
+            return {
+                'errCode': errCode,
+            }
 
     if action == 'delete':
-        utils.api_delete_zoom_meeting(deleteMeetingId, account)
-        #synchronize data
-        utils.grdm_delete_zoom_meeting(deleteMeetingId)
+        try:
+            utils.api_delete_zoom_meeting(deleteMeetingId, account)
+            #synchronize data
+            utils.grdm_delete_zoom_meeting(deleteMeetingId)
+        except HTTPError as e1:
+            logger.info(str(e1))
+            errCode = str(e1) if e1.response is None else e1.response.status_code
+            return {
+                'errCode': errCode,
+            }
     return {}

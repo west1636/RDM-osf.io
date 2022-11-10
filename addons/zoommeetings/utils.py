@@ -5,6 +5,7 @@ from addons.zoommeetings import models
 from addons.zoommeetings import settings
 import logging
 from datetime import timedelta
+import pytz
 import dateutil.parser
 from django.db import transaction
 logger = logging.getLogger(__name__)
@@ -74,6 +75,9 @@ def grdm_create_zoom_meeting(addon, account, createdData):
     joinUrl = createdData['join_url']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
+    target = '('
+    idx = organizer_fullname.find(target)
+    organizer_fullname = organizer_fullname[idx+1:len(organizer_fullname)-1]
 
     with transaction.atomic():
 
@@ -112,9 +116,12 @@ def api_update_zoom_meeting(meetingId, requestData, account):
 def grdm_update_zoom_meeting(meetingId, requestData):
 
     subject = requestData['topic']
+    timeZone = requestData['timezone']
+    tz = pytz.timezone(timeZone)
     startDatetime = requestData['start_time']
-    duration = requestData['duration']
     startDatetime = dateutil.parser.parse(startDatetime)
+    startDatetime = tz.localize(startDatetime)
+    duration = requestData['duration']
     endDatetime = startDatetime + timedelta(minutes=duration)
     content = requestData['agenda']
 

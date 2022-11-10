@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
+import pytz
+import dateutil.parser
 from addons.microsoftteams import models
 from addons.microsoftteams import settings
 import logging
@@ -46,7 +48,8 @@ def api_get_microsoft_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    username = responseData['displayName']
+    logger.info(str(response.status_code))
+    username = responseData.get('displayName', '')
     return username
 
 def api_create_teams_meeting(requestData, account):
@@ -69,14 +72,23 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
 
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
+    timeZone = createdData['start']['timeZone']
+    tz = pytz.timezone(timeZone)
     startDatetime = createdData['start']['dateTime']
+    startDatetime = dateutil.parser.parse(startDatetime)
+    startDatetime = tz.localize(startDatetime)
     endDatetime = createdData['end']['dateTime']
+    endDatetime = dateutil.parser.parse(endDatetime)
+    endDatetime = tz.localize(endDatetime)
     attendees = createdData['attendees']
     attendeeIds = []
     content = createdData['bodyPreview']
     joinUrl = createdData['onlineMeeting']['joinUrl']
     meetingId = createdData['id']
     organizer_fullname = account.display_name
+    target = '('
+    idx = organizer_fullname.find(target)
+    organizer_fullname = organizer_fullname[idx+1:len(organizer_fullname)-1]
     contentExtract = requestData['contentExtract']
     isGuest = False
 
@@ -138,8 +150,14 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
 
     meetingId = updatedData['id']
     subject = updatedData['subject']
+    timeZone = updatedData['start']['timeZone']
+    tz = pytz.timezone(timeZone)
     startDatetime = updatedData['start']['dateTime']
+    startDatetime = dateutil.parser.parse(startDatetime)
+    startDatetime = tz.localize(startDatetime)
     endDatetime = updatedData['end']['dateTime']
+    endDatetime = dateutil.parser.parse(endDatetime)
+    endDatetime = tz.localize(endDatetime)
     attendees = updatedData['attendees']
     attendeeIds = []
     content = updatedData['bodyPreview']

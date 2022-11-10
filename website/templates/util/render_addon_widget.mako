@@ -244,10 +244,16 @@
 
                 % if addon_name == 'microsoftteams' or addon_name == 'webexmeetings' or addon_name == 'zoommeetings':
                     % if addon_name == 'microsoftteams':
+                        <div id="webmeetings-content-z" class="scripted"></div>
+                        <div id="webmeetings-content-w" class="scripted"></div>
                         <div id="webmeetings-content-m" class="scripted">
                     % elif addon_name == 'webexmeetings':
+                        <div id="webmeetings-content-m" class="scripted"></div>
+                        <div id="webmeetings-content-z" class="scripted"></div>
                         <div id="webmeetings-content-w" class="scripted">
                     % elif addon_name == 'zoommeetings':
+                        <div id="webmeetings-content-w" class="scripted"></div>
+                        <div id="webmeetings-content-m" class="scripted"></div>
                         <div id="webmeetings-content-z" class="scripted">
                     % endif
                         <!-- ko if: loading -->
