@@ -152,7 +152,11 @@ def webexmeetings_register_email(**kwargs):
                     'regAuto': regAuto,
                 }
         if is_guest:
-            displayName = fullname
+            displayName = utils.api_get_webex_meetings_username(account, email)
+            if not displayName:
+                displayName = fullname
+            else:
+                is_guest = False
         else:
             displayName = utils.api_get_webex_meetings_username(account, email)
             if not displayName:
@@ -191,7 +195,11 @@ def webexmeetings_register_email(**kwargs):
             attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
 
         if is_guest:
-            displayName = fullname
+            displayName = utils.api_get_webex_meetings_username(account, email)
+            if not displayName:
+                displayName = fullname
+            else:
+                is_guest = False
         else:
             displayName = utils.api_get_webex_meetings_username(account, email)
             if not displayName:
