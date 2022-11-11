@@ -73,6 +73,7 @@ def getProjectContribs(node):
             info['fullname'] = nodeContrib.fullname
             info['username'] = nodeContrib.username
             info['institution'] = (nodeContrib.jobs[0]).get('institution', '') if len(nodeContrib.jobs) else ''
+            info['institutionJa'] = (nodeContrib.jobs[0]).get('institution_ja', '') if len(nodeContrib.jobs) else ''
             projectContribs.append(info)
 
     ret = json.dumps(projectContribs)
