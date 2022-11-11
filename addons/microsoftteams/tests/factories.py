@@ -19,7 +19,7 @@ class MicrosoftTeamsAccountFactory(ExternalAccountFactory):
     provider = SHORT_NAME
     provider_id = factory.Sequence(lambda n: 'id-{0}'.format(n))
     oauth_key = factory.Sequence(lambda n: 'key-{0}'.format(n))
-    display_name = 'MicrosoftTeams Fake User'
+    display_name = 'teamstestuser1@test.onmicrosoft.com(MicrosoftTeams Fake User)'
 
 
 class MicrosoftTeamsUserSettingsFactory(DjangoModelFactory):
@@ -46,6 +46,8 @@ class MicrosoftTeamsAttendeesFactory(DjangoModelFactory):
     email_address = 'teamstestuser1@test.onmicrosoft.com'
     display_name = 'Teams Test User1'
     is_guest = False
+    is_active = True
+    has_grdm_account = True
     external_account = factory.SubFactory(MicrosoftTeamsAccountFactory)
     node_settings = factory.SubFactory(MicrosoftTeamsNodeSettingsFactory)
 

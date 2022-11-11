@@ -19,7 +19,7 @@ class WebexMeetingsAccountFactory(ExternalAccountFactory):
     provider = SHORT_NAME
     provider_id = factory.Sequence(lambda n: 'id-{0}'.format(n))
     oauth_key = factory.Sequence(lambda n: 'key-{0}'.format(n))
-    display_name = 'WebexMeetings Fake User'
+    display_name = 'webextestuser1@test.webex.com(WebexMeetings Fake User)'
 
 
 class WebexMeetingsUserSettingsFactory(DjangoModelFactory):
@@ -46,6 +46,8 @@ class WebexMeetingsAttendeesFactory(DjangoModelFactory):
     email_address = 'webextestuser1@test.webex.com'
     display_name = 'Webex Test User1'
     is_guest = False
+    is_active = True
+    has_grdm_account = True
     external_account = factory.SubFactory(WebexMeetingsAccountFactory)
     node_settings = factory.SubFactory(WebexMeetingsNodeSettingsFactory)
 
