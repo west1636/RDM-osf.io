@@ -2,6 +2,7 @@
 from flask import request
 import logging
 import json
+import time
 from addons.webexmeetings import SHORT_NAME
 from addons.base import generic_views
 from framework.auth.decorators import must_be_logged_in
@@ -217,7 +218,9 @@ def webexmeetings_register_email(**kwargs):
 
     elif actionType == 'delete':
         attendee = models.Attendees.objects.get(node_settings_id=nodeSettings.id, _id=_id)
+        timestamp = int(time.time())
         attendee.is_active = False
+        attendee.email_address = '{}{}{}'.format(attendee.email_address, '_', timestamp)
         attendee.save()
 
     logger.info('{} Email was {}d with following attribute by {}=> '.format(settings.WEBEX_MEETINGS, str(actionType), str(user)) + str(vars(attendee)))
