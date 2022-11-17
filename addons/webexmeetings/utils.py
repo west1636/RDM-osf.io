@@ -84,7 +84,7 @@ def get_invitees(account, meetingId):
 
     return invitees['items']
 
-def grdm_create_webex_meeting(addon, account, createdData, guestOrNot):
+def grdm_create_webex_meeting(addon, account, createdData):
 
     subject = createdData['title']
     organizer = createdData['hostEmail']
@@ -185,7 +185,7 @@ def api_update_webex_meeting_attendees(requestData, account):
 
     return updatedAttendees
 
-def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon):
+def grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon):
 
     subject = updatedMeeting['title']
     startDatetime = updatedMeeting['start']

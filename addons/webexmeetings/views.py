@@ -68,7 +68,6 @@ def webexmeetings_request_api(**kwargs):
     action = requestDataJsonLoads['actionType']
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
-    guestOrNot = requestDataJsonLoads['guestOrNot']
     requestBody = requestDataJsonLoads['body']
 
     account = ExternalAccount.objects.get(
@@ -79,7 +78,7 @@ def webexmeetings_request_api(**kwargs):
         try:
             createdMeeting = utils.api_create_webex_meeting(requestBody, account)
             #synchronize data
-            utils.grdm_create_webex_meeting(addon, account, createdMeeting, guestOrNot)
+            utils.grdm_create_webex_meeting(addon, account, createdMeeting)
         except HTTPError as e1:
             logger.info(str(e1))
             errCode = str(e1) if e1.response is None else e1.response.status_code
@@ -92,7 +91,7 @@ def webexmeetings_request_api(**kwargs):
             updatedMeeting = utils.api_update_webex_meeting(updateMeetingId, requestBody, account)
             updatedAttendees = utils.api_update_webex_meeting_attendees(requestDataJsonLoads, account)
             #synchronize data
-            utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, guestOrNot, addon)
+            utils.grdm_update_webex_meeting(updatedAttendees, updatedMeeting, addon)
         except HTTPError as e1:
             logger.info(str(e1))
             errCode = str(e1) if e1.response is None else e1.response.status_code

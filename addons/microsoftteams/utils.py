@@ -68,7 +68,7 @@ def api_create_teams_meeting(requestData, account):
     logger.info('StatusCode:{} . A {} meeting was created with following attributes => '.format(str(response.status_code), settings.MICROSOFT_TEAMS) + str(responseData))
     return responseData
 
-def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrNot):
+def grdm_create_teams_meeting(addon, account, requestData, createdData):
 
     subject = createdData['subject']
     organizer = createdData['organizer']['emailAddress']['address']
@@ -94,11 +94,6 @@ def grdm_create_teams_meeting(addon, account, requestData, createdData, guestOrN
 
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
-
-        if address in guestOrNot:
-            isGuest = guestOrNot[address]
-        else:
-            continue
 
         try:
             attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address, is_guest=isGuest)
@@ -146,7 +141,7 @@ def api_update_teams_meeting(meetingId, requestData, account):
     logger.info('StatusCode:{} . A {} meeting was updated with following attributes => '.format(str(response.status_code), settings.MICROSOFT_TEAMS) + str(responseData))
     return responseData
 
-def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
+def grdm_update_teams_meeting(addon, requestData, updatedData):
 
     meetingId = updatedData['id']
     subject = updatedData['subject']
@@ -169,11 +164,6 @@ def grdm_update_teams_meeting(addon, requestData, updatedData, guestOrNot):
 
     for attendeeMail in attendees:
         address = attendeeMail['emailAddress']['address']
-
-        if address in guestOrNot:
-            isGuest = guestOrNot[address]
-        else:
-            continue
 
         try:
             attendeeObj = models.Attendees.objects.get(node_settings_id=addon.id, email_address=address, is_guest=isGuest)

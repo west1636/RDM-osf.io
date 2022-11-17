@@ -68,7 +68,6 @@ def microsoftteams_request_api(**kwargs):
     updateMeetingId = requestDataJsonLoads['updateMeetingId']
     deleteMeetingId = requestDataJsonLoads['deleteMeetingId']
     requestBody = requestDataJsonLoads['body']
-    guestOrNot = requestDataJsonLoads['guestOrNot']
 
     account = ExternalAccount.objects.get(
         provider='microsoftteams', id=account_id
@@ -77,7 +76,7 @@ def microsoftteams_request_api(**kwargs):
         try:
             createdMeetings = utils.api_create_teams_meeting(requestBody, account)
             #synchronize data
-            utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings, guestOrNot)
+            utils.grdm_create_teams_meeting(addon, account, requestDataJsonLoads, createdMeetings)
         except HTTPError as e1:
             logger.info(str(e1))
             errCode = str(e1) if e1.response is None else e1.response.status_code
@@ -89,7 +88,7 @@ def microsoftteams_request_api(**kwargs):
         try:
             updatedMeetings = utils.api_update_teams_meeting(updateMeetingId, requestBody, account)
             #synchronize data
-            utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings, guestOrNot)
+            utils.grdm_update_teams_meeting(addon, requestDataJsonLoads, updatedMeetings)
         except HTTPError as e1:
             logger.info(str(e1))
             errCode = str(e1) if e1.response is None else e1.response.status_code
