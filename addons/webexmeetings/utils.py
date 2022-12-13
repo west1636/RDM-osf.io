@@ -46,7 +46,8 @@ def api_get_webex_meetings_username(account, email):
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
     items = responseData.get('items', {})
-    logger.info('items:::' + str(items))
+    logger.info('Get the following user {}=> '.format(str(items)))
+    logger.info('StatusCode: {}'.format(str(response.status_code)))
     if items:
         displayName = items[0].get('displayName', '')
     else:
@@ -259,5 +260,5 @@ def grdm_delete_webex_meeting(meetingId):
 
     deleteData = models.Meetings.objects.get(meetingid=meetingId)
     deleteData.delete()
-    logger.info('A {} meeting information on GRDM was deleted.=> '.format(settings.WEBEX_MEETINGS))
+    logger.info('A {} meeting information on GRDM was deleted. meetingId => '.format(settings.WEBEX_MEETINGS) + str(meetingId))
     return {}

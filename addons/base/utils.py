@@ -66,7 +66,6 @@ def getProjectContribs(node):
     nodeContribs = node.contributors
 
     for nodeContrib in nodeContribs:
-        logger.info('node contirbutor::' + str(vars(nodeContrib)))
         if not nodeContrib.is_invited:
             info = {}
             info['guid'] = nodeContrib._id
