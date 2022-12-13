@@ -1,13 +1,10 @@
 import json
 import markupsafe
-from admin.rdm import utils as rdm_utils
 from os.path import basename
-from osf.models import OSFUser
 from website.settings import MFR_SERVER_URL
 
 from website import settings
-import logging
-logger = logging.getLogger(__name__)
+
 
 def get_mfr_url(target, provider_name):
     if hasattr(target, 'osfstorage_region') and provider_name == 'osfstorage':
