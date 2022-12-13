@@ -48,7 +48,7 @@ def api_get_microsoft_username(account, email):
     }
     response = requests.get(url, headers=requestHeaders, timeout=60)
     responseData = response.json()
-    logger.info('Get the following user {}'.format(str(responseData)))
+    logger.info('Get the following user => {}'.format(str(responseData)))
     logger.info('StatusCode: {}'.format(str(response.status_code)))
     username = responseData.get('displayName', '')
     return username
