@@ -82,7 +82,7 @@ def get_invitees(account, meetingId):
     response = requests.get(url, headers=requestHeaders, timeout=60)
     response.raise_for_status()
     invitees = response.json()
-
+    logger.info('StatusCode:{} . Get {} meeting invitees => '.format(str(response.status_code), settings.WEBEX_MEETINGS) + str(invitees))
     return invitees['items']
 
 def grdm_create_webex_meeting(addon, account, createdData):
