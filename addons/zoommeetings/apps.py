@@ -19,8 +19,6 @@ class ZoomMeetingsAddonConfig(BaseAddonAppConfig):
     owners = ['user', 'node']
     configs = ['accounts', 'node']
     has_page_icon = False
-    tab_name = 'Zoom Meetings'
-    tab_path = 'zoommeetings'
 
     node_settings_template = os.path.join(TEMPLATE_PATH, 'zoommeetings_node_settings.mako')
     user_settings_template = os.path.join(TEMPLATE_PATH, 'zoommeetings_user_settings.mako')

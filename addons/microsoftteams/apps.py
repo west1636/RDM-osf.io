@@ -19,8 +19,6 @@ class MicrosoftTeamsAddonConfig(BaseAddonAppConfig):
     owners = ['user', 'node']
     configs = ['accounts', 'node']
     has_page_icon = False
-    tab_name = 'Microsoft Teams'
-    tab_path = 'microsoftteams'
 
     node_settings_template = os.path.join(TEMPLATE_PATH, 'microsoftteams_node_settings.mako')
     user_settings_template = os.path.join(TEMPLATE_PATH, 'microsoftteams_user_settings.mako')

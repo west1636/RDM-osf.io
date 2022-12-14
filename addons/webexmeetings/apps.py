@@ -19,8 +19,6 @@ class WebexMeetingsAddonConfig(BaseAddonAppConfig):
     owners = ['user', 'node']
     configs = ['accounts', 'node']
     has_page_icon = False
-    tab_name = 'Webex Meetings'
-    tab_path = 'webexmeetings'
 
     node_settings_template = os.path.join(TEMPLATE_PATH, 'webexmeetings_node_settings.mako')
     user_settings_template = os.path.join(TEMPLATE_PATH, 'webexmeetings_user_settings.mako')
