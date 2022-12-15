@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.6.0\n"
 "Report-Msgid-Bugs-To: rocs-office@nii.ac.jp\n"
-"POT-Creation-Date: 2022-09-29 19:03+0900\n"
+"POT-Creation-Date: 2022-12-15 10:10+0900\n"
 "PO-Revision-Date: 2020-07-02 20:20+0900\n"
 "Last-Translator: Takuya Ishibashi\n"
 "Language: en\n"
@@ -119,7 +119,7 @@ msgstr ""
 #: website/templates/include/profile/schools.mako:120
 #: website/templates/include/profile/social.mako:150
 #: website/templates/include/profile/social.mako:153
-#: website/templates/profile/add_email.mako:113
+#: website/templates/profile/add_email.mako:211
 #: website/templates/profile/oauth_app_detail.mako:88
 #: website/templates/profile/personal_tokens_detail.mako:55
 #: website/templates/project/addon/node_settings_default.mako:74
@@ -1741,8 +1741,8 @@ msgstr ""
 msgid "Education"
 msgstr ""
 
-#: website/templates/profile.mako:84
-msgid "Social"
+#: website/templates/profile.mako:84 website/templates/profile/settings.mako:53
+msgid "ID"
 msgstr ""
 
 #: website/templates/profile.mako:115
@@ -2050,15 +2050,15 @@ msgid "Read IdP Profile"
 msgstr ""
 
 #: website/templates/include/profile/jobs.mako:36
-#: website/templates/profile/add_email.mako:79
+#: website/templates/profile/add_email.mako:177
 msgid "Affiliation"
 msgstr ""
 
 #: website/templates/include/profile/jobs.mako:38
 #: website/templates/include/profile/jobs.mako:53
 #: website/templates/include/profile/schools.mako:37
-#: website/templates/profile/add_email.mako:81
-#: website/templates/profile/add_email.mako:96
+#: website/templates/profile/add_email.mako:179
+#: website/templates/profile/add_email.mako:194
 #: website/templates/profile/oauth_app_detail.mako:55
 #: website/templates/profile/oauth_app_detail.mako:61
 #: website/templates/profile/oauth_app_detail.mako:73
@@ -2071,7 +2071,7 @@ msgid "Department / Institute"
 msgstr ""
 
 #: website/templates/include/profile/jobs.mako:51
-#: website/templates/profile/add_email.mako:94
+#: website/templates/profile/add_email.mako:192
 msgid "Affiliation (English)"
 msgstr ""
 
@@ -2129,7 +2129,7 @@ msgstr ""
 #: website/templates/include/profile/names.mako:102
 #: website/templates/include/profile/schools.mako:117
 #: website/templates/include/profile/social.mako:150
-#: website/templates/profile/add_email.mako:113
+#: website/templates/profile/add_email.mako:211
 msgid "Saving"
 msgstr ""
 
@@ -2180,32 +2180,32 @@ msgid "Auto-fill"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:26
-#: website/templates/profile/add_email.mako:37
+#: website/templates/profile/add_email.mako:135
 msgid "Family name"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:33
-#: website/templates/profile/add_email.mako:44
+#: website/templates/profile/add_email.mako:142
 msgid "Middle name(s)"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:37
-#: website/templates/profile/add_email.mako:48
+#: website/templates/profile/add_email.mako:146
 msgid "Given name"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:47
-#: website/templates/profile/add_email.mako:58
+#: website/templates/profile/add_email.mako:156
 msgid "Family name (EN)"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:54
-#: website/templates/profile/add_email.mako:65
+#: website/templates/profile/add_email.mako:163
 msgid "Middle name(s) (EN)"
 msgstr ""
 
 #: website/templates/include/profile/names.mako:58
-#: website/templates/profile/add_email.mako:69
+#: website/templates/profile/add_email.mako:167
 msgid "Given name (EN)"
 msgstr ""
 
@@ -2230,7 +2230,7 @@ msgid "Institution"
 msgstr ""
 
 #: website/templates/include/profile/schools.mako:44
-#: website/templates/profile/add_email.mako:87
+#: website/templates/profile/add_email.mako:185
 msgid "Department"
 msgstr ""
 
@@ -2310,44 +2310,52 @@ msgid "Account Settings"
 msgstr ""
 
 #: website/templates/profile/account.mako:15
-#: website/templates/profile/add_email.mako:121
+#: website/templates/profile/add_email.mako:25
+#: website/templates/profile/add_email.mako:219
 msgid "Connected Emails"
 msgstr ""
 
 #: website/templates/profile/account.mako:20
-#: website/templates/profile/add_email.mako:127
+#: website/templates/profile/add_email.mako:31
+#: website/templates/profile/add_email.mako:225
 msgid "Primary Email"
 msgstr ""
 
 #: website/templates/profile/account.mako:34
-#: website/templates/profile/add_email.mako:157
+#: website/templates/profile/add_email.mako:61
+#: website/templates/profile/add_email.mako:255
 msgid "Alternate Emails"
 msgstr ""
 
 #: website/templates/profile/account.mako:40
-#: website/templates/profile/add_email.mako:163
+#: website/templates/profile/add_email.mako:67
+#: website/templates/profile/add_email.mako:261
 msgid "make&nbsp;primary"
 msgstr ""
 
 #: website/templates/profile/account.mako:48
-#: website/templates/profile/add_email.mako:172
+#: website/templates/profile/add_email.mako:76
+#: website/templates/profile/add_email.mako:270
 msgid "Unconfirmed Emails"
 msgstr ""
 
 #: website/templates/profile/account.mako:55
-#: website/templates/profile/add_email.mako:179
+#: website/templates/profile/add_email.mako:83
+#: website/templates/profile/add_email.mako:277
 msgid "resend&nbsp;confirmation"
 msgstr ""
 
 #: website/templates/profile/account.mako:64
-#: website/templates/profile/add_email.mako:188
+#: website/templates/profile/add_email.mako:92
+#: website/templates/profile/add_email.mako:286
 msgid ""
 "To merge an existing account with this one or to log in with multiple "
 "email addresses, add an alternate email address below."
 msgstr ""
 
 #: website/templates/profile/account.mako:65
-#: website/templates/profile/add_email.mako:189
+#: website/templates/profile/add_email.mako:93
+#: website/templates/profile/add_email.mako:287
 msgid ""
 "Merging accounts will move all projects and components associated with "
 "two emails into one account. All projects and components will be "
@@ -2361,12 +2369,14 @@ msgid ""
 msgstr ""
 
 #: website/templates/profile/account.mako:73
-#: website/templates/profile/add_email.mako:198
+#: website/templates/profile/add_email.mako:102
+#: website/templates/profile/add_email.mako:296
 msgid "Email address"
 msgstr ""
 
 #: website/templates/profile/account.mako:75
-#: website/templates/profile/add_email.mako:200
+#: website/templates/profile/add_email.mako:104
+#: website/templates/profile/add_email.mako:298
 msgid "Add email"
 msgstr ""
 
@@ -2385,91 +2395,91 @@ msgid "Update location"
 msgstr ""
 
 #: website/templates/profile/account.mako:110
-#: website/templates/profile/add_email.mako:217
+#: website/templates/profile/add_email.mako:315
 msgid "Connected Identities"
 msgstr ""
 
 #: website/templates/profile/account.mako:112
-#: website/templates/profile/add_email.mako:219
+#: website/templates/profile/add_email.mako:317
 msgid ""
 "Connected identities allow you to log in to the GakuNin RDM via a third-"
 "party service."
 msgstr ""
 
 #: website/templates/profile/account.mako:113
-#: website/templates/profile/add_email.mako:220
+#: website/templates/profile/add_email.mako:318
 msgid "You can revoke these authorizations here."
 msgstr ""
 
 #: website/templates/profile/account.mako:116
-#: website/templates/profile/add_email.mako:223
+#: website/templates/profile/add_email.mako:321
 msgid ""
 "You have not authorized any external services to log in to the GakuNin "
 "RDM."
 msgstr ""
 
 #: website/templates/profile/account.mako:126
-#: website/templates/profile/add_email.mako:233
+#: website/templates/profile/add_email.mako:331
 msgid "Verified"
 msgstr ""
 
 #: website/templates/profile/account.mako:128
-#: website/templates/profile/add_email.mako:235
+#: website/templates/profile/add_email.mako:333
 msgid "Pending"
 msgstr ""
 
 #: website/templates/profile/account.mako:148
-#: website/templates/profile/add_email.mako:255
+#: website/templates/profile/add_email.mako:353
 msgid "Change Password"
 msgstr ""
 
 #: website/templates/profile/account.mako:152
-#: website/templates/profile/add_email.mako:259
+#: website/templates/profile/add_email.mako:357
 msgid "Old password"
 msgstr ""
 
 #: website/templates/profile/account.mako:157
-#: website/templates/profile/add_email.mako:264
+#: website/templates/profile/add_email.mako:362
 msgid "Old Password"
 msgstr ""
 
 #: website/templates/profile/account.mako:169
-#: website/templates/profile/add_email.mako:276
+#: website/templates/profile/add_email.mako:374
 msgid "New password"
 msgstr ""
 
 #: website/templates/profile/account.mako:174
-#: website/templates/profile/add_email.mako:281
+#: website/templates/profile/add_email.mako:379
 msgid "New Password"
 msgstr ""
 
 #: website/templates/profile/account.mako:204
-#: website/templates/profile/add_email.mako:311
+#: website/templates/profile/add_email.mako:409
 msgid "Confirm new password"
 msgstr ""
 
 #: website/templates/profile/account.mako:209
-#: website/templates/profile/add_email.mako:316
+#: website/templates/profile/add_email.mako:414
 msgid "Verify Password"
 msgstr ""
 
 #: website/templates/profile/account.mako:220
-#: website/templates/profile/add_email.mako:327
+#: website/templates/profile/add_email.mako:425
 msgid "Update password"
 msgstr ""
 
 #: website/templates/profile/account.mako:227
-#: website/templates/profile/add_email.mako:332
+#: website/templates/profile/add_email.mako:430
 msgid "Security Settings"
 msgstr ""
 
 #: website/templates/profile/account.mako:239
-#: website/templates/profile/add_email.mako:345
+#: website/templates/profile/add_email.mako:443
 msgid "Export Account Data"
 msgstr ""
 
 #: website/templates/profile/account.mako:241
-#: website/templates/profile/add_email.mako:347
+#: website/templates/profile/add_email.mako:445
 msgid ""
 "Exporting your account data allows you to keep a permanent copy of the "
 "current state of your account. Keeping a copy of your account data can "
@@ -2478,12 +2488,12 @@ msgid ""
 msgstr ""
 
 #: website/templates/profile/account.mako:242
-#: website/templates/profile/add_email.mako:348
+#: website/templates/profile/add_email.mako:446
 msgid "Request export"
 msgstr ""
 
 #: website/templates/profile/account.mako:246
-#: website/templates/profile/add_email.mako:354
+#: website/templates/profile/add_email.mako:452
 msgid "Deactivate Account"
 msgstr ""
 
@@ -2494,7 +2504,7 @@ msgid ""
 msgstr ""
 
 #: website/templates/profile/account.mako:249
-#: website/templates/profile/add_email.mako:359
+#: website/templates/profile/add_email.mako:457
 msgid ""
 "Deactivating your account will remove you from all public projects to "
 "which you are a contributor. Your account will no longer be associated "
@@ -2503,12 +2513,12 @@ msgid ""
 msgstr ""
 
 #: website/templates/profile/account.mako:250
-#: website/templates/profile/add_email.mako:363
+#: website/templates/profile/add_email.mako:461
 msgid "Your account is currently pending deactivation."
 msgstr ""
 
 #: website/templates/profile/account.mako:251
-#: website/templates/profile/add_email.mako:361
+#: website/templates/profile/add_email.mako:459
 msgid "Request deactivation"
 msgstr ""
 
@@ -2516,31 +2526,39 @@ msgstr ""
 msgid "Cancel deactivation request"
 msgstr ""
 
-#: website/templates/profile/add_email.mako:22
-msgid "Account Information"
+#: website/templates/profile/add_email.mako:21
+msgid ""
+"If you do not have an email address registered, please enter or add your "
+"email address in the \"Registered email address\" entry field first."
 msgstr ""
 
-#: website/templates/profile/add_email.mako:27
-msgid "Display name"
-msgstr ""
-
-#: website/templates/profile/add_email.mako:102
-msgid "Department (English)"
-msgstr ""
-
-#: website/templates/profile/add_email.mako:108
-msgid "e-Rad number"
-msgstr ""
-
-#: website/templates/profile/add_email.mako:142
+#: website/templates/profile/add_email.mako:46
+#: website/templates/profile/add_email.mako:240
 msgid "eduPersonPrincipalName (ePPN)"
 msgstr ""
 
-#: website/templates/profile/add_email.mako:192
+#: website/templates/profile/add_email.mako:96
+#: website/templates/profile/add_email.mako:290
 msgid "Add an email address below."
 msgstr ""
 
-#: website/templates/profile/add_email.mako:357
+#: website/templates/profile/add_email.mako:120
+msgid "Account Information"
+msgstr ""
+
+#: website/templates/profile/add_email.mako:125
+msgid "Display name"
+msgstr ""
+
+#: website/templates/profile/add_email.mako:200
+msgid "Department (English)"
+msgstr ""
+
+#: website/templates/profile/add_email.mako:206
+msgid "e-Rad number"
+msgstr ""
+
+#: website/templates/profile/add_email.mako:455
 msgid "<strong>Warning:</strong> This action is irreversible."
 msgstr ""
 
@@ -2793,10 +2811,6 @@ msgstr ""
 #: website/templates/project/contributors.mako:230
 #: website/templates/project/modal_add_contributor.mako:216
 msgid "Name"
-msgstr ""
-
-#: website/templates/profile/settings.mako:53
-msgid "ID"
 msgstr ""
 
 #: website/templates/project/addons.mako:14
@@ -3902,7 +3916,7 @@ msgstr ""
 
 #: website/templates/project/addon/page.mako:23
 #: website/templates/project/addon/widget.mako:19
-#: website/templates/util/render_addon_widget.mako:309
+#: website/templates/util/render_addon_widget.mako:315
 #, python-format
 msgid "Configure this add-on on the <a href=%(nodeUrl)s>add-ons</a> page."
 msgstr ""
@@ -3954,13 +3968,13 @@ msgstr ""
 
 #: website/templates/util/render_addon_widget.mako:154
 #: website/templates/util/render_addon_widget.mako:185
-#: website/templates/util/render_addon_widget.mako:254
+#: website/templates/util/render_addon_widget.mako:260
 msgid "Loading"
 msgstr ""
 
 #: website/templates/util/render_addon_widget.mako:157
 #: website/templates/util/render_addon_widget.mako:188
-#: website/templates/util/render_addon_widget.mako:257
+#: website/templates/util/render_addon_widget.mako:263
 msgid "Error occurred"
 msgstr ""
 
@@ -3994,23 +4008,23 @@ msgstr ""
 msgid "Image Scan only"
 msgstr ""
 
-#: website/templates/util/render_addon_widget.mako:260
+#: website/templates/util/render_addon_widget.mako:266
 msgid "Web Meeting Information"
 msgstr ""
 
-#: website/templates/util/render_addon_widget.mako:261
+#: website/templates/util/render_addon_widget.mako:267
 msgid "No Today's Meeting"
 msgstr ""
 
-#: website/templates/util/render_addon_widget.mako:263
+#: website/templates/util/render_addon_widget.mako:269
 msgid "Today's Meeting"
 msgstr ""
 
-#: website/templates/util/render_addon_widget.mako:281
+#: website/templates/util/render_addon_widget.mako:287
 msgid "No Tomorrow's Meeting"
 msgstr ""
 
-#: website/templates/util/render_addon_widget.mako:283
+#: website/templates/util/render_addon_widget.mako:289
 msgid "Tomorrow's Meeting"
 msgstr ""
 
