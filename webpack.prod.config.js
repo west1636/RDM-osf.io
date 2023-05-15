@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var common = require('./webpack.common.config.js');
 var assign = require('object-assign');
 var SaveAssetsJson = require('assets-webpack-plugin');
+var TerserPlugin = require("terser-webpack-plugin")
 
 module.exports = assign(common, {
     stats: {reasons: false},
@@ -16,22 +17,38 @@ module.exports = assign(common, {
             DEBUG: false,
             '__DEV__': false
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            exclude: /conference.*?\.js$/,
-            sourceMap: true,
-            warnings: true,
-        }),
+//        new webpack.optimization.UglifyJsPlugin({
+//            exclude: /conference.*?\.js$/,
+//            sourceMap: true,
+//            warnings: true,
+//        }),
         // Save a webpack-assets.json file that maps base filename to filename with
         // hash. This file is used by the webpack_asset mako filter to expand
         // base filenames to full filename with hash.
         new SaveAssetsJson(),
         // Append hash to commons chunk for cachebusting
-        new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.[hash].js' }),
+//        new webpack.optimization.splitChunks({ name: 'vendor', filename: 'vendor.[hash].js' }),
         new webpack.LoaderOptionsPlugin({
             debug: false,
             minimize: true
         })
     ]),
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                exclude: /conference.*?\.js$/,
+                terserOptions: {
+                    sourceMap: true,
+                    
+                },
+            }),
+        ],
+        splitChunks: {
+            name: 'vendor',
+            filename: 'vendor.[hash].js'
+        }
+    },
     output: {
         path: path.resolve(__dirname, 'website', 'static', 'public', 'js'),
         // publicPath: '/static/', // used to generate urls to e.g. images

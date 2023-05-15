@@ -10,7 +10,7 @@ var utils = require('./util.js');
 var FileEditor = require('./editor.js');
 var makeClient = require('js/clipboard');
 var FileRevisionsTable = require('./revisions.js');
-var storageAddons = require('json-loader!storageAddons.json');
+var storageAddons = require('../../storageAddons.json');
 var CommentModel = require('js/comment');
 
 var _ = require('js/rdmGettext')._;

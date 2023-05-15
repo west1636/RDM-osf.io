@@ -1,18 +1,209 @@
 'use strict';
 var ko = require('knockout');
 var $ = require('jquery');
-
 var $osf = require('js/osfHelpers');
 var mathrender = require('js/mathrender');
 var md = require('js/markdown').full;
 var mdQuick = require('js/markdown').quick;
 var mdOld = require('js/markdown').old;
 var diffTool = require('js/diffTool');
-
+var $osf = require('js/osfHelpers');
 var _ = require('js/rdmGettext')._;
 
 var THROTTLE = 500;
 
+var yProseMirror = require('y-prosemirror');
+
+var mCore = require('@milkdown/core');
+var mCommonmark = require('@milkdown/preset-commonmark');
+var mNord = require('@milkdown/theme-nord');
+var mHistory = require('@milkdown/plugin-history');
+var mEmoji = require('@milkdown/plugin-emoji');
+var mUpload = require('@milkdown/plugin-upload');
+var mMath = require('@milkdown/plugin-math');
+var mClipboard = require('@milkdown/plugin-clipboard');
+var mSlash = require('@milkdown/plugin-slash');
+var mGfm = require('@milkdown/preset-gfm');
+require('@milkdown/theme-nord/style.css');
+require('@milkdown/prose/view/style/prosemirror.css');
+require('@milkdown/prose/tables/style/tables.css');
+var mBlock = require('@milkdown/plugin-block');
+var mCursor = require('@milkdown/plugin-cursor');
+var mListener = require('@milkdown/plugin-listener');
+var mPrism = require('@milkdown/plugin-prism');
+//var mDiagram = require('@milkdown/plugin-diagram');
+var mIndent = require('@milkdown/plugin-indent');
+var mTooltip = require('@milkdown/plugin-tooltip');
+var mUtils = require('@milkdown/utils');
+var mCollab = require('@milkdown/plugin-collab');
+var yWebsocket = require('y-websocket');
+var yjs = require('yjs');
+var macros =  require('@milkdown/utils');
+//var yLeveldb =  require('y-leveldb');
+var currentOutput = '';
+var mEdit;
+
+var readonly = true;
+const editable = () => !readonly;
+
+/*
+console.log(mCore);
+console.log(mCommonmark);
+console.log(mUtils);
+console.log(mNord);
+console.log(mHistory);
+console.log(mEmoji);
+console.log(mUpload);
+console.log(mMath);
+console.log(mClipboard);
+console.log(mSlash);
+console.log(mGfm);
+console.log(mBlock);
+console.log(mCursor);
+console.log(mListener);
+console.log(mPrism);
+console.log(mTooltip);
+//console.log(mDiagram);
+console.log(mIndent);
+console.log(mCollab);
+*/
+
+async function test(isSynced, collabService, markdown){
+    console.log('once more more');
+    if (isSynced) {
+      collabService
+        // apply your template
+        .applyTemplate(markdown)
+        // don't forget connect
+        .connect();
+    }
+}
+
+async function createMEditor(editor, viewVM, temp) {
+    console.log(editor);
+    console.log('1111111');
+    console.log(viewVM);
+    console.log(temp)
+    if (editor && editor.destroy) {
+        console.log('123');
+        editor.destroy();
+        console.log('456');
+    }
+    var m =
+`# Template :heartpulse: Vanilla Commonmark
+
+> You're scared of a world where you're needed.
+
+This is a demo for using Milkdown with **Vanilla Typescript**.
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |`
+    var mEdit = await mCore.Editor
+      .make()
+      .config(ctx => {
+        ctx.set(mCore.rootCtx, '#mEditor')
+        ctx.get(mListener.listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
+//        ctx.get(mListener.listenerCtx).updated((ctx, markdown, prevMarkdown) => {
+            console.log(prevMarkdown);
+            console.log(markdown);
+            viewVM.displaySource(markdown);
+        })
+        ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
+            ...prev,
+            editable,
+        }))
+//        ctx.set(mCore.defaultValueCtx, m)
+      })
+      .config(mNord.nord)
+      .use(mCommonmark.commonmark)
+      .use(mHistory.history)
+      .use(mEmoji.emoji)
+      .use(mUpload.upload)
+      .use(mMath.math)
+      .use(mClipboard.clipboard)
+      .use(mGfm.gfm)
+      .use(mBlock.block)
+      .use(mCursor.cursor)
+      .use(mListener.listener)
+      .use(mPrism.prism)
+    //  .use(mTooltip.tooltipFactory)
+    //  .use(mDiagram.diagram)
+        .use(mIndent.indent)
+      .use(mCollab.collab)
+    //  .use(mSlash.slashFactory)
+      .create()
+    console.log(mEdit);
+
+//    const persistence = new yLeveldb.LeveldbPersistence('./storage-location')
+//    persistence.storeUpdate(window.contextVars.wiki.metadata.docId, Y.encodeStateAsUpdate(ydoc))
+//    const ydocPersisted = await persistence.getYDoc('my-doc')
+//    console.log(ydocPersisted)
+    mEdit.action((ctx) => {
+        const collabService = ctx.get(mCollab.collabServiceCtx);
+        const doc = new yjs.Doc();
+        const docId = window.contextVars.wiki.metadata.docId;
+        const wsProvider = new yWebsocket.WebsocketProvider('ws://localhost:1234', docId, doc);
+        console.log(wsProvider.synced);
+        wsProvider.on('sync', isSynced => {
+          console.log('sync')
+          console.log(isSynced)
+        })
+        wsProvider.on('status', event => {
+          console.log(event.status) // logs "connected" or "disconnected"
+        })
+        wsProvider.on('connection-close', WSClosedEvent => {
+          console.log(WSClosedEvent) // logs "connected" or "disconnected"
+        })
+        wsProvider.on('connection-error', WSClosedEvent => {
+          console.log(WSClosedEvent) // logs "connected" or "disconnected"
+        })
+        console.log(wsProvider);
+        const fullname = window.contextVars.currentUser.fullname;
+        console.log(window.contextVars);
+        console.log(window.contextVars.wiki.metadata.docId);
+        console.log(doc);
+
+        wsProvider.awareness.setLocalStateField('user', { name: fullname, color: '#ffb61e'})
+
+        collabService
+          .bindDoc(doc)
+          .setAwareness(wsProvider.awareness)
+          .applyTemplate(temp, (remoteNode, templateNode) => {
+            // return true to apply template
+            console.log(remoteNode);
+            console.log(templateNode);
+            return true
+          })
+          .connect();
+
+//        const schema = ctx.get(mCore.schemaCtx);
+//        const yDocNode = yProseMirror.yDocToProsemirror(schema, doc);
+//        console.log(yDocNode);
+/*
+        wsProvider.once('synced', async (isSynced) => {
+            console.log('synced');
+            console.log(isSynced);
+            if (isSynced) {
+              collabService
+                // apply your template
+                .applyTemplate(temp, (remoteNode, templateNode) => {
+                  // return true to apply template
+                  console.log(remoteNode);
+                  console.log(templateNode);
+                  return true
+                })
+                // don't forget connect
+                .connect();
+            }
+          });
+*/
+        console.log('--------------------------')
+    })
+    return mEdit;
+
+}
 //<div id="preview" data-bind="mathjaxify">
 ko.bindingHandlers.mathjaxify = {
     update: function(element, valueAccessor, allBindingsAccessor, data, context) {
@@ -73,9 +264,13 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
         var requestURL;
         if (typeof self.version() !== 'undefined') {
             if (self.version() === 'preview') {
-                self.rendered(self.renderMarkdown(self.viewText()));
+//                self.rendered(self.renderMarkdown(self.viewText()));
                 self.displaySource(self.viewText());
+                document.getElementById("mEditor").style.display = "";
+                document.getElementById("wikiViewRender").style.display = "none";
             } else {
+                document.getElementById("mEditor").style.display = "none";
+                document.getElementById("wikiViewRender").style.display = "";
                 if (self.version() === 'current') {
                     requestURL = contentURL;
                 } else {
@@ -290,7 +485,19 @@ function ViewModel(options){
     }
     self.viewVM = new ViewWidget(self.viewVis, self.viewVersion, self.viewText, self.renderedView, self.contentURL, self.allowMathjaxification, self.allowFullRender, self.editor);
     self.compareVM = new CompareWidget(self.compareVis, self.compareVersion, self.viewVM.displaySource, self.renderedCompare, self.contentURL);
-
+    var request = $.ajax({
+        url: self.contentURL
+    });
+    request.done(function (resp) {
+        if (resp.wiki_content){
+            var rawContent = resp.wiki_content
+        } else if(window.contextVars.currentUser.canEdit) {
+            var rawContent = _('*Add important information, links, or images here to describe your project.*');
+        } else {
+            var rawContent = _('*No wiki content.*');
+        }
+        mEdit = createMEditor(mEdit, self.viewVM, rawContent);
+    });
     var bodyElement = $('body');
     bodyElement.on('togglePanel', function (event, panel, display) {
         // Update self.editVis, self.viewVis, or self.compareVis in viewmodel
@@ -313,6 +520,53 @@ function ViewModel(options){
     bodyElement.on('toggleMenu', function(event, menuVisible) {
         self.menuVis(menuVisible);
     });
+
+    self.editMode = function() {
+        readonly = false;
+        self.viewVersion('preview');
+        document.getElementById("mEditorFooter").style.display = "";
+    }
+
+    self.editModeOff = function() {
+        readonly = true;
+        document.getElementById("mEditorFooter").style.display = "none";
+    }
+
+    // Submit the wysiwyg content as markdown
+    self.submitMText = function() {
+        console.log(self.viewVM.displaySource());
+        var pageUrl = window.contextVars.wiki.urls.page;
+        $.ajax({
+            url:pageUrl,
+            type:'POST',
+            data: self.viewVM.displaySource(),
+        }).done(function (resp) {
+            console.log('success');
+            window.location.reload();
+        }).fail(function(xhr) {
+            var resp = JSON.parse(xhr.responseText);
+            var message = resp.message;
+            var title = resp.title || 'Problem creating bucket';
+            $osf.unblock();
+            if (!message) {
+                message = 'Looks like that name is taken. Try another name?';
+            }
+            bootbox.confirm({
+                title: $osf.htmlEscape(title),
+                message: $osf.htmlEscape(message),
+                callback: function(result) {
+                    if (result) {
+                        self.openCreateBucket();
+                    }
+                },
+                buttons:{
+                    confirm:{
+                        label:'Try again'
+                    }
+                }
+            });
+        });
+    }
 }
 
 
