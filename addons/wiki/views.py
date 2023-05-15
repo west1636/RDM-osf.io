@@ -3,6 +3,7 @@
 from rest_framework import status as http_status
 import logging
 
+import urllib.parse
 from flask import request
 from django.db.models.expressions import F
 
@@ -296,12 +297,14 @@ def project_wiki_edit_post(auth, wname, **kwargs):
     wiki_name = wname.strip()
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     redirect_url = node.web_url_for('project_wiki_view', wname=wiki_name, _guid=True)
-    form_wiki_content = request.form['content']
+#    form_wiki_content = request.form['content']
 
     # ensure home is always lower case since it cannot be renamed
     if wiki_name.lower() == 'home':
         wiki_name = 'home'
 
+    requestData = request.get_data()
+    form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
     if wiki_version:
         # Only update wiki if content has changed
         if form_wiki_content != wiki_version.content:
