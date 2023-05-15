@@ -57,11 +57,11 @@ var ShareJSDoc = function(url, metadata, viewText, editor) {
     var ReconnectingWebSocket = require('reconnectingWebsocket');
     require('addons/wiki/static/ace.js');
     // Configure connection
-    var wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
-    var wsUrl = wsPrefix + ctx.urls.sharejs;
-    var socket = new ReconnectingWebSocket(wsUrl);
-    var sjs = new sharejs.Connection(socket);
-    var doc = sjs.get('docs', metadata.docId);
+//    var wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
+//    var wsUrl = wsPrefix + ctx.urls.sharejs;
+//    var socket = new ReconnectingWebSocket(wsUrl);
+//    var sjs = new sharejs.Connection(socket);
+    var doc/* = sjs.get('docs', metadata.docId)*/;
     var madeConnection = false;
     var allowRefresh = true;
     var refreshTriggered = false;
@@ -92,6 +92,7 @@ var ShareJSDoc = function(url, metadata, viewText, editor) {
         self.editor.getSession().setUndoManager(undoManager);
         self.editor.setReadOnly(false);
     }
+/*
     // Send user metadata
     function register() {
         // our shareJS explicitly wants 'userGravatar' and not our more general 'userProfileImage'
@@ -187,12 +188,14 @@ var ShareJSDoc = function(url, metadata, viewText, editor) {
             viewModel.status('disconnected');
         }
     };
+
     // This will be called on both connect and reconnect
     doc.on('subscribe', register);
     // This will be called when we have a live copy of the server's data.
     doc.whenReady(whenReady);
     // Subscribe to changes
     doc.subscribe();
+*/
 };
 
 module.exports = ShareJSDoc;
