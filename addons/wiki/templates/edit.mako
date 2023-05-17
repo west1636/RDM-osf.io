@@ -84,6 +84,7 @@
                         <div class="col-sm-8">
 
                             <div class="pull-right">
+                                <button id="editWysiwyg" class="btn btn-info" data-bind="click: editMode">Edit</button>
                                 <!-- Version Picker -->
                                 <span>${_("Wiki Version:")}</span>
                                 <div style="display: inline-block">
@@ -110,6 +111,7 @@
                 </div>
 
                 <div id="wikiViewPanel"  class="panel-body" data-bind="css: { 'osf-panel-body-flex': $root.singleVis() !== 'view' }">
+                  <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'}"></div>
                   <div id="wikiViewRender" data-bind="html: renderedView, mathjaxify: renderedView, anchorScroll : { buffer: 50, elem : '#wikiViewPanel'}" class="markdown-it-view scripted">
                       % if wiki_content:
                           ${wiki_content}
@@ -118,6 +120,22 @@
                       % endif
                   </div>
                 </div>
+                  <div id="mEditorFooter" class="panel-footer" style="display: none">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="pull-right">
+                              <button id="revert-button"
+                                      class="btn"
+                                      data-bind="click: editModeOff"
+                                      >Finish</button>
+                              <input type="submit"
+                                    class="btn btn-success"
+                                    value="Save"
+                                    data-bind="click: submitMText">
+                          </div>
+                        </div>
+                      </div>
+                  </div>
               </div>
           </div>
 
@@ -412,5 +430,5 @@ ${parent.javascript_bottom()}
 <script src="//${sharejs_url}/share.js"></script>
 <link href="${node['mfr_url']}/static/css/mfr.css" media="all" rel="stylesheet" />
 <script src="${node['mfr_url']}/static/js/mfr.js"></script>
-<script src=${"/static/public/js/wiki-edit-page.js" | webpack_asset}></script>
+<script src=${"/static/js/pages/wiki-edit-page.js" | webpack_asset}></script>
 </%def>
