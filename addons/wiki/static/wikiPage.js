@@ -2,7 +2,7 @@
 var ko = require('knockout');
 var $ = require('jquery');
 var $osf = require('js/osfHelpers');
-var mathrender = require('js/mathrender');
+//var mathrender = require('js/mathrender');
 var md = require('js/markdown').full;
 var mdQuick = require('js/markdown').quick;
 var mdOld = require('js/markdown').old;
@@ -38,7 +38,6 @@ var mUtils = require('@milkdown/utils');
 var mCollab = require('@milkdown/plugin-collab');
 var yWebsocket = require('y-websocket');
 var yjs = require('yjs');
-var macros =  require('@milkdown/utils');
 //var yLeveldb =  require('y-leveldb');
 var currentOutput = '';
 var mEdit;
@@ -68,38 +67,14 @@ console.log(mIndent);
 console.log(mCollab);
 */
 
-async function test(isSynced, collabService, markdown){
-    console.log('once more more');
-    if (isSynced) {
-      collabService
-        // apply your template
-        .applyTemplate(markdown)
-        // don't forget connect
-        .connect();
-    }
-}
-
 async function createMEditor(editor, viewVM, temp) {
-    console.log(editor);
-    console.log('1111111');
-    console.log(viewVM);
+    console.log('----createMEditor 1------');
     console.log(temp)
     if (editor && editor.destroy) {
         console.log('123');
         editor.destroy();
         console.log('456');
     }
-    var m =
-`# Template :heartpulse: Vanilla Commonmark
-
-> You're scared of a world where you're needed.
-
-This is a demo for using Milkdown with **Vanilla Typescript**.
-
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |`
     var mEdit = await mCore.Editor
       .make()
       .config(ctx => {
@@ -136,16 +111,12 @@ This is a demo for using Milkdown with **Vanilla Typescript**.
       .create()
     console.log(mEdit);
 
-//    const persistence = new yLeveldb.LeveldbPersistence('./storage-location')
-//    persistence.storeUpdate(window.contextVars.wiki.metadata.docId, Y.encodeStateAsUpdate(ydoc))
-//    const ydocPersisted = await persistence.getYDoc('my-doc')
-//    console.log(ydocPersisted)
+    const doc = new yjs.Doc();
+    const docId = window.contextVars.wiki.metadata.docId;
+    const wsProvider = new yWebsocket.WebsocketProvider('ws://localhost:1234', docId, doc);
+
     mEdit.action((ctx) => {
         const collabService = ctx.get(mCollab.collabServiceCtx);
-        const doc = new yjs.Doc();
-        const docId = window.contextVars.wiki.metadata.docId;
-        const wsProvider = new yWebsocket.WebsocketProvider('ws://localhost:1234', docId, doc);
-        console.log(wsProvider.synced);
         wsProvider.on('sync', isSynced => {
           console.log('sync')
           console.log(isSynced)
@@ -161,45 +132,21 @@ This is a demo for using Milkdown with **Vanilla Typescript**.
         })
         console.log(wsProvider);
         const fullname = window.contextVars.currentUser.fullname;
-        console.log(window.contextVars);
         console.log(window.contextVars.wiki.metadata.docId);
         console.log(doc);
 
         wsProvider.awareness.setLocalStateField('user', { name: fullname, color: '#ffb61e'})
+        collabService.bindDoc(doc).setAwareness(wsProvider.awareness)
 
-        collabService
-          .bindDoc(doc)
-          .setAwareness(wsProvider.awareness)
-          .applyTemplate(temp, (remoteNode, templateNode) => {
-            // return true to apply template
-            console.log(remoteNode);
-            console.log(templateNode);
-            return true
-          })
-          .connect();
-
-//        const schema = ctx.get(mCore.schemaCtx);
-//        const yDocNode = yProseMirror.yDocToProsemirror(schema, doc);
-//        console.log(yDocNode);
-/*
         wsProvider.once('synced', async (isSynced) => {
-            console.log('synced');
-            console.log(isSynced);
             if (isSynced) {
-              collabService
-                // apply your template
-                .applyTemplate(temp, (remoteNode, templateNode) => {
-                  // return true to apply template
-                  console.log(remoteNode);
-                  console.log(templateNode);
-                  return true
-                })
-                // don't forget connect
+                collabService
+                .applyTemplate(temp)
                 .connect();
             }
-          });
-*/
-        console.log('--------------------------')
+        });
+        console.log(mEdit.action(mUtils.getMarkdown()))
+        console.log('--createMEditor end----')
     })
     return mEdit;
 
@@ -212,7 +159,7 @@ ko.bindingHandlers.mathjaxify = {
         ko.unwrap(valueAccessor());
 
         if(vm.allowMathjaxification() && vm.allowFullRender()) {
-            mathrender.mathjaxify('#' + element.id);
+//            mathrender.mathjaxify('#' + element.id);
         }
     }
 };
