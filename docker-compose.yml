@@ -571,3 +571,15 @@ services:
       - reviews_dist_vol:/reviews
 #      - /host_server/user_key_info:/user_key_info
     stdin_open: true
+
+  y_websocket:
+    build: ../grdm/y-socket-server-dev-west1636
+    command: npm start
+    ports:
+      - 1234:1234
+    depends_on:
+      - web
+    environment:
+      HOST: 0.0.0.0
+      YPERSISTENCE: ./dbDir
+    stdin_open: true
