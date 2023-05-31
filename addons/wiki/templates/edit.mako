@@ -347,7 +347,8 @@ ${parent.javascript_bottom()}
             grid: ${urls['api']['grid'] | sjson, n },
             page: ${urls['web']['page'] | sjson, n },
             base: ${urls['web']['base'] | sjson, n },
-            sharejs: ${ sharejs_url | sjson, n }
+            sharejs: ${ sharejs_url | sjson, n },
+            y_websocket: ${ y_websocket_url | sjson, n }
         },
         metadata: {
             registration: true,
