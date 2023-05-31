@@ -12,6 +12,14 @@
     <%include file="include/comment_pane_template.mako"/>
 % endif
 
+<style >
+
+.ProseMirror:focus {
+    outline: none;
+  }
+
+</style>
+
 <div class="row" style="margin-bottom: 5px;">
     <div class="col-sm-6">
         <%include file="wiki/templates/status.mako"/>
@@ -104,6 +112,19 @@
                                     % endif
                                 </select>
                               </div>
+                              <div class="pull-right">
+                                <div class="progress no-margin pointer " data-toggle="modal" data-bind="attr: {'data-target': modalTarget}" >
+                                    <div role="progressbar" data-bind="attr: progressBar">
+                                        <span class="progress-bar-content p-h-sm">
+                                            <span data-bind="text: statusDisplay"></span>
+                                            <span class="sharejs-info-btn">
+                                                <i class="fa fa-question-circle fa-large"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                              </div>
+
                             </div>
 
                         </div>
@@ -138,87 +159,6 @@
                   </div>
               </div>
           </div>
-
-          % if user['can_edit_wiki_body']:
-            <div data-bind="with: $root.editVM.wikiEditor.viewModel"
-
-                 class="${'col-sm-{0}'.format(12 / num_columns)}"
-                 style="${'' if 'edit' in panels_used else 'display: none' | n}">
-              <form id="wiki-form" action="${urls['web']['edit']}" method="POST">
-                <div class="osf-panel panel panel-default osf-panel-edit" data-bind="css: { 'no-border': $root.singleVis() === 'edit' }">
-                  <div class="panel-heading wiki-panel-header clearfix" data-bind="css : { 'wiki-single-heading': $root.singleVis() === 'edit' }">
-                    <div class="row">
-                      <div class="col-md-6">
-                           <h3 class="panel-title" > <i class="fa fa-pencil-square-o"> </i>   ${_("Edit")} </h3>
-                      </div>
-                        <div class="col-md-6">
-                          <div class="pull-right">
-                            <div class="progress no-margin pointer " data-toggle="modal" data-bind="attr: {'data-target': modalTarget}" >
-                                <div role="progressbar" data-bind="attr: progressBar">
-                                    <span class="progress-bar-content p-h-sm">
-                                        <span data-bind="text: statusDisplay"></span>
-                                        <span class="sharejs-info-btn">
-                                            <i class="fa fa-question-circle fa-large"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-
-                    </div>
-                  </div>
-                  <div class="panel-body">
-                        <div class="row">
-                        <div class="col-xs-12">
-                          <div class="form-group wmd-panel">
-                          <ul class="list-inline pull-right">
-                          <!-- ko foreach: showCollaborators -->
-                             <!-- ko ifnot: id === ${ user_id | sjson, n } -->
-                                <li><a data-bind="attr: { href: url }" >
-                                          ## our shareJS explicitly passes back 'gravatar' despite our generalization
-                                          <img data-container="body" data-bind="attr: {src: gravatar}, tooltip: {title: name, placement: 'top'}"
-                                               style="border: 1px solid black;" width="30px" height="30px">
-                                      </a></li>
-                             <!-- /ko -->
-                          <!-- /ko -->
-                                <li><span data-bind="text: andOthersMessage"></span></li>
-                              </ul>
-                              <div id="wmd-button-bar"></div>
-                              <div id="aceLoadingBall" class="ball-scale ball-scale-blue absolute-center">
-                                  <div></div>
-                              </div>
-                              <div id="editor" class="wmd-input wiki-editor"
-                                   data-bind="ace: currentText">${_("Loading. . .")}</div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="panel-footer">
-                      <div class="row">
-                        <div class="col-xs-12">
-                           <div class="pull-right">
-                              <button id="revert-button"
-                                      class="btn btn-danger"
-                                      data-bind="click: revertChanges"
-                                      >${_("Revert")}</button>
-                              <input type="submit"
-                                     class="btn btn-success"
-                                     value="${_('Save')}"
-                                     onclick=$(window).off('beforeunload')>
-                          </div>
-                        </div>
-                      </div>
-                        <!-- Invisible textarea for form submission -->
-                        <textarea name="content" style="display: none;"
-                                  data-bind="value: currentText"></textarea>
-                  </div>
-                </div>
-                </form>
-
-            </div>
-          % endif
-
 
           <div data-osf-panel="${_('Compare')}"
                class="${'col-sm-{0}'.format(12 / num_columns)}"
