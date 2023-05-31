@@ -268,6 +268,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'versions': versions,
         'sharejs_uuid': sharejs_uuid or '',
         'sharejs_url': settings.SHAREJS_URL,
+        'y_websocket_url': settings.Y_WEBSOCKET_URL,
         'is_current': is_current,
         'version_settings': version_settings,
         'pages_current': _get_wiki_pages_latest(node),
