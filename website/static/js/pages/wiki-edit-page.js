@@ -10,12 +10,6 @@ var sprintf = require('agh.sprintf').sprintf;
 
 var WikiPage = require('wikiPage');
 
-require('ace-noconflict');
-require('ace-mode-markdown');
-require('ace-ext-language_tools');
-require('addons/wiki/static/ace-markdown-snippets.js');
-require('../../vendor/ace-plugins/spellcheck_ace.js');
-
 var WikiMenu = require('../wikiMenu');
 var Comment = require('js/comment'); //jshint ignore:line
 var $osf = require('js/osfHelpers');
@@ -138,10 +132,8 @@ $(document).ready(function () {
                 title.toLowerCase(),
                 buttonState
             ]);
-            if (typeof editor !== 'undefined') { ace.edit(editor).resize(); } // jshint ignore: line
         },
         complete : function() {
-            if (typeof editor !== 'undefined') { ace.edit(editor).resize(); } // jshint ignore: line
         }
     });
 

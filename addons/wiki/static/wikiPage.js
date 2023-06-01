@@ -2,7 +2,7 @@
 var ko = require('knockout');
 var $ = require('jquery');
 var $osf = require('js/osfHelpers');
-//var mathrender = require('js/mathrender');
+var mathrender = require('js/mathrender');
 var md = require('js/markdown').full;
 var mdQuick = require('js/markdown').quick;
 var mdOld = require('js/markdown').old;
@@ -13,8 +13,10 @@ var _ = require('js/rdmGettext')._;
 var THROTTLE = 500;
 
 var yProseMirror = require('y-prosemirror');
+var pMarkdown = require('prosemirror-markdown');
 
 var mCore = require('@milkdown/core');
+var mTransformer = require('@milkdown/transformer');
 var mCommonmark = require('@milkdown/preset-commonmark');
 var mNord = require('@milkdown/theme-nord');
 var mHistory = require('@milkdown/plugin-history');
@@ -67,29 +69,54 @@ console.log(mIndent);
 console.log(mCollab);
 */
 
-async function createMEditor(editor, viewVM, temp) {
+async function createMEditor(editor, vm, template) {
     console.log('----createMEditor 1------');
-    console.log(temp)
+    console.log(template)
     if (editor && editor.destroy) {
         console.log('123');
         editor.destroy();
         console.log('456');
     }
+    const doc = new yjs.Doc();
+    const docId = window.contextVars.wiki.metadata.docId;
+    var wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
+    var wsUrl = wsPrefix + window.contextVars.wiki.urls.y_websocket;
+    const wsProvider = new yWebsocket.WebsocketProvider(wsUrl, docId, doc);
     var mEdit = await mCore.Editor
       .make()
       .config(ctx => {
         ctx.set(mCore.rootCtx, '#mEditor')
         ctx.get(mListener.listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
-//        ctx.get(mListener.listenerCtx).updated((ctx, markdown, prevMarkdown) => {
             console.log(prevMarkdown);
             console.log(markdown);
-            viewVM.displaySource(markdown);
+            const collabService = ctx.get(mCollab.collabServiceCtx);
+            vm.viewVM.displaySource(markdown);
+            collabService
+            .applyTemplate('a', (remoteNode, templateNode) => {
+                console.log(remoteNode)
+                console.log(templateNode)
+                console.log('--------listener------------')
+
+//                yjs.applyUpdate(doc, 'a')
+
+//                const pMarkdownSerializer = new pMarkdown.MarkdownSerializer(remoteNode);
+//                console.log(pMarkdownSerializer)
+//                console.log(pMarkdownSerializer.serialize(remoteNode))
+                return false
+            })
+
+//            const collabService = ctx.get(mCollab.collabServiceCtx)
+//            collabService
+//            .applyTemplate(template, (remoteNode, templateNode) => {
+//                console.log('---listen---')
+//                viewVM.displaySource(remoteNode.textContent);
+//                return false
+//            })
         })
         ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
             ...prev,
             editable,
         }))
-//        ctx.set(mCore.defaultValueCtx, m)
       })
       .config(mNord.nord)
       .use(mCommonmark.commonmark)
@@ -111,18 +138,27 @@ async function createMEditor(editor, viewVM, temp) {
       .create()
     console.log(mEdit);
 
-    const doc = new yjs.Doc();
-    const docId = window.contextVars.wiki.metadata.docId;
-    const wsProvider = new yWebsocket.WebsocketProvider('ws://localhost:1234', docId, doc);
-
     mEdit.action((ctx) => {
         const collabService = ctx.get(mCollab.collabServiceCtx);
         wsProvider.on('sync', isSynced => {
           console.log('sync')
           console.log(isSynced)
         })
+
+        doc.on('update', (update, origin, doc) => {
+            console.log(update)
+            console.log(origin)
+            console.log(doc)
+        })
+
         wsProvider.on('status', event => {
           console.log(event.status) // logs "connected" or "disconnected"
+          vm.status(event.status);
+          console.log(vm.status)
+          if (vm.status !== 'connecting') {
+            vm.updateStatus();
+          }
+          vm.throttledUpdateStatus();
         })
         wsProvider.on('connection-close', WSClosedEvent => {
           console.log(WSClosedEvent) // logs "connected" or "disconnected"
@@ -141,11 +177,34 @@ async function createMEditor(editor, viewVM, temp) {
         wsProvider.once('synced', async (isSynced) => {
             if (isSynced) {
                 collabService
-                .applyTemplate(temp)
+//                .applyTemplate(template)
+                .applyTemplate(template, (remoteNode, templateNode) => {
+                    console.log(remoteNode)
+                    console.log(templateNode)
+                    if (remoteNode.textContent.length === 0) {
+                        vm.viewVM.displaySource(template);
+                        return true
+                    } else {
+//                        const serializer = ctx.get(mCore.serializerCtx)
+//                        const remoteDoc = yProseMirror.prosemirrorToYDoc(remoteNode.type)
+//                        const markdown = serializer(remoteDoc)
+//                        console.log(markdown)
+//                          const markdown = mTransformer.Serializer(remoteNode)
+//                          console.log(markdown)
+//                        viewVM.displaySource('');
+                        return false
+                    }
+                 })
                 .connect();
             }
         });
-        console.log(mEdit.action(mUtils.getMarkdown()))
+//        const parser = ctx.get(mCore.parserCtx)
+//        const node = parser('aaa')
+//        const dummyDoc = yProseMirror.prosemirrorToYDoc(node)
+//        const dummy = yjs.encodeStateAsUpdate(dummyDoc)
+//        yjs.applyUpdate(doc, dummy)
+//        console.log(mEdit.action(mUtils.getMarkdown()))
+//        mEdit.action(mUtils.insert('1234567890'))
         console.log('--createMEditor end----')
     })
     return mEdit;
@@ -159,7 +218,7 @@ ko.bindingHandlers.mathjaxify = {
         ko.unwrap(valueAccessor());
 
         if(vm.allowMathjaxification() && vm.allowFullRender()) {
-//            mathrender.mathjaxify('#' + element.id);
+            mathrender.mathjaxify('#' + element.id);
         }
     }
 };
@@ -192,26 +251,13 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
         }
     };
 
-    if (typeof self.editor !== 'undefined') {
-        self.editor.on('change', function () {
-            if(self.version() === 'preview') {
-                // Quick render
-                self.allowFullRender(false);
-
-                // Full render
-                self.debouncedAllowFullRender();
-            }
-        });
-    } else {
-        self.allowFullRender(true);
-    }
-
     self.displayText =  ko.computed(function() {
         self.allowFullRender();
         var requestURL;
         if (typeof self.version() !== 'undefined') {
             if (self.version() === 'preview') {
 //                self.rendered(self.renderMarkdown(self.viewText()));
+                console.log(self.viewText())
                 self.displaySource(self.viewText());
                 document.getElementById("mEditor").style.display = "";
                 document.getElementById("wikiViewRender").style.display = "none";
@@ -262,7 +308,8 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
     // currentText comes from ViewWidget.displayText
 function CompareWidget(visible, compareVersion, currentText, rendered, contentURL) {
     var self = this;
-
+    console.log('--CompareWidget--')
+    console.log(compareVersion)
     self.compareVersion = compareVersion;
     self.currentText = currentText;
     self.rendered = rendered;
@@ -277,6 +324,7 @@ function CompareWidget(visible, compareVersion, currentText, rendered, contentUR
         } else {
             requestURL= self.contentURL + self.compareVersion();
         }
+        console.log(requestURL)
         var request = $.ajax({
             url: requestURL
         });
@@ -297,7 +345,6 @@ function CompareWidget(visible, compareVersion, currentText, rendered, contentUR
 
 
 var defaultOptions = {
-    editVisible: false,
     viewVisible: true,
     compareVisible: false,
     menuVisible: true,
@@ -315,7 +362,6 @@ var defaultOptions = {
 function ViewModel(options){
     var self = this;
     // enabled?
-    self.editVis = ko.observable(options.editVisible);
     self.viewVis = ko.observable(options.viewVisible);
     self.compareVis = ko.observable(options.compareVisible);
     self.menuVis = ko.observable(options.menuVisible);
@@ -323,10 +369,6 @@ function ViewModel(options){
     self.singleVis = ko.pureComputed(function(){
         var visible = 0;
         var single;
-        if(self.editVis()){
-            visible++;
-            single = 'edit';
-        }
         if(self.viewVis()){
             visible++;
             single = 'view';
@@ -342,6 +384,9 @@ function ViewModel(options){
     });
 
     self.pageTitle = $(document).find('title').text();
+
+    self.status = ko.observable('connecting');
+    self.throttledStatus = ko.observable(self.status());
 
     self.compareVersion = ko.observable(options.compareVersion);
     self.viewVersion = ko.observable(options.viewVersion);
@@ -378,6 +423,58 @@ function ViewModel(options){
     delete initialParams.menu;
     self.initialQueryParams = $.param(initialParams);
 
+    self.modalTarget = ko.computed(function() {
+        switch(self.throttledStatus()) {
+            case 'connected':
+                return '#connectedModal';
+            case 'connecting':
+                return '#connectingModal';
+            case 'unsupported':
+                return '#unsupportedModal';
+            default:
+                return '#disconnectedModal';
+        }
+    });
+
+    self.statusDisplay = ko.computed(function() {
+        switch(self.throttledStatus()) {
+            case 'connected':
+                return 'Live editing mode';
+            case 'connecting':
+                return 'Attempting to connect';
+            default:
+                return 'Unavailable: Live editing';
+        }
+    });
+
+    // Throttle the display when updating status.
+    self.updateStatus = function() {
+        self.throttledStatus(self.status());
+    };
+
+    self.throttledUpdateStatus = $osf.throttle(self.updateStatus, 4000, {leading: false});
+
+
+    self.progressBar = ko.computed(function() {
+        switch(self.throttledStatus()) {
+            case 'connected':
+                return {
+                    class: 'progress-bar progress-bar-success',
+                    style: 'width: 100%'
+                };
+            case 'connecting':
+                return {
+                    class: 'progress-bar progress-bar-warning progress-bar-striped active',
+                    style: 'width: 100%'
+                };
+            default:
+                return {
+                    class: 'progress-bar progress-bar-danger',
+                    style: 'width: 100%'
+                };
+        }
+    });
+
     self.currentURL = ko.computed(function() {
         // Do not change URL for incompatible browsers
         if (typeof window.history.replaceState === 'undefined') {
@@ -392,20 +489,15 @@ function ViewModel(options){
             paramPrefix = '&';
         }
         // Default view is special cased
-        if (!self.editVis() && self.viewVis() && self.viewVersion() === 'current' && !self.compareVis() && self.menuVis()) {
+        if (self.viewVis() && self.viewVersion() === 'current' && !self.compareVis() && self.menuVis()) {
             window.history.replaceState({}, '', url);
             return;
         }
 
-        if (self.editVis()) {
-            url += paramPrefix + 'edit';
-            paramPrefix = '&';
-        }
         if (self.viewVis()) {
             url += paramPrefix + 'view';
             paramPrefix = '&';
-            if  ((!self.editVis() && self.viewVersion() !== 'current' ) ||
-                 (self.editVis() && self.viewVersion() !== 'preview')) {
+            if  ((self.viewVersion() !== 'current' )) {
                 url += '=' + self.viewVersion();
             }
         }
@@ -423,42 +515,32 @@ function ViewModel(options){
         window.history.replaceState({}, self.pageTitle, url);
     });
 
-
-    if(self.canEdit) {
-        self.editor = ace.edit('editor'); // jshint ignore: line
-
-        var ShareJSDoc = require('addons/wiki/static/ShareJSDoc.js');
-        self.editVM = new ShareJSDoc(self.draftURL, self.editorMetadata, self.viewText, self.editor);
-    }
     self.viewVM = new ViewWidget(self.viewVis, self.viewVersion, self.viewText, self.renderedView, self.contentURL, self.allowMathjaxification, self.allowFullRender, self.editor);
     self.compareVM = new CompareWidget(self.compareVis, self.compareVersion, self.viewVM.displaySource, self.renderedCompare, self.contentURL);
-    var request = $.ajax({
-        url: self.contentURL
-    });
-    request.done(function (resp) {
-        if (resp.wiki_content){
-            var rawContent = resp.wiki_content
-        } else if(window.contextVars.currentUser.canEdit) {
-            var rawContent = _('*Add important information, links, or images here to describe your project.*');
-        } else {
-            var rawContent = _('*No wiki content.*');
-        }
-        mEdit = createMEditor(mEdit, self.viewVM, rawContent);
-    });
+
+    if(self.canEdit) {
+        var request = $.ajax({
+            url: self.contentURL
+        });
+        request.done(function (resp) {
+            if (resp.wiki_content){
+                var rawContent = resp.wiki_content
+            } else if(window.contextVars.currentUser.canEdit) {
+                var rawContent = _('*Add important information, links, or images here to describe your project.*');
+            } else {
+                var rawContent = _('*No wiki content.*');
+            }
+            mEdit = createMEditor(mEdit, self, rawContent);
+        });
+    }
     var bodyElement = $('body');
     bodyElement.on('togglePanel', function (event, panel, display) {
-        // Update self.editVis, self.viewVis, or self.compareVis in viewmodel
+        // Update self.viewVis, or self.compareVis in viewmodel
         self[panel + 'Vis'](display);
         //URL needs to be a computed observable, and this should just update the panel states, which will feed URL
         // Switch view to correct version
-        if (panel === 'edit') {
-            if (display) {
-                self.viewVersion('preview');
-            } else if (self.viewVersion() === 'preview') {
-                self.viewVersion('current');
-            }
-        } else if (panel === 'view') {
-            if(!display && self.compareVis() && self.editVis()){
+        if (panel === 'view') {
+            if(!display && self.compareVis()){
                 self.viewVersion('preview');
             }
         }
@@ -469,9 +551,13 @@ function ViewModel(options){
     });
 
     self.editMode = function() {
+      if(self.canEdit) {
         readonly = false;
         self.viewVersion('preview');
         document.getElementById("mEditorFooter").style.display = "";
+      } else{
+       // output modal 'can not edit because of your permmission'
+      }
     }
 
     self.editModeOff = function() {
