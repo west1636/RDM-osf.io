@@ -13,7 +13,6 @@ var _ = require('js/rdmGettext')._;
 var THROTTLE = 500;
 
 var yProseMirror = require('y-prosemirror');
-var pMarkdown = require('prosemirror-markdown');
 
 var mCore = require('@milkdown/core');
 var mTransformer = require('@milkdown/transformer');
@@ -550,10 +549,16 @@ function ViewModel(options){
         self.menuVis(menuVisible);
     });
 
+    // Revert to last saved version, even if draft is more recent
+    self.revertChanges = function() {
+        console.log('revertChanges');
+    };
+
     self.editMode = function() {
       if(self.canEdit) {
         readonly = false;
         self.viewVersion('preview');
+        document.getElementById("editWysiwyg").style.display = "none";
         document.getElementById("mEditorFooter").style.display = "";
       } else{
        // output modal 'can not edit because of your permmission'
@@ -563,6 +568,7 @@ function ViewModel(options){
     self.editModeOff = function() {
         readonly = true;
         document.getElementById("mEditorFooter").style.display = "none";
+        document.getElementById("editWysiwyg").style.display = "";
     }
 
     // Submit the wysiwyg content as markdown
@@ -574,30 +580,12 @@ function ViewModel(options){
             type:'POST',
             data: self.viewVM.displaySource(),
         }).done(function (resp) {
-            console.log('success');
-            window.location.reload();
+            const reloadUrl = (location.href).replace(location.search, '')
+            window.location.assign(reloadUrl);
         }).fail(function(xhr) {
             var resp = JSON.parse(xhr.responseText);
             var message = resp.message;
-            var title = resp.title || 'Problem creating bucket';
-            $osf.unblock();
-            if (!message) {
-                message = 'Looks like that name is taken. Try another name?';
-            }
-            bootbox.confirm({
-                title: $osf.htmlEscape(title),
-                message: $osf.htmlEscape(message),
-                callback: function(result) {
-                    if (result) {
-                        self.openCreateBucket();
-                    }
-                },
-                buttons:{
-                    confirm:{
-                        label:'Try again'
-                    }
-                }
-            });
+            console.log(message)
         });
     }
 }
