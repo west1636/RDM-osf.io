@@ -7,13 +7,14 @@ var md = require('js/markdown').full;
 var mdQuick = require('js/markdown').quick;
 var mdOld = require('js/markdown').old;
 var diffTool = require('js/diffTool');
-var $osf = require('js/osfHelpers');
 var _ = require('js/rdmGettext')._;
 
 var THROTTLE = 500;
 
 var yProseMirror = require('y-prosemirror');
 
+var pMarkdown = require('prosemirror-markdown');
+var mCtx = require('@milkdown/ctx');
 var mCore = require('@milkdown/core');
 var mTransformer = require('@milkdown/transformer');
 var mCommonmark = require('@milkdown/preset-commonmark');
@@ -39,14 +40,25 @@ var mUtils = require('@milkdown/utils');
 var mCollab = require('@milkdown/plugin-collab');
 var yWebsocket = require('y-websocket');
 var yjs = require('yjs');
-//var yLeveldb =  require('y-leveldb');
 var currentOutput = '';
 var mEdit;
 
 var readonly = true;
 const editable = () => !readonly;
 
+var currentMd = '';
+var element = document.getElementById("mEditor");
+const doc = new yjs.Doc();
+const docId = window.contextVars.wiki.metadata.docId;
+const wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
+const wsUrl = wsPrefix + window.contextVars.wiki.urls.y_websocket;
+var wikiCtx = window.contextVars;
+var validImgExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf'];
+var imageFolder = 'Wiki images';
+var promises = [];
+var mEdit;
 /*
+console.log('--------')
 console.log(mCore);
 console.log(mCommonmark);
 console.log(mUtils);
@@ -66,26 +78,85 @@ console.log(mTooltip);
 //console.log(mDiagram);
 console.log(mIndent);
 console.log(mCollab);
+console.log('--------')
 */
+
+function slashPluginView(view) {
+  const content = document.createElement('div');
+  content.innerHTML = 'testaaaaa';
+  const provider = new mSlash.SlashProvider({
+    content,
+  });
+
+  return {
+    update: (updatedView, prevState) => {
+      provider.update(updatedView, prevState);
+    },
+    destroy: () => {
+      provider.destroy();
+      content.remove();
+    }
+  }
+}
 
 async function createMEditor(editor, vm, template) {
     console.log('----createMEditor 1------');
     console.log(template)
     if (editor && editor.destroy) {
-        console.log('123');
         editor.destroy();
-        console.log('456');
     }
-    const doc = new yjs.Doc();
-    const docId = window.contextVars.wiki.metadata.docId;
-    var wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
-    var wsUrl = wsPrefix + window.contextVars.wiki.urls.y_websocket;
+    ///////
+    const enableHtmlFileUploader = false
+    const uploader = async (files, schema) => {
+        var renderInfo = await localFileHandler(files);
+        const attachments = [];
+        for (let i = 0; i < files.length; i++) {
+          var file = files.item(i);
+          if (!file) {
+            continue;
+          }
+          // You can handle whatever the file type you want, we handle image here.
+          if (!file.type.includes('image') && !file.type.includes('pdf')) {
+            continue;
+          }
+          attachments.push(file);
+        }
+        const data = []
+        for(let i = 0; i < renderInfo.length; i++){
+            data.push({alt: renderInfo[i]['name'], src: renderInfo[i]['url']});
+        }
+        const ret = data.map(({ alt, src }) => {
+            if(/(?:\.([^.]+))?$/.exec(alt)[1] === 'pdf'){
+                var attrs={ title: alt, href: src }
+                    return schema.nodes.paragraph.createAndFill({}, schema.text(attrs.title, [schema.marks.link.create(attrs)]))
+            }else{
+                return schema.nodes.image.createAndFill({ src, alt })
+            }
+        });
+        return ret
+    };
+    ////////
+    const slash = mSlash.slashFactory('my-slash');
     const wsProvider = new yWebsocket.WebsocketProvider(wsUrl, docId, doc);
-    var mEdit = await mCore.Editor
+    mEdit = await mCore.Editor
       .make()
       .config(ctx => {
         ctx.set(mCore.rootCtx, '#mEditor')
+        ctx.update(mUpload.uploadConfig.key, (prev) => ({
+            ...prev,
+            uploader,
+            enableHtmlFileUploader,
+        }))
         ctx.get(mListener.listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
+            console.log('---listener start---')
+            const view = ctx.get(mCore.editorViewCtx);
+            const state = view.state
+            const undoElement = document.getElementById("undoWiki");
+            if(state["y-undo$"].hasUndoOps){
+                undoElement.disabled = false;
+                document.getElementById("msoUndo").style.opacity = 1;
+            }
+            console.log(doc)
             console.log(prevMarkdown);
             console.log(markdown);
             const collabService = ctx.get(mCollab.collabServiceCtx);
@@ -96,14 +167,12 @@ async function createMEditor(editor, vm, template) {
                 console.log(templateNode)
                 console.log('--------listener------------')
 
-//                yjs.applyUpdate(doc, 'a')
-
 //                const pMarkdownSerializer = new pMarkdown.MarkdownSerializer(remoteNode);
 //                console.log(pMarkdownSerializer)
 //                console.log(pMarkdownSerializer.serialize(remoteNode))
                 return false
             })
-
+            console.log('---listener end---')
 //            const collabService = ctx.get(mCollab.collabServiceCtx)
 //            collabService
 //            .applyTemplate(template, (remoteNode, templateNode) => {
@@ -116,10 +185,12 @@ async function createMEditor(editor, vm, template) {
             ...prev,
             editable,
         }))
+        ctx.set(slash.key, {
+            view: slashPluginView
+        })
       })
       .config(mNord.nord)
       .use(mCommonmark.commonmark)
-      .use(mHistory.history)
       .use(mEmoji.emoji)
       .use(mUpload.upload)
       .use(mMath.math)
@@ -128,14 +199,16 @@ async function createMEditor(editor, vm, template) {
       .use(mBlock.block)
       .use(mCursor.cursor)
       .use(mListener.listener)
+      .use(slash)
       .use(mPrism.prism)
-    //  .use(mTooltip.tooltipFactory)
     //  .use(mDiagram.diagram)
         .use(mIndent.indent)
       .use(mCollab.collab)
-    //  .use(mSlash.slashFactory)
       .create()
-    console.log(mEdit);
+
+    console.log('---created---')
+    console.log(mEdit)
+    console.log('---created---')
 
     mEdit.action((ctx) => {
         const collabService = ctx.get(mCollab.collabServiceCtx);
@@ -145,15 +218,18 @@ async function createMEditor(editor, vm, template) {
         })
 
         doc.on('update', (update, origin, doc) => {
+            console.log('---update---start')
+            yjs.logUpdate(update)
             console.log(update)
+            console.log(new TextDecoder().decode(update))
             console.log(origin)
             console.log(doc)
+            console.log('---update---end')
         })
 
         wsProvider.on('status', event => {
           console.log(event.status) // logs "connected" or "disconnected"
           vm.status(event.status);
-          console.log(vm.status)
           if (vm.status !== 'connecting') {
             vm.updateStatus();
           }
@@ -167,19 +243,26 @@ async function createMEditor(editor, vm, template) {
         })
         console.log(wsProvider);
         const fullname = window.contextVars.currentUser.fullname;
-        console.log(window.contextVars.wiki.metadata.docId);
+        console.log('---bind doc---start');
         console.log(doc);
-
         wsProvider.awareness.setLocalStateField('user', { name: fullname, color: '#ffb61e'})
         collabService.bindDoc(doc).setAwareness(wsProvider.awareness)
-
+        console.log('---bind doc---end');
         wsProvider.once('synced', async (isSynced) => {
             if (isSynced) {
                 collabService
 //                .applyTemplate(template)
                 .applyTemplate(template, (remoteNode, templateNode) => {
+                    console.log('-----applyTemplate start----')
                     console.log(remoteNode)
                     console.log(templateNode)
+                    var dms = pMarkdown.defaultMarkdownSerializer;
+                    var state = new pMarkdown.MarkdownSerializerState(dms.nodes, dms.marks, dms.options)
+                    console.log('---------')
+                    console.log(state)
+                    //state.renderContent(remoteNode)
+                    console.log(state.out)
+                    console.log('---------')
                     if (remoteNode.textContent.length === 0) {
                         vm.viewVM.displaySource(template);
                         return true
@@ -193,6 +276,7 @@ async function createMEditor(editor, vm, template) {
 //                        viewVM.displaySource('');
                         return false
                     }
+                    console.log('-----applyTemplate end----')
                  })
                 .connect();
             }
@@ -206,7 +290,9 @@ async function createMEditor(editor, vm, template) {
 //        mEdit.action(mUtils.insert('1234567890'))
         console.log('--createMEditor end----')
     })
-    return mEdit;
+    console.log('---created---2')
+    console.log(mEdit)
+    console.log('---created---2')
 
 }
 //<div id="preview" data-bind="mathjaxify">
@@ -258,10 +344,16 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
 //                self.rendered(self.renderMarkdown(self.viewText()));
                 console.log(self.viewText())
                 self.displaySource(self.viewText());
+                if (document.getElementById("editWysiwyg").style.display === "none"){
+                    document.getElementById("mMenuBar").style.display = "";
+                    document.getElementById("mEditorFooter").style.display = "";
+                }
                 document.getElementById("mEditor").style.display = "";
                 document.getElementById("wikiViewRender").style.display = "none";
             } else {
+                document.getElementById("mMenuBar").style.display = "none";
                 document.getElementById("mEditor").style.display = "none";
+                document.getElementById("mEditorFooter").style.display = "none";
                 document.getElementById("wikiViewRender").style.display = "";
                 if (self.version() === 'current') {
                     requestURL = contentURL;
@@ -381,6 +473,9 @@ function ViewModel(options){
         }
         return false;
     });
+
+    self.linkHref = ko.observable("");
+    self.linkTitle = ko.observable();
 
     self.pageTitle = $(document).find('title').text();
 
@@ -529,7 +624,11 @@ function ViewModel(options){
             } else {
                 var rawContent = _('*No wiki content.*');
             }
+
             mEdit = createMEditor(mEdit, self, rawContent);
+            console.log('---after createMEditor---')
+            console.log(mEdit)
+            console.log('---after createMEditor---')
         });
     }
     var bodyElement = $('body');
@@ -551,13 +650,163 @@ function ViewModel(options){
 
     // Revert to last saved version, even if draft is more recent
     self.revertChanges = function() {
-        console.log('revertChanges');
+        console.log('---revertChanges start---');
+        if(currentMd === ''){
+            var requestURL = self.contentURL
+            var request = $.ajax({
+                url: requestURL
+            });
+
+            request.done(function (resp) {
+                if (resp.wiki_content){
+                     var rawContent = resp.wiki_content
+                } else if(window.contextVars.currentUser.canEdit) {
+                    var rawContent = _('*Add important information, links, or images here to describe your project.*');
+                } else {
+                    var rawContent = _('*No wiki content.*');
+                }
+                currentMd = rawContent;
+            });
+        }
+        console.log(doc);
+        //var ydoc = new yjs.Doc();
+        //var ytext = ydoc.getText(currentMd);
+        //ytext.insert(0, currentMd)
+        //var latest = yjs.encodeStateAsUpdate(ydoc);
+        //var latest = new Uint8Array(currentMd)
+        //yjs.applyUpdate(doc, 'a')
+        self.viewVM.displaySource(currentMd);
+        console.log(currentMd);
+        console.log('---revertChanges end---');
     };
+
+    self.undoWiki = function() {
+        mEdit.action((ctx) => {
+            console.log('---undo---')
+            var view = ctx.get(mCore.editorViewCtx);
+            var state = view.state
+            view.focus()
+            yProseMirror.undo(state)
+            console.log(state["y-undo$"])
+            if(!(state["y-undo$"].hasUndoOps)){
+                document.getElementById("undoWiki").disabled = true;
+                document.getElementById("msoUndo").style.opacity = 0.3;
+            }
+            if(state["y-undo$"].hasRedoOps){
+                document.getElementById("redoWiki").disabled = false;
+                document.getElementById("msoRedo").style.opacity = 1;
+            }
+        })
+    }
+    self.redoWiki = function() {
+        mEdit.action((ctx) => {
+            console.log('---redo---')
+            const view = ctx.get(mCore.editorViewCtx);
+            const state = view.state
+            view.focus()
+            yProseMirror.redo(state)
+            console.log(state["y-undo$"])
+            if(!(state["y-undo$"].hasRedoOps)){
+                document.getElementById("redoWiki").disabled = true;
+                document.getElementById("msoRedo").style.opacity = 0.3;
+            }
+            if(state["y-undo$"].hasUndoOps){
+                document.getElementById("undoWiki").disabled = false;
+                document.getElementById("msoUndo").style.opacity = 1;
+            }
+        })
+    }
+    self.strong = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.toggleStrongCommand.key)(ctx)
+        })
+    }
+    self.link = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.toggleLinkCommand.key, {href: self.linkHref, title: self.linkTitle})(ctx)
+        })
+    }
+    self.image = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.insertImageCommand.key, {src: 'http://localhost:7777/v1/resources/p24xf/providers/osfstorage/6496fa09c1ce7b000a56d1d9?mode=render', title: 'title image', alt: 'tryimage'})(ctx)
+        })
+    }
+    self.italic = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.toggleEmphasisCommand.key)(ctx)
+        })
+    }
+    self.quote = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.wrapInBlockquoteCommand.key)(ctx)
+        })
+    }
+    self.code = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.createCodeBlockCommand.key)(ctx)
+        })
+    }
+    self.listNumbered = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.wrapInOrderedListCommand.key)(ctx)
+        })
+    }
+    self.listBulleted = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.wrapInBulletListCommand.key)(ctx)
+        })
+    }
+    self.head = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.wrapInHeadingCommand.key, 1)(ctx)
+        })
+    }
+    self.horizontal = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mCommonmark.insertHrCommand.key)(ctx)
+        })
+    }
+
+    self.table = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mGfm.insertTableCommand.key)(ctx)
+        })
+    }
 
     self.editMode = function() {
       if(self.canEdit) {
-        readonly = false;
+       readonly = false;
+       mEdit.action((ctx) => {
+           const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+        })
+        console.log('--editmode--')
+        console.log(mEdit)
+        console.log('--editmode--')
         self.viewVersion('preview');
+        document.getElementById("mMenuBar").style.display = "";
         document.getElementById("editWysiwyg").style.display = "none";
         document.getElementById("mEditorFooter").style.display = "";
       } else{
@@ -565,8 +814,13 @@ function ViewModel(options){
       }
     }
 
+    self.closeDialog = function() {
+        console.log('aaa')
+    }
+
     self.editModeOff = function() {
         readonly = true;
+        document.getElementById("mMenuBar").style.display = "none";
         document.getElementById("mEditorFooter").style.display = "none";
         document.getElementById("editWysiwyg").style.display = "";
     }
@@ -574,6 +828,7 @@ function ViewModel(options){
     // Submit the wysiwyg content as markdown
     self.submitMText = function() {
         console.log(self.viewVM.displaySource());
+        console.log(window.contextVars.wiki.urls)
         var pageUrl = window.contextVars.wiki.urls.page;
         $.ajax({
             url:pageUrl,
@@ -590,7 +845,196 @@ function ViewModel(options){
     }
 }
 
+/**
+ * If the 'Wiki images' folder does not exist for the current node, createFolder generates the request to create it
+ */
+function createFolder() {
+    return $.ajax({
+        url: wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage/?name=' + encodeURI(imageFolder) + '&kind=folder',
+        type: 'PUT',
+        beforeSend: $osf.setXHRAuthorization,
+    });
+};
 
+/**
+ * Checks to see whether there is already a 'Wiki images' folder for the current node
+ *
+ * If the folder doesn't exist, it attempts to create the folder
+ *
+ * @return {*} The folder's path attribute if it exists/was created
+ */
+function getOrCreateWikiImagesFolder() {
+    var folderUrl = wikiCtx.apiV2Prefix + 'nodes/' + wikiCtx.node.id + '/files/osfstorage/?filter[kind]=folder&fields[file]=name,path&filter[name]=' + encodeURI(imageFolder);
+    return $.ajax({
+        url: folderUrl,
+        type: 'GET',
+        beforeSend: $osf.setXHRAuthorization,
+        dataType: 'json'
+    }).then(function(response) {
+        if (response.data.length > 0) {
+            for (var i = 0, folder; folder = response.data[i]; i++) {
+                var name = folder.attributes.name;
+                if (name === imageFolder) {
+                    return folder.attributes.path;
+                }
+            }
+        }
+        if (response.data.length === 0) {
+            return createFolder().then(function(response) {
+                return response.data.attributes.path;
+            });
+        }
+    });
+};
+
+async function uplaodDnDFiles(files, path, fileNames) {
+	var info = {};
+    var infos = [];
+    var ext;
+    var name;
+    var fileBaseUrl = (window.contextVars.wiki.urls.base).replace('wiki', 'files');
+    if (path) {
+        $.each(files, function (i, file) {
+            var newName = null;
+            if (fileNames.indexOf(file.name) !== -1) {
+                newName = autoIncrementFileName(file.name, fileNames);
+            }
+            ext = getExtension(file.name);
+            name = newName ? newName : file.name;
+            if (validImgExtensions.indexOf(ext.toLowerCase()) <= -1) {
+                $osf.growl('Error', 'This file type cannot be embedded  (' + file.name + ')', 'danger');
+            } else {
+                var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + encodeURI(path) + '?name=' + encodeURIComponent(name) + '&type=file';
+                $osf.trackClick('wiki', 'dropped-image', wikiCtx.node.id);
+                promises.push(
+                $.ajax({
+                    url: waterbutlerURL,
+                    type: 'PUT',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: $osf.setXHRAuthorization,
+                    data: file,
+                }).done(function (response) {
+                    var extUploaded = getExtension(response.data.attributes.name);
+                    if(extUploaded === 'pdf'){
+                        var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + '/files' + response.data.attributes.path;
+                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: fileBaseUrl}
+                        infos.push(info)
+                        //paths.splice(i, 0, response.data.attributes.path);
+                        //names.splice(i, 0, response.data.attributes.name);
+                        //urls.splice(i, 0, fileBaseUrl);
+                    }else {
+                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: response.data.links.download + '?mode=render'}
+                        infos.push(info)
+                        //paths.splice(i, 0, response.data.attributes.path);
+                        //names.splice(i, 0, response.data.attributes.name);
+                        //urls.splice(i, 0, response.data.links.download + '?mode=render');
+                    }
+                }).fail(function (response) {
+                    notUploaded(response, false);
+                })
+                );
+            }
+        });
+        return $.when.apply(null, promises).then(function () {
+            return infos;
+        });
+    } else {
+        notUploaded(null, multiple);
+    }
+};
+
+async function getFileUrl(infos) {
+    if (infos.length !== 0) {
+        $.each(infos, function (i, info) {
+            var fileUrl = wikiCtx.apiV2Prefix + 'files' + info.path
+            promises.push(
+                $.ajax({
+                    url: fileUrl,
+                    type: 'GET',
+                    beforeSend: $osf.setXHRAuthorization,
+                    dataType: 'json'
+                }).done(function (response) {
+                    var ext = getExtension(info.name);
+                    if(ext === 'pdf'){
+                        info.url = response.data.links.html
+                    }
+                }).fail(function (response) {
+                    notUploaded(response, false);
+                })
+            );
+        });
+        return $.when.apply(null, promises).then(function () {
+            return infos;
+        });
+    } else {
+        notUploaded(null, multiple);
+    }
+};
+
+function autoIncrementFileName(name, nameList) {
+    var num = 1;
+    var newName;
+    var ext = getExtension(name);
+    var baseName = name.replace('.' + ext, '');
+
+    rename:
+    while (true) {
+        for (var i = 0; i < nameList.length; i++) {
+            newName = baseName + '(' + num + ').' + ext;
+            if (nameList[i] === newName) {
+                num += 1;
+                newName = baseName + '(' + num + ').' + ext;
+                continue rename;
+            }
+        }
+        break;
+    }
+    return newName;
+};
+
+function getExtension(filename) {
+    return /(?:\.([^.]+))?$/.exec(filename)[1];
+};
+
+async function localFileHandler(files) {
+    var multiple = files.length > 1;
+    var fileNames = [];
+    var path;
+    var response;
+    var info;
+    var renderInfo;
+    path = await getOrCreateWikiImagesFolder().fail(function(response) {
+        notUploaded(response, multiple);
+    })
+    fileNames = await $.ajax({
+    // Check to makes sure we don't overwrite a file with the same name.
+        url: wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + encodeURI(path) + '?meta=',
+        beforeSend: $osf.setXHRAuthorization,
+    }).then(function(response) {
+        return response.data.map(function(file) {
+            return file.attributes.name;
+        });
+    }).fail(function (response) {
+        notUploaded(response, false);
+    });
+
+    info = await uplaodDnDFiles(files, path, fileNames);
+    renderInfo = await getFileUrl(info);
+    return renderInfo
+}
+
+function notUploaded(response, multiple) {
+    var files = multiple ? 'Files' : 'File';
+    if (response.status === 403) {
+        $osf.growl('Error', 'File not uploaded. You do not have permission to upload files to' +
+            ' this project.', 'danger');
+    } else {
+        $osf.growl('Error', files + ' not uploaded. Please refresh the page and try ' +
+            'again or contact <a href="mailto: support@cos.io">support@cos.io</a> ' +
+            'if the problem persists.', 'danger');
+    }
+};
 
 var WikiPage = function(selector, options) {
     var self = this;
