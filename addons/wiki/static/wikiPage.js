@@ -685,6 +685,7 @@ function ViewModel(options){
             console.log('---undo---')
             var view = ctx.get(mCore.editorViewCtx);
             var state = view.state
+            var preUndoOps = state["y-undo$"]
             view.focus()
             yProseMirror.undo(state)
             console.log(state["y-undo$"])
@@ -692,10 +693,8 @@ function ViewModel(options){
                 document.getElementById("undoWiki").disabled = true;
                 document.getElementById("msoUndo").style.opacity = 0.3;
             }
-            if(state["y-undo$"].hasRedoOps){
-                document.getElementById("redoWiki").disabled = false;
-                document.getElementById("msoRedo").style.opacity = 1;
-            }
+            document.getElementById("redoWiki").disabled = false;
+            document.getElementById("msoRedo").style.opacity = 1;
         })
     }
     self.redoWiki = function() {
@@ -710,10 +709,8 @@ function ViewModel(options){
                 document.getElementById("redoWiki").disabled = true;
                 document.getElementById("msoRedo").style.opacity = 0.3;
             }
-            if(state["y-undo$"].hasUndoOps){
-                document.getElementById("undoWiki").disabled = false;
-                document.getElementById("msoUndo").style.opacity = 1;
-            }
+            document.getElementById("undoWiki").disabled = false;
+            document.getElementById("msoUndo").style.opacity = 1;
         })
     }
     self.strong = function() {
