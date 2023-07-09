@@ -1,5 +1,8 @@
 <%inherit file="project/project_base.mako"/>
 <%def name="title()">${node['title']} ${_("Wiki")}</%def>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
 
 <%def name="stylesheets()">
     ${parent.stylesheets()}
@@ -11,6 +14,13 @@
 % if (user['can_comment'] or node['has_comments']) and not node['anonymous']:
     <%include file="include/comment_pane_template.mako"/>
 % endif
+<style >
+
+.ProseMirror:focus {
+    outline: none;
+  }
+
+</style>
 
 <style >
 
@@ -86,13 +96,13 @@
               <div class="osf-panel panel panel-default no-border" data-bind="css: { 'no-border reset-height': $root.singleVis() === 'view', 'osf-panel-flex': $root.singleVis() !== 'view' }">
                 <div class="panel-heading wiki-panel-header wiki-single-heading" data-bind="css: { 'osf-panel-heading-flex': $root.singleVis() !== 'view', 'wiki-single-heading': $root.singleVis() === 'view' }">
                     <div class="row wiki-view-icon-container">
-                        <div class="col-lg-4">
-                            <div class="panel-title" > <i class="fa fa-eye"> </i>  ${_("View")}</div>
-                        </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8" style="width:100%">
 
-                            <div class="pull-right">
-                                <button id="editWysiwyg" class="btn btn-info" data-bind="click: editMode">Edit</button>
+                            <div id="editWysiwyg" class="wiki-toolbar-icon text-info" data-bind="click: editMode">
+                                <i class="fa fa-edit text-info"></i><span>Edit</span>
+                            </div>
+                            <div class="pull-right" style="margin-right:20px;">
+
                                 <!-- Version Picker -->
                                 <span>${_("Wiki Version:")}</span>
                                 <div style="display: inline-block">
@@ -111,20 +121,19 @@
                                         % endfor
                                     % endif
                                 </select>
-                              </div>
-                              <div class="pull-right">
-                                <div class="progress no-margin pointer " data-toggle="modal" data-bind="attr: {'data-target': modalTarget}" >
-                                    <div role="progressbar" data-bind="attr: progressBar">
-                                        <span class="progress-bar-content p-h-sm">
-                                            <span data-bind="text: statusDisplay"></span>
-                                            <span class="sharejs-info-btn">
-                                                <i class="fa fa-question-circle fa-large"></i>
-                                            </span>
-                                        </span>
-                                    </div>
                                 </div>
-                              </div>
-
+                                <div class="pull-right" style="margin-left: 20px;>
+                                  <div class="progress no-margin pointer " data-toggle="modal" data-bind="attr: {'data-target': modalTarget}" >
+                                      <div role="progressbar" data-bind="attr: progressBar">
+                                          <span class="progress-bar-content p-h-sm">
+                                              <span data-bind="text: statusDisplay"></span>
+                                              <span class="sharejs-info-btn">
+                                                  <i class="fa fa-question-circle fa-large"></i>
+                                              </span>
+                                          </span>
+                                      </div>
+                                  </div>
+                                </div>
                             </div>
 
                         </div>
@@ -132,7 +141,22 @@
                 </div>
 
                 <div id="wikiViewPanel"  class="panel-body" data-bind="css: { 'osf-panel-body-flex': $root.singleVis() !== 'view' }">
-                  <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'}"></div>
+                  <div id="mMenuBar" style="display: none; border-bottom: 1px solid; border-bottom-color: #d1d5db">
+                    <button id="undoWiki" class="menuItem" data-bind="click: undoWiki" disabled><span id="msoUndo" class="material-symbols-outlined" style="opacity: 0.3">undo</span></button>
+                    <button id="redoWiki" class="menuItem" data-bind="click: redoWiki" disabled><span id="msoRedo" class="material-symbols-outlined" style="opacity: 0.3">redo</span></button>
+                    <button id="strongWiki" class="menuItem" data-bind="click: strong"><span class="material-symbols-outlined" >format_bold</span></button>
+                    <button id="italicWiki" class="menuItem" data-bind="click: italic"><span class="material-symbols-outlined">format_italic</span></button>
+                    <button class="menuItem" data-toggle="modal" data-target="#toggleLink"><span class="material-symbols-outlined" >link</span></button>
+                    <button class="menuItem" data-bind="click: quote"><span class="material-symbols-outlined">format_quote</span></button>
+                    <button class="menuItem" data-toggle="modal" data-target="#toggleImage"><span class="material-symbols-outlined">image</span></button>
+                    <button class="menuItem" data-bind="click: listNumbered"><span class="material-symbols-outlined">format_list_numbered</span></button>
+                    <button class="menuItem" data-bind="click: listBulleted"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+                    <button class="menuItem" data-bind="click: head"><span class="material-symbols-outlined">view_headline</span></button>
+                    <button class="menuItem" data-bind="click: horizontal"><span class="material-symbols-outlined">horizontal_rule</span></button>
+                    <button class="menuItem" data-bind="click: table"><span class="material-symbols-outlined">table</span></button>
+                    <button class="menuItem" data-toggle="modal" data-target="#wiki-help-modal"><span class="material-symbols-outlined">help</span></button>
+                  </div>
+                  <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'} overflow: auto;height: 400px;"></div>
                   <div id="wikiViewRender" data-bind="html: renderedView, mathjaxify: renderedView, anchorScroll : { buffer: 50, elem : '#wikiViewPanel'}" class="markdown-it-view scripted">
                       % if wiki_content:
                           ${wiki_content}
@@ -317,6 +341,61 @@
             ${_("Your browser does not support collaborative editing. You may continue to make edits.")}
             <strong>${_('Changes will not be saved until you press the "Save" button.')}</strong>
         </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="toggleLink" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add hyperlink</h4>
+      </div>
+      <div class="modal-body">
+        <div><p style="display: inline-block; margin-right: 10px;">href:</p><input id="linkHref" class="form-control" type="text" style="display: inline-block; width: 75%;" placeholder="Enter the URL"></div>
+        <div><p style="display: inline-block; margin-right: 12px;">title:</p><input id="linkTitle" class="form-control" type="text" style="display: inline-block; width: 75%;" placeholder="Enter the Title"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-right">
+          <button
+            class="btn"
+            data-dismiss="modal"
+          >Cancel</button>
+          <button
+            id="addLink"
+            class="btn btn-success"
+          >Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="toggleImage" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add image</h4>
+      </div>
+      <div class="modal-body">
+        <div><p style="display: inline-block; margin-right: 16px;">src:</p><input id="imageSrc" class="form-control" type="text" style="display: inline-block; width: 75%;" placeholder="Enter the URL"></div>
+        <div><p style="display: inline-block; margin-right: 10px;">title:</p><input id="imageTitle" class="form-control" type="text" style="display: inline-block; width: 75%;" placeholder="Enter the URL"></div>
+        <div><p style="display: inline-block; margin-right: 19px;">alt:</p><input id="imageAlt" class="form-control" type="text" style="display: inline-block; width: 75%;" placeholder="Enter the URL"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-right">
+          <button
+            class="btn"
+            data-dismiss="modal"
+          >Cancel</button>
+          <button
+            id="addImage"
+            class="btn btn-success"
+          >Add</button>
+        </div>
       </div>
     </div>
   </div>
