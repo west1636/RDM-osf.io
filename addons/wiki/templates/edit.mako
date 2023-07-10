@@ -153,10 +153,20 @@
                     <button class="menuItem" data-bind="click: listBulleted"><span class="material-symbols-outlined">format_list_bulleted</span></button>
                     <button class="menuItem" data-bind="click: head"><span class="material-symbols-outlined">view_headline</span></button>
                     <button class="menuItem" data-bind="click: horizontal"><span class="material-symbols-outlined">horizontal_rule</span></button>
-                    <button class="menuItem" data-bind="click: table"><span class="material-symbols-outlined">table</span></button>
-                    <button class="menuItem" data-toggle="modal" data-target="#wiki-help-modal"><span class="material-symbols-outlined">help</span></button>
+                    <div style="display: inline-block; position:absolute">
+                    <button id="tableBtn" class="menuItem" data-bind="click: table"><span class="material-symbols-outlined">table</span><span id="arrowDropDown" class="material-symbols-outlined" style="margin-left: -7px; display: none;">arrow_drop_down</span></button>
+                      <div id="tableMenu" class="table-dropdown-menu" style="display: none; border: 1px solid #aaa; padding: 2px; font-size: 90%; background: white; z-index: 15; white-space: nowrap; position: absolute">
+                        <div class="table-dropdown-item" data-bind="click: addColumnBef"><div style="">Insert column before</div></div>
+                        <div class="table-dropdown-item" data-bind="click: addColumnAft"><div style="">Insert column after</div></div>
+                        <div class="table-dropdown-item" data-bind="click: addRowBef"><div style="">Insert row before</div></div>
+                        <div class="table-dropdown-item" data-bind="click: addRowAft"><div style="">Insert row after</div></div>
+                        <div class="table-dropdown-item" data-bind="click: deleteTable"><div style="">delete table</div></div>
+                      </div>
+                    </div>
+                    <button class="menuItem" style="margin-left: 40px;" data-toggle="modal" data-target="#wiki-help-modal" style="margin-left: -7px"><span class="material-symbols-outlined">help</span></button>
                   </div>
                   <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'} overflow: auto;height: 400px;"></div>
+
                   <div id="wikiViewRender" data-bind="html: renderedView, mathjaxify: renderedView, anchorScroll : { buffer: 50, elem : '#wikiViewPanel'}" class="markdown-it-view scripted">
                       % if wiki_content:
                           ${wiki_content}
