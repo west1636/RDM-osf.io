@@ -345,3 +345,18 @@ select.form-control {
     display: inherit;
     overflow-y: hidden;
 }
+
+.menuItem {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #4B5563;
+}
+.menuItem:hover{
+    background: #d1d5db;
+}
+
+.table-dropdown-item {
+  padding: 2px 8px 2px 4px;
+}
+
