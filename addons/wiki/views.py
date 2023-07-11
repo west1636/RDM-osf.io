@@ -294,7 +294,6 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_edit_post(auth, wname, **kwargs):
-    logger.info('---project_wiki_edit_post start---')
     node = kwargs['node'] or kwargs['project']
     wiki_name = wname.strip()
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
@@ -305,11 +304,8 @@ def project_wiki_edit_post(auth, wname, **kwargs):
     if wiki_name.lower() == 'home':
         wiki_name = 'home'
 
-    logger.info('request:::' + str(request))
     requestData = request.get_data()
-    logger.info('requestData:::' + str(requestData))
     form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
-    logger.info('form_wiki_content:::' + str(form_wiki_content))
     if wiki_version:
         # Only update wiki if content has changed
         if form_wiki_content != wiki_version.content:
