@@ -307,7 +307,8 @@ def project_wiki_edit_post(auth, wname, **kwargs):
 
     logger.info('request:::' + str(request))
     requestData = request.get_data()
-    logger.info('requestData:::' + str(requestData))
+    logger.info('requestGetData:::' + str(requestData))
+    logger.info('requestData:::' + str(request.data))
     form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
     logger.info('form_wiki_content:::' + str(form_wiki_content))
     if wiki_version:
