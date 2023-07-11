@@ -46,6 +46,14 @@
                            "bucketLocations": {
                              "osakau": {"name": "osakau", "host": "s3-osakau.oniongw.hpc.cmc.osaka-u.ac.jp:443"},
                              "": {"name": "osakau"}},
+                           "serverSideEncryption": false},
+                          {"name": "StorageGRID",
+                           "host": "sgws.sg.ndxlab.net:443",
+                           "bucketLocations": {"us-east-1": {"name": "nii001"}},
+                           "serverSideEncryption": false},
+                          {"name": "ONTAP S3",
+                           "host": "ontap.sg.ndxlab.net:443",
+                           "bucketLocations": {"us-east-1": {"name": "select001"}},
                            "serverSideEncryption": false}
                            ],
     "encryptUploads": true
