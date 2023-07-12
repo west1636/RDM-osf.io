@@ -305,7 +305,12 @@ def project_wiki_edit_post(auth, wname, **kwargs):
         wiki_name = 'home'
 
     requestData = request.get_data()
-    form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
+#    form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
+    logger.info('requestGetJson:::' + str(request.get_json))
+    getJson = request.get_json()
+    form_wiki_content = getJson['markdown']
+    logger.info('form_wiki_content:::' + str(form_wiki_content))
+
     if wiki_version:
         # Only update wiki if content has changed
         if form_wiki_content != wiki_version.content:
