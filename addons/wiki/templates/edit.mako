@@ -147,6 +147,7 @@
                     <button id="italicWiki" class="menuItem" data-bind="click: italic"><span class="material-symbols-outlined">format_italic</span></button>
                     <button class="menuItem" data-toggle="modal" data-target="#toggleLink"><span class="material-symbols-outlined" >link</span></button>
                     <button class="menuItem" data-bind="click: quote"><span class="material-symbols-outlined">format_quote</span></button>
+                    <button class="menuItem" data-bind="click: code"><span class="material-symbols-outlined">code</span></button>
                     <button class="menuItem" data-toggle="modal" data-target="#toggleImage"><span class="material-symbols-outlined">image</span></button>
                     <button class="menuItem" data-bind="click: listNumbered"><span class="material-symbols-outlined">format_list_numbered</span></button>
                     <button class="menuItem" data-bind="click: listBulleted"><span class="material-symbols-outlined">format_list_bulleted</span></button>
