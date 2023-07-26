@@ -33,7 +33,6 @@ var mBlock = require('@milkdown/plugin-block');
 var mCursor = require('@milkdown/plugin-cursor');
 var mListener = require('@milkdown/plugin-listener');
 var mPrism = require('@milkdown/plugin-prism');
-//var mDiagram = require('@milkdown/plugin-diagram');
 var mIndent = require('@milkdown/plugin-indent');
 var mTooltip = require('@milkdown/plugin-tooltip');
 var mUtils = require('@milkdown/utils');
@@ -42,9 +41,12 @@ var yWebsocket = require('y-websocket');
 var yjs = require('yjs');
 var currentOutput = '';
 var mEdit;
+var mView;
 
 var readonly = true;
 const editable = () => !readonly;
+var viewonly = true;
+const uneditable = () => !viewonly;
 
 var currentMd = '';
 var element = document.getElementById("mEditor");
@@ -57,29 +59,8 @@ var validImgExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf'];
 var imageFolder = 'Wiki images';
 var promises = [];
 var mEdit;
-/*
-console.log('--------')
-console.log(mCore);
-console.log(mCommonmark);
-console.log(mUtils);
-console.log(mNord);
-console.log(mHistory);
-console.log(mEmoji);
-console.log(mUpload);
-console.log(mMath);
-console.log(mClipboard);
-console.log(mSlash);
-console.log(mGfm);
-console.log(mBlock);
-console.log(mCursor);
-console.log(mListener);
-console.log(mPrism);
-console.log(mTooltip);
-//console.log(mDiagram);
-console.log(mIndent);
-console.log(mCollab);
-console.log('--------')
-*/
+var altDafaultFlg = false;
+var headNum = 1;
 
 function slashPluginView(view) {
   const content = document.createElement('div');
@@ -99,13 +80,49 @@ function slashPluginView(view) {
   }
 }
 
+async function createMView(editor, markdown) {
+    console.log('----createMView 1------');
+    console.log(markdown)
+    if (editor && editor.destroy) {
+        editor.destroy();
+    }
+    mView = await mCore.Editor
+      .make()
+      .config(ctx => {
+        ctx.set(mCore.rootCtx, '#mView')
+        ctx.set(mCore.defaultValueCtx, markdown);
+        ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
+            ...prev,
+            attributes: { spellcheck: 'false' },
+        }))
+        ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
+            ...prev,
+            uneditable,
+        }))
+      })
+      .config(mNord.nord)
+      .use(mCommonmark.commonmark)
+      .use(mEmoji.emoji)
+      .use(mUpload.upload)
+      .use(mMath.math)
+      .use(mClipboard.clipboard)
+      .use(mGfm.gfm)
+      .use(mBlock.block)
+      .use(mCursor.cursor)
+      .use(mListener.listener)
+      .use(mPrism.prism)
+        .use(mIndent.indent)
+      .use(mCollab.collab)
+      .create()
+}
+
+
 async function createMEditor(editor, vm, template) {
     console.log('----createMEditor 1------');
     console.log(template)
     if (editor && editor.destroy) {
         editor.destroy();
     }
-    ///////
     const enableHtmlFileUploader = false
     const uploader = async (files, schema) => {
         var renderInfo = await localFileHandler(files);
@@ -135,7 +152,6 @@ async function createMEditor(editor, vm, template) {
         });
         return ret
     };
-    ////////
     const slash = mSlash.slashFactory('my-slash');
     const wsProvider = new yWebsocket.WebsocketProvider(wsUrl, docId, doc);
     mEdit = await mCore.Editor
@@ -147,39 +163,33 @@ async function createMEditor(editor, vm, template) {
             uploader,
             enableHtmlFileUploader,
         }))
+        ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
+            ...prev,
+            attributes: { spellcheck: 'false' },
+        }))
         ctx.get(mListener.listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
             console.log('---listener start---')
             const view = ctx.get(mCore.editorViewCtx);
             const state = view.state
             const undoElement = document.getElementById("undoWiki");
-            if(state["y-undo$"].hasUndoOps){
-                undoElement.disabled = false;
-                document.getElementById("msoUndo").style.opacity = 1;
+            var tableWrappers = document.querySelectorAll('.tableWrapper');
+            console.log(tableWrappers);
+            for (let i = 0; i < tableWrappers.length; i++) {
+                tableWrappers[i].addEventListener('click', (event) => {
+                    document.getElementById("arrowDropDown").style.display = "";
+                });
             }
             console.log(doc)
             console.log(prevMarkdown);
             console.log(markdown);
             const collabService = ctx.get(mCollab.collabServiceCtx);
             vm.viewVM.displaySource(markdown);
-            collabService
-            .applyTemplate('a', (remoteNode, templateNode) => {
-                console.log(remoteNode)
-                console.log(templateNode)
-                console.log('--------listener------------')
 
-//                const pMarkdownSerializer = new pMarkdown.MarkdownSerializer(remoteNode);
-//                console.log(pMarkdownSerializer)
-//                console.log(pMarkdownSerializer.serialize(remoteNode))
-                return false
-            })
+            if(state["y-undo$"] !== undefined && (state["y-undo$"].undoManager.undoStack).length !== 0){
+                undoElement.disabled = false;
+                document.getElementById("msoUndo").style.opacity = 1;
+            }
             console.log('---listener end---')
-//            const collabService = ctx.get(mCollab.collabServiceCtx)
-//            collabService
-//            .applyTemplate(template, (remoteNode, templateNode) => {
-//                console.log('---listen---')
-//                viewVM.displaySource(remoteNode.textContent);
-//                return false
-//            })
         })
         ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
             ...prev,
@@ -201,37 +211,29 @@ async function createMEditor(editor, vm, template) {
       .use(mListener.listener)
       .use(slash)
       .use(mPrism.prism)
-    //  .use(mDiagram.diagram)
         .use(mIndent.indent)
       .use(mCollab.collab)
       .create()
 
-    console.log('---created---')
-    console.log(mEdit)
-    console.log('---created---')
-
     mEdit.action((ctx) => {
         const collabService = ctx.get(mCollab.collabServiceCtx);
         wsProvider.on('sync', isSynced => {
-          console.log('sync')
           console.log(isSynced)
         })
 
         doc.on('update', (update, origin, doc) => {
-            console.log('---update---start')
-            yjs.logUpdate(update)
-            console.log(update)
-            console.log(new TextDecoder().decode(update))
-            console.log(origin)
-            console.log(doc)
-            console.log('---update---end')
+            console.log('---doc update---')
         })
 
         wsProvider.on('status', event => {
           console.log(event.status) // logs "connected" or "disconnected"
           vm.status(event.status);
-          if (vm.status !== 'connecting') {
-            vm.updateStatus();
+          if (vm.status() !== 'connecting') {
+              vm.updateStatus();
+              if (vm.status() === 'connected') {
+                  console.log('---connected---') 
+                  altDafaultFlg = true;
+              }
           }
           vm.throttledUpdateStatus();
         })
@@ -240,59 +242,45 @@ async function createMEditor(editor, vm, template) {
         })
         wsProvider.on('connection-error', WSClosedEvent => {
           console.log(WSClosedEvent) // logs "connected" or "disconnected"
+          vm.status('disconnected');
+          vm.updateStatus();
+          vm.throttledUpdateStatus();
+          if (!altDafaultFlg) {
+              mEdit.action(mUtils.insert(template))
+              altDafaultFlg = true;
+              const parser = ctx.get(mCore.parserCtx)
+              const node = parser(template)
+              const dummyDoc = yProseMirror.prosemirrorToYDoc(node)
+              const dummy = yjs.encodeStateAsUpdate(dummyDoc)
+              yjs.applyUpdate(doc, dummy)
+              vm.viewVM.displaySource(template);
+              console.log('---end alternative apply---') 
+          }
         })
-        console.log(wsProvider);
         const fullname = window.contextVars.currentUser.fullname;
-        console.log('---bind doc---start');
-        console.log(doc);
         wsProvider.awareness.setLocalStateField('user', { name: fullname, color: '#ffb61e'})
         collabService.bindDoc(doc).setAwareness(wsProvider.awareness)
-        console.log('---bind doc---end');
         wsProvider.once('synced', async (isSynced) => {
             if (isSynced) {
                 collabService
-//                .applyTemplate(template)
                 .applyTemplate(template, (remoteNode, templateNode) => {
                     console.log('-----applyTemplate start----')
                     console.log(remoteNode)
                     console.log(templateNode)
-                    var dms = pMarkdown.defaultMarkdownSerializer;
-                    var state = new pMarkdown.MarkdownSerializerState(dms.nodes, dms.marks, dms.options)
-                    console.log('---------')
-                    console.log(state)
-                    //state.renderContent(remoteNode)
-                    console.log(state.out)
-                    console.log('---------')
+                    // if no remote node content, apply current
                     if (remoteNode.textContent.length === 0) {
+                        console.log('-----remote node 0----')
                         vm.viewVM.displaySource(template);
-                        return true
                     } else {
-//                        const serializer = ctx.get(mCore.serializerCtx)
-//                        const remoteDoc = yProseMirror.prosemirrorToYDoc(remoteNode.type)
-//                        const markdown = serializer(remoteDoc)
-//                        console.log(markdown)
-//                          const markdown = mTransformer.Serializer(remoteNode)
-//                          console.log(markdown)
-//                        viewVM.displaySource('');
-                        return false
+                        console.log('-----not applytemplte----')
                     }
                     console.log('-----applyTemplate end----')
                  })
                 .connect();
             }
         });
-//        const parser = ctx.get(mCore.parserCtx)
-//        const node = parser('aaa')
-//        const dummyDoc = yProseMirror.prosemirrorToYDoc(node)
-//        const dummy = yjs.encodeStateAsUpdate(dummyDoc)
-//        yjs.applyUpdate(doc, dummy)
-//        console.log(mEdit.action(mUtils.getMarkdown()))
-//        mEdit.action(mUtils.insert('1234567890'))
         console.log('--createMEditor end----')
     })
-    console.log('---created---2')
-    console.log(mEdit)
-    console.log('---created---2')
 
 }
 //<div id="preview" data-bind="mathjaxify">
@@ -325,6 +313,14 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
     }, THROTTLE);
 
     self.renderMarkdown = function(rawContent){
+       console.log('---renderMakrdown---');
+       console.log(rawContent);
+       createMView(mView, rawContent);
+
+
+
+
+/*
         if(self.visible()) {
             if (self.allowFullRender()) {
                 return md.render(rawContent);
@@ -334,6 +330,7 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
         } else {
             return '';
         }
+*/
     };
 
     self.displayText =  ko.computed(function() {
@@ -473,9 +470,6 @@ function ViewModel(options){
         }
         return false;
     });
-
-    self.linkHref = ko.observable("");
-    self.linkTitle = ko.observable();
 
     self.pageTitle = $(document).find('title').text();
 
@@ -689,7 +683,7 @@ function ViewModel(options){
             view.focus()
             yProseMirror.undo(state)
             console.log(state["y-undo$"])
-            if(!(state["y-undo$"].hasUndoOps)){
+            if((state["y-undo$"].undoManager.undoStack).length === 0){
                 document.getElementById("undoWiki").disabled = true;
                 document.getElementById("msoUndo").style.opacity = 0.3;
             }
@@ -705,7 +699,7 @@ function ViewModel(options){
             view.focus()
             yProseMirror.redo(state)
             console.log(state["y-undo$"])
-            if(!(state["y-undo$"].hasRedoOps)){
+            if((state["y-undo$"].undoManager.redoStack).length === 0){
                 document.getElementById("redoWiki").disabled = true;
                 document.getElementById("msoRedo").style.opacity = 0.3;
             }
@@ -717,28 +711,40 @@ function ViewModel(options){
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
             view.focus()
-            return mUtils.callCommand(mCommonmark.toggleStrongCommand.key)(ctx)
+            mUtils.callCommand(mCommonmark.toggleStrongCommand.key)(ctx)
         })
     }
     self.link = function() {
+        var linkHref = document.getElementById("linkHref");
+        var linkTitle = document.getElementById("linkTitle");
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
+            mUtils.callCommand(mCommonmark.toggleLinkCommand.key, {href: linkHref.value, title: linkTitle.value})(ctx)
+            $('.modal').modal('hide');
+            linkHref.value = '';
+            linkTitle.value = '';
             view.focus()
-            return mUtils.callCommand(mCommonmark.toggleLinkCommand.key, {href: self.linkHref, title: self.linkTitle})(ctx)
         })
     }
     self.image = function() {
+        var imageSrc = document.getElementById("imageSrc");
+        var imageTitle = document.getElementById("imageTitle");
+        var imageAlt = document.getElementById("imageAlt");
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
+            mUtils.callCommand(mCommonmark.insertImageCommand.key, {src: imageSrc.value, title: imageTitle.value, alt: imageAlt.value})(ctx)
+            $('.modal').modal('hide');
+            imageSrc.value = '';
+            imageTitle.value = '';
+            imageAlt.value = '';
             view.focus()
-            return mUtils.callCommand(mCommonmark.insertImageCommand.key, {src: 'http://localhost:7777/v1/resources/p24xf/providers/osfstorage/6496fa09c1ce7b000a56d1d9?mode=render', title: 'title image', alt: 'tryimage'})(ctx)
         })
     }
     self.italic = function() {
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
             view.focus()
-            return mUtils.callCommand(mCommonmark.toggleEmphasisCommand.key)(ctx)
+            mUtils.callCommand(mCommonmark.toggleEmphasisCommand.key)(ctx)
         })
     }
     self.quote = function() {
@@ -773,7 +779,8 @@ function ViewModel(options){
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
             view.focus()
-            return mUtils.callCommand(mCommonmark.wrapInHeadingCommand.key, 1)(ctx)
+            mUtils.callCommand(mCommonmark.wrapInHeadingCommand.key, headNum)(ctx)
+            headNum === 6 ? headNum = 1 : headNum =  headNum + 1;
         })
     }
     self.horizontal = function() {
@@ -785,20 +792,95 @@ function ViewModel(options){
     }
 
     self.table = function() {
+        var cssArrow = document.getElementById("arrowDropDown").style.display;
+        console.log('--table---');
+        console.log(cssArrow);
+        if(cssArrow === ''){
+            document.getElementById("tableMenu").style.display = "";
+            var tableMenu = document.querySelector('#tableMenu');
+
+        } else {
+            mEdit.action((ctx) => {
+                const view = ctx.get(mCore.editorViewCtx);
+                view.focus()
+                return mUtils.callCommand(mGfm.insertTableCommand.key)(ctx)
+            })
+        }
+    }
+
+    self.addColumnBef = function() {
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
             view.focus()
-            return mUtils.callCommand(mGfm.insertTableCommand.key)(ctx)
+            return mUtils.callCommand(mGfm.addColBeforeCommand.key)(ctx)
         })
     }
 
+    self.addColumnAft = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mGfm.addColAfterCommand.key)(ctx)
+        })
+    }
+
+    self.addRowBef = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mGfm.addRowBeforeCommand.key)(ctx)
+        })
+    }
+
+    self.addRowAft = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mGfm.addRowAfterCommand.key)(ctx)
+        })
+    }
+
+    self.deleteTable = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            mUtils.callCommand(mGfm.selectTableCommand.key)(ctx)
+            mUtils.callCommand(mGfm.deleteSelectedCellsCommand.key)(ctx)
+        })
+    }
+
+    var addLink = document.querySelector('#addLink');
+    addLink.onclick = self.link.bind(self);
+    var addImage = document.querySelector('#addImage');
+    addImage.onclick = self.image.bind(self);
+
+    document.addEventListener('mousedown', (event) => {
+        console.log(event);
+        console.log(event.target);
+        console.log(event.target.closest('.tableWrapper'));
+        console.log(event.target.closest('.table-dropdown-item'));
+        console.log(event.target.closest('#tableBtn'));
+        if (!(event.target.closest('.tableWrapper')) && !(event.target.closest('#tableBtn'))) {
+            document.getElementById("arrowDropDown").style.display = "none";
+        }
+        if (!(event.target.closest('.table-dropdown-item')) && !(event.target.closest('#tableBtn'))) {
+            document.getElementById("tableMenu").style.display = "none";
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        console.log('---view focus---')
+        if (event.target.closest('#mEditor')) {
+            mEdit.action((ctx) => {
+                const view = ctx.get(mCore.editorViewCtx);
+                view.focus()
+            })
+        }
+    });
+
     self.editMode = function() {
       if(self.canEdit) {
-       readonly = false;
-       mEdit.action((ctx) => {
-           const view = ctx.get(mCore.editorViewCtx);
-            view.focus()
-        })
+        readonly = false;
         console.log('--editmode--')
         console.log(mEdit)
         console.log('--editmode--')
@@ -806,7 +888,19 @@ function ViewModel(options){
         document.getElementById("mMenuBar").style.display = "";
         document.getElementById("editWysiwyg").style.display = "none";
         document.getElementById("mEditorFooter").style.display = "";
-      } else{
+
+        var tableWrappers = document.querySelectorAll('.tableWrapper');
+        console.log(tableWrappers);
+        for (let i = 0; i < tableWrappers.length; i++) {
+            tableWrappers[i].addEventListener('click', (event) => {
+            document.getElementById("arrowDropDown").style.display = "";
+            });
+        }
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+                view.focus()
+        })
+      } else {
        // output modal 'can not edit because of your permmission'
       }
     }
@@ -830,7 +924,8 @@ function ViewModel(options){
         $.ajax({
             url:pageUrl,
             type:'POST',
-            data: self.viewVM.displaySource(),
+            data: JSON.stringify({markdown: self.viewVM.displaySource()}),
+            contentType: 'application/json; charset=utf-8',
         }).done(function (resp) {
             const reloadUrl = (location.href).replace(location.search, '')
             window.location.assign(reloadUrl);
@@ -917,15 +1012,9 @@ async function uplaodDnDFiles(files, path, fileNames) {
                         var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + '/files' + response.data.attributes.path;
                         info = {name: response.data.attributes.name, path: response.data.attributes.path, url: fileBaseUrl}
                         infos.push(info)
-                        //paths.splice(i, 0, response.data.attributes.path);
-                        //names.splice(i, 0, response.data.attributes.name);
-                        //urls.splice(i, 0, fileBaseUrl);
                     }else {
                         info = {name: response.data.attributes.name, path: response.data.attributes.path, url: response.data.links.download + '?mode=render'}
                         infos.push(info)
-                        //paths.splice(i, 0, response.data.attributes.path);
-                        //names.splice(i, 0, response.data.attributes.name);
-                        //urls.splice(i, 0, response.data.links.download + '?mode=render');
                     }
                 }).fail(function (response) {
                     notUploaded(response, false);
