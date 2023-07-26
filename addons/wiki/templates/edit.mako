@@ -167,9 +167,9 @@
                   </div>
                   <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'} overflow: auto;height: 400px;"></div>
 
-                  <div id="wikiViewRender" data-bind="html: renderedView, mathjaxify: renderedView, anchorScroll : { buffer: 50, elem : '#wikiViewPanel'}" class="markdown-it-view scripted">
-                      % if wiki_content:
-                          ${wiki_content}
+                  <div id="wikiViewRender">
+                      % if wiki_markdown:
+                          <div id="mView" style="overflow: auto;height: 400px;"></div>
                       % else:
                           <p class="text-muted"><em>${_("Add important information, links, or images here to describe your project.")}</em></p>
                       % endif
