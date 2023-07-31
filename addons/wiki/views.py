@@ -227,6 +227,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         is_current = wiki_version.is_current
         content = wiki_version.html(node)
         rendered_before_update = wiki_version.rendered_before_update
+        markdown = wiki_version.content
     else:
         version = 'NA'
         is_current = False
@@ -262,6 +263,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'wiki_id': wiki_page._primary_key if wiki_page else None,
         'wiki_name': wiki_page.page_name if wiki_page else wiki_name,
         'wiki_content': content,
+        'wiki_markdown': markdown,
         'rendered_before_update': rendered_before_update,
         'page': wiki_page,
         'version': version,
