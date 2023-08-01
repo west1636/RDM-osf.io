@@ -233,7 +233,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         is_current = False
         content = ''
         rendered_before_update = False
-
+        markdown = ''
     if can_edit:
         if wiki_key not in node.wiki_private_uuids:
             wiki_utils.generate_private_uuid(node, wiki_name)
