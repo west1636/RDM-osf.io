@@ -45,8 +45,6 @@ var mView;
 
 var readonly = true;
 const editable = () => !readonly;
-var viewonly = true;
-const uneditable = () => !viewonly;
 
 var currentMd = '';
 var element = document.getElementById("mEditor");
@@ -86,6 +84,8 @@ async function createMView(editor, markdown) {
     if (editor && editor.destroy) {
         editor.destroy();
     }
+    var viewonly = true
+    const editable = () => !viewonly;;
     mView = await mCore.Editor
       .make()
       .config(ctx => {
@@ -97,7 +97,7 @@ async function createMView(editor, markdown) {
         }))
         ctx.update(mCore.editorViewOptionsCtx, (prev) => ({
             ...prev,
-            uneditable,
+            editable,
         }))
       })
       .config(mNord.nord)
@@ -267,6 +267,16 @@ async function createMEditor(editor, vm, template) {
                     console.log('-----applyTemplate start----')
                     console.log(remoteNode)
                     console.log(templateNode)
+//                    console.log('---transfer markdown---')
+//                    console.log(mTransformer)
+//                    const serializer = ctx.get(mCore.serializerCtx)
+//                    const remoteDoc = yProseMirror.prosemirrorToYDoc(remoteNode)
+//                    const markdown = serializer(remoteDoc)
+//                    console.log(markdown)
+//                    const markdown = mTransformer.Serializer(remoteNode)
+//                    console.log(markdown)
+//                    viewVM.displaySource('');
+
                     // if no remote node content, apply current
                     if (remoteNode.textContent.length === 0) {
                         console.log('-----remote node 0----')
