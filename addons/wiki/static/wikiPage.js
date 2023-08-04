@@ -267,22 +267,17 @@ async function createMEditor(editor, vm, template) {
                     console.log('-----applyTemplate start----')
                     console.log(remoteNode)
                     console.log(templateNode)
-//                    console.log('---transfer markdown---')
-//                    console.log(mTransformer)
-//                    const serializer = ctx.get(mCore.serializerCtx)
-//                    const remoteDoc = yProseMirror.prosemirrorToYDoc(remoteNode)
-//                    const markdown = serializer(remoteDoc)
-//                    console.log(markdown)
-//                    const markdown = mTransformer.Serializer(remoteNode)
-//                    console.log(markdown)
-//                    viewVM.displaySource('');
-
+/*
+                    const schema = ctx.get(mCore.schemaCtx)
+                    const serializer = mTransformer.SerializerState.create(schema, remark.remark);
+                    console.log(serializer);
+                    const toStr = serializer(remoteNode);
+                    console.log(toStr);
+*/
                     // if no remote node content, apply current
                     if (remoteNode.textContent.length === 0) {
                         console.log('-----remote node 0----')
                         vm.viewVM.displaySource(template);
-                    } else {
-                        console.log('-----not applytemplte----')
                     }
                     console.log('-----applyTemplate end----')
                  })
@@ -293,19 +288,6 @@ async function createMEditor(editor, vm, template) {
     })
 
 }
-//<div id="preview" data-bind="mathjaxify">
-ko.bindingHandlers.mathjaxify = {
-    update: function(element, valueAccessor, allBindingsAccessor, data, context) {
-        var vm = context.$data;
-        //Need to unwrap the data in order for KO to know it's changed.
-        ko.unwrap(valueAccessor());
-
-        if(vm.allowMathjaxification() && vm.allowFullRender()) {
-            mathrender.mathjaxify('#' + element.id);
-        }
-    }
-};
-
 
 function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathjaxification, allowFullRender, editor) {
     var self = this;
@@ -326,21 +308,6 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
        console.log('---renderMakrdown---');
        console.log(rawContent);
        createMView(mView, rawContent);
-
-
-
-
-/*
-        if(self.visible()) {
-            if (self.allowFullRender()) {
-                return md.render(rawContent);
-            } else {
-                return mdQuick.render(rawContent);
-            }
-        } else {
-            return '';
-        }
-*/
     };
 
     self.displayText =  ko.computed(function() {
