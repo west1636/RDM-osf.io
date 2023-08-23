@@ -101,6 +101,9 @@
                             <div id="editWysiwyg" class="wiki-toolbar-icon text-info" data-bind="click: editMode">
                                 <i class="fa fa-edit text-info"></i><span>Edit</span>
                             </div>
+                            <div class="wiki-toolbar-icon text-success" data-bind="click: importToy">
+                                <i class="fa fa-edit text-success"></i><span>Import Toy</span>
+                            </div>
                             <div class="pull-right" style="margin-right:20px;">
 
                                 <!-- Version Picker -->

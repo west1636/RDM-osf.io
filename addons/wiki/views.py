@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os
+import re
+import json
+import requests
+import collections
+from django.core import serializers
+from addons.base.utils import get_mfr_url
+from osf.models.files import BaseFileNode
 from rest_framework import status as http_status
 import logging
 
@@ -95,9 +103,22 @@ def _get_wiki_pages_latest(node):
             'name': page.wiki_page.page_name,
             'url': node.web_url_for('project_wiki_view', wname=page.wiki_page.page_name, _guid=True),
             'wiki_id': page.wiki_page._primary_key,
+            'id': page.wiki_page.id,
             'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node)
         }
         for page in WikiPage.objects.get_wiki_pages_latest(node).order_by(F('name'))
+    ]
+
+def _get_wiki_child_pages_latest(node, parent):
+    return [
+        {
+            'name': page.wiki_page.page_name,
+            'url': node.web_url_for('project_wiki_view', wname=page.wiki_page.page_name, _guid=True),
+            'wiki_id': page.wiki_page._primary_key,
+            'id': page.wiki_page.id,
+            'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node)
+        }
+        for page in WikiPage.objects.get_wiki_child_pages_latest(node, parent).order_by(F('name'))
     ]
 
 def _get_wiki_api_urls(node, name, additional_urls=None):
@@ -166,7 +187,13 @@ def project_wiki_delete(auth, wname, **kwargs):
     if not wiki_page:
         raise HTTPError(http_status.HTTP_404_NOT_FOUND)
 
+    child_wiki_pages = WikiPage.objects.get_for_node(node=node, parent=wiki_page.id)
     wiki_page.delete(auth)
+
+    if child_wiki_pages:
+        for page in child_wiki_pages:
+            page.delete(auth)
+
     wiki_utils.broadcast_to_sharejs('delete', sharejs_uuid, node)
     return {}
 
@@ -183,6 +210,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     wiki_page = WikiPage.objects.get_for_node(node, wiki_name)
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     wiki_settings = node.get_addon('wiki')
+    parent_wiki_page = WikiPage.objects.get(id=wiki_page.parent) if wiki_page and wiki_page.parent else None
     can_edit = (
         auth.logged_in and not
         node.is_registration and (
@@ -259,11 +287,29 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'compare': compare or 'previous',
     }
 
+    # Get import folder
+    root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
+    parent_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefolder', parent=root_dir['id'], deleted__isnull=True)
+    import_dirs = []
+    for dir in parent_dirs:
+        wiki_dir = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefolder', parent=dir.id, deleted__isnull=True).first()
+        if not wiki_dir:
+            continue
+        wiki_file_name = wiki_dir.name + '.md'
+        if BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', parent=wiki_dir.id, name=wiki_file_name, deleted__isnull=True).exists():
+            dict = {
+                'id': dir._id,
+                'name': dir.name
+            }
+            import_dirs.append(dict)
+
     ret = {
         'wiki_id': wiki_page._primary_key if wiki_page else None,
         'wiki_name': wiki_page.page_name if wiki_page else wiki_name,
         'wiki_content': content,
         'wiki_markdown': markdown,
+        'parent_wiki_name': parent_wiki_page.page_name if parent_wiki_page else '',
+        'import_dirs': import_dirs,
         'rendered_before_update': rendered_before_update,
         'page': wiki_page,
         'version': version,
@@ -307,7 +353,6 @@ def project_wiki_edit_post(auth, wname, **kwargs):
         wiki_name = 'home'
 
     requestData = request.get_data()
-#    form_wiki_content = urllib.parse.unquote(requestData.decode('utf8'))
     logger.info('requestGetJson:::' + str(request.get_json))
     getJson = request.get_json()
     form_wiki_content = getJson['markdown']
@@ -453,7 +498,7 @@ def project_wiki_rename(auth, wname, **kwargs):
 @must_have_permission(WRITE)  # returns user, project
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
-def project_wiki_validate_name(wname, auth, node, **kwargs):
+def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
     wiki_name = wname.strip()
     wiki = WikiPage.objects.get_for_node(node, wiki_name)
 
@@ -462,8 +507,23 @@ def project_wiki_validate_name(wname, auth, node, **kwargs):
             message_short='Wiki page name conflict.',
             message_long='A wiki page with that name already exists.'
         ))
-    else:
-        WikiPage.objects.create_for_node(node, wiki_name, '', auth)
+
+    parent_wiki_id = None
+    if p_wname:
+        parent_wiki_name = p_wname.strip()
+        parent_wiki = WikiPage.objects.get_for_node(node, parent_wiki_name)
+        if not parent_wiki:
+            if parent_wiki_name.lower() == 'home':
+                # Create a wiki
+                parent_wiki = WikiPage.objects.create_for_node(node, parent_wiki_name, '', auth)
+            else:
+                raise HTTPError(http_status.HTTP_404_NOT_FOUND, data=dict(
+                    message_short='Parent Wiki page nothing.',
+                    message_long='The parent wiki page does not exist.'
+                ))
+        parent_wiki_id = parent_wiki.id
+
+    WikiPage.objects.create_for_node(node, wiki_name, '', auth, parent_wiki_id)
     return {'message': wiki_name}
 
 @must_be_valid_project
@@ -507,6 +567,10 @@ def format_home_wiki_page(node):
                 'id': home_wiki._primary_key,
             }
         }
+        child_wiki_pages = _format_child_wiki_pages(node, home_wiki.id)
+        if child_wiki_pages:
+            home_wiki_page['children'] = child_wiki_pages
+            home_wiki_page['kind'] = 'folder'
     return home_wiki_page
 
 
@@ -526,8 +590,37 @@ def format_project_wiki_pages(node, auth):
                     'id': wiki_page['wiki_id'],
                 }
             }
+            child_wiki_pages = _format_child_wiki_pages(node, wiki_page['id'])
+            page['children'] = child_wiki_pages
+            if child_wiki_pages:
+                page['kind'] = 'folder'
+
             if can_edit or has_content:
                 pages.append(page)
+    return pages
+
+
+def _format_child_wiki_pages(node, parent):
+    pages = []
+    child_wiki_pages = _get_wiki_child_pages_latest(node, parent)
+    if not child_wiki_pages:
+        return pages
+
+    for wiki_page in child_wiki_pages:
+        if wiki_page['name'] != 'home':
+            page = {
+                'page': {
+                    'url': wiki_page['url'],
+                    'name': wiki_page['name'],
+                    'id': wiki_page['wiki_id'],
+                }
+            }
+            grandchild_wiki_pages = _format_child_wiki_pages(node, wiki_page['id'])
+            page['children'] = grandchild_wiki_pages
+            if grandchild_wiki_pages:
+                page['kind'] = 'folder'
+
+            pages.append(page)
     return pages
 
 
@@ -556,6 +649,12 @@ def serialize_component_wiki(node, auth):
             'id': node._id
         }
     }
+    home_wiki = WikiPage.objects.get_for_node(node, 'home')
+    if home_wiki:
+        child_wiki_pages = _format_child_wiki_pages(node, home_wiki.id)
+        if child_wiki_pages:
+            component_home_wiki['children'] = child_wiki_pages
+            component_home_wiki['kind'] = 'folder'
 
     can_edit = node.has_permission(auth.user, WRITE) and not node.is_registration
     if can_edit or home_has_content:
@@ -571,6 +670,10 @@ def serialize_component_wiki(node, auth):
                     'id': page['wiki_id'],
                 }
             }
+            child_wiki_pages = _format_child_wiki_pages(node, page['id'])
+            component_page['children'] = child_wiki_pages
+            if child_wiki_pages:
+                component_page['kind'] = 'folder'
             if can_edit or has_content:
                 children.append(component_page)
 
@@ -587,3 +690,69 @@ def serialize_component_wiki(node, auth):
         }
         return component
     return None
+
+@must_be_valid_project
+@must_be_contributor_or_public
+def project_wiki_import_toy(auth, node, **kwargs):
+    logger.info('import start')
+    wiki_save = request.get_json()['step']
+    logger.info(wiki_save)
+
+    if wiki_save:
+        logger.info('---wiki_save start---')
+        wiki_names = request.get_json()['names']
+        wiki_contents = request.get_json()['contents']
+#        logger.info(wiki_names)
+#        logger.info(wiki_contents)
+
+        for j in range(len(wiki_names)):
+            wiki_name = (wiki_names[j]).strip()
+            logger.info('---------wiki_name------------')
+            logger.info(wiki_name)
+            wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
+            form_wiki_content = wiki_contents[j]
+            if wiki_name == 'markdownfile.md':
+                logger.info('---show content startaaa---')
+                logger.info(wiki_contents[j])
+                index = (wiki_contents[j]).find('^')
+                filename = (wiki_contents[j])[index+1:][:-1]
+                logger.info(filename)
+                index = (wiki_contents[j]).find('^')
+                qs = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', name=filename).values('name')
+                logger.info(qs)
+            if wiki_version:
+            # Only update wiki if content has changed
+                if form_wiki_content != wiki_version.content:
+                    wiki_version.wiki_page.update(auth.user, form_wiki_content)
+                    ret = {'status': 'success'}
+                else:
+                    ret = {'status': 'unmodified'}
+            else:
+                # Create a wiki
+                WikiPage.objects.create_for_node(node, wiki_name, form_wiki_content, auth)
+                ret = {'status': 'success'}
+        logger.info('---wiki_save end---' + str(ret))
+        return ret
+    else:
+        guid = get_guid(node)
+        _ids = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile').values('_id')
+        names = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile').values('name')
+        wiki_infos = []
+        for i in range(len(_ids)):
+#            logger.info(os.path.splitext(os.path.basename(names[i]['name']))[1][1:])
+            if os.path.splitext(os.path.basename(names[i]['name']))[1][1:] == 'md':
+                wiki_infos.append({ 'name': names[i]['name'], '_id': _ids[i]['_id'] })
+#                logger.info('wiki_infos:::' + str(wiki_infos))
+
+
+    return { 'guid': guid,
+             'info': wiki_infos
+            }
+
+def get_guid(node):
+
+    qsGuid = node._prefetched_objects_cache['guids'].only()
+    guidSerializer = serializers.serialize('json', qsGuid, ensure_ascii=False)
+    guidJson = json.loads(guidSerializer)
+    guid = guidJson[0]['fields']['_id']
+    return guid
