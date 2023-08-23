@@ -116,6 +116,7 @@ api_routes = {
         Rule([
             '/project/<pid>/wiki/<wname>/validate/',
             '/project/<pid>/node/<nid>/wiki/<wname>/validate/',
+            '/project/<pid>/wiki/<wname>/parent/<p_wname>/validate/',
         ], 'get', views.project_wiki_validate_name, json_renderer),
 
         # Edit | POST
@@ -158,6 +159,12 @@ api_routes = {
             '/project/<pid>/wiki/<wname>/grid/',
             '/project/<pid>/node/<nid>/wiki/<wname>/grid/'
         ], 'get', views.project_wiki_grid_data, json_renderer),
+
+        # Wiki Import Toy
+        Rule([
+            '/project/<pid>/wiki/importtoy/',
+            '/project/<pid>/node/<nid>/wiki/importtoy/'
+        ], 'post', views.project_wiki_import_toy, json_renderer),
 
     ],
 

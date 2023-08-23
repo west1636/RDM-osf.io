@@ -352,6 +352,15 @@ select.form-control {
   background: transparent;
   color: #4B5563;
 }
+
+.wiki-radio-group {
+    display:flex;
+}
+
+.wiki-radio-item {
+    margin-right: 10px;
+}
+
 .menuItem:hover{
     background: #d1d5db;
 }
