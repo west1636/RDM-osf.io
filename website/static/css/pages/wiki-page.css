@@ -369,3 +369,7 @@ select.form-control {
   padding: 2px 8px 2px 4px;
 }
 
+.milkdown .editor img.emoji {
+    width: 1em;
+    height: 1em;
+}
