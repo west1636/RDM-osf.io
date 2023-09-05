@@ -373,3 +373,7 @@ select.form-control {
     width: 1em;
     height: 1em;
 }
+
+.milkdown .editor table {
+    width: 80%;
+}
