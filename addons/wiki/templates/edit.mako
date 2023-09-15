@@ -51,6 +51,11 @@
                         <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#newWiki">
                             <i class="fa fa-plus text-success"></i><span>${_("New")}</span>
                         </div>
+                        % if len(import_dirs) > 0:
+                          <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#importWiki">
+                              <i class="fa fa-upload text-success"></i><span>${_("Import")}</span>
+                          </div>
+                        % endif
                         % if wiki_id and wiki_name != 'home':
                             <div class="wiki-toolbar-icon text-danger" data-toggle="modal" data-target="#deleteWiki">
                                 <i class="fa fa-trash-o text-danger"></i><span>${_("Delete")}</span>
@@ -100,9 +105,6 @@
 
                             <div id="editWysiwyg" class="wiki-toolbar-icon text-info" data-bind="click: editMode">
                                 <i class="fa fa-edit text-info"></i><span>Edit</span>
-                            </div>
-                            <div class="wiki-toolbar-icon text-success" data-bind="click: importToy">
-                                <i class="fa fa-edit text-success"></i><span>Import Toy</span>
                             </div>
                             <div class="pull-right" style="margin-right:20px;">
 
@@ -239,6 +241,7 @@
 
 <!-- Wiki modals should also be placed here! -->
   <%include file="wiki/templates/add_wiki_page.mako"/>
+  <%include file="wiki/templates/import_wiki_page.mako"/>
   <%include file="wiki/templates/wiki-bar-modal-help.mako"/>
 % if wiki_id and wiki_name != 'home':
   <%include file="wiki/templates/delete_wiki_page.mako"/>

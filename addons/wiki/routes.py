@@ -119,6 +119,11 @@ api_routes = {
             '/project/<pid>/wiki/<wname>/parent/<p_wname>/validate/',
         ], 'get', views.project_wiki_validate_name, json_renderer),
 
+        Rule([
+            '/project/<pid>/wiki/import/<dir_id>/validate/',
+            '/project/<pid>/node/<nid>/wiki/import/<dir_id>/validate/',
+        ], 'get', views.project_wiki_validate_import, json_renderer),
+
         # Edit | POST
         Rule([
             '/project/<pid>/wiki/<wname>/edit/',
@@ -160,11 +165,30 @@ api_routes = {
             '/project/<pid>/node/<nid>/wiki/<wname>/grid/'
         ], 'get', views.project_wiki_grid_data, json_renderer),
 
-        # Wiki Import Toy
+        # Wiki Copy Import Directory
         Rule([
-            '/project/<pid>/wiki/importtoy/',
-            '/project/<pid>/node/<nid>/wiki/importtoy/'
-        ], 'post', views.project_wiki_import_toy, json_renderer),
+            '/project/<pid>/wiki/copy_import_directory/<dir_id>/',
+            '/project/<pid>/node/<nid>/wiki/copy_import_directory/<dir_id>/'
+        ], 'post', views.project_wiki_copy_import_directory, json_renderer),
+
+        # Wiki Replace
+        Rule([
+            '/project/<pid>/wiki/replace/<dir_id>/',
+            '/project/<pid>/node/<nid>/wiki/replace/<dir_id>/'
+        ], 'post', views.project_wiki_replace, json_renderer),
+
+        # Wiki Import Process
+        Rule([
+            '/project/<pid>/wiki/<wname>/import_process/',
+            '/project/<pid>/node/<nid>/wiki/<wname>/import_proces/',
+            '/project/<pid>/wiki/<wname>/parent/<p_wname>/import_process/',
+        ], 'post', views.project_wiki_import_process, json_renderer),
+
+        # Get Imported Wiki workspace (temporary)
+        Rule([
+            '/project/<pid>/wiki/get_imported_wiki_workspace/<dir_id>/',
+            '/project/<pid>/node/<nid>/wiki/get_imported_wiki_workspace/<dir_id>/'
+        ], 'post', views.project_wiki_get_imported_wiki_workspace, json_renderer),
 
     ],
 
