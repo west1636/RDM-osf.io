@@ -895,13 +895,8 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
             wiki_content = info['wiki_content']
             linkMatches = re.findall(repLink, wiki_content)
             imageMatches = re.findall(repImage, wiki_content)
-            logger.info(info['wiki_name'])
-            if info['wiki_name'] == 'test_replace_link_url_attachment_file.md':
-                logger.info('---matchmatch---')
-                logger.info(linkMatches)
-                logger.info(imageMatches)
-                info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
-                info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
+            info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
+            info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
             replaced_wiki_info.append(info)
     logger.info('------------replace md end------------')
     return {'replaced': replaced_wiki_info}
@@ -1017,13 +1012,9 @@ def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
 
     parent_directory = _get_wiki_import_directory(replaced_wiki_name, dir_id)
     try:
-        if replaced_file_name == 'TEST_4-7 __+__ (プラス記号)を含むページ.txt':
-            logger.info('---ok---')
-            child_file = parent_directory._children.get(name='TEST_4-7 __+__ (プラス記号)を含むページ.txt', type='osf.osfstoragefile', deleted__isnull=True)
-            return child_file._id
-        else:
-            child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
-            return child_file._id
+        logger.info(replaced_file_name)
+        child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
+        return child_file._id
     except:
         logger.info(replaced_file_name)
         logger.info('---NG---')
