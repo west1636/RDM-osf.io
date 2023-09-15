@@ -272,6 +272,9 @@
                 if (ext !== 'md') {
                     continue;
                 }
+                if (res.data[i]._id === undefined) {
+                    continue;
+                }
                 var parentWikiName = res.data[i].parent_wiki_name;
                 var mfr_url = mfr_format_url.replace('{1}', window.contextVars.node.id).replace('{2}', res.data[i]._id);
                 promisesWB.push(
