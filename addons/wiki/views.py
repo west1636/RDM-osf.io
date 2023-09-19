@@ -887,8 +887,8 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
 #    repImage = r"!\[(.*?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%\w]+)\)"
 #    repLink = r"\[(.+?)\]\((.+?)\)"
 #    repImage = r"!\[(.*?)\]\((.+?)\)"
-    repLink = r"\[((?!.*\\$).*)\]\(((?!.*\\$).*)\)"
-    repImage = r"!\[((?!.*\\$).*)\]\(((?!.*\\$).*)\)"
+    repLink = r"\[((?!.*\\$).+)\]\(((?!.*\\$).+)\)"
+    repImage = r"!\[((?!.*\\$).*)\]\(((?!.*\\$).+)\)"
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
         if info['validation'] == 'valid':
@@ -989,10 +989,12 @@ def _replace_file_name(node, wiki_name, wiki_content, file_name, notation, dir_i
 def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
     logger.info('------------_check_attachment_file_name_exist start------------')
     # check file name contains slash
-    hasSlash = '/' in file_name
-    if hasSlash:
-        another_wiki_name = file_name.split('/')[0]
-        file_name = file_name.split('/')[1]
+#    hasSlash = '/' in file_name
+    hasHat = '\^' in file_name
+#    if hasSlash:
+    if hasHat:
+        another_wiki_name = file_name.split('\^')[0]
+        file_name = file_name.split('\^')[1]
         # check as wikiName/fileName
         file_id = _process_attachment_file_name_exist(another_wiki_name, file_name, dir_id)
         logger.info(file_name)
