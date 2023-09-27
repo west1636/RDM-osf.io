@@ -5,6 +5,8 @@ import re
 import json
 import requests
 import collections
+import unicodedata
+import urllib.parse
 from django.core import serializers
 from django.http.response import JsonResponse
 from django.contrib.contenttypes.models import ContentType
@@ -749,14 +751,20 @@ def _validate_import_duplicated_directry(info_list):
 
 def _validate_import_folder(node, folder, parent_path):
     logger.info('--validateimportfolder----')
-    logger.info('parent_path:  ' +str(parent_path))
     index = parent_path.rfind('/')
-    logger.info(index)
     parent_wiki_name = parent_path[index+1:] if index != -1 else None
-    logger.info('parent_wiki_name:  ' +str(parent_wiki_name))
-    path = parent_path + '/' + folder.name
+    parent_wiki_fullpath = _get_wiki_fullpath(node, parent_wiki_name)
+    p_numbering = None
+    # check duplication of parent_wiki_name
+    if parent_path != parent_wiki_fullpath:
+        p_numbering = _get_wiki_numbering(node, parent_wiki_name)
+    if isinstance(p_numbering, int):
+        parent_wiki_name = parent_wiki_name + '(' + str(p_numbering) + ')'
+        path = parent_path[:index+1] + parent_wiki_name + '/' + folder.name
+    else:
+        path = parent_path + '/' + folder.name
     info_list = []
-    VALID_IMG_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp']
+    wiki_name = folder.name
     wiki_file_name = folder.name + '.md'
     if not BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', parent=folder.id, name=wiki_file_name, deleted__isnull=True).exists():
         logger.warn(f'The wiki page does not exist, so the subordinate pages are not processed: {folder.name}')
@@ -781,8 +789,8 @@ def _validate_import_folder(node, folder, parent_path):
                 info = {
                     'parent_wiki_name': parent_wiki_name,
                     'path': path,
-                    'original_name': obj.name,
-                    'name': obj.name,
+                    'original_name': wiki_name,
+                    'name': wiki_name,
                     'status': 'valid',
                     'message': '',
                     '_id': obj._id
@@ -791,22 +799,13 @@ def _validate_import_folder(node, folder, parent_path):
                 info_list.append(info)
                 continue
 
-            ext = os.path.splitext(obj.name)[-1].lower()
-            if ext not in VALID_IMG_EXTENSIONS:
-                logger.warn(f'Only image files can be imported: {obj.name}')
-                info = {
-                    'path': path,
-                    'original_name': obj.name,
-                    'name': obj.name,
-                    'status': 'invalid',
-                    'message': 'Only image files can be imported.',
-                }
                 info_list.append(info)
     return info_list
 
 def _validate_import_wiki_exists_duplicated(node, info):
     logger.info('---validateimportwikiexistsduplicated---')
-    w_name = info['name'].rstrip('.md')
+    w_name = info['name']
+    p_wname = info['parent_wiki_name']
     logger.info(w_name)
     if w_name.lower() == 'home':
         return info
@@ -819,11 +818,14 @@ def _validate_import_wiki_exists_duplicated(node, info):
         if fullpath == info['path']:
             # if the wiki exists, update info list
             info['status'] = 'valid_exists'
+            info['numbering'] = _get_wiki_numbering(node, w_name)
             can_start_import = False
         else:
             # if the wiki duplicated, update info list
             info['status'] = 'valid_duplicated'
-            info['name'] += '(1)'
+            info['numbering'] = _get_wiki_numbering(node, w_name)
+            info['name'] = info['name'] + '(' + str(info['numbering']) + ')'
+            info['path'] = info['path'] + '(' + str(info['numbering']) + ')'
             can_start_import = False
 #            info['path'] = re.sub(info['original_name'] + r'(?!.+' + info['original_name'] + ')', info['name'], info['path'], flags=re.DOTALL)
     return info
@@ -834,6 +836,19 @@ def _get_wiki_fullpath(node, w_name):
         return ''
     fullpath = '/' + _get_wiki_parent(wiki, w_name)
     return fullpath
+
+def _get_wiki_numbering(node, w_name):
+    max = 1000
+    index = 1
+    wiki = WikiPage.objects.get_for_node(node, w_name)
+    if wiki is None:
+        return ''
+
+    for index in range(index, max+1):
+        wiki = WikiPage.objects.get_for_node(node, w_name + '('+ str(index) + ')')
+        if wiki is None:
+            return index
+    return None
 
 def _get_wiki_parent(wiki, path):
     try:
@@ -856,21 +871,14 @@ def get_node_guid(node):
 def project_wiki_copy_import_directory(dir_id, auth, node, **kwargs):
     logger.info('copy import directory startaaa')
     data = request.get_json()
-    wiki_info = data['validationResult']
     folderPath = data['folderPath']
-    logger.info(folderPath)
-    logger.info(wiki_info)
     copyFrom_id = dir_id
     toCopy_id = folderPath[1:][:-1]
-    logger.info(copyFrom_id)
-    logger.info(toCopy_id)
     copyFrom = BaseFileNode.objects.get(_id=copyFrom_id)
     toCopy = BaseFileNode.objects.get(_id=toCopy_id)
 
     cloned = files_utils.copy_files(copyFrom, node, toCopy)
     cloned_id = cloned._id
-    logger.info(cloned_id)
-#    url = http://localhost:7777/v1/resources/ed6b4/providers/osfstorage/64fec6466788154b7d63be5d/
     logger.info('copy import directory end')
     return {'clonedId': cloned_id}
 
@@ -880,24 +888,27 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
     logger.info('------------replace md start------------')
     data = request.get_json()
     wiki_info = data['wiki_info']
-    logger.info(wiki_info)
     replaced_wiki_info = []
 #    repLink = r"\[(.+?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%]+)\)"
 #    repLink = r"\[(.+?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%\w]+)\)"
 #    repImage = r"!\[(.*?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%\w]+)\)"
 #    repLink = r"\[(.+?)\]\((.+?)\)"
 #    repImage = r"!\[(.*?)\]\((.+?)\)"
-    repLink = r"\[((?!.*\\$).+)\]\(((?!.*\\$).+)\)"
-    repImage = r"!\[((?!.*\\$).*)\]\(((?!.*\\$).+)\)"
+#    repLink = r"\[((?!.*\\$).+)\]\(((?!.*\\$).+)\)"
+#    repImage = r"!\[((?!.*\\$).*)\]\(((?!.*\\$).+)\)"
+#    repLink = r"\[(.+?[^\\])\]\((.+?[^\\])\)"
+#    repImage = r"!\[(.+?[^\\])\]\((.+?[^\\])\)"
+    repLink = r"\[(.+?)\]\((.+?)\)"
+    repImage = r"!\[(.*?)\]\((.+?)\)"
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
-        if info['validation'] == 'valid':
-            wiki_content = info['wiki_content']
-            linkMatches = re.findall(repLink, wiki_content)
-            imageMatches = re.findall(repImage, wiki_content)
-            info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
-            info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
-            replaced_wiki_info.append(info)
+        logger.info(info['wiki_name'])
+        wiki_content = info['wiki_content']
+        linkMatches = re.findall(repLink, wiki_content)
+        imageMatches = re.findall(repImage, wiki_content)
+        info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
+        info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
+        replaced_wiki_info.append(info)
     logger.info('------------replace md end------------')
     return {'replaced': replaced_wiki_info}
 
@@ -924,9 +935,8 @@ def _get_all_child_directory(dir_id):
     return dir_list
 
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
-    logger.info('------------_replace_wiki_link_notation start------------')
-    # remove '.md'
-    wiki_name, ext = os.path.splitext(info['wiki_name'])
+#    logger.info('------------_replace_wiki_link_notation start------------')
+    wiki_name = info['wiki_name']
     for match in linkMatches:
         hasSharp = '#' in match[1]
         hasDot = '.' in match[1]
@@ -937,57 +947,72 @@ def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_child
         if hasSharp:
             if hasDot:
                 # relace file name
-                logger.info('---has # and likely to FILE---')
-                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match[1], 'link', dir_id)
+#                logger.info('---has # and likely to FILE---')
+                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
                 continue
 
         # check whether wiki or not
         isWiki = _check_wiki_name_exist(node, match[1], all_children_name)
         if isWiki:
             # replace wiki name
-            wiki_content = wiki_content.replace('](' + match[1] + ')', '](../' + match[1] + '/)')
+            decode_title = urllib.parse.unquote(match[0])
+            wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_title + '](../' + match[1] + '/)')
         else:
             # If not wiki, check whether attachment file or not
-            logger.info('---it is not WIKI, likely to FILE---')
-            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match[1], 'link', dir_id)
+#            logger.info('---it is not WIKI, likely to FILE---')
+            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
 
     return wiki_content
 
 def _check_wiki_name_exist(node, checkedName, all_children_name):
-    logger.info('------------_check_wiki_name_exist start------------')
+#    logger.info('------------_check_wiki_name_exist start------------')
     # check existing wiki
     # Need [%20],[%23],[\(],[\)] is to be replaced in checkedName
+#    logger.info(checkedName)
     replaced_wiki_name = _replace_common_rule(checkedName)
+#    logger.info(replaced_wiki_name)
+    # transform NFC
+    replaced_wiki_name = unicodedata.normalize('NFC', replaced_wiki_name)
     wiki = WikiPage.objects.get_for_node(node, replaced_wiki_name)
+#    logger.info(wiki)
     if wiki:
         return True
     else:
         # check import directory(copyed)
         for name in all_children_name:
+#            logger.info(name)
+#            logger.info(replaced_wiki_name)
             if replaced_wiki_name == name:
                 return True
     return False
 
-def _replace_file_name(node, wiki_name, wiki_content, file_name, notation, dir_id):
-    logger.info('------------_replace_file_name start------------')
+def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id):
+#    logger.info('------------_replace_file_name start------------')
     # check whether attachment file or not
-    file_id = _check_attachment_file_name_exist(wiki_name, file_name, dir_id)
+    file_id = _check_attachment_file_name_exist(wiki_name, match[1], dir_id)
+    decode_alt = urllib.parse.unquote(match[0])
     if file_id:
         # replace process of file name
         #renderUrl = http://localhost:7777/v1/resources/y39bz/providers/osfstorage/64f9604f224f72001089b9de?mode=render
         node_guid = get_node_guid(node)
         if notation == 'image':
             url = website_settings.WATERBUTLER_URL + '/v1/resources/' +  node_guid + '/providers/osfstorage/' + file_id + '?mode=render'
+            wiki_content = wiki_content.replace('![' + match[0] + '](' + match[1] + ')', '![' + decode_alt + '](' + url + ')')
         elif notation == 'link':
             file_obj = BaseFileNode.objects.get(_id=file_id)
             url = website_settings.DOMAIN + node_guid + '/files/osfstorage/' + file_id
-        wiki_content = wiki_content.replace('](' + file_name + ')', '](' + url + ')')
+        wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + url + ')')
     else:
-        logger.info('---DO NOT REPLACE----')
+        # replace only ALT
+        if notation == 'image':
+            wiki_content = wiki_content.replace('![' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + match[1] + ')')
+        elif notation == 'link':
+            wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + match[1] + ')')
+#        logger.info('---DO NOT REPLACE----')
     return wiki_content
 
 def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
-    logger.info('------------_check_attachment_file_name_exist start------------')
+#    logger.info('------------_check_attachment_file_name_exist start------------')
     # check file name contains slash
 #    hasSlash = '/' in file_name
     hasHat = '\^' in file_name
@@ -997,8 +1022,8 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
         file_name = file_name.split('\^')[1]
         # check as wikiName/fileName
         file_id = _process_attachment_file_name_exist(another_wiki_name, file_name, dir_id)
-        logger.info(file_name)
-        logger.info(file_id)
+#        logger.info(file_name)
+#        logger.info(file_id)
     else:
         # check as fileName
         file_id = _process_attachment_file_name_exist(wiki_name, file_name, dir_id)
@@ -1006,7 +1031,7 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
     return file_id
 
 def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
-    logger.info('------------_process_attachment_file_name_exist start------------')
+#    logger.info('------------_process_attachment_file_name_exist start------------')
     # check as fileName
     # Need [%20],[%23],[\(],[\)] is to be replaced in wiki_name and file_name
     replaced_wiki_name = _replace_common_rule(wiki_name)
@@ -1014,18 +1039,20 @@ def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
 
     parent_directory = _get_wiki_import_directory(replaced_wiki_name, dir_id)
     try:
-        logger.info(replaced_file_name)
+#        logger.info(replaced_file_name)
+        # transform NFC
+        replaced_wiki_name = unicodedata.normalize('NFC', replaced_wiki_name)
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
         return child_file._id
     except:
-        logger.info(replaced_file_name)
-        logger.info('---NG---')
+#        logger.info(replaced_file_name)
+#        logger.info('---NG---')
         pass
 
     return None
 
 def _get_wiki_import_directory(wiki_name, dir_id):
-    logger.info('------------_get_wiki_import_directory start------------')
+#    logger.info('------------_get_wiki_import_directory start------------')
     import_directory_root = BaseFileNode.objects.get(_id=dir_id)
     children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
     for child in children:
@@ -1038,36 +1065,29 @@ def _get_wiki_import_directory(wiki_name, dir_id):
 
 def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
     logger.info('------------_replace_wiki_image start------------')
-    # remove '.md'
-    wiki_name, ext = os.path.splitext(wiki_info['wiki_name'])
+    wiki_name = wiki_info['wiki_name']
     for match in imageMatches:
-        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match[1], 'image', dir_id)
+        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'image', dir_id)
     return wiki_content
 
 # for Search wikiName or fileName
 def _replace_common_rule(name):
-    logger.info('------------replacecommonrule start------------')
-    replaceName = name
-    logger.info(replaceName)
-    # Need [%20],[%23],[\(],[\)] [\\] is to be replaced in file_name
-    replaceRule = [['%20', ' '], ['%23', '#'], ['\(', '('], ['\)', ')'], ['\\', '']]
-    for toReplace in replaceRule:
-        replaceName = replaceName.replace(toReplace[0], toReplace[1])
-    logger.info(replaceName)
-    return replaceName
+#    logger.info('------------replacecommonrule start------------')
+    # decode
+    decodedName = urllib.parse.unquote(name)
+    return decodedName
 
 @must_be_valid_project  # returns project
 @must_have_permission(WRITE)  # returns user, project
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import_process(wname, auth, node, p_wname=None, **kwargs):
-    logger.info('---projectwikiimportprocess--- start')
-    # remove '.md'
-    wiki_name, ext = os.path.splitext(wname)
+#    logger.info('---projectwikiimportprocess--- start')
+    wiki_name = wname
     parent_wiki_id = None
     wiki = WikiPage.objects.get_for_node(node, wiki_name)
     data = request.get_data()
-    logger.info(wname)
+#    logger.info(wname)
 
     if p_wname:
         parent_wiki_name = p_wname.strip()
@@ -1095,19 +1115,20 @@ def project_wiki_import_process(wname, auth, node, p_wname=None, **kwargs):
         # Create a wiki
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id)
 
-    logger.info('---projectwikiimportprocess end---')
+#    logger.info('---projectwikiimportprocess end---')
 #    WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id)
     return {'message': [], 'error_wiki_name': []}
 
 @must_be_valid_project
 @must_be_contributor_or_public
 def project_wiki_get_imported_wiki_workspace(dir_id, auth, node, **kwargs):
-    logger.info('---getimportedwikiworkspace--- start')
+#    logger.info('---getimportedwikiworkspace--- start')
     imported_wiki_workspace_folder_name = 'Imported Wiki workspace (temporary)'
     try:
         wiki_images_dir = BaseFileNode.objects.get(_id=dir_id)
     except:
-        logger.info('no wiki images')
+        pass
+#        logger.info('no wiki images')
     try:
         imported_wiki_workspace_folder = wiki_images_dir._children.get(name=imported_wiki_workspace_folder_name, type='osf.osfstoragefolder', deleted__isnull=True)
         path = '/' + imported_wiki_workspace_folder._id + '/'
@@ -1116,7 +1137,7 @@ def project_wiki_get_imported_wiki_workspace(dir_id, auth, node, **kwargs):
         path = '/' + dir_id +'/'
         exist = False
 
-    logger.info(path)
-    logger.info(exist)
+#    logger.info(path)
+#    logger.info(exist)
 
     return {'path': path, 'exist': exist}
