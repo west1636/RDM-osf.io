@@ -971,7 +971,7 @@ def _check_wiki_name_exist(node, checkedName, all_children_name):
 #    logger.info(checkedName)
     replaced_wiki_name = _replace_common_rule(checkedName)
 #    logger.info(replaced_wiki_name)
-    # transform NFC
+    # normalize NFC
     replaced_wiki_name = unicodedata.normalize('NFC', replaced_wiki_name)
     wiki = WikiPage.objects.get_for_node(node, replaced_wiki_name)
 #    logger.info(wiki)
@@ -1040,7 +1040,7 @@ def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
     parent_directory = _get_wiki_import_directory(replaced_wiki_name, dir_id)
     try:
 #        logger.info(replaced_file_name)
-        # transform NFC
+        # normalize NFC
         replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
         return child_file._id
@@ -1072,8 +1072,12 @@ def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
 # for Search wikiName or fileName
 def _replace_common_rule(name):
 #    logger.info('------------replacecommonrule start------------')
+    hasPlus = '+' in name
     # decode
-    decodedName = urllib.parse.unquote(name)
+    if hasPlus:
+        decodedName = urllib.parse.unquote_plus(name)
+    else:
+        decodedName = urllib.parse.unquote(name)
     return decodedName
 
 @must_be_valid_project  # returns project
