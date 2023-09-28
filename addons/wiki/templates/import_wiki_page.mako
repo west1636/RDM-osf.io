@@ -518,8 +518,6 @@
          * Override from wikiPage.js
          */
         function createSubFolder(newFolderLink, folderName) {
-            console.log(newFolderLink)
-            console.log(folderName)
             return $.ajax({
                 url: newFolderLink + '&name=' + encodeURI(folderName),
                 type: 'PUT',
@@ -533,6 +531,9 @@
                     }
                     return xhr;
                 }
+            }).fail(function (response) {
+                console.log(response);
+                console.log('error createSubFOlder' + folderName)
             });
         };
         function getOrCreateWikiImportFolder(imageFolder, dir_id) {

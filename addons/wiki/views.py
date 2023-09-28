@@ -1041,12 +1041,11 @@ def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
     try:
 #        logger.info(replaced_file_name)
         # transform NFC
-        replaced_wiki_name = unicodedata.normalize('NFC', replaced_wiki_name)
+        replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
         return child_file._id
     except:
-#        logger.info(replaced_file_name)
-#        logger.info('---NG---')
+        logger.info('---NG---')
         pass
 
     return None
