@@ -172,19 +172,17 @@ async function createMEditor(editor, vm, template) {
             const view = ctx.get(mCore.editorViewCtx);
             const state = view.state
             const undoElement = document.getElementById("undoWiki");
+            // add event table menu
             var tableWrappers = document.querySelectorAll('.tableWrapper');
-            console.log(tableWrappers);
             for (let i = 0; i < tableWrappers.length; i++) {
                 tableWrappers[i].addEventListener('click', (event) => {
                     document.getElementById("arrowDropDown").style.display = "";
                 });
             }
-            console.log(doc)
             console.log(prevMarkdown);
             console.log(markdown);
-            const collabService = ctx.get(mCollab.collabServiceCtx);
             vm.viewVM.displaySource(markdown);
-
+            // set undo able
             if(state["y-undo$"] !== undefined && (state["y-undo$"].undoManager.undoStack).length !== 0){
                 undoElement.disabled = false;
                 document.getElementById("msoUndo").style.opacity = 1;
@@ -267,17 +265,11 @@ async function createMEditor(editor, vm, template) {
                     console.log('-----applyTemplate start----')
                     console.log(remoteNode)
                     console.log(templateNode)
-/*
-                    const schema = ctx.get(mCore.schemaCtx)
-                    const serializer = mTransformer.SerializerState.create(schema, remark.remark);
-                    console.log(serializer);
-                    const toStr = serializer(remoteNode);
-                    console.log(toStr);
-*/
-                    // if no remote node content, apply current
+                    // if no remote node content, apply current to displaySource
                     if (remoteNode.textContent.length === 0) {
                         console.log('-----remote node 0----')
                         vm.viewVM.displaySource(template);
+                        return true
                     }
                     console.log('-----applyTemplate end----')
                  })
@@ -893,15 +885,22 @@ function ViewModel(options){
         document.getElementById("editWysiwyg").style.display = "";
     }
 
-    // Submit the wysiwyg content as markdown
+    // Command once to get edits, including collaborative editing or for only set preview comparison value.
     self.submitMText = function() {
-        console.log(self.viewVM.displaySource());
-        console.log(window.contextVars.wiki.urls)
+        var toMarkdown = '';
+        mEdit.action((ctx) => {
+            console.log('---submitMText---');
+            const view = ctx.get(mCore.editorViewCtx);
+            const currentDoc = view.state.doc;
+            const schema = ctx.get(mCore.schemaCtx)
+            const serializer = ctx.get(mCore.serializerCtx)
+            toMarkdown = serializer(view.state.doc)
+        })
         var pageUrl = window.contextVars.wiki.urls.page;
         $.ajax({
             url:pageUrl,
             type:'POST',
-            data: JSON.stringify({markdown: self.viewVM.displaySource()}),
+            data: JSON.stringify({markdown: toMarkdown}),
             contentType: 'application/json; charset=utf-8',
         }).done(function (resp) {
             const reloadUrl = (location.href).replace(location.search, '')
