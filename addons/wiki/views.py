@@ -1015,11 +1015,11 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
 #    logger.info('------------_check_attachment_file_name_exist start------------')
     # check file name contains slash
 #    hasSlash = '/' in file_name
-    hasHat = '\^' in file_name
+    hasHat = '^' in file_name
 #    if hasSlash:
     if hasHat:
-        another_wiki_name = file_name.split('\^')[0]
-        file_name = file_name.split('\^')[1]
+        another_wiki_name = file_name.split('^')[0]
+        file_name = file_name.split('^')[1]
         # check as wikiName/fileName
         file_id = _process_attachment_file_name_exist(another_wiki_name, file_name, dir_id)
 #        logger.info(file_name)
