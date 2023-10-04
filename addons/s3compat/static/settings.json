@@ -49,7 +49,7 @@
                            "bucketLocations": {
                              "kakuma-01": {"name": "kakuma-01", "host": "minio.rdm.kanazawa-u.ac.jp:443"},
                              "": {"name": "kakuma-01"}},
-                           "serverSideEncryption": true},
+                           "serverSideEncryption": false},
                           {"name": "cohesity@Kanazawa University",
                            "host": "cohesity.rdm.kanazawa-u.ac.jp:3000",
                            "serverSideEncryption": true}
