@@ -1054,7 +1054,8 @@ def project_wiki_import_process(wname, auth, node, p_wname=None, **kwargs):
     wiki_name = wname
     parent_wiki_id = None
     wiki = WikiPage.objects.get_for_node(node, wiki_name)
-    data = request.get_data()
+    dataJson = request.get_json()
+    data = dataJson['wikiContent']
     ret = {'status_or_error_wiki_name': wiki_name}
     if p_wname:
         parent_wiki_name = p_wname.strip()

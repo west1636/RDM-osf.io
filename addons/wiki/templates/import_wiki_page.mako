@@ -34,7 +34,7 @@
                     <h3 class="modal-title">${_("Duplicate wiki name")}</h3>
                 </div><!-- end modal-header -->
                 <div class="modal-body">
-                    <p id="attentionValidateInfo" style="display: none">
+                    <p id="attentionValidateInfo" class="partOperationAll" style="display: none">
                         ${_('The following wiki page already exists. Please select the process when importing. When creating a new wiki, the wiki name will be created with a sequential number like [Wiki name](1). If you dismiss this alert, the import will be aborted.')}
                     </p>
                     <div class="partOperationAll" style="display: none">
@@ -198,7 +198,9 @@
                 var $perFileList = $('#perFileDifinitionForm li');
                 console.log($perFileList)
                 for (var j = 0; j < $perFileList.length; j++){
-                    var opList = { wiki_name: $perFileList[j].id, operation: $perFileList[j].children.importOperationPer.children.importOperationPerSelect.value};
+                    var wiki_name = ($perFileList[j].id).substring(($perFileList[j].id).lastIndexOf('/') + 1);
+                    var operation = $perFileList[j].children.importOperationPer.children.importOperationPerSelect.value;
+                    var opList = { wiki_name: wiki_name, operation: operation};
                     perOperationList.push(opList);
                 }
             }
@@ -329,8 +331,8 @@
                                             type: 'POST',
                                             cache: false,
                                             url: importProcessUrl,
-                                            data: wiki_info[i].wiki_content,
-                                            contentType: 'json'
+                                            data: JSON.stringify({wikiContent: wiki_info[i].wiki_content}),
+                                            contentType: 'application/json; charset=utf-8',
                                         }).done(function (response) {
                                             importCtn = importCtn + 1;
                                             $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki Page")}' + importCtn + '/' + totalCtn);
@@ -401,8 +403,8 @@
                             type: 'POST',
                             cache: false,
                             url: importProcessUrl,
-                            data: wiki_info[i].wiki_content,
-                            contentType: 'json'
+                            data: JSON.stringify({wikiContent: wiki_info[i].wiki_content}),
+                            contentType: 'application/json; charset=utf-8',
                         }).done(function (response) {
                             importCtn = importCtn + 1;
                             console.log('aaa')
@@ -452,7 +454,6 @@
         }
         function fixToImportList(operation, validationResult, perOperationList) {
             console.log('---fixtoimportlist---');
-            console.log(operation);
             if (operation === null && perOperationList.length > 0) {
                 console.log('---per action---')
                 for (var m=validationResult.length-1; m>=0; m--) {
@@ -461,8 +462,6 @@
                         continue;
                     }
                     for (var n=0; n<perOperationList.length; n++) {
-                        console.log(validationResult[m].name)
-                        console.log(perOperationList[n].wiki_name)
                         if (validationResult[m].name === perOperationList[n].wiki_name) {
                             console.log('---per action proceed---')
                             console.log(perOperationList[n].operation)
@@ -559,6 +558,8 @@
                         });
                     });
                 }
+            }).fail(function (response) {
+                alert('error, possibly Wiki images failed to create or nothing')
             });
         };
         /**
