@@ -271,8 +271,14 @@ async function createMEditor(editor, vm, template) {
                         vm.viewVM.displaySource(template);
                         return true
                     }
-                    console.log('-----applyTemplate end----')
-                 })
+                    if (vm.viewVM.version() === 'preview') {
+                        const view = ctx.get(mCore.editorViewCtx);
+                        const serializer = ctx.get(mCore.serializerCtx)
+                        const toMarkdown = serializer(remoteNode);
+                        vm.viewVM.displaySource(toMarkdown);
+                    }
+                console.log('-----applyTemplate end----')
+                })
                 .connect();
             }
         });
@@ -308,8 +314,18 @@ function ViewWidget(visible, version, viewText, rendered, contentURL, allowMathj
         if (typeof self.version() !== 'undefined') {
             if (self.version() === 'preview') {
 //                self.rendered(self.renderMarkdown(self.viewText()));
-                console.log(self.viewText())
-                self.displaySource(self.viewText());
+                console.log('---preview---')
+                console.log(mEdit);
+                var toMarkdown = '';
+                if (mEdit !== undefined) {
+                    console.log('---preview tomarkdown---')
+                    mEdit.action((ctx) => {
+                        const view = ctx.get(mCore.editorViewCtx);
+                        const serializer = ctx.get(mCore.serializerCtx)
+                        toMarkdown = serializer(view.state.doc)
+                    })
+                }
+                self.displaySource(toMarkdown);
                 if (document.getElementById("editWysiwyg").style.display === "none"){
                     document.getElementById("mMenuBar").style.display = "";
                     document.getElementById("mEditorFooter").style.display = "";
@@ -867,7 +883,11 @@ function ViewModel(options){
         }
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
-                view.focus()
+            view.focus();
+            const serializer = ctx.get(mCore.serializerCtx)
+            const toMarkdown = serializer(view.state.doc)
+            self.viewVM.displaySource(toMarkdown);
+            console.log(toMarkdown)
         })
       } else {
        // output modal 'can not edit because of your permmission'
@@ -891,8 +911,6 @@ function ViewModel(options){
         mEdit.action((ctx) => {
             console.log('---submitMText---');
             const view = ctx.get(mCore.editorViewCtx);
-            const currentDoc = view.state.doc;
-            const schema = ctx.get(mCore.schemaCtx)
             const serializer = ctx.get(mCore.serializerCtx)
             toMarkdown = serializer(view.state.doc)
         })
