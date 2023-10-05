@@ -462,6 +462,7 @@
                         continue;
                     }
                     for (var n=0; n<perOperationList.length; n++) {
+                        console.log(validationResult[m])
                         if (validationResult[m].name === perOperationList[n].wiki_name) {
                             console.log('---per action proceed---')
                             console.log(perOperationList[n].operation)
