@@ -355,7 +355,9 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
 @must_have_addon('wiki', 'node')
 def project_wiki_edit_post(auth, wname, **kwargs):
     node = kwargs['node'] or kwargs['project']
-    wiki_name = wname.strip()
+    # normalize NFC
+    wiki_name = unicodedata.normalize('NFC', wname)
+    wiki_name = wiki_name.strip()
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     redirect_url = node.web_url_for('project_wiki_view', wname=wiki_name, _guid=True)
 #    form_wiki_content = request.form['content']
@@ -367,6 +369,9 @@ def project_wiki_edit_post(auth, wname, **kwargs):
     requestData = request.get_data()
     getJson = request.get_json()
     form_wiki_content = getJson['markdown']
+
+    # normalize NFC
+    form_wiki_content = unicodedata.normalize('NFC', form_wiki_content)
 
     if wiki_version:
         # Only update wiki if content has changed
@@ -509,7 +514,9 @@ def project_wiki_rename(auth, wname, **kwargs):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
-    wiki_name = wname.strip()
+    # normalize NFC
+    wiki_name = unicodedata.normalize('NFC', wname)
+    wiki_name = wiki_name.strip()
     wiki = WikiPage.objects.get_for_node(node, wiki_name)
 
     if wiki or wiki_name.lower() == 'home':
@@ -520,6 +527,7 @@ def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
 
     parent_wiki_id = None
     if p_wname:
+        p_wname = unicodedata.normalize('NFC', p_wname)
         parent_wiki_name = p_wname.strip()
         parent_wiki = WikiPage.objects.get_for_node(node, parent_wiki_name)
         if not parent_wiki:
@@ -1051,13 +1059,16 @@ def _replace_common_rule(name):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import_process(wname, auth, node, p_wname=None, **kwargs):
-    wiki_name = wname
     parent_wiki_id = None
-    wiki = WikiPage.objects.get_for_node(node, wiki_name)
     dataJson = request.get_json()
     data = dataJson['wikiContent']
+    # normalize NFC
+    data = unicodedata.normalize('NFC', data)
+    wiki_name = unicodedata.normalize('NFC', wname)
+
     ret = {'status_or_error_wiki_name': wiki_name}
     if p_wname:
+        p_wname = unicodedata.normalize('NFC', p_wname)
         parent_wiki_name = p_wname.strip()
         parent_wiki = WikiPage.objects.get_for_node(node, parent_wiki_name)
         if not parent_wiki:
