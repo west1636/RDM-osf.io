@@ -806,7 +806,6 @@ def _validate_import_folder(node, folder, parent_path):
 def _validate_import_wiki_exists_duplicated(node, info):
     w_name = info['name']
     p_wname = info['parent_wiki_name']
-    logger.info(w_name)
     if w_name.lower() == 'home':
         return info
 
@@ -901,7 +900,6 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
     repImage = r"!\[(.*?)\]\((.+?)\)"
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
-        logger.info(info['wiki_name'])
         wiki_content = info['wiki_content']
         linkMatches = re.findall(repLink, wiki_content)
         imageMatches = re.findall(repImage, wiki_content)
@@ -1003,16 +1001,16 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
         another_wiki_name = file_name.split('^')[0]
         file_name = file_name.split('^')[1]
         # check as wikiName/fileName
-        file_id = _process_attachment_file_name_exist(another_wiki_name, file_name, dir_id)
+        file_id = _process_attachment_file_name_exist(hasHat, another_wiki_name, file_name, dir_id)
     else:
         # check as fileName
-        file_id = _process_attachment_file_name_exist(wiki_name, file_name, dir_id)
+        file_id = _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id)
 
     return file_id
 
-def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
+def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
     # check as fileName
-    replaced_wiki_name = _replace_common_rule(wiki_name)
+    replaced_wiki_name = _replace_common_rule(wiki_name) if hasHat else wiki_name
     replaced_file_name = _replace_common_rule(file_name)
 
     parent_directory = _get_wiki_import_directory(replaced_wiki_name, dir_id)
@@ -1030,6 +1028,8 @@ def _process_attachment_file_name_exist(wiki_name, file_name, dir_id):
 def _get_wiki_import_directory(wiki_name, dir_id):
     import_directory_root = BaseFileNode.objects.get(_id=dir_id)
     children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
+    # normalize NFC
+    wiki_name = unicodedata.normalize('NFC', wiki_name)
     for child in children:
         if child.name == wiki_name:
             return child
