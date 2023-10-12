@@ -744,9 +744,7 @@ def _validate_import_duplicated_directry(info_list):
     folder_name_list = []
     # create original folder name list
     for info in info_list:
-        # pick up md
-        if os.path.splitext(os.path.basename(info['original_name']))[1][1:] == 'md':
-            folder_name_list.append(info['original_name'])
+        folder_name_list.append(info['original_name'])
     # extract duplicate page names
     duplicated_folder_list = [k for k, v in collections.Counter(folder_name_list).items() if v > 1]
     return duplicated_folder_list

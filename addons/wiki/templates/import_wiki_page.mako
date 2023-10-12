@@ -65,6 +65,7 @@
                 <div class="modal-footer">
                     <button class="stopImport btn btn-default" href="#" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Stop import")}</button>
                     <button id="backalertInfo" type="button" class="btn btn-default btnIndividual" style="display: none">${_("Back")}</button>
+                    <button id="closeAlertInfo" type="button" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Close")}</button>
                     <button id="continueImportWikiSubmit" type="submit" class="btn btn-success btnAll btnIndividual" style="display: none">${_("Continue import")}</button>
                     <button id="perFileDefinition" type="button" class="btn btn-warning btnAll" style="display: none">${_("Per-file definition")}</button>
                 </div><!-- end modal-footer -->
@@ -120,7 +121,7 @@
                         if (response.duplicated_folder.length > 0) {
                             $('#attentionDuplicatedFolder').css('display', '');
                             $alertInfoForm.find('.partOperationAll').css('display', 'none');
-                            $('#backalertInfo').css('display', '');
+                            $('#closeAlertInfo').css('display', '');
                             response.duplicated_folder.forEach(function(item) {
                                 $('#duplicatedFolder ul').append('<li>' + item + '</li>');
                             });
