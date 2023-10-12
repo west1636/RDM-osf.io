@@ -16,8 +16,9 @@
                         </select>
                     </div>
                 </div><!-- end modal-body -->
-                <div class="modal-footer">
-                    <a id="close" href="#" class="btn btn-default" data-dismiss="modal">${_("Cancel")}</a>
+                <div id="importFooter" class="modal-footer">
+                    <a id="closeImport" href="#" class="btn btn-default" data-dismiss="modal">${_("Cancel")}</a>
+                    <button class="stopImport btn btn-default" href="#" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Stop import")}</button>
                     <button id="importWikiSubmit" type="submit" class="btn btn-success">${_("Import")}</button>
                 </div><!-- end modal-footer -->
             </form>
@@ -72,25 +73,6 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 
-<div class="modal fade" id="importResult">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 class="modal-title">${_("Import Result")}</h3>
-            </div><!-- end modal-header -->
-            <div class="modal-body">
-                <p id="importComplete" style="display: none">
-                    ${_("Import Complete.")}
-                </p>
-            </div><!-- end modal-body -->
-            <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal" style="display: none">${_("OK")}</a>
-            </div><!-- end modal-footer -->
-        </div><!-- end modal- content -->
-    </div><!-- end modal-dialog -->
-</div><!-- end modal -->
-
 <script type="text/javascript">
     $(function () {
         var $importWikiForm = $('#importWiki form');
@@ -129,6 +111,8 @@
                         .text('${_("Import")}');
                     if (response.canStartImport) {
                         var data = fixToImportList('', response.data)
+                        $importWikiForm.find('#closeImport').css('display', 'none');
+                        $importWikiForm.find('.stopImport').css('display', '');
                         startImportWiki(data, dirId, $submitForm);
                     } else {
                         $('#alertInfo').modal('show');
@@ -199,13 +183,18 @@
                     perOperationList.push(opList);
                 }
             }
-            validationResult = fixToImportList(operationAll, validationResult, perOperationList)
+            var validationResultCopy = validationResult.slice();
+            var validationResultFix = fixToImportList(operationAll, validationResultCopy, perOperationList);
+            if (validationResultFix.length === 0) {
+                alert('No page to import.');
+                return;
+            }
             // TODO: helper to eliminate slashes in the url.
             var dirId = $importDir.val();
             $perFile.attr('disabled', 'disabled');
             $perBack.attr('disabled', 'disabled');
             $stopImport.css('display', '');
-            startImportWiki(validationResult, dirId, $submitForm);
+            startImportWiki(validationResultFix, dirId, $submitForm);
         });
 
         $alertInfoForm.find('#perFileDefinition').on('click', function () {
@@ -218,6 +207,11 @@
             $('#alertInfo li').remove();
         });
         $alertInfoForm.find('.stopImport').on('click', function () {
+            const reloadUrl = (location.href).replace(location.search, '')
+            window.location.assign(reloadUrl);
+            return;
+        });
+        $importWikiForm.find('.stopImport').on('click', function () {
             const reloadUrl = (location.href).replace(location.search, '')
             window.location.assign(reloadUrl);
             return;
@@ -417,19 +411,19 @@
             }
             return max - 1;
         }
-        function fixToImportList(operation, validationResult, perOperationList) {
-            console.log('---fixtoimportlist---');
+        function fixToImportList(operation, validationResultCopy, perOperationList) {
+            console.log('---fixtoimportlist start---');
             if (operation === null && perOperationList.length > 0) {
-                for (var m=validationResult.length-1; m>=0; m--) {
-                    if (validationResult[m].status === 'invalid') {
-                        validationResult.splice(m, 1);
+                for (var m=validationResultCopy.length-1; m>=0; m--) {
+                    if (validationResultCopy[m].status === 'invalid') {
+                        validationResultCopy.splice(m, 1);
                         continue;
                     }
                     for (var n=0; n<perOperationList.length; n++) {
-                        if (validationResult[m].name === perOperationList[n].wiki_name) {
+                        if (validationResultCopy[m].name === perOperationList[n].wiki_name) {
                             if (perOperationList[n].operation === 'skip') {
                                 console.log('---per action skip---')
-                                validationResult.splice(m, 1);
+                                validationResultCopy.splice(m, 1);
                                 break;
                             } else if (perOperationList[n].operation === 'overwrite') {
                                 console.log('---per action overwrite---')
@@ -437,8 +431,8 @@
                                 // no deal
                             } else if (perOperationList[n].operation === 'createNew') {
                                 console.log('---per action createNew---')
-                                if ((validationResult[m].status).startsWith('valid_')){
-                                    validationResult[m].name = validationResult[m].name + '(' + validationResult[m].numbering + ')';
+                                if ((validationResultCopy[m].status).startsWith('valid_')){
+                                    validationResultCopy[m].name = validationResultCopy[m].name + '(' + validationResultCopy[m].numbering + ')';
                                 }
                                 break;
                             }
@@ -446,34 +440,34 @@
                     }
                 }
             } else if (operation === 'skipAll' || operation === '') {
-                for (var i=validationResult.length-1; i>=0; i--) {
-                    if (validationResult[i].status !== 'valid' && validationResult[i].status !== 'valid_duplicated') {
-                        validationResult.splice(i, 1);
+                for (var i=validationResultCopy.length-1; i>=0; i--) {
+                    if (validationResultCopy[i].status !== 'valid' && validationResultCopy[i].status !== 'valid_duplicated') {
+                        validationResultCopy.splice(i, 1);
                     }
                 }
             } else if (operation === 'overwriteAll') {
-                for (var j=validationResult.length-1; j>=0; j--) {
-                    if (validationResult[j].status === 'invalid') {
-                        validationResult.splice(j, 1);
+                for (var j=validationResultCopy.length-1; j>=0; j--) {
+                    if (validationResultCopy[j].status === 'invalid') {
+                        validationResultCopy.splice(j, 1);
                     }
                 }
             } else if (operation === 'createNewAll') {
-                for (var k=validationResult.length-1; k>=0; k--) {
-                    if (validationResult[k].status === 'invalid') {
-                        validationResult.splice(k, 1);
-                    } else if (validationResult[k].status === 'valid_exists') {
-                        validationResult[k].name = validationResult[k].name + '(' + validationResult[k].numbering + ')';
+                for (var k=validationResultCopy.length-1; k>=0; k--) {
+                    if (validationResultCopy[k].status === 'invalid') {
+                        validationResultCopy.splice(k, 1);
+                    } else if (validationResultCopy[k].status === 'valid_exists') {
+                        validationResultCopy[k].name = validationResultCopy[k].name + '(' + validationResultCopy[k].numbering + ')';
                     }
                 }
             } else {
                 // as skipAll
-                for (var m=validationResult.length-1; m>=0; m--) {
-                    if (validationResult[m].status !== 'valid' && validationResult[i].status !== 'valid_duplicated') {
-                        validationResult.splice(m, 1);
+                for (var m=validationResultCopy.length-1; m>=0; m--) {
+                    if (validationResultCopy[m].status !== 'valid' && validationResultCopy[i].status !== 'valid_duplicated') {
+                        validationResultCopy.splice(m, 1);
                     }
                 }
             }
-            return validationResult;
+            return validationResultCopy;
         }
         /**
          * Override from wikiPage.js
