@@ -165,6 +165,7 @@
                         <div class="table-dropdown-item" data-bind="click: addColumnAft"><div style="">Insert column after</div></div>
                         <div class="table-dropdown-item" data-bind="click: addRowBef"><div style="">Insert row before</div></div>
                         <div class="table-dropdown-item" data-bind="click: addRowAft"><div style="">Insert row after</div></div>
+                        <div class="table-dropdown-item" data-bind="click: deleteSelectedCell"><div style="">delete cell</div></div>
                         <div class="table-dropdown-item" data-bind="click: deleteTable"><div style="">delete table</div></div>
                       </div>
                     </div>
