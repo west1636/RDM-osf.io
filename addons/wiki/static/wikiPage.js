@@ -593,15 +593,11 @@ function ViewModel(options){
         var request = $.ajax({
             url: self.contentURL
         });
+        var rawContent = '';
         request.done(function (resp) {
             if (resp.wiki_content){
-                var rawContent = resp.wiki_content
-            } else if(window.contextVars.currentUser.canEdit) {
-                var rawContent = _('*Add important information, links, or images here to describe your project.*');
-            } else {
-                var rawContent = _('*No wiki content.*');
+                rawContent = resp.wiki_content
             }
-
             mEdit = createMEditor(mEdit, self, rawContent);
             console.log('---after createMEditor---')
             console.log(mEdit)
@@ -624,38 +620,6 @@ function ViewModel(options){
     bodyElement.on('toggleMenu', function(event, menuVisible) {
         self.menuVis(menuVisible);
     });
-
-    // Revert to last saved version, even if draft is more recent
-    self.revertChanges = function() {
-        console.log('---revertChanges start---');
-        if(currentMd === ''){
-            var requestURL = self.contentURL
-            var request = $.ajax({
-                url: requestURL
-            });
-
-            request.done(function (resp) {
-                if (resp.wiki_content){
-                     var rawContent = resp.wiki_content
-                } else if(window.contextVars.currentUser.canEdit) {
-                    var rawContent = _('*Add important information, links, or images here to describe your project.*');
-                } else {
-                    var rawContent = _('*No wiki content.*');
-                }
-                currentMd = rawContent;
-            });
-        }
-        console.log(doc);
-        //var ydoc = new yjs.Doc();
-        //var ytext = ydoc.getText(currentMd);
-        //ytext.insert(0, currentMd)
-        //var latest = yjs.encodeStateAsUpdate(ydoc);
-        //var latest = new Uint8Array(currentMd)
-        //yjs.applyUpdate(doc, 'a')
-        self.viewVM.displaySource(currentMd);
-        console.log(currentMd);
-        console.log('---revertChanges end---');
-    };
 
     self.undoWiki = function() {
         mEdit.action((ctx) => {
