@@ -74,10 +74,29 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 
+<div class="modal fade" id="importResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">${_("Import Result")}</h3>
+            </div><!-- end modal-header -->
+            <div class="modal-body">
+                <div id="showImportError" style="display: none">
+                </div>
+            </div><!-- end modal-body -->
+            <div class="modal-footer">
+                <a href="#" class="btn btn-success" data-dismiss="modal" >${_("OK")}</a>
+            </div><!-- end modal-footer -->
+        </div><!-- end modal- content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->
+
 <script type="text/javascript">
     $(function () {
         var $importWikiForm = $('#importWiki form');
         var $alertInfoForm = $('#alertInfo form');
+        var $importResult = $('#importResult')
         var selectOperation = '<div class="form-group" name="importOperationPer" style="display: inline-block; margin-left: 10px;"><select class="form-control" name="importOperationPerSelect"><option value="skip">Skip</option><option value="overwrite">Overwrite</option><option value="createNew">Create New</option></select></div>'
         var validationResult = [];
         var wiki_info = []
@@ -307,10 +326,16 @@
             if (depth > maxDepth) {
                 if (importErrors.length > 0) {
                     var importErrorMsg = createErrMsg(importErrors);
-                    alert(importErrorMsg);
+                    $('#importWiki').modal('hide');
+                    $('#alertInfo').modal('hide');
+                    $('#importResult').modal('show');
+                    $('#showImportError').append('<p>' + importErrorMsg + '</p>')
+                    $importResult.find('#showImportError').css('display', '');
+                    $alertInfoForm.find('.btnAll').css('display', 'none');
+                } else {
+                    const reloadUrl = (location.href).replace(location.search, '')
+                    window.location.assign(reloadUrl);
                 }
-                const reloadUrl = (location.href).replace(location.search, '')
-                window.location.assign(reloadUrl);
                 return;
             }
             var promisesSubordinateImportProcess = [];
@@ -381,8 +406,8 @@
         }
         function createErrMsg(errorList) {
             var errMsg = 'The following wiki pages could not be imported.';
-            var errWB = '\n< failed to get the text from markdown file >';
-            var errImportProcess = '\n< failed to import process >';
+            var errWB = '<br>< failed to get the text from markdown file >';
+            var errImportProcess = '<br>< failed to import process >';
             var flgErrWB = false;
             var flgErrorImportProcess = false;
             for (var i = 0; i < errorList.length; i++) {
@@ -391,7 +416,7 @@
                     errWB += '\n' + errorList[i].wb;
                 } else if (Object.keys(errorList[i])[0] === 'importProcess') {
                     flgErrorImportProcess = true;
-                    errImportProcess += '\n' + errorList[i].importProcess;
+                    errImportProcess += '<br>' + errorList[i].importProcess;
                 }
             }
             if (flgErrWB) {
@@ -492,6 +517,7 @@
                     alert('error create sub folder: ' + folderName);
                     const reloadUrl = (location.href).replace(location.search, '');
                     window.location.assign(reloadUrl);
+                    return;
                 }
             });
         };
@@ -519,6 +545,7 @@
                     alert('error, possibly Wiki images failed to create or nothing.')
                     const reloadUrl = (location.href).replace(location.search, '')
                     window.location.assign(reloadUrl);
+                    return;
                 }
             });
         };
