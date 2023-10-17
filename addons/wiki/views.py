@@ -885,22 +885,13 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
     data = request.get_json()
     wiki_info = data['wiki_info']
     replaced_wiki_info = []
-#    repLink = r"\[(.+?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%]+)\)"
-#    repLink = r"\[(.+?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%\w]+)\)"
-#    repImage = r"!\[(.*?)\]\(([a-zA-Z0-9-._~:/?#@!$&'()*+,;=%\w]+)\)"
-#    repLink = r"\[(.+?)\]\((.+?)\)"
-#    repImage = r"!\[(.*?)\]\((.+?)\)"
-#    repLink = r"\[((?!.*\\$).+)\]\(((?!.*\\$).+)\)"
-#    repImage = r"!\[((?!.*\\$).*)\]\(((?!.*\\$).+)\)"
-#    repLink = r"\[(.+?[^\\])\]\((.+?[^\\])\)"
-#    repImage = r"!\[(.+?[^\\])\]\((.+?[^\\])\)"
-    repLink = r"\[(.+?)\]\((.+?)\)"
-    repImage = r"!\[(.*?)\]\((.+?)\)"
+    repLink = r"(?!\\\\)\[(?P<title>.+?)(?!\\\\)\]\((?P<path>.+?)(?!\\\\)\)"
+    repImage = r"(?!\\\\)!\[(?P<title>.*?)(?!\\\\)\]\((?P<path>.+?)(?!\\\\)\)"
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
         wiki_content = info['wiki_content']
-        linkMatches = re.findall(repLink, wiki_content)
-        imageMatches = re.findall(repImage, wiki_content)
+        linkMatches = list(re.finditer(repLink, wiki_content))
+        imageMatches = list(re.finditer(repImage, wiki_content))
         info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
         info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
         replaced_wiki_info.append(info)
@@ -932,10 +923,10 @@ def _get_all_child_directory(dir_id):
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
     wiki_name = info['wiki_name']
     for match in linkMatches:
-        hasSharp = '#' in match[1]
-        hasDot = '.' in match[1]
+        hasSharp = '#' in match['path']
+        hasDot = '.' in match['path']
         repUrl = r"^https?://[\w/:%#\$&\?\(\)~\.=\+\-]+$"
-        isUrl = re.match(repUrl, match[1])
+        isUrl = re.match(repUrl, match['path'])
         if bool(isUrl):
             continue
         if hasSharp:
@@ -943,13 +934,12 @@ def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_child
                 # relace file name
                 wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
                 continue
+            continue
 
         # check whether wiki or not
-        isWiki = _check_wiki_name_exist(node, match[1], all_children_name)
+        isWiki = _check_wiki_name_exist(node, match['path'], all_children_name)
         if isWiki:
-            # replace wiki name
-            decode_title = _replace_common_rule(match[0])
-            wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_title + '](../' + match[1] + '/)')
+            wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')
         else:
             # If not wiki, check whether attachment file or not
             wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
@@ -972,24 +962,17 @@ def _check_wiki_name_exist(node, checkedName, all_children_name):
 
 def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id):
     # check whether attachment file or not
-    file_id = _check_attachment_file_name_exist(wiki_name, match[1], dir_id)
-    decode_alt = _replace_common_rule(match[0])
+    file_id = _check_attachment_file_name_exist(wiki_name, match['path'], dir_id)
     if file_id:
         # replace process of file name
         node_guid = get_node_guid(node)
         if notation == 'image':
             url = website_settings.WATERBUTLER_URL + '/v1/resources/' +  node_guid + '/providers/osfstorage/' + file_id + '?mode=render'
-            wiki_content = wiki_content.replace('![' + match[0] + '](' + match[1] + ')', '![' + decode_alt + '](' + url + ')')
+            wiki_content = wiki_content.replace('![' + match['title'] + '](' + match['path'] + ')', '![' + match['title'] + '](' + url + ')')
         elif notation == 'link':
             file_obj = BaseFileNode.objects.get(_id=file_id)
             url = website_settings.DOMAIN + node_guid + '/files/osfstorage/' + file_id
-        wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + url + ')')
-    else:
-        # replace only ALT
-        if notation == 'image':
-            wiki_content = wiki_content.replace('![' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + match[1] + ')')
-        elif notation == 'link':
-            wiki_content = wiki_content.replace('[' + match[0] + '](' + match[1] + ')', '[' + decode_alt + '](' + match[1] + ')')
+        wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](' + url + ')')
     return wiki_content
 
 def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
