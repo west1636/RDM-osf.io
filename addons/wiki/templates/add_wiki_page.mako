@@ -91,7 +91,7 @@
                     dataType: 'json'
                 });
                 request.done(function (response) {
-                    window.location.href = ${ urls['web']['base'] | sjson, n } + encodeURIComponent(wikiName) + '/edit/';
+                    window.location.href = ${ urls['web']['base'] | sjson, n } + encodeURIComponent(wikiName);
                 });
                 request.fail(function (response, textStatus, error) {
                     if (response.status === 409) {
