@@ -53,7 +53,7 @@ const docId = window.contextVars.wiki.metadata.docId;
 const wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
 const wsUrl = wsPrefix + window.contextVars.wiki.urls.y_websocket;
 var wikiCtx = window.contextVars;
-var validImgExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf'];
+var validImgExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
 var imageFolder = 'Wiki images';
 var promises = [];
 var mEdit;
@@ -125,15 +125,12 @@ async function createMEditor(editor, vm, template) {
     }
     const enableHtmlFileUploader = false
     const uploader = async (files, schema) => {
+        // You can handle whatever the file can be upload to GRDM.
         var renderInfo = await localFileHandler(files);
         const attachments = [];
         for (let i = 0; i < files.length; i++) {
           var file = files.item(i);
           if (!file) {
-            continue;
-          }
-          // You can handle whatever the file type you want, we handle image here.
-          if (!file.type.includes('image') && !file.type.includes('pdf')) {
             continue;
           }
           attachments.push(file);
@@ -143,7 +140,8 @@ async function createMEditor(editor, vm, template) {
             data.push({alt: renderInfo[i]['name'], src: renderInfo[i]['url']});
         }
         const ret = data.map(({ alt, src }) => {
-            if(/(?:\.([^.]+))?$/.exec(alt)[1] === 'pdf'){
+            var ext = getExtension(alt);
+            if(!(validImgExtensions.includes(ext))){
                 var attrs={ title: alt, href: src }
                     return schema.nodes.paragraph.createAndFill({}, schema.text(attrs.title, [schema.marks.link.create(attrs)]))
             }else{
@@ -825,6 +823,14 @@ function ViewModel(options){
         })
     }
 
+    self.deleteSelectedCell = function() {
+        mEdit.action((ctx) => {
+            const view = ctx.get(mCore.editorViewCtx);
+            view.focus()
+            return mUtils.callCommand(mGfm.deleteSelectedCellsCommand.key)(ctx)
+        })
+    }
+
     self.deleteTable = function() {
         mEdit.action((ctx) => {
             const view = ctx.get(mCore.editorViewCtx);
@@ -985,14 +991,10 @@ async function uplaodDnDFiles(files, path, fileNames) {
             if (fileNames.indexOf(file.name) !== -1) {
                 newName = autoIncrementFileName(file.name, fileNames);
             }
-            ext = getExtension(file.name);
             name = newName ? newName : file.name;
-            if (validImgExtensions.indexOf(ext.toLowerCase()) <= -1) {
-                $osf.growl('Error', 'This file type cannot be embedded  (' + file.name + ')', 'danger');
-            } else {
-                var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + encodeURI(path) + '?name=' + encodeURIComponent(name) + '&type=file';
-                $osf.trackClick('wiki', 'dropped-image', wikiCtx.node.id);
-                promises.push(
+            var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + encodeURI(path) + '?name=' + encodeURIComponent(name) + '&type=file';
+            $osf.trackClick('wiki', 'dropped-image', wikiCtx.node.id);
+            promises.push(
                 $.ajax({
                     url: waterbutlerURL,
                     type: 'PUT',
@@ -1002,19 +1004,19 @@ async function uplaodDnDFiles(files, path, fileNames) {
                     data: file,
                 }).done(function (response) {
                     var extUploaded = getExtension(response.data.attributes.name);
-                    if(extUploaded === 'pdf'){
-                        var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + '/files' + response.data.attributes.path;
-                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: fileBaseUrl}
+                    var ext = getExtension(file.name);
+                    if(validImgExtensions.includes(ext)){
+                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: response.data.links.download + '?mode=render'}
                         infos.push(info)
                     }else {
-                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: response.data.links.download + '?mode=render'}
+                        var waterbutlerURL = wikiCtx.waterbutlerURL + 'v1/resources/' + wikiCtx.node.id + '/providers/osfstorage' + '/files' + response.data.attributes.path;
+                        info = {name: response.data.attributes.name, path: response.data.attributes.path, url: fileBaseUrl}
                         infos.push(info)
                     }
                 }).fail(function (response) {
                     notUploaded(response, false);
                 })
-                );
-            }
+            );
         });
         return $.when.apply(null, promises).then(function () {
             return infos;
@@ -1036,7 +1038,7 @@ async function getFileUrl(infos) {
                     dataType: 'json'
                 }).done(function (response) {
                     var ext = getExtension(info.name);
-                    if(ext === 'pdf'){
+                    if(!(validImgExtensions.includes(ext))){
                         info.url = response.data.links.html
                     }
                 }).fail(function (response) {
