@@ -886,7 +886,7 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
     wiki_info = data['wiki_info']
     replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?)(?<!\\)\]\((?P<path>.+?)(?<!\\)\)'
-    imageLink = r'(?<!\\)!\[(?P<title>.+?)(?<!\\)\]\((?P<path>.+?)(?<!\\)\)'
+    repImage = r'(?<!\\)!\[(?P<title>.+?)(?<!\\)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
         wiki_content = info['wiki_content']
