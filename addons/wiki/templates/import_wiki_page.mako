@@ -34,7 +34,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3 class="modal-title">${_("Duplicate wiki name")}</h3>
                 </div><!-- end modal-header -->
-                <div class="modal-body">
+                <div class="modal-body" style="height: 700px;overflow: auto;">
                     <p id="attentionValidateInfo" class="partOperationAll" style="display: none">
                         ${_('The following wiki page already exists. Please select the process when importing. When creating a new wiki, the wiki name will be created with a sequential number like [Wiki name](1). If you dismiss this alert, the import will be aborted.')}
                     </p>
@@ -152,7 +152,7 @@
                                     $alertInfoForm.find('.partOperationAll').css('display', '');
                                     //$('#attentionValidateInfo').css('display', '');
                                     $('#validateInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
-                                    $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '">' + '<div style="display: inline-block">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>')
+                                    $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '" style="display: flex;justify-content: flex-end;">' + '<div style="display: list-item; position: absolute; left: 55px; max-width: 450px;">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>')
                                 } else if (item.status === 'valid_duplicated'){
                                     $('#attentionDuplicatedInfo').css('display', '');
                                     $('#duplicatedInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
