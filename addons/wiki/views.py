@@ -884,6 +884,7 @@ def project_wiki_replace(dir_id, auth, node, **kwargs):
     logger.info('------------replace md start------------')
     data = request.get_json()
     wiki_info = data['wiki_info']
+    replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     repImage = r'(?<!\\)!\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name = _get_all_wiki_name_import_directory(dir_id)
