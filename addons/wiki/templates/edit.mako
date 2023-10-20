@@ -171,7 +171,7 @@
                     </div>
                     <button class="menuItem" style="margin-left: 40px;" data-toggle="modal" data-target="#wiki-help-modal" style="margin-left: -7px"><span class="material-symbols-outlined">help</span></button>
                   </div>
-                  <div id="mEditor" style="${'' if version_settings['view'] == 'preview' else 'display: none'} overflow: auto;height: 400px;"></div>
+                  <div id="mEditor" style="overflow: auto;height: 400px; ${'' if version_settings['view'] == 'preview' else 'display: none'}"></div>
 
                   <div id="wikiViewRender">
                       % if wiki_markdown:
