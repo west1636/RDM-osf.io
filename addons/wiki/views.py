@@ -804,8 +804,6 @@ def _validate_import_folder(node, folder, parent_path):
 def _validate_import_wiki_exists_duplicated(node, info):
     w_name = info['name']
     p_wname = info['parent_wiki_name']
-    if w_name.lower() == 'home':
-        return info
 
     global can_start_import
     # get wiki full path
