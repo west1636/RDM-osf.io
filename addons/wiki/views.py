@@ -24,12 +24,10 @@ from framework.auth.utils import privacy_info_handle
 from framework.auth.decorators import must_be_logged_in
 from framework.flask import redirect
 
-from framework.celery_tasks import app as celery_app
 from addons.wiki.utils import to_mongo_key
 from addons.wiki import settings
 from addons.wiki import utils as wiki_utils
 from addons.wiki.models import WikiPage, WikiVersion
-from addons.wiki import tasks
 from osf import features
 from website import settings as website_settings
 from website.files import utils as files_utils
@@ -713,16 +711,7 @@ def serialize_component_wiki(node, auth):
 
 @must_be_valid_project
 @must_be_contributor_or_public
-def project_wiki_validate_import(dir_id, node, **kwargs):
-    logger.info('validate import start')
-    node_id = get_node_guid(node)
-    task = tasks.run_project_wiki_validate_import.delay(dir_id, node_id)
-    result = task.get()
-    logger.info('validate import end')
-    return result
-
-def project_wiki_validate_import_process(dir_id, node):
-    logger.info('validate import process start')
+def project_wiki_validate_import(dir_id, auth, node, **kwargs):
     global can_start_import 
     can_start_import = True
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
@@ -745,7 +734,6 @@ def project_wiki_validate_import_process(dir_id, node):
         child_info_list = _validate_import_folder(node, obj, '')
         info_list.extend(child_info_list)
     duplicated_folder_list = _validate_import_duplicated_directry(info_list)
-    logger.info('validate import process end')
     return {
         'data': info_list,
         'duplicated_folder': duplicated_folder_list,
@@ -874,17 +862,9 @@ def get_node_guid(node):
 
 @must_be_valid_project
 @must_be_contributor_or_public
-def project_wiki_copy_import_directory(dir_id, node, **kwargs):
+def project_wiki_copy_import_directory(dir_id, auth, node, **kwargs):
     logger.info('copy import directory start')
     data = request.get_json()
-    node_id = get_node_guid(node)
-    task = tasks.run_project_wiki_copy_import_directory.delay(data, dir_id, node_id)
-    result = task.get()
-    logger.info('copy import directory end')
-    return result
-
-def project_wiki_copy_import_directory_process(data, dir_id, node):
-    logger.info('copy import directory process start')
     folderPath = data['folderPath']
     copyFrom_id = dir_id
     toCopy_id = folderPath[1:][:-1]
@@ -893,22 +873,14 @@ def project_wiki_copy_import_directory_process(data, dir_id, node):
 
     cloned = files_utils.copy_files(copyFrom, node, toCopy)
     cloned_id = cloned._id
-    logger.info('copy import directory process end')
+    logger.info('copy import directory end')
     return {'clonedId': cloned_id}
 
 @must_be_valid_project
 @must_be_contributor_or_public
-def project_wiki_replace(dir_id, node, **kwargs):
+def project_wiki_replace(dir_id, auth, node, **kwargs):
     logger.info('------------replace md start------------')
     data = request.get_json()
-    node_id = get_node_guid(node)
-    task = tasks.run_project_wiki_replace.delay(data, dir_id, node_id)
-    result = task.get()
-    logger.info('------------replace md end------------')
-    return result
-
-def project_wiki_replace_process(data, dir_id, node):
-    logger.info('------------replace md process start------------')
     wiki_info = data['wiki_info']
     replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
@@ -921,7 +893,7 @@ def project_wiki_replace_process(data, dir_id, node):
         info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
         info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
         replaced_wiki_info.append(info)
-    logger.info('------------replace md process end------------')
+    logger.info('------------replace md end------------')
     return {'replaced': replaced_wiki_info}
 
 def _get_all_wiki_name_import_directory(dir_id):
