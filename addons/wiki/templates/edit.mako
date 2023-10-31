@@ -95,7 +95,7 @@
     <div class="panel-expand col-sm-${'9' if 'menu' in panels_used else '11'}">
       <div class="row">
 
-          <div data-osf-panel="${_('View')}"
+          <div data-osf-panel="View"
                class="${'col-sm-{0}'.format(12 / num_columns)}"
                style="${'' if 'view' in panels_used else 'display: none'}">
               <div class="osf-panel panel panel-default no-border" data-bind="css: { 'no-border reset-height': $root.singleVis() === 'view', 'osf-panel-flex': $root.singleVis() !== 'view' }">
@@ -200,7 +200,7 @@
               </div>
           </div>
 
-          <div data-osf-panel="${_('Compare')}"
+          <div data-osf-panel="Compare"
                class="${'col-sm-{0}'.format(12 / num_columns)}"
                style="${'' if 'compare' in panels_used else 'display: none'}">
             <div class="osf-panel panel panel-default osf-panel-flex" data-bind="css: { 'no-border reset-height': $root.singleVis() === 'compare', 'osf-panel-flex': $root.singleVis() !== 'compare' }">
