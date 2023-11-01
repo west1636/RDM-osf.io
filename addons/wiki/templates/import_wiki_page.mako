@@ -161,7 +161,7 @@
                     }
                 });
                 request.fail(function (response, textStatus, error) {
-                    $alert.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
+                    $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
                     Raven.captureMessage('${_("Error occurred while validating page")}', {
                         extra: {
                             url: ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/',
@@ -262,7 +262,6 @@
                 }
                 var mfr_url = mfr_format_url.replace('{1}', window.contextVars.node.id).replace('{2}', data[i]._id);
                 await getMdContentFromWB(mfr_url, data[i], $submitForm, totalCtn);
-                console.log(i)
             }
             // Wiki images, Imported Wiki workspace and copy wiki miport directoy
             var copyImportDirectryUrl = ${ urls['api']['base'] | sjson, n } + 'copy_import_directory/' + dirId + '/';
@@ -288,22 +287,39 @@
                         url: replaceUrl,
                         data: JSON.stringify({ wiki_info: wiki_info}),
                         contentType: 'application/json; charset=utf-8',
-                    }).done(function (response) {
+                    }).done(async function (response) {
                         importCtn = 0;
                         var wiki_info = response.replaced;
                         var totalCtn = wiki_info.length;
                         $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki Page")}' + importCtn + '/' + totalCtn);
-                        var promisesRootImportProcess = [];
+                         // Wiki page registration(root).
                         for (var i = 0; i < wiki_info.length; i++) {
-                            var importProcessUrl = ${ urls['api']['base'] | sjson, n } + encodeURIComponent(wiki_info[i].wiki_name) + '/import_process/';
                             if (wiki_info[i].parent_wiki_name === null) {
-                                promisesRootImportProcess.push(importProcess(importProcessUrl, wiki_info[i], $submitForm, totalCtn));
+                                var importProcessUrl = ${ urls['api']['base'] | sjson, n } + encodeURIComponent(wiki_info[i].wiki_name) + '/import_process/';
+                                await importProcess(importProcessUrl, wiki_info[i], $submitForm, totalCtn);
                             }
                         }
-                        $.when.apply(null, promisesRootImportProcess).done(function () {
-                            // subordinate wiki pages is created.
-                            importSameLevelWiki(wiki_info, 1, $submitForm, importCtn, totalCtn);
-                        });
+                        var maxDepth = getMaxDepth(wiki_info);
+                        // Wiki page registration(childs).
+                        for (var depth = 1; depth <= maxDepth; depth++) {
+                            await importSameLevelWiki(wiki_info, depth, $submitForm, importCtn, totalCtn);
+                        }
+                        // The series of import processes has reached the end.
+                        if (importErrors.length > 0) {
+                            // show import error modal.
+                            var importErrorMsg = createErrMsg(importErrors);
+                            $('#importWiki').modal('hide');
+                            $('#alertInfo').modal('hide');
+                            $('#importResult').modal('show');
+                            $('#showImportError').append('<p>' + importErrorMsg + '</p>')
+                            $importResult.find('#showImportError').css('display', '');
+                            $alertInfoForm.find('.btnAll').css('display', 'none');
+                        } else {
+                            //rolaod
+                            const reloadUrl = (location.href).replace(location.search, '')
+                            window.location.assign(reloadUrl);
+                        }
+                        return;
                     }).fail(function (response) {
                         if (response.status !== 0) {
                             alert('error when replace');
@@ -320,39 +336,15 @@
                 });
             });
         }
-        function importSameLevelWiki(wiki_info, depth, $submitForm, importCtn, totalCtn) {
-            var complete = true;
-            var maxDepth = getMaxDepth(wiki_info);
-            if (depth > maxDepth) {
-                if (importErrors.length > 0) {
-                    var importErrorMsg = createErrMsg(importErrors);
-                    $('#importWiki').modal('hide');
-                    $('#alertInfo').modal('hide');
-                    $('#importResult').modal('show');
-                    $('#showImportError').append('<p>' + importErrorMsg + '</p>')
-                    $importResult.find('#showImportError').css('display', '');
-                    $alertInfoForm.find('.btnAll').css('display', 'none');
-                } else {
-                    const reloadUrl = (location.href).replace(location.search, '')
-                    window.location.assign(reloadUrl);
-                }
-                return;
-            }
-            var promisesSubordinateImportProcess = [];
+        async function importSameLevelWiki(wiki_info, depth, $submitForm, importCtn, totalCtn) {
             for (var i = 0; i < wiki_info.length; i++) {
                 var slashCnt = ( (wiki_info[i].path).match( /\//g ) || [] ).length ;
                 var wiki_depth = slashCnt - 1;
                 if (depth === wiki_depth) {
-                    complete = false;
                     var importProcessUrl = ${ urls['api']['base'] | sjson, n } + encodeURIComponent(wiki_info[i].wiki_name) + '/parent/' + encodeURIComponent(wiki_info[i].parent_wiki_name) + '/import_process/';
-                    promisesSubordinateImportProcess.push(importProcess(importProcessUrl, wiki_info[i], $submitForm, totalCtn));
+                    await importProcess(importProcessUrl, wiki_info[i], $submitForm, totalCtn);
                 }
             }
-            $.when.apply($, promisesSubordinateImportProcess).done(function () {
-                if (!complete) {
-                    importSameLevelWiki(wiki_info, depth + 1, $submitForm, importCtn, totalCtn);
-                }
-            });
         }
         async function getMdContentFromWB(mfr_url, data, $submitForm, totalCtn) {
             return $.ajax({
@@ -383,8 +375,7 @@
             })
         }
         async function importProcess(importProcessUrl, wiki_info, $submitForm, totalCtn) {
-            var dfr = new $.Deferred();
-            $.ajax({
+            return $.ajax({
                 type: 'POST',
                 cache: false,
                 url: importProcessUrl,
@@ -395,10 +386,7 @@
                 $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki Page")}' + importCtn + '/' + totalCtn);
             }).fail(function (response) {
                 importErrors.push({'importProcess': response.responseJSON.error_wiki_name})
-            }).always(function (response) {
-                dfr.resolve();
             })
-            return dfr.promise();
         }
         function createErrMsg(errorList) {
             var errMsg = 'The following wiki pages could not be imported.';
