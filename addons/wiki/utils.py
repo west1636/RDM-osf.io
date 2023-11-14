@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
 from future.moves.urllib.parse import quote
+import json
 import uuid
-
+import unicodedata
 import ssl
 from pymongo import MongoClient
 import requests
 from bs4 import BeautifulSoup
 from django.apps import apps
-
+from django.core import serializers
 from addons.wiki import settings as wiki_settings
 from addons.wiki.exceptions import InvalidVersionError
+from osf.models.files import BaseFileNode
 from osf.utils.permissions import ADMIN, READ, WRITE
 # MongoDB forbids field names that begin with "$" or contain ".". These
 # utilities map to and from Mongo field names.
@@ -259,3 +261,98 @@ def serialize_wiki_widget(node):
     }
     wiki_widget_data.update(wiki.config.to_json())
     return wiki_widget_data
+
+def get_node_guid(node):
+    qsGuid = node._prefetched_objects_cache['guids'].only()
+    guidSerializer = serializers.serialize('json', qsGuid, ensure_ascii=False)
+    guidJson = json.loads(guidSerializer)
+    guid = guidJson[0]['fields']['_id']
+    return guid
+
+def get_all_wiki_name_import_directory(dir_id):
+    import_directory_root = BaseFileNode.objects.get(_id=dir_id)
+    children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
+    all_dir_list = []
+    for child in children:
+        all_dir_list.append(child.name)
+        all_child_list = _get_all_child_directory(child._id)
+        all_dir_list.extend(all_child_list)
+    return all_dir_list
+
+def _get_all_child_directory(dir_id):
+    parent_dir = BaseFileNode.objects.get(_id=dir_id)
+    children = parent_dir._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
+    dir_list = []
+    for child in children:
+        dir_list.append(child.name)
+        child_list = _get_all_child_directory(child._id)
+        dir_list.extend(child_list)
+
+    return dir_list
+
+def get_wiki_directory(wiki_name, dir_id):
+    import_directory_root = BaseFileNode.objects.get(_id=dir_id)
+    children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
+    # normalize NFC
+    wiki_name = unicodedata.normalize('NFC', wiki_name)
+    for child in children:
+        if child.name == wiki_name:
+            return child
+        wiki = get_wiki_directory(wiki_name, child._id)
+        if wiki:
+            return wiki
+    return None
+
+def get_wiki_fullpath(node, w_name):
+    WikiPage = apps.get_model('addons_wiki.WikiPage')
+    wiki = WikiPage.objects.get_for_node(node, w_name)
+    if wiki is None:
+        return ''
+    fullpath = '/' + _get_wiki_parent(wiki, w_name)
+    return fullpath
+
+def _get_wiki_parent(wiki, path):
+    WikiPage = apps.get_model('addons_wiki.WikiPage')
+    try:
+        parent_wiki_page = WikiPage.objects.get(id=wiki.parent)
+        path = parent_wiki_page.page_name + '/' + path
+        return _get_wiki_parent(parent_wiki_page, path)
+    except:
+        return path
+
+def get_wiki_numbering(node, w_name):
+    max = 1000
+    index = 1
+    WikiPage = apps.get_model('addons_wiki.WikiPage')
+    wiki = WikiPage.objects.get_for_node(node, w_name)
+    if wiki is None:
+        return ''
+
+    for index in range(index, max+1):
+        wiki = WikiPage.objects.get_for_node(node, w_name + '('+ str(index) + ')')
+        if wiki is None:
+            return index
+    return None
+
+def get_max_depth(wiki_info):
+    max = 0
+    for info in wiki_info:
+        now = info['path'].count('/')
+        if now > max:
+            max = now
+    return max - 1
+
+def check_import_error(rets):
+    error_occurred = False
+    for ret in rets:
+        error_occurred = ('status', 'import_error') in ret.items() 
+        if error_occurred:
+            break
+    return error_occurred
+
+def create_import_error_list(rets):
+    import_errors = []
+    for ret in rets:
+        if ret['status'] == 'import_error':
+            import_errors.append({'import_error': ret['error_wiki_name']})
+    return import_errors
