@@ -137,8 +137,10 @@
                     dataType: 'json'
                 });
                 request.done(async function (response) {
+                    console.log('---validate task---')
                     var taskId = response.taskId;
                     var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
+                    console.log(taskId);
                     validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
                     if (!validateImportResult) {
                         return;
@@ -343,6 +345,7 @@
         }
 
         async function intervalGetCeleryTaskResult(url, ms, timeout, operation) {
+            console.log('interval get celery task result start')
             var count = 0;
             var result = '';
             var timeoutCtn = timeout * 1000 / ms
