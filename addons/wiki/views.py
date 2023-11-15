@@ -721,7 +721,6 @@ def project_wiki_validate_import(dir_id, node, **kwargs):
     node_id = wiki_utils.get_node_guid(node)
     task = tasks.run_project_wiki_validate_import.delay(dir_id, node_id)
     task_id = task.id
-    logger.info(task_id)
     logger.info('validate import end')
     return { 'taskId': task_id}
 
