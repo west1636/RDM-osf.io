@@ -26,19 +26,27 @@ def search(query, index=None, doc_type=None, raw=None, private=False, ext=False)
 
 @requires_search
 def update_node(node, index=None, bulk=False, async_update=True, saved_fields=None, wiki_page=None):
+    logger.info('---update node start---')
     kwargs = {
         'index': index,
         'bulk': bulk
     }
+    #logger.info('---update node 1---')
     if async_update:
+        #logger.info('---update node 2---')
         node_id = node._id
+        #logger.info('---update node 3---')
         kwargs['wiki_page_id'] = wiki_page._id if wiki_page else None
+        #logger.info(str(kwargs['wiki_page_id']))
+        #logger.info('---update node 4---')
         # We need the transaction to be committed before trying to run celery tasks.
         # For example, when updating a Node's privacy, is_public must be True in the
         # database in order for method that updates the Node's elastic search document
         # to run correctly.
         if settings.USE_CELERY:
+            #logger.info('---update node 5---')
             enqueue_task(search_engine.update_node_async.s(node_id=node_id, **kwargs))
+            #logger.info('---update node 6---')
         else:
             search_engine.update_node_async(node_id=node_id, **kwargs)
     else:

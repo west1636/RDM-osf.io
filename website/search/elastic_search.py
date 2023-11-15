@@ -146,21 +146,26 @@ CLIENT = None
 
 
 def client():
+    #logger.info('---client start---')
     global CLIENT
     if CLIENT is None:
         try:
+            #logger.info('---client 1---')
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
                 request_timeout=settings.ELASTIC_TIMEOUT,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
+            #logger.info('---client 2--')
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
             logging.getLogger('urllib3').setLevel(logging.WARN)
             logging.getLogger('requests').setLevel(logging.WARN)
             CLIENT.cluster.health(wait_for_status='yellow')
+            #logger.info('---client 3--')
         except ConnectionError:
+            #logger.info('---client 4--')
             message = (
                 'The SEARCH_ENGINE setting is set to "elastic", but there '
                 'was a problem starting the elasticsearch interface. Is '
@@ -175,12 +180,16 @@ def client():
             else:
                 logger.error(message)
             exit(1)
+    #logger.info(CLIENT)
+    #logger.info('---client end---')
     return CLIENT
 
 
 def requires_search(func):
     def wrapped(*args, **kwargs):
+        #logger.info('---requires search start---')
         if client() is not None:
+            #logger.info('---requires search 1---')
             try:
                 return func(*args, **kwargs)
             except ConnectionError as e:
@@ -204,6 +213,8 @@ def requires_search(func):
             except TransportError as e:
                 # Catch and wrap generic uncaught ES error codes. TODO: Improve fix for https://openscience.atlassian.net/browse/OSF-4538
                 raise exceptions.SearchException(e.error)
+
+        #logger.info('---requires search 2---')
 
         sentry.log_message('Elastic search action failed. Is elasticsearch running?')
         raise exceptions.SearchUnavailableError('Failed to connect to elasticsearch')
@@ -668,15 +679,21 @@ def get_doctype_from_node(node):
 
 @celery_app.task(bind=True, max_retries=5, default_retry_delay=60)
 def update_node_async(self, node_id, index=None, bulk=False, wiki_page_id=None):
+    logger.info('---update_node_async start---')
     AbstractNode = apps.get_model('osf.AbstractNode')
     node = AbstractNode.load(node_id)
+    #logger.info('---update_node_async 1---')
     if wiki_page_id:
+        #logger.info('---update_node_async 2---')
         WikiPage = apps.get_model('addons_wiki.WikiPage')
         wiki_page = WikiPage.load(wiki_page_id)
     else:
+        #logger.info('---update_node_async 3---')
         wiki_page = None
     try:
+        #logger.info('---update_node_async 4---')
         update_node(node=node, index=index, bulk=bulk, async_update=True, wiki_page=wiki_page)
+        #logger.info('---update_node_async 5---')
     except Exception as exc:
         self.retry(exc=exc)
 
@@ -1038,6 +1055,7 @@ def node_is_ignored(node):
 
 @requires_search
 def update_wiki(wiki_page, index=None, bulk=False):
+    logger.info('---update wiki---')
     index = es_index(index)
     category = 'wiki'
 
@@ -1053,7 +1071,10 @@ def update_wiki(wiki_page, index=None, bulk=False):
     if bulk:
         return elastic_document
     else:
+        logger.info('---add wiki index start---')
+        logger.info(body)
         client().index(index=index, doc_type=category, id=wiki_page._id, body=elastic_document, refresh=True)
+        logger.info('---add wiki index end---')
 
 @requires_search
 def update_file_metadata(file_metadata, index=None, bulk=False):
@@ -1072,31 +1093,49 @@ def update_file_metadata(file_metadata, index=None, bulk=False):
 
 @requires_search
 def update_node(node, index=None, bulk=False, async_update=False, wiki_page=None):
+    logger.info('---update_node start---')
     if wiki_page:
+        logger.info('---update_node 1---')
+        logger.info(wiki_page)
         update_wiki(wiki_page, index=index)
         # NOTE: update_node() may be called twice after WikiPage.save()
     metadata = node.get_addon(METADATA_SHORT_NAME)
     if metadata is not None:
         for file_metadata in metadata.file_metadata.all():
             update_file_metadata(file_metadata, index=index)
-
+    #logger.info('---update_node 2---')
     from addons.osfstorage.models import OsfStorageFile
+    #logger.info('---update_node 3---')
+    #logger.info(index)
     index = es_index(index)
+    #logger.info(index)
+    #logger.info('---update_node 4---')
+    #logger.info('---update_node 4-2---')
     for file_ in paginated(OsfStorageFile, Q(target_content_type=ContentType.objects.get_for_model(type(node)), target_object_id=node.id)):
+        #logger.info('---update_node 4-3---')
+        #logger.info(file_.name)
         update_file(file_, index=index)
-
+    #logger.info('---update_node 5---')
     is_qa_node = bool(set(settings.DO_NOT_INDEX_LIST['tags']).intersection(node.tags.all().values_list('name', flat=True))) or any(substring in node.title for substring in settings.DO_NOT_INDEX_LIST['titles'])
+    #logger.info('---update_node 6---')
     if node.is_deleted or (not settings.ENABLE_PRIVATE_SEARCH and not node.is_public) or node.archiving or node.is_spam or (node.spam_status == SpamStatus.FLAGGED and settings.SPAM_FLAGGED_REMOVE_FROM_SEARCH) or node.is_quickfiles or is_qa_node:
+        #logger.info('---update_node 7---')
         delete_doc(node._id, node, index=index)
+        #logger.info('---update_node 7-1---')
         for wiki_page in node.wikis.iterator():
+            #logger.info('---update_node 7-2---')
             delete_wiki_doc(wiki_page._id, index=index)
     else:
+        #logger.info('---update_node 8---')
         category = get_doctype_from_node(node)
         elastic_document = serialize_node(node, category)
         if bulk:
+            #logger.info('---update_node 9---')
             return elastic_document
         else:
+            #logger.info('---update_node 10---')
             client().index(index=index, doc_type=category, id=node._id, body=elastic_document, refresh=True)
+            #logger.info('---update_node 11---')
 
 @requires_search
 def update_preprint(preprint, index=None, bulk=False, async_update=False):
@@ -1365,17 +1404,23 @@ def update_user(user, index=None):
 
 @requires_search
 def update_file(file_, index=None, delete=False):
+    #logger.info('update file start')
     index = es_index(index)
+    #logger.info(index)
     target = file_.target
-
+    #logger.info(target)
     # TODO: Can remove 'not file_.name' if we remove all base file nodes with name=None
     file_node_is_qa = bool(
         set(settings.DO_NOT_INDEX_LIST['tags']).intersection(file_.tags.all().values_list('name', flat=True))
     ) or bool(
         set(settings.DO_NOT_INDEX_LIST['tags']).intersection(target.tags.all().values_list('name', flat=True))
     ) or any(substring in target.title for substring in settings.DO_NOT_INDEX_LIST['titles'])
+
+    #logger.info(file_node_is_qa)
+
     if not file_.name or (not settings.ENABLE_PRIVATE_SEARCH and not target.is_public) or delete or file_node_is_qa or getattr(target, 'is_deleted', False) or getattr(target, 'archiving', False) or target.is_spam or (
             target.spam_status == SpamStatus.FLAGGED and settings.SPAM_FLAGGED_REMOVE_FROM_SEARCH):
+        #logger.info('---update file 2---')
         client().delete(
             index=index,
             doc_type='file',
@@ -1384,8 +1429,9 @@ def update_file(file_, index=None, delete=False):
             ignore=[404]
         )
         return
-
+    #logger.info('---update file 3---')
     if isinstance(target, Preprint):
+        #logger.info('---update file 4---')
         if not getattr(target, 'verified_publishable', False) or target.primary_file != file_ or target.is_spam or (
                 target.spam_status == SpamStatus.FLAGGED and settings.SPAM_FLAGGED_REMOVE_FROM_SEARCH):
             client().delete(
@@ -1396,7 +1442,7 @@ def update_file(file_, index=None, delete=False):
                 ignore=[404]
             )
             return
-
+    #logger.info('---update file 5---')
     # We build URLs manually here so that this function can be
     # run outside of a Flask request context (e.g. in a celery task)
     file_deep_url = '/{target_id}/files/{provider}{path}/'.format(
@@ -1404,13 +1450,20 @@ def update_file(file_, index=None, delete=False):
         provider=file_.provider,
         path=file_.path,
     )
+    #logger.info('---update file 6---')
     if getattr(target, 'is_quickfiles', None):
+        #logger.info('---update file 7---')
         node_url = '/{user_id}/quickfiles/'.format(user_id=target.creator._id)
     else:
+        #logger.info('---update file 8---')
         node_url = '/{target_id}/'.format(target_id=target._id)
+
+    #logger.info('---update file 9---')
 
     tags = list(file_.tags.filter(system=False).values_list('name', flat=True))
     normalized_tags = [unicode_normalize(tag) for tag in tags]
+
+    #logger.info('---update file 10---')
 
     # FileVersion ordering is '-created'. (reversed order)
     first_file = file_.versions.all().last()  # may be None
@@ -1434,8 +1487,13 @@ def update_file(file_, index=None, delete=False):
         modifier_name = None
         date_modified = file_.created
 
+    #logger.info('---update file 11---')
+
     guid_url = None
     file_guid = file_.get_guid(create=False)
+
+    #logger.info('---update file 12---')
+
     if file_guid:
         guid_url = '/{file_guid}/'.format(file_guid=file_guid._id)
     # File URL's not provided for preprint files, because the File Detail Page will
@@ -1474,6 +1532,8 @@ def update_file(file_, index=None, delete=False):
         'node_public': target.is_public,
         'comments': comments_to_doc(file_guid._id) if file_guid else {}
     }
+    #logger.info(file_doc)
+    #logger.info('---update file 13---')
 
     client().index(
         index=index,
@@ -1778,6 +1838,7 @@ def create_index(index=None):
 
 @requires_search
 def delete_doc(elastic_document_id, node, index=None, category=None):
+    #logger.info('---delete doc start--')
     index = es_index(index)
     if not category:
         if isinstance(node, Preprint):
@@ -1786,6 +1847,9 @@ def delete_doc(elastic_document_id, node, index=None, category=None):
             category = 'registration'
         else:
             category = node.project_or_component
+    #logger.info(index)
+    #logger.info(category)
+    #logger.info(elastic_document_id)
     client().delete(index=index, doc_type=category, id=elastic_document_id, refresh=True, ignore=[404])
 
 @requires_search
@@ -1795,6 +1859,7 @@ def delete_group_doc(deleted_id, index=None):
 
 @requires_search
 def delete_wiki_doc(deleted_id, index=None):
+    #logger.info('---delete wiki doc start---')
     index = es_index(index)
     client().delete(index=index, doc_type='wiki', id=deleted_id, refresh=True, ignore=[404])
 

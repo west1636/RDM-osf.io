@@ -174,12 +174,16 @@ class WikiVersion(ObjectIDMixin, BaseModel):
         return self.content
 
     def save(self, *args, **kwargs):
+        logger.info('---wiki version save start---')
+        logger.info('---super wiki version save start---')
         rv = super(WikiVersion, self).save(*args, **kwargs)
+        logger.info('---super wiki version save end---')
         if self.wiki_page.node:
             self.wiki_page.node.update_search()
         self.wiki_page.modified = self.created
         self.wiki_page.save()
         self.check_spam()
+        logger.info('---wiki version save end---')
         return rv
 
     def check_spam(self):
@@ -242,6 +246,7 @@ class WikiVersion(ObjectIDMixin, BaseModel):
 class WikiPageNodeManager(models.Manager):
 
     def create_for_node(self, node, name, content, auth, parent=None):
+        logger.info('---create for node start---')
         existing_wiki_page = WikiPage.objects.get_for_node(node, name)
         if existing_wiki_page:
             raise NodeStateError('Wiki Page already exists.')
@@ -254,6 +259,7 @@ class WikiPageNodeManager(models.Manager):
         )
         # Creates a WikiVersion object
         wiki_page.update(auth.user, content)
+        logger.info('---create for node end---')
         return wiki_page
 
     def get_for_node(self, node, name=None, id=None, parent=None):
@@ -299,9 +305,17 @@ class WikiPage(GuidMixin, BaseModel):
         ]
 
     def save(self, *args, **kwargs):
+        logger.info('---wiki page save start---')
+        logger.info('---super wiki page save start---')
         rv = super(WikiPage, self).save(*args, **kwargs)
+        logger.info('---super wiki page save end---')
+        logger.info(self.node)
+        logger.info(self.node.is_public)
+        logger.info(settings.ENABLE_PRIVATE_SEARCH)
         if self.node and (self.node.is_public or settings.ENABLE_PRIVATE_SEARCH):
+            logger.info('---wiki page update search start---')
             self.node.update_search(wiki_page=self)
+            logger.info('---wiki page update search end---')
         return rv
 
     def update(self, user, content):
