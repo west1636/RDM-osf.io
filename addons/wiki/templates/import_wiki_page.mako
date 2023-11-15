@@ -130,7 +130,6 @@
                 // TODO: helper to eliminate slashes in the url.
                 var dirId = $importDir.val();
                 var validateImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
-                console.log('---validate start---')
                 var request = $.ajax({
                     type: 'GET',
                     cache: false,
