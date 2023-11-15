@@ -136,12 +136,13 @@
                     cache: false,
                     url: validateImportUrl,
                     dataType: 'json'
-                }).done(async function (response) {
+                });
+                request.done(async function (response) {
                     console.log('---validate task---')
                     var taskId = response.taskId;
                     var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
                     console.log(taskId);
-                    var validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
+                    validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
                     if (!validateImportResult) {
                         return;
                     }
@@ -182,7 +183,8 @@
                             });
                         }
                     }
-                }).fail(function (response, textStatus, error) {
+                });
+                request.fail(function (response, textStatus, error) {
                     $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
                     Raven.captureMessage('${_("Error occurred while validating page")}', {
                         extra: {
