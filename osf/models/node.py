@@ -743,17 +743,12 @@ class AbstractNode(DirtyFieldsMixin, TypedModel, AddonModelMixin, IdentifierMixi
 
     def update_search(self, wiki_page=None):
         from website import search
-        logger.info('---update search start---')
-        logger.info(wiki_page)
+
         try:
-            #logger.info('---update search 1---')
             search.search.update_node(self, bulk=False, async_update=True,
                                       wiki_page=wiki_page)
-            #logger.info('---update search 2---')
             if self.is_collected and self.is_public:
-                #logger.info('---update search 3---')
                 search.search.update_collected_metadata(self._id)
-                #logger.info('---update search 4---')
         except search.exceptions.SearchUnavailableError as e:
             logger.exception(e)
             log_exception()
