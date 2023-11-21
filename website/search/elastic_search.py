@@ -1103,40 +1103,39 @@ def update_node(node, index=None, bulk=False, async_update=False, wiki_page=None
     if metadata is not None:
         for file_metadata in metadata.file_metadata.all():
             update_file_metadata(file_metadata, index=index)
-    logger.info('---update_node 2---')
+    #logger.info('---update_node 2---')
     from addons.osfstorage.models import OsfStorageFile
-    logger.info('---update_node 3---')
-    logger.info(index)
+    #logger.info('---update_node 3---')
+    #logger.info(index)
     index = es_index(index)
-    logger.info(index)
-    logger.info('---update_node 4---')
-    logger.info('---update_node 4-2---')
+    #logger.info(index)
+    #logger.info('---update_node 4---')
+    #logger.info('---update_node 4-2---')
     for file_ in paginated(OsfStorageFile, Q(target_content_type=ContentType.objects.get_for_model(type(node)), target_object_id=node.id)):
-        logger.info('---update_node 4-3---')
-        logger.info(file_.name)
+        #logger.info('---update_node 4-3---')
+        #logger.info(file_.name)
         update_file(file_, index=index)
-    logger.info('---update_node 5---')
+    #logger.info('---update_node 5---')
     is_qa_node = bool(set(settings.DO_NOT_INDEX_LIST['tags']).intersection(node.tags.all().values_list('name', flat=True))) or any(substring in node.title for substring in settings.DO_NOT_INDEX_LIST['titles'])
-    logger.info('---update_node 6---')
+    #logger.info('---update_node 6---')
     if node.is_deleted or (not settings.ENABLE_PRIVATE_SEARCH and not node.is_public) or node.archiving or node.is_spam or (node.spam_status == SpamStatus.FLAGGED and settings.SPAM_FLAGGED_REMOVE_FROM_SEARCH) or node.is_quickfiles or is_qa_node:
-        logger.info('---update_node 7---')
+        #logger.info('---update_node 7---')
         delete_doc(node._id, node, index=index)
-        logger.info('---update_node 7-1---')
+        #logger.info('---update_node 7-1---')
         for wiki_page in node.wikis.iterator():
-            logger.info('---update_node 7-2---')
+            #logger.info('---update_node 7-2---')
             delete_wiki_doc(wiki_page._id, index=index)
     else:
-        logger.info('---update_node 8---')
+        #logger.info('---update_node 8---')
         category = get_doctype_from_node(node)
         elastic_document = serialize_node(node, category)
         if bulk:
-            logger.info('---update_node 9---')
+            #logger.info('---update_node 9---')
             return elastic_document
         else:
-            logger.info('---update_node 10---')
-            logger.info(elastic_document)
+            #logger.info('---update_node 10---')
             client().index(index=index, doc_type=category, id=node._id, body=elastic_document, refresh=True)
-            logger.info('---update_node 11---')
+            #logger.info('---update_node 11---')
 
 @requires_search
 def update_preprint(preprint, index=None, bulk=False, async_update=False):
