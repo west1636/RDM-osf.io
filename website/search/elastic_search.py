@@ -1072,7 +1072,7 @@ def update_wiki(wiki_page, index=None, bulk=False):
         return elastic_document
     else:
         logger.info('---add wiki index start---')
-        logger.info(elastic_document)
+        logger.info(body)
         client().index(index=index, doc_type=category, id=wiki_page._id, body=elastic_document, refresh=True)
         logger.info('---add wiki index end---')
 
