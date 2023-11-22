@@ -141,8 +141,7 @@
                     var taskId = response.taskId;
                     var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
                     console.log(taskId);
-                    //const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages');
-                    const validateImportResult = 0;
+                    const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
                     if (!validateImportResult) {
                         return;
                     }
