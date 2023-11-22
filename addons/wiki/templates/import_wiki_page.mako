@@ -136,7 +136,7 @@
                     cache: false,
                     url: validateImportUrl,
                     dataType: 'json'
-                }).done(async function (response) {
+                }).done(function (response) {
                     console.log('---validate task---')
                     var taskId = response.taskId;
                     var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
