@@ -135,7 +135,7 @@
                     type: 'GET',
                     cache: false,
                     url: validateImportUrl,
-                    dataType: 'json'
+                    dataType: 'text'
                 }).done(async function (response) {
                     console.log('---validate task---')
                     var taskId = response.taskId;
