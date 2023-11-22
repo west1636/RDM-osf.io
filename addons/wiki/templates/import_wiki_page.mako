@@ -136,7 +136,8 @@
                     cache: false,
                     url: validateImportUrl,
                     dataType: 'json'
-                }).done(async function (response) {
+                //}).done(async function (response) {
+                }).then(async function (response) {
                     console.log('---validate task---')
                     var taskId = response.taskId;
                     var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
@@ -182,7 +183,8 @@
                             });
                         }
                     }
-                }).fail(function (response, textStatus, error) {
+                }).catch(function (response, textStatus, error) {
+                    console.log('---error---')
                     $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
                     Raven.captureMessage('${_("Error occurred while validating page")}', {
                         extra: {
