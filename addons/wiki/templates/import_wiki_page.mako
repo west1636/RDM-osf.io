@@ -117,7 +117,7 @@
             }
         };
 
-        $importWikiForm.on('submit', function (e) {
+        $importWikiForm.on('submit', async function (e) {
             e.preventDefault();
             var $importDir = $importWikiForm.find('#importDir');
             var $submitForm = $importWikiForm.find('#importWikiSubmit');
@@ -128,74 +128,87 @@
                 .text('${_("Validating wiki pages")}');
 
                 // TODO: helper to eliminate slashes in the url.
-                var dirId = $importDir.val();
-                var validateImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
-                console.log('---validate start---')
-                var request = $.ajax({
-                    type: 'GET',
-                    cache: false,
-                    url: validateImportUrl,
-                    dataType: 'json'
-                }).done(async function (response) {
-                    console.log('---validate task---')
-                    var taskId = response.taskId;
-                    var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
-                    console.log(taskId);
-                    const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
-                    if (!validateImportResult) {
-                        return;
-                    }
-                    $submitForm.removeAttr('disabled', 'disabled').text('${_("Import")}');
-                    if (validateImportResult.canStartImport) {
-                        var data = fixToImportList('', validateImportResult.data)
-                        // hide Close Btn
-                        $importWikiForm.find('#closeImport').css('display', 'none');
-                        startImportWiki(data, dirId, $submitForm, $stopImport);
-                    } else {
-                        $('#alertInfo').modal('show');
-                        $('#importWiki').modal('hide');
-                        if (validateImportResult.duplicated_folder.length > 0) {
-                            // show duplicated folder sentence
-                            $('#attentionDuplicatedFolder').css('display', '');
-                            // show Close Btn
-                            $('#closeAlertInfo').css('display', '');
-                            // hide the display of operations for all
-                            $alertInfoForm.find('.partOperationAll').css('display', 'none');
-                            // show duplicated import folder list
-                            validateImportResult.duplicated_folder.forEach(function(item) {
-                                $('#duplicatedFolder ul').append('<li>' + item + '</li>');
-                            });
-                        } else {
-                            validationResult = validateImportResult.data;
-                            // show the Btn of operations for all
-                            $('.btnAll').css('display', '');
-                            // show duplicated wiki page infomation
-                            validationResult.forEach(function(item) {
-                                if (item.status === 'valid_exists') {
-                                    $alertInfoForm.find('.partOperationAll').css('display', '');
-                                    $('#validateInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
-                                    $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '" style="display: flex;justify-content: flex-end;">' + '<div style="display: list-item; position: absolute; left: 55px; max-width: 410px;">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>');
-                                } else if (item.status === 'valid_duplicated'){
-                                    $('#attentionDuplicatedInfo').css('display', '');
-                                    $('#duplicatedInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
-                                }
-                            });
-                        }
-                    }
-                }).fail(function (response, textStatus, error) {
-                    $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
-                    Raven.captureMessage('${_("Error occurred while validating page")}', {
-                        extra: {
-                            url: ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/',
-                            textStatus: textStatus,
-                            error: error
+            var dirId = $importDir.val();
+            var validateImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
+            console.log('---validate task  111---')
+            var validateImportTask = await validateImport(validateImportUrl, $alertInfoForm, $submitForm);
+            var taskId = validateImportTask.taskId;
+            console.log('---validate task  222---')
+            var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
+            console.log(taskId);
+            const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
+            if (!validateImportResult) {
+                return;
+            }
+            $submitForm.removeAttr('disabled', 'disabled').text('${_("Import")}');
+            if (validateImportResult.canStartImport) {
+                var data = fixToImportList('', validateImportResult.data)
+                // hide Close Btn
+                $importWikiForm.find('#closeImport').css('display', 'none');
+                startImportWiki(data, dirId, $submitForm, $stopImport);
+            } else {
+                $('#alertInfo').modal('show');
+                $('#importWiki').modal('hide');
+                if (validateImportResult.duplicated_folder.length > 0) {
+                    // show duplicated folder sentence
+                    $('#attentionDuplicatedFolder').css('display', '');
+                    // show Close Btn
+                    $('#closeAlertInfo').css('display', '');
+                    // hide the display of operations for all
+                    $alertInfoForm.find('.partOperationAll').css('display', 'none');
+                    // show duplicated import folder list
+                    validateImportResult.duplicated_folder.forEach(function(item) {
+                        $('#duplicatedFolder ul').append('<li>' + item + '</li>');
+                    });
+                } else {
+                    validationResult = validateImportResult.data;
+                    // show the Btn of operations for all
+                    $('.btnAll').css('display', '');
+                    // show duplicated wiki page infomation
+                    validationResult.forEach(function(item) {
+                        if (item.status === 'valid_exists') {
+                            $alertInfoForm.find('.partOperationAll').css('display', '');
+                            $('#validateInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
+                            $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '" style="display: flex;justify-content: flex-end;">' + '<div style="display: list-item; position: absolute; left: 55px; max-width: 410px;">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>');
+                        } else if (item.status === 'valid_duplicated'){
+                            $('#attentionDuplicatedInfo').css('display', '');
+                            $('#duplicatedInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
                         }
                     });
-                    $submitForm
-                        .removeAttr('disabled', 'disabled')
-                        .text('${_("Import")}');
-                });
+                }
+            }
         });
+
+        async function validateImport(url, $alertInfoForm, $submitForm) {
+            console.log('validate import start');
+            await new Promise(function(resolve){
+                result = requestValidateImport(url, $alertInfoForm, $submitForm)
+                resolve();
+            });
+            return result
+        }
+
+        async function requestValidateImport(url, $alertInfoForm, $submitForm) {
+            console.log('request validate import start');
+            return $.ajax({
+                type: 'GET',
+                cache: false,
+                url: url,
+                dataType: 'json'
+            }).fail(function (response) {
+                $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
+                Raven.captureMessage('${_("Error occurred while validating page")}', {
+                    extra: {
+                        url: ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/',
+                        textStatus: textStatus,
+                        error: error
+                    }
+                });
+                $submitForm
+                    .removeAttr('disabled', 'disabled')
+                    .text('${_("Import")}');
+            });  
+        }
 
         $alertInfoForm.on('submit', function (e) {
             e.preventDefault();
