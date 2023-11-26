@@ -307,12 +307,13 @@
             var wikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/';
             $submitForm.attr('disabled', 'disabled').text('${_("Creating Wiki Folder...")}');
             var wikiImagesResult = await startGetOrCreateWikiImagesFolder(imageFolder)
+            console.log('---path---')
             console.log(wikiImagesResult)
-            var path = wikiImagesResult.path;
-            var wikiImportTask = await wikiImport(wikiImportUrl, path);
+            var path = wikiImagesResult;
             // show stop import Btn
             $stopImport.css('display', '');
             $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
+            var wikiImportTask = await wikiImport(wikiImportUrl, path);
             var taskId = wikiImportTask.taskId;
             celeryTask._id = taskId;
             var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
@@ -352,7 +353,7 @@
         async function wikiImport(wikiImportUrl, path) {
             console.log('wiki import start');
             await new Promise(function(resolve){
-                result = getOrCreateWikiImagesFolder(wikiImportUrl,path)
+                result = requestWikiImport(wikiImportUrl,path)
                 resolve();
             });
             return result
