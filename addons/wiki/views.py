@@ -1063,7 +1063,7 @@ def _wiki_import_create_or_update(wname, data, auth, node, p_wname=None, **kwarg
     else:
         logger.info('---wiki import create or update 5---')
         # Create a wiki
-        WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
+        WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id)
         logger.info('---wiki import create or update 6---')
         ret = {'status': 'success', 'wiki_name': wiki_name}
     logger.info('---wiki import create or update end---')
@@ -1131,4 +1131,4 @@ def project_abort_celery_task(task_id, **kwargs):
         'task_id': task_id,
         'task_state': task.state,
     }
-    
+
