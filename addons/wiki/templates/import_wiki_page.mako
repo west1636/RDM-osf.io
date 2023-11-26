@@ -306,54 +306,71 @@
             // Wiki images, Imported Wiki workspace and copy wiki miport directoy
             var wikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/';
             $submitForm.attr('disabled', 'disabled').text('${_("Creating Wiki Folder...")}');
-            getOrCreateWikiImagesFolder(imageFolder).fail(function(response) {
-                if (response.status !== 0) {
-                    alert('failed to get or create wiki folder')
-                    const reloadUrl = (location.href).replace(location.search, '')
-                    window.location.assign(reloadUrl);
-                }
-            }).done(function(path) {
-                // show stop import Btn
-                $stopImport.css('display', '');
-                $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
-                $.ajax({
-                    type: 'POST',
-                    cache: false,
-                    url: wikiImportUrl,
-                    data: JSON.stringify({folderPath: path, wiki_info: wiki_info}),
-                    contentType: 'application/json; charset=utf-8',
-                }).done(async function (response) {
-                    var taskId = response.taskId;
-                    celeryTask._id = taskId;
-                    var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
-                    wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 5000, WIKI_IMPORT_TIMEOUT, 'import wiki')
-                    if (!wikiImportResult) {
-                        return;
-                    }
-                    // The series of import processes has reached the end.
-                    if (wikiImportResult.error_occurred) {
-                        // show import error modal.
-                        importErrors.push(...wikiImportResult.import_errors)
-                        var importErrorMsg = createErrMsg(importErrors);
-                        $('#importWiki').modal('hide');
-                        $('#alertInfo').modal('hide');
-                        $('#importResult').modal('show');
-                        $('#showImportError').append('<p>' + importErrorMsg + '</p>')
-                        $importResult.find('#showImportError').css('display', '');
-                        $alertInfoForm.find('.btnAll').css('display', 'none');
-                    } else {
-                        $submitForm.attr('disabled', 'disabled').text('${_("Import Complete")}');
-                        //rolaod
-                        const reloadUrl = (location.href).replace(location.search, '')
-                        window.location.assign(reloadUrl);
-                    }
-                    return;
-                }).fail(function (response) {
-                    if (response.status !== 0) {
-                        alert('Error occurred when wiki import.');
-                    }
-                });
+            var wikiImagesResult = await startGetOrCreateWikiImagesFolder(imageFolder)
+            console.log(wikiImagesResult)
+            var path = wikiImagesResult.path;
+            var wikiImportTask = await wikiImport(wikiImportUrl, path);
+            // show stop import Btn
+            $stopImport.css('display', '');
+            $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
+            var taskId = wikiImportTask.taskId;
+            celeryTask._id = taskId;
+            var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
+            wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 5000, WIKI_IMPORT_TIMEOUT, 'import wiki')
+            if (!wikiImportResult) {
+                return;
+            }
+            // The series of import processes has reached the end.
+            if (wikiImportResult.error_occurred) {
+                // show import error modal.
+                importErrors.push(...wikiImportResult.import_errors)
+                var importErrorMsg = createErrMsg(importErrors);
+                $('#importWiki').modal('hide');
+                $('#alertInfo').modal('hide');
+                $('#importResult').modal('show');
+                $('#showImportError').append('<p>' + importErrorMsg + '</p>')
+                $importResult.find('#showImportError').css('display', '');
+                $alertInfoForm.find('.btnAll').css('display', 'none');
+            } else {
+                $submitForm.attr('disabled', 'disabled').text('${_("Import Complete")}');
+                //rolaod
+                const reloadUrl = (location.href).replace(location.search, '')
+                window.location.assign(reloadUrl);
+            }
+            return;
+        }
+
+        async function startGetOrCreateWikiImagesFolder(imageFolder) {
+            console.log('wiki images create start');
+            await new Promise(function(resolve){
+                result = getOrCreateWikiImagesFolder(imageFolder)
+                resolve();
             });
+            return result
+        }
+
+        async function wikiImport(wikiImportUrl, path) {
+            console.log('wiki import start');
+            await new Promise(function(resolve){
+                result = getOrCreateWikiImagesFolder(wikiImportUrl,path)
+                resolve();
+            });
+            return result
+        }
+
+        async function requestWikiImport(wikiImportUrl, path) {
+            console.log('request wiki import start');
+            return $.ajax({
+                type: 'POST',
+                cache: false,
+                url: wikiImportUrl,
+                data: JSON.stringify({folderPath: path, wiki_info: wiki_info}),
+                contentType: 'application/json; charset=utf-8',
+            }).fail(function (response) {
+                if (response.status !== 0) {
+                    alert('Error occurred when wiki import.');
+                }
+            });  
         }
 
         async function intervalGetCeleryTaskResult(url, ms, timeout, operation) {
@@ -601,7 +618,7 @@
         /**
          * Override from wikiPage.js
          */
-        function getOrCreateWikiImagesFolder(imageFolder) {
+        async function getOrCreateWikiImagesFolder(imageFolder) {
             var folderUrl = window.contextVars.apiV2Prefix + 'nodes/' + window.contextVars.node.id + '/files/osfstorage/?filter[kind]=folder&fields[file]=name,path&filter[name]=' + encodeURI(imageFolder);
             return $.ajax({
                 url: folderUrl,
