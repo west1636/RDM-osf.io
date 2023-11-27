@@ -25,7 +25,7 @@ def search(query, index=None, doc_type=None, raw=None, private=False, ext=False)
                                 private=private, ext=ext)
 
 @requires_search
-def update_node(node, index=None, bulk=False, async_update=True, saved_fields=None, wiki_page=None):
+def update_node(node, index=None, bulk=False, async_update=True, saved_fields=None, wiki_page=None, wiki_import=False):
     kwargs = {
         'index': index,
         'bulk': bulk
@@ -38,9 +38,9 @@ def update_node(node, index=None, bulk=False, async_update=True, saved_fields=No
         # database in order for method that updates the Node's elastic search document
         # to run correctly.
         if settings.USE_CELERY:
-            enqueue_task(search_engine.update_node_async.s(node_id=node_id, **kwargs))
+            enqueue_task(search_engine.update_node_async.s(node_id=node_id, wiki_import=wiki_import, **kwargs))
         else:
-            search_engine.update_node_async(node_id=node_id, **kwargs)
+            search_engine.update_node_async(node_id=node_id, wiki_import=wiki_import, **kwargs)
     else:
         kwargs['wiki_page'] = wiki_page
         return search_engine.update_node(node, **kwargs)

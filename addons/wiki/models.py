@@ -173,12 +173,12 @@ class WikiVersion(ObjectIDMixin, BaseModel):
 
         return self.content
 
-    def save(self, *args, **kwargs):
+    def save(self, wiki_import=False, *args, **kwargs):
         rv = super(WikiVersion, self).save(*args, **kwargs)
         if self.wiki_page.node:
-            self.wiki_page.node.update_search()
+            self.wiki_page.node.update_search(wiki_import=wiki_import)
         self.wiki_page.modified = self.created
-        self.wiki_page.save()
+        self.wiki_page.save(wiki_import=wiki_import)
         self.check_spam()
         return rv
 
@@ -241,7 +241,7 @@ class WikiVersion(ObjectIDMixin, BaseModel):
 
 class WikiPageNodeManager(models.Manager):
 
-    def create_for_node(self, node, name, content, auth, parent=None):
+    def create_for_node(self, node, name, content, auth, parent=None, wiki_import=False):
         existing_wiki_page = WikiPage.objects.get_for_node(node, name)
         if existing_wiki_page:
             raise NodeStateError('Wiki Page already exists.')
@@ -250,10 +250,11 @@ class WikiPageNodeManager(models.Manager):
             node=node,
             page_name=name,
             user=auth.user,
-            parent=parent
+            parent=parent,
+            wiki_import=wiki_import
         )
         # Creates a WikiVersion object
-        wiki_page.update(auth.user, content)
+        wiki_page.update(auth.user, content, wiki_import)
         return wiki_page
 
     def get_for_node(self, node, name=None, id=None, parent=None):
@@ -284,6 +285,12 @@ class WikiPageNodeManager(models.Manager):
         """Check if node meets requirements to make publicly editable."""
         return node.get_descendants_recursive()
 
+    def create(self, wiki_import=False, **kwargs):
+        obj = self.model(**kwargs)
+        self._for_write = True
+        obj.save(force_insert=True, using=self.db, wiki_import=wiki_import)
+        return obj
+
 class WikiPage(GuidMixin, BaseModel):
     objects = WikiPageNodeManager()
 
@@ -298,13 +305,13 @@ class WikiPage(GuidMixin, BaseModel):
             models.Index(fields=['page_name', 'node'])
         ]
 
-    def save(self, *args, **kwargs):
+    def save(self, wiki_import=False, *args, **kwargs):
         rv = super(WikiPage, self).save(*args, **kwargs)
         if self.node and (self.node.is_public or settings.ENABLE_PRIVATE_SEARCH):
-            self.node.update_search(wiki_page=self)
+            self.node.update_search(wiki_page=self, wiki_import=wiki_import)
         return rv
 
-    def update(self, user, content):
+    def update(self, user, content, wiki_import=False):
         """
         Updates the wiki with the provided content by creating a new version
 
@@ -312,7 +319,7 @@ class WikiPage(GuidMixin, BaseModel):
         :param content: Latest content for wiki
         """
         version = WikiVersion(user=user, wiki_page=self, content=content, identifier=self.current_version_number + 1)
-        version.save()
+        version.save(wiki_import)
 
         self.node.add_log(
             action=NodeLog.WIKI_UPDATED,
