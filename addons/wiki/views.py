@@ -717,16 +717,12 @@ def serialize_component_wiki(node, auth):
 
 @must_be_valid_project
 def project_wiki_validate_import(dir_id, node, **kwargs):
-    logger.info('validate import start')
     node_id = wiki_utils.get_node_guid(node)
     task = tasks.run_project_wiki_validate_import.delay(dir_id, node_id)
     task_id = task.id
-    logger.info(task_id)
-    logger.info('validate import end')
-    return { 'taskId': task_id}
+    return { 'taskId': task_id }
 
 def project_wiki_validate_import_process(dir_id, node):
-    logger.info('validate import process start')
     global can_start_import 
     can_start_import = True
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
@@ -749,7 +745,6 @@ def project_wiki_validate_import_process(dir_id, node):
         child_info_list = _validate_import_folder(node, obj, '')
         info_list.extend(child_info_list)
     duplicated_folder_list = _validate_import_duplicated_directry(info_list)
-    logger.info('validate import process end')
     return {
         'data': info_list,
         'duplicated_folder': duplicated_folder_list,
@@ -845,14 +840,12 @@ def _validate_import_duplicated_directry(info_list):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
-    logger.info('import start')
     node_id = wiki_utils.get_node_guid(node)
     current_user_id = get_current_user_id()
     data = request.get_json()
     dataJson = json.dumps(data)
     task = tasks.run_project_wiki_import.delay(dataJson, dir_id, current_user_id, node_id)
     task_id = task.id
-    logger.info('import end')
     return { 'taskId': task_id}
 
 def project_wiki_import_process(data, dir_id, auth, node):
@@ -878,11 +871,8 @@ def project_wiki_import_process(data, dir_id, auth, node):
     if error_occurred:
         # Create import error list
         import_errors = wiki_utils.create_import_error_list(ret)
-    logger.info('wiki import end')
-    logger.info('update search task run')
     node_id = wiki_utils.get_node_guid(node)
     task_update_search = tasks.run_update_search.delay(node_id)
-    logger.info('update search task ran')
     return {'ret': ret, 'error_occurred': error_occurred, 'import_errors': import_errors}
 
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
@@ -969,7 +959,6 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
         return child_file._id
     except:
-        logger.info('---NG---::' + replaced_file_name)
         pass
 
     return None
@@ -994,7 +983,6 @@ def _replace_common_rule(name):
     return decodedName
 
 def _wiki_copy_import_directory(data, dir_id, node):
-    logger.info('copy import directory process start')
     folderPath = data['folderPath']
     copyFrom_id = dir_id
     toCopy_id = folderPath[1:][:-1]
@@ -1003,11 +991,9 @@ def _wiki_copy_import_directory(data, dir_id, node):
 
     cloned = files_utils.copy_files(copyFrom, node, toCopy)
     cloned_id = cloned._id
-    logger.info('copy import directory process end')
     return cloned_id
 
 def _wiki_content_replace(data, dir_id, node):
-    logger.info('------------replace md process start------------')
     wiki_info = data['wiki_info']
     replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
@@ -1020,17 +1006,14 @@ def _wiki_content_replace(data, dir_id, node):
         info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
         info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
         replaced_wiki_info.append(info)
-    logger.info('------------replace md process end------------')
     return {'replaced': replaced_wiki_info}
 
 def _wiki_import_create_or_update(wname, data, auth, node, p_wname=None, **kwargs):
-    logger.info('---wiki import create or update start---')
     parent_wiki_id = None
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
     wiki_name = unicodedata.normalize('NFC', wname)
     ret = {}
-    logger.info('---wiki import create or update 1---')
     if p_wname:
         p_wname = unicodedata.normalize('NFC', p_wname)
         parent_wiki_name = p_wname.strip()
@@ -1041,32 +1024,22 @@ def _wiki_import_create_or_update(wname, data, auth, node, p_wname=None, **kwarg
             return ret
         parent_wiki_id = parent_wiki.id
 
-    logger.info('---wiki import create or update 2---')
-
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     # ensure home is always lower case since it cannot be renamed
     if wiki_name.lower() == 'home':
         wiki_name = 'home'
 
-    logger.info('---wiki import create or update 3---')
-
     if wiki_version:
-        logger.info('---wiki import create or update 4---')
         # Only update wiki if content has changed
         if data != wiki_version.content:
-            logger.info('---wiki import create or update 4-1---')
             wiki_version.wiki_page.update(auth.user, data, True)
-            logger.info('---wiki import create or update 4-2---')
             ret = {'status': 'success', 'wiki_name': wiki_name}
         else:
             ret = {'status': 'unmodified', 'wiki_name': wiki_name}
     else:
-        logger.info('---wiki import create or update 5---')
         # Create a wiki
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
-        logger.info('---wiki import create or update 6---')
         ret = {'status': 'success', 'wiki_name': wiki_name}
-    logger.info('---wiki import create or update end---')
     return ret
 
 def _import_same_level_wiki(wiki_info, depth, auth, node):
@@ -1104,24 +1077,17 @@ def project_wiki_get_imported_wiki_workspace(dir_id, auth, node, **kwargs):
 @must_be_valid_project
 @must_have_permission(ADMIN)
 def project_get_task_result(task_id, node, **kwargs):
-    logger.info('get task result start')
     res = AsyncResult(task_id,app=celery_app)
-    logger.info('get task result 1')
-    logger.info(res.ready())
     if not res.ready():
         return None
     result = res.get()
-    logger.info('get task result 2')
-    logger.info(result)
     return result
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
 def project_abort_celery_task(task_id, **kwargs):
-    logger.info('abort task result start')
     task = AbortableAsyncResult(task_id)
     task.abort()
-    logger.info(task.state)
     if task.state != ABORTED:
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
             message_short='Cannot abort',
