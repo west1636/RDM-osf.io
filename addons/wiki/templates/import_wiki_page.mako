@@ -371,6 +371,7 @@
                 data: JSON.stringify({folderPath: path, wiki_info: wiki_info}),
                 contentType: 'application/json; charset=utf-8',
             }).fail(function (response) {
+                console.log(response)
                 if (response.status !== 0) {
                     alert('Error occurred when wiki import.');
                 }
