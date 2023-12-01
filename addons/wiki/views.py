@@ -840,12 +840,19 @@ def _validate_import_duplicated_directry(info_list):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
+    logger.info('---project wiki import start---')
     node_id = wiki_utils.get_node_guid(node)
+    logger.info('---project wiki import 1---')
     current_user_id = get_current_user_id()
+    logger.info('---project wiki import 2---')
     data = request.get_json()
+    logger.info('---project wiki import 3---')
     dataJson = json.dumps(data)
+    logger.info('---project wiki import 4---')
     task = tasks.run_project_wiki_import.delay(dataJson, dir_id, current_user_id, node_id)
+    logger.info('---project wiki import 5---')
     task_id = task.id
+    logger.info('---project wiki import end---')
     return { 'taskId': task_id}
 
 def project_wiki_import_process(data, dir_id, auth, node):

@@ -105,8 +105,8 @@
         var readingCtn = 0;
         var imageFolder = 'Wiki images';
         var importFolder = 'Imported Wiki workspace (temporary)';
-        const VALIDATE_IMPORT_TIMEOUT = 60;
-        const WIKI_IMPORT_TIMEOUT = 600;
+        const VALIDATE_IMPORT_TIMEOUT = 600;
+        const WIKI_IMPORT_TIMEOUT = 3600;
         var celeryTask = {
             _id: 0,
             get id() {
@@ -314,6 +314,8 @@
             $stopImport.css('display', '');
             $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
             var wikiImportTask = await wikiImport(wikiImportUrl, path);
+            console.log('---task---')
+            console.log(wikiImportTask)
             var taskId = wikiImportTask.taskId;
             celeryTask._id = taskId;
             var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
@@ -361,6 +363,7 @@
 
         async function requestWikiImport(wikiImportUrl, path) {
             console.log('request wiki import start');
+            console.log(wikiImportUrl);
             return $.ajax({
                 type: 'POST',
                 cache: false,
