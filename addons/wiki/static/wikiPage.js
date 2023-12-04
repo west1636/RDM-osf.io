@@ -29,6 +29,7 @@ var mGfm = require('@milkdown/preset-gfm');
 require('@milkdown/theme-nord/style.css');
 require('@milkdown/prose/view/style/prosemirror.css');
 require('@milkdown/prose/tables/style/tables.css');
+require('katex/dist/katex.min.css')
 var mBlock = require('@milkdown/plugin-block');
 var mCursor = require('@milkdown/plugin-cursor');
 var mListener = require('@milkdown/plugin-listener');
