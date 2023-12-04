@@ -45,6 +45,7 @@ function WikiMenu(data, wikiID, canEdit) {
 
     //  Treebeard version
     var tbOptions = {
+        rowHeight : 35,         // user can override or get from .tb-row height
         divID: 'grid',
         filesData: data,
         paginate : false,       // Whether the applet starts with pagination or not.
