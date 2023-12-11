@@ -1054,14 +1054,16 @@ def _get_md_content_from_wb(data, node, creator_auth):
     return data
 
 def _wiki_copy_import_directory(copy_to_id, copy_from_id, node):
-
+    logger.info('---wikicopyimportdirectory start---')
     copy_from = BaseFileNode.objects.get(_id=copy_from_id)
     copy_to = BaseFileNode.objects.get(_id=copy_to_id)
     cloned = files_utils.copy_files(copy_from, node, copy_to)
     cloned_id = cloned._id
+    logger.info('---wikicopyimportdirectory end---')
     return cloned_id
 
 def _wiki_content_replace(wiki_info, dir_id, node):
+    logger.info('---wikicontentreplace start---')
     replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
@@ -1076,9 +1078,11 @@ def _wiki_content_replace(wiki_info, dir_id, node):
         info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
         info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
         replaced_wiki_info.append(info)
+    logger.info('---wikicontentreplace end---')
     return replaced_wiki_info
 
 def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs):
+    logger.info('---wikiimportcreateorupdate start---')
     parent_wiki_id = None
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
@@ -1109,6 +1113,7 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
         # Create a wiki
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
         ret = {'status': 'success', 'path': path}
+    logger.info('---wikiimportcreateorupdate end---')
     return ret
 
 def _import_same_level_wiki(wiki_info, depth, auth, node):
