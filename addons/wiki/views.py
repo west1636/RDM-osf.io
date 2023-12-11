@@ -1024,7 +1024,7 @@ def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, 
     return folder_id, folder_path
 
 def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
-    logger.info('---getorcreatewikifolder start---')
+    logger.info('---createwikifolder start---')
     try:
         folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
         folder_response.raise_for_status()
