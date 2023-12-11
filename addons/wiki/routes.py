@@ -171,12 +171,6 @@ api_routes = {
             '/project/<pid>/node/<nid>/wiki/import/<dir_id>/'
         ], 'post', views.project_wiki_import, json_renderer),
 
-        # Get Imported Wiki workspace (temporary)
-        Rule([
-            '/project/<pid>/wiki/get_imported_wiki_workspace/<dir_id>/',
-            '/project/<pid>/node/<nid>/wiki/get_imported_wiki_workspace/<dir_id>/'
-        ], 'get', views.project_wiki_get_imported_wiki_workspace, json_renderer),
-
         # Get Celery Task Result
         Rule([
             '/project/<pid>/wiki/get_task_result/<task_id>/',

@@ -98,129 +98,49 @@
         var $alertInfoForm = $('#alertInfo form');
         var $importResult = $('#importResult')
         var selectOperation = '<div class="form-group" name="importOperationPer" style="display: inline-block; margin-left: 10px;"><select class="form-control" name="importOperationPerSelect"><option value="skip">Skip</option><option value="overwrite">Overwrite</option><option value="createNew">Create New</option></select></div>'
-        var validationResult = [];
-        var wiki_info = []
+        var validateImportResultData = [];
         var importErrors = [];
-        var importCtn = 0;
-        var readingCtn = 0;
-        var imageFolder = 'Wiki images';
-        var importFolder = 'Imported Wiki workspace (temporary)';
-        const VALIDATE_IMPORT_TIMEOUT = 600;
-        const WIKI_IMPORT_TIMEOUT = 3600;
-        var celeryTask = {
-            _id: 0,
-            get id() {
-                return this._age;
-            },
-            set id(val) {
-                this._id = val;
-            }
-        };
+        const VALIDATE_IMPORT_TIMEOUT = 300;
+        const WIKI_IMPORT_TIMEOUT = 7200;
 
         $importWikiForm.on('submit', async function (e) {
             e.preventDefault();
-            var $importDir = $importWikiForm.find('#importDir');
-            var $submitForm = $importWikiForm.find('#importWikiSubmit');
-            var $stopImport = $importWikiForm.find('.stopImport');
-
-            $submitForm
-                .attr('disabled', 'disabled')
-                .text('${_("Validating wiki pages")}');
-
-                // TODO: helper to eliminate slashes in the url.
-            var dirId = $importDir.val();
-            var validateImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
-            console.log('---validate task  111---')
-            var validateImportTask = await validateImport(validateImportUrl, $alertInfoForm, $submitForm);
-            var taskId = validateImportTask.taskId;
-            console.log('---validate task  222---')
-            var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
-            console.log(taskId);
+            // Clean
+            importErrors = [];
+            validateImportResultData = [];
+            const $importDir = $importWikiForm.find('#importDir');
+            const $submitForm = $importWikiForm.find('#importWikiSubmit');
+            const $stopImport = $importWikiForm.find('.stopImport');
+            const dirId = $importDir.val();
+            const validateImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
+            const validateImportTask = await requestValidateImportTask(validateImportUrl, $alertInfoForm, $submitForm);
+            const taskId = validateImportTask.taskId;
+            $submitForm.attr('disabled', 'disabled').text('${_("Validating wiki pages")}');
+            const getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
             const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
-            if (!validateImportResult) {
-                return;
-            }
-            $submitForm.removeAttr('disabled', 'disabled').text('${_("Import")}');
-            if (validateImportResult.canStartImport) {
-                var data = fixToImportList('', validateImportResult.data)
-                // hide Close Btn
-                $importWikiForm.find('#closeImport').css('display', 'none');
-                startImportWiki(data, dirId, $submitForm, $stopImport);
-            } else {
-                $('#alertInfo').modal('show');
-                $('#importWiki').modal('hide');
-                if (validateImportResult.duplicated_folder.length > 0) {
-                    // show duplicated folder sentence
-                    $('#attentionDuplicatedFolder').css('display', '');
-                    // show Close Btn
-                    $('#closeAlertInfo').css('display', '');
-                    // hide the display of operations for all
-                    $alertInfoForm.find('.partOperationAll').css('display', 'none');
-                    // show duplicated import folder list
-                    validateImportResult.duplicated_folder.forEach(function(item) {
-                        $('#duplicatedFolder ul').append('<li>' + item + '</li>');
-                    });
+            if (validateImportResult) {
+                if (validateImportResult.canStartImport) {
+                    // hide Close Btn
+                    $importWikiForm.find('#closeImport').css('display', 'none');
+                    var data = fixToImportList('', validateImportResult.data)
+                    startImportWiki(data, dirId, $submitForm, $stopImport);
                 } else {
-                    validationResult = validateImportResult.data;
-                    // show the Btn of operations for all
-                    $('.btnAll').css('display', '');
-                    // show duplicated wiki page infomation
-                    validationResult.forEach(function(item) {
-                        if (item.status === 'valid_exists') {
-                            $alertInfoForm.find('.partOperationAll').css('display', '');
-                            $('#validateInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
-                            $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '" style="display: flex;justify-content: flex-end;">' + '<div style="display: list-item; position: absolute; left: 55px; max-width: 410px;">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>');
-                        } else if (item.status === 'valid_duplicated'){
-                            $('#attentionDuplicatedInfo').css('display', '');
-                            $('#duplicatedInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
-                        }
-                    });
+                    showAlertInfo(validateImportResult, $alertInfoForm);
                 }
             }
+            return;
         });
-
-        async function validateImport(url, $alertInfoForm, $submitForm) {
-            console.log('validate import start');
-            await new Promise(function(resolve){
-                result = requestValidateImport(url, $alertInfoForm, $submitForm)
-                resolve();
-            });
-            return result
-        }
-
-        async function requestValidateImport(url, $alertInfoForm, $submitForm) {
-            console.log('request validate import start');
-            return $.ajax({
-                type: 'GET',
-                cache: false,
-                url: url,
-                dataType: 'json'
-            }).fail(function (response) {
-                $alertInfoForm.text('${_("Could not validate wiki page. Please try again.")}'+response.status);
-                Raven.captureMessage('${_("Error occurred while validating page")}', {
-                    extra: {
-                        url: ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/',
-                        textStatus: textStatus,
-                        error: error
-                    }
-                });
-                $submitForm
-                    .removeAttr('disabled', 'disabled')
-                    .text('${_("Import")}');
-            });  
-        }
 
         $alertInfoForm.on('submit', function (e) {
             e.preventDefault();
-            var $importDir = $importWikiForm.find('#importDir');
-            var $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
-            var $perFile = $alertInfoForm.find('#perFileDefinition');
-            var $perBack = $alertInfoForm.find('#backalertInfo');
-            var $stopImport = $alertInfoForm.find('.stopImport');
+            const $importDir = $importWikiForm.find('#importDir');
+            const $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
+            const $perFile = $alertInfoForm.find('#perFileDefinition');
+            const $perBack = $alertInfoForm.find('#backalertInfo');
+            const $stopImport = $alertInfoForm.find('.stopImport');
             var operationAll = null;
             var perOperationList = []
             var perFileDifinitionFormDisplay = document.getElementById('perFileDifinitionForm').style.display;
-
             if (perFileDifinitionFormDisplay === 'none') {
                 var importOperations = document.getElementsByName('importOperation');
                 for (var i = 0; i < importOperations.length; i++){
@@ -237,145 +157,202 @@
                     perOperationList.push(opList);
                 }
             }
-            var validationResultCopy = validationResult.slice();
-            var validationResultFix = fixToImportList(operationAll, validationResultCopy, perOperationList);
-            if (validationResultFix.length === 0) {
+            var validateImportResultCopy = validateImportResultData.slice();
+            var validateImportResultFix = fixToImportList(operationAll, validateImportResultCopy, perOperationList);
+            if (validateImportResultFix.length === 0) {
                 alert('No page to import.');
-                return;
+            } else {
+                var dirId = $importDir.val();
+                $perFile.attr('disabled', 'disabled');
+                $perBack.attr('disabled', 'disabled');
+                startImportWiki(validateImportResultFix, dirId, $submitForm, $stopImport);
             }
-            // TODO: helper to eliminate slashes in the url.
-            var dirId = $importDir.val();
-            $perFile.attr('disabled', 'disabled');
-            $perBack.attr('disabled', 'disabled');
-            startImportWiki(validationResultFix, dirId, $submitForm, $stopImport);
-        });
-
-        $alertInfoForm.find('#perFileDefinition').on('click', function () {
-            showPerFileDefinition();
-        });
-        $alertInfoForm.find('#backalertInfo').on('click', function () {
-            backalertInfo();
-        });
-        $('#alertInfo').on('hidden.bs.modal', function (event) {
-            $('#alertInfo li').remove();
-        });
-        $alertInfoForm.find('.stopImport').on('click', function () {
-            var $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
-            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
-            abortCeleryTask(celeryTask.id)
             return;
         });
-        $importWikiForm.find('.stopImport').on('click', function () {
-            var $submitForm = $importWikiForm.find('#importWikiSubmit');
-            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
-            abortCeleryTask(celeryTask.id)
-            return;
-        });
-
-        function showPerFileDefinition() {
-            $alertInfoForm.find('.partOperationAll').css('display', 'none');
-            $alertInfoForm.find('.btnAll').css('display', 'none');
-            $alertInfoForm.find('.btnIndividual').css('display', '');
-            $alertInfoForm.find('#perFileDifinitionForm').css('display', '');
-        }
-        function backalertInfo() {
-            $alertInfoForm.find('.partOperationAll').css('display', '');
-            $alertInfoForm.find('#perFileDifinitionForm').css('display', 'none');
-            $alertInfoForm.find('.btnIndividual').css('display', 'none');
-            $alertInfoForm.find('.btnAll').css('display', '');
-        }
 
         async function startImportWiki(data, dirId, $submitForm, $stopImport) {
-            readingCtn = 0;
-            var totalCtn = (data).length
-            $submitForm.attr('disabled', 'disabled').text('${_("Reading Wiki Contents")}' + readingCtn + '/' + totalCtn);
-            var mfr_format_url = window.contextVars.waterbutlerURL  + 'v1/resources/{1}/providers/osfstorage/{2}?direct=true&mode=render'
-            wiki_info = []
-            // Get Markdown content
-            for (var i = 0; i < data.length; i++) {
-                if (data[i]._id === undefined) {
-                    continue;
-                }
-                var mfr_url = mfr_format_url.replace('{1}', window.contextVars.node.id).replace('{2}', data[i]._id);
-                try {
-                    await getMdContentFromWB(mfr_url, data[i], $submitForm, totalCtn);
-                } catch(e) {
-                    console.log('failed to get md content: ' + data[i].name)
-                }
-            }
-            // Wiki images, Imported Wiki workspace and copy wiki miport directoy
             var wikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/';
-            $submitForm.attr('disabled', 'disabled').text('${_("Creating Wiki Folder...")}');
-            var wikiImagesResult = await startGetOrCreateWikiImagesFolder(imageFolder)
-            console.log('---path---')
-            console.log(wikiImagesResult)
-            var path = wikiImagesResult;
+            var wikiImportTask = await requestWikiImportTask(wikiImportUrl, data);
+            var taskId = wikiImportTask.taskId;
             // show stop import Btn
             $stopImport.css('display', '');
+            //change import label
             $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
-            var wikiImportTask = await wikiImport(wikiImportUrl, path);
-            console.log('---task---')
-            console.log(wikiImportTask)
-            var taskId = wikiImportTask.taskId;
-            celeryTask._id = taskId;
-            var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
-            wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 5000, WIKI_IMPORT_TIMEOUT, 'import wiki')
-            if (!wikiImportResult) {
-                return;
-            }
-            // The series of import processes has reached the end.
-            if (wikiImportResult.error_occurred) {
-                // show import error modal.
-                importErrors.push(...wikiImportResult.import_errors)
-                var importErrorMsg = createErrMsg(importErrors);
-                $('#importWiki').modal('hide');
-                $('#alertInfo').modal('hide');
-                $('#importResult').modal('show');
-                $('#showImportError').append('<p>' + importErrorMsg + '</p>')
-                $importResult.find('#showImportError').css('display', '');
-                $alertInfoForm.find('.btnAll').css('display', 'none');
-            } else {
-                $submitForm.attr('disabled', 'disabled').text('${_("Import Complete")}');
-                //rolaod
-                const reloadUrl = (location.href).replace(location.search, '')
-                window.location.assign(reloadUrl);
+            var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId + '/';
+            wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 5000, WIKI_IMPORT_TIMEOUT, 'import wiki');
+            if (wikiImportResult) {
+                // The series of import processes has reached the end.
+                if ((wikiImportResult.import_errors).length > 0) {
+                    showErrModal($importResult, $alertInfoForm);
+                } else {
+                    $submitForm.attr('disabled', 'disabled').text('${_("Import Complete")}');
+                    //reload
+                    const reloadUrl = (location.href).replace(location.search, '')
+                    window.location.assign(reloadUrl);
+                }
             }
             return;
         }
 
-        async function startGetOrCreateWikiImagesFolder(imageFolder) {
-            console.log('wiki images create start');
+        function fixToImportList(operation, validateImportResultCopy, perOperationList) {
+            console.log('---fixtoimportlist start---');
+            console.log(validateImportResultCopy);
+            if (operation === null && perOperationList.length > 0) {
+                for (var m=validateImportResultCopy.length-1; m>=0; m--) {
+                    if (validateImportResultCopy[m].status === 'invalid') {
+                        validateImportResultCopy.splice(m, 1);
+                        continue;
+                    }
+                    for (var n=0; n<perOperationList.length; n++) {
+                        if (validateImportResultCopy[m].wiki_name === perOperationList[n].wiki_name) {
+                            if (perOperationList[n].operation === 'skip') {
+                                console.log('---per action skip---')
+                                validateImportResultCopy.splice(m, 1);
+                                break;
+                            } else if (perOperationList[n].operation === 'overwrite') {
+                                console.log('---per action overwrite---')
+                                break;
+                                // no deal
+                            } else if (perOperationList[n].operation === 'createNew') {
+                                console.log('---per action createNew---')
+                                if ((validateImportResultCopy[m].status).startsWith('valid_')){
+                                    validateImportResultCopy[m].wiki_name = validateImportResultCopy[m].wiki_name + '(' + validateImportResultCopy[m].numbering + ')';
+                                    validateImportResultCopy[m].path = validateImportResultCopy[m].path + '(' + validateImportResultCopy[m].numbering + ')';
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (operation === 'skipAll' || operation === '') {
+                for (var i=validateImportResultCopy.length-1; i>=0; i--) {
+                    if (validateImportResultCopy[i].status !== 'valid' && validateImportResultCopy[i].status !== 'valid_duplicated') {
+                        validateImportResultCopy.splice(i, 1);
+                    }
+                }
+            } else if (operation === 'overwriteAll') {
+                console.log(operation)
+                for (var j=validateImportResultCopy.length-1; j>=0; j--) {
+                    if (validateImportResultCopy[j].status === 'invalid') {
+                        validateImportResultCopy.splice(j, 1);
+                    }
+                }
+            } else if (operation === 'createNewAll') {
+                console.log(operation)
+                for (var k=validateImportResultCopy.length-1; k>=0; k--) {
+                    if (validateImportResultCopy[k].status === 'invalid') {
+                        validateImportResultCopy.splice(k, 1);
+                    } else if (validateImportResultCopy[k].status === 'valid_exists') {
+                        validateImportResultCopy[k].wiki_name = validateImportResultCopy[k].wiki_name + '(' + validateImportResultCopy[k].numbering + ')';
+                        validateImportResultCopy[k].path = validateImportResultCopy[k].path + '(' + validateImportResultCopy[k].numbering + ')';
+                    }
+                }
+            } else {
+                // as skipAll
+                for (var m=validateImportResultCopy.length-1; m>=0; m--) {
+                    if (validateImportResultCopy[m].status !== 'valid' && validateImportResultCopy[i].status !== 'valid_duplicated') {
+                        validateImportResultCopy.splice(m, 1);
+                    }
+                }
+            }
+            console.log(validateImportResultCopy);
+            return validateImportResultCopy;
+        }
+
+        function showAlertInfo(validateImportResult, $alertInfoForm) {
+            console.log('---showalertinfo---')
+            $('#alertInfo').modal('show');
+            $('#importWiki').modal('hide');
+            if (validateImportResult.duplicated_folder.length > 0) {
+                // show duplicated folder sentence
+                $('#attentionDuplicatedFolder').css('display', '');
+                // show Close Btn
+                $('#closeAlertInfo').css('display', '');
+                // hide the display of operations for all
+                $alertInfoForm.find('.partOperationAll').css('display', 'none');
+                // show duplicated import folder list
+                validateImportResult.duplicated_folder.forEach(function(item) {
+                    $('#duplicatedFolder ul').append('<li>' + item + '</li>');
+                });
+            } else {
+                validateImportResultData = validateImportResult.data;
+                // show the Btn of operations for all
+                $('.btnAll').css('display', '');
+                // show duplicated wiki page infomation
+                validateImportResultData.forEach(function(item) {
+                    if (item.status === 'valid_exists') {
+                        $alertInfoForm.find('.partOperationAll').css('display', '');
+                        $('#validateInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
+                        $('#perFileDifinitionForm ul').append('<li id="' + (item.path).slice(1) + '" style="display: flex;justify-content: flex-end;">' + '<div style="display: list-item; position: absolute; left: 55px; max-width: 410px;">' +  (item.path).slice(1) + '</div>' + selectOperation + '</li>');
+                    } else if (item.status === 'valid_duplicated'){
+                        $('#attentionDuplicatedInfo').css('display', '');
+                        $('#duplicatedInfo ul').append('<li>' + (item.path).slice(1) + '</li>')
+                    }
+                });
+            }
+        }
+
+        async function requestValidateImportTask(url, $alertInfoForm, $submitForm) {
             await new Promise(function(resolve){
-                result = getOrCreateWikiImagesFolder(imageFolder)
+                result = validateImportTaskPromise(url, $alertInfoForm, $submitForm)
                 resolve();
             });
             return result
         }
 
-        async function wikiImport(wikiImportUrl, path) {
-            console.log('wiki import start');
+        async function validateImportTaskPromise(url, $alertInfoForm, $submitForm) {
+            return $.ajax({
+                type: 'GET',
+                cache: false,
+                url: url,
+                dataType: 'json'
+            }).fail(function (response) {
+                if (response.status !== 0) {
+                    alert('Error occurred when wiki validate.');
+                }
+            });  
+        }
+
+        async function requestWikiImportTask(wikiImportUrl, data) {
             await new Promise(function(resolve){
-                result = requestWikiImport(wikiImportUrl,path)
+                result = wikiImportTaskPromise(wikiImportUrl, data)
                 resolve();
             });
             return result
         }
 
-        async function requestWikiImport(wikiImportUrl, path) {
-            console.log('request wiki import start');
-            console.log(wikiImportUrl);
+        async function wikiImportTaskPromise(wikiImportUrl, data) {
             return $.ajax({
                 type: 'POST',
                 cache: false,
                 url: wikiImportUrl,
-                data: JSON.stringify({folderPath: path, wiki_info: wiki_info}),
+                data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
             }).fail(function (response) {
-                console.log(response)
                 if (response.status !== 0) {
                     alert('Error occurred when wiki import.');
                 }
             });  
+        }
+
+        function showErrModal($importResult, $alertInfoForm) {
+            // show import error modal.
+            importErrors.push(...wikiImportResult.import_errors)
+            var importErrorMsg = createErrMsg(importErrors);
+            $('#importWiki').modal('hide');
+            $('#alertInfo').modal('hide');
+            $('#importResult').modal('show');
+            $('#showImportError').append('<p>' + importErrorMsg + '</p>')
+            $importResult.find('#showImportError').css('display', '');
+            $alertInfoForm.find('.btnAll').css('display', 'none');
+        }
+
+        function createErrMsg(errorList) {
+            var errMsg = 'The following wiki pages could not be imported.';
+            for (var i = 0; i < errorList.length; i++) {
+                errMsg += '<br>' + errorList[i];
+            }
+            return errMsg;
         }
 
         async function intervalGetCeleryTaskResult(url, ms, timeout, operation) {
@@ -393,6 +370,9 @@
                     }, ms);
                 });
                 if (result) {
+                    if (result === 'aborted') {
+                        alert('task aborted')
+                    }
                     break;
                 }
                 count++;
@@ -414,251 +394,64 @@
             }).fail(function (response) {
                 if (response.status !== 0) {
                     alert('error when ' + operation);
-                    const reloadUrl = (location.href).replace(location.search, '')
                     return;
                 }
             });     
         }
 
-        async function abortCeleryTask(taskId) {
+        async function abortCeleryTask() {
             console.log('abort celery task start')
-            var abortTaskUrl = ${ urls['api']['base'] | sjson, n } + 'abort_celery_task/' + taskId+ '/';
+            var abortTaskUrl = ${ urls['api']['base'] | sjson, n } + 'abort_celery_task/';
             return $.ajax({
                 type: 'GET',
                 cache: false,
                 url: abortTaskUrl,
                 dataType: 'json',
             }).done(function (response) {
+                //reload
                 const reloadUrl = (location.href).replace(location.search, '')
                 window.location.assign(reloadUrl);
             }).fail(function (response) {
                 if (response.status !== 0) {
                     console.log(response)
-                    alert(response.message_long);
-                    const reloadUrl = (location.href).replace(location.search, '')
-                    window.location.assign(reloadUrl);
                     return;
                 }
             });
         }
 
-        async function getMdContentFromWB(mfr_url, data, $submitForm, totalCtn) {
-            return $.ajax({
-                type: 'GET',
-                url: mfr_url,
-                dataType: 'text',
-                beforeSend: function (xhr, options) {
-                    if (navigator.appVersion.indexOf('MSIE 9.') === -1) {
-                        xhr.withCredentials = true;
-                        xhr.fileName = data.name;
-                        xhr.parentWikiName = data.parent_wiki_name;
-                        xhr.path = data.path;
-                        xhr.validation = data.status;
-                        xhr.numbering = data.numbering;
-                        if (options) {
-                            options.withCredentials = true;
-                            options.xhrFields = {withCredentials:true};
-                        }
-                    }
-                    return xhr;
-                }
-            }).done(function (parsed, status, response) {
-                readingCtn = readingCtn + 1;
-                $submitForm.attr('disabled', 'disabled').text('${_("Reading Wiki Contents")}' + readingCtn + '/' + totalCtn);
-                wiki_info.push({path: response.path, wiki_name: response.fileName, wiki_content: response.responseText, parent_wiki_name: response.parentWikiName, validation: response.validation, numbering: response.numbering});
-            }).fail(function (response) {
-                importErrors.push({'wb': response.fileName})
-            })
+        $alertInfoForm.find('#perFileDefinition').on('click', function () {
+            showPerFileDefinition();
+        });
+        $alertInfoForm.find('#backalertInfo').on('click', function () {
+            backalertInfo();
+        });
+        $('#alertInfo').on('hidden.bs.modal', function (event) {
+            $('#alertInfo li').remove();
+        });
+        $alertInfoForm.find('.stopImport').on('click', function () {
+            var $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
+            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
+            abortCeleryTask()
+            return;
+        });
+        $importWikiForm.find('.stopImport').on('click', function () {
+            var $submitForm = $importWikiForm.find('#importWikiSubmit');
+            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
+            abortCeleryTask()
+            return;
+        });
+
+        function showPerFileDefinition() {
+            $alertInfoForm.find('.partOperationAll').css('display', 'none');
+            $alertInfoForm.find('.btnAll').css('display', 'none');
+            $alertInfoForm.find('.btnIndividual').css('display', '');
+            $alertInfoForm.find('#perFileDifinitionForm').css('display', '');
         }
-        function createErrMsg(errorList) {
-            var errMsg = 'The following wiki pages could not be imported.';
-            var errWB = '<br>< failed to get the text from markdown file >';
-            var errImportProcess = '<br>< failed to import process >';
-            var flgErrWB = false;
-            var flgErrorImportProcess = false;
-            for (var i = 0; i < errorList.length; i++) {
-                if (Object.keys(errorList[i])[0] === 'wb') {
-                    flgErrWB = true;
-                    errWB += '<br>' + errorList[i].wb;
-                } else if (Object.keys(errorList[i])[0] === 'import_error') {
-                    flgErrorImportProcess = true;
-                    errImportProcess += '<br>' + errorList[i].import_error;
-                }
-            }
-            if (flgErrWB) {
-                errMsg += errWB;
-            }
-            if (flgErrorImportProcess) {
-                errMsg += errImportProcess;
-            }
-            return errMsg;
+        function backalertInfo() {
+            $alertInfoForm.find('.partOperationAll').css('display', '');
+            $alertInfoForm.find('#perFileDifinitionForm').css('display', 'none');
+            $alertInfoForm.find('.btnIndividual').css('display', 'none');
+            $alertInfoForm.find('.btnAll').css('display', '');
         }
-        function fixToImportList(operation, validationResultCopy, perOperationList) {
-            console.log('---fixtoimportlist start---');
-            if (operation === null && perOperationList.length > 0) {
-                for (var m=validationResultCopy.length-1; m>=0; m--) {
-                    if (validationResultCopy[m].status === 'invalid') {
-                        validationResultCopy.splice(m, 1);
-                        continue;
-                    }
-                    for (var n=0; n<perOperationList.length; n++) {
-                        if (validationResultCopy[m].name === perOperationList[n].wiki_name) {
-                            if (perOperationList[n].operation === 'skip') {
-                                console.log('---per action skip---')
-                                validationResultCopy.splice(m, 1);
-                                break;
-                            } else if (perOperationList[n].operation === 'overwrite') {
-                                console.log('---per action overwrite---')
-                                break;
-                                // no deal
-                            } else if (perOperationList[n].operation === 'createNew') {
-                                console.log('---per action createNew---')
-                                if ((validationResultCopy[m].status).startsWith('valid_')){
-                                    validationResultCopy[m].name = validationResultCopy[m].name + '(' + validationResultCopy[m].numbering + ')';
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else if (operation === 'skipAll' || operation === '') {
-                for (var i=validationResultCopy.length-1; i>=0; i--) {
-                    if (validationResultCopy[i].status !== 'valid' && validationResultCopy[i].status !== 'valid_duplicated') {
-                        validationResultCopy.splice(i, 1);
-                    }
-                }
-            } else if (operation === 'overwriteAll') {
-                for (var j=validationResultCopy.length-1; j>=0; j--) {
-                    if (validationResultCopy[j].status === 'invalid') {
-                        validationResultCopy.splice(j, 1);
-                    }
-                }
-            } else if (operation === 'createNewAll') {
-                for (var k=validationResultCopy.length-1; k>=0; k--) {
-                    if (validationResultCopy[k].status === 'invalid') {
-                        validationResultCopy.splice(k, 1);
-                    } else if (validationResultCopy[k].status === 'valid_exists') {
-                        validationResultCopy[k].name = validationResultCopy[k].name + '(' + validationResultCopy[k].numbering + ')';
-                    }
-                }
-            } else {
-                // as skipAll
-                for (var m=validationResultCopy.length-1; m>=0; m--) {
-                    if (validationResultCopy[m].status !== 'valid' && validationResultCopy[i].status !== 'valid_duplicated') {
-                        validationResultCopy.splice(m, 1);
-                    }
-                }
-            }
-            return validationResultCopy;
-        }
-        /**
-         * Override from wikiPage.js
-         */
-        function createSubFolder(newFolderLink, folderName) {
-            return $.ajax({
-                url: newFolderLink + '&name=' + encodeURI(folderName),
-                type: 'PUT',
-                beforeSend: function (xhr, options) {
-                    if (navigator.appVersion.indexOf('MSIE 9.') === -1) {
-                        xhr.withCredentials = true;
-                        if (options) {
-                            options.withCredentials = true;
-                            options.xhrFields = {withCredentials:true};
-                        }
-                    }
-                    return xhr;
-                }
-            }).fail(function (response) {
-                if (response.status !== 0) {
-                    alert('error create sub folder: ' + folderName);
-                    return;
-                }
-            });
-        };
-        function getOrCreateWikiImportFolder(imageFolder, dir_id) {
-            var folderUrl = ${ urls['api']['base'] | sjson, n } + 'get_imported_wiki_workspace/' + dir_id + '/';
-            return $.ajax({
-                url: folderUrl,
-                type: 'GET',
-                dataType: 'json'
-            }).then(function(response) {
-                var link = window.contextVars.waterbutlerURL + 'v1/resources/' + window.contextVars.node.id + '/providers/osfstorage' + response.path + '?kind=folder';
-                if (response.exist) {
-                    return createSubFolder(link, Math.random().toString(32).substring(2)).then(function(response) {
-                        return response.data.attributes.path;
-                    });
-                } else {
-                    return createSubFolder(link, importFolder).then(function(response) {
-                        return createSubFolder(response.data.links.new_folder, Math.random().toString(32).substring(2)).then(function(response) {
-                            return response.data.attributes.path;
-                        });
-                    });
-                }
-            }).fail(function (response) {
-                if (response.status !== 0) {
-                    alert('error, possibly Wiki images failed to create or nothing.')
-                    return;
-                }
-            });
-        };
-        /**
-         * Override from wikiPage.js
-         */
-        function createFolder() {
-            return $.ajax({
-                url: window.contextVars.waterbutlerURL + 'v1/resources/' + window.contextVars.node.id + '/providers/osfstorage/?name=' + encodeURI(imageFolder) + '&kind=folder',
-                type: 'PUT',
-                beforeSend: function (xhr, options) {
-                    if (navigator.appVersion.indexOf('MSIE 9.') === -1) {
-                        xhr.withCredentials = true;
-                        if (options) {
-                            options.withCredentials = true;
-                            options.xhrFields = {withCredentials:true};
-                        }
-                    }
-                    return xhr;
-                }
-            });
-        };
-        /**
-         * Override from wikiPage.js
-         */
-        async function getOrCreateWikiImagesFolder(imageFolder) {
-            var folderUrl = window.contextVars.apiV2Prefix + 'nodes/' + window.contextVars.node.id + '/files/osfstorage/?filter[kind]=folder&fields[file]=name,path&filter[name]=' + encodeURI(imageFolder);
-            return $.ajax({
-                url: folderUrl,
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function (xhr, options) {
-                    if (navigator.appVersion.indexOf('MSIE 9.') === -1) {
-                        xhr.withCredentials = true;
-                        if (options) {
-                            options.withCredentials = true;
-                            options.xhrFields = {withCredentials:true};
-                        }
-                    }
-                    return xhr;
-                }
-            }).then(function(response) {
-                if (response.data.length > 0) {
-                    for (var i = 0, folder; folder = response.data[i]; i++) {
-                        var name = folder.attributes.name;
-                        var id = folder.id;
-                        if (name === imageFolder) {
-                            return getOrCreateWikiImportFolder(importFolder, id);
-                        }
-                    }
-                }
-                if (response.data.length === 0) {
-                    return createFolder(imageFolder).then(function(response) {
-                        return createSubFolder(response.data.links.new_folder, importFolder).then(function(response) {
-                            return createSubFolder(response.data.links.new_folder, Math.random().toString(32).substring(2)).then(function(response) {
-                                return response.data.attributes.path;
-                            });
-                        });
-                    });
-                }
-            });
-        };
     });
 </script>

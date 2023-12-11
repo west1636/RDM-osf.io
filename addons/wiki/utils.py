@@ -10,6 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.apps import apps
 from django.core import serializers
+from django.db.models import Q
 from addons.wiki import settings as wiki_settings
 from addons.wiki.exceptions import InvalidVersionError
 from osf.models.files import BaseFileNode
@@ -342,17 +343,13 @@ def get_max_depth(wiki_info):
             max = now
     return max - 1
 
-def check_import_error(rets):
-    error_occurred = False
-    for ret in rets:
-        error_occurred = ('status', 'import_error') in ret.items() 
-        if error_occurred:
-            break
-    return error_occurred
-
-def create_import_error_list(rets):
+def create_import_error_list(wiki_info, imported_list):
     import_errors = []
-    for ret in rets:
-        if ret['status'] == 'import_error':
-            import_errors.append({'import_error': ret['error_wiki_name']})
+    info_path =[]
+    imported_path = []
+    for info in wiki_info:
+        info_path.append(info['path'])
+    for imported in imported_list:
+        imported_path.append(imported['path'])
+    import_errors = list(set(info_path) ^ set(imported_path))
     return import_errors
