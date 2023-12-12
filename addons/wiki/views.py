@@ -1072,6 +1072,7 @@ def _wiki_content_replace(wiki_info, dir_id, node):
         if not ('wiki_content' in info):
             logger.info('-----no wiki_content key-------')
             continue
+        logger.info('replace : ' + info['wiki_name'])
         wiki_content = info['wiki_content']
         linkMatches = list(re.finditer(repLink, wiki_content))
         imageMatches = list(re.finditer(repImage, wiki_content))
