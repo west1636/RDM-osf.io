@@ -1112,7 +1112,9 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
+        logger.info('---createwiki start---')
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
+        logger.info('---createwiki end---')
         ret = {'status': 'success', 'path': path}
     logger.info('---wikiimportcreateorupdate end---')
     return ret
