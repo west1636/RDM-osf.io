@@ -725,6 +725,7 @@ def serialize_component_wiki(node, auth):
 
 @must_be_valid_project
 def project_wiki_validate_import(dir_id, node, **kwargs):
+    wiki_utils.check_dir_id(dir_id, node)
     node_id = wiki_utils.get_node_guid(node)
     task = tasks.run_project_wiki_validate_import.delay(dir_id, node_id)
     task_id = task.id
@@ -848,6 +849,7 @@ def _validate_import_duplicated_directry(info_list):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
+    wiki_utils.check_dir_id(dir_id, node)
     node_id = wiki_utils.get_node_guid(node)
     current_user_id = get_current_user_id()
     data = request.get_json()

@@ -5,18 +5,24 @@ import json
 import uuid
 import unicodedata
 import ssl
+import logging
 from pymongo import MongoClient
 import requests
 from bs4 import BeautifulSoup
 from django.apps import apps
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from addons.wiki import settings as wiki_settings
 from addons.wiki.exceptions import InvalidVersionError
 from osf.models.files import BaseFileNode
 from osf.utils.permissions import ADMIN, READ, WRITE
+from framework.exceptions import HTTPError
+from rest_framework import status as http_status
 # MongoDB forbids field names that begin with "$" or contain ".". These
 # utilities map to and from Mongo field names.
+
+logger = logging.getLogger(__name__)
 
 mongo_map = {
     '.': '__!dot!__',
@@ -353,3 +359,22 @@ def create_import_error_list(wiki_info, imported_list):
         imported_path.append(imported['path'])
     import_errors = list(set(info_path) ^ set(imported_path))
     return import_errors
+
+def check_dir_id(dir_id, node):
+    try:
+        target = BaseFileNode.objects.get(_id=dir_id)
+    except ObjectDoesNotExist:
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
+            message_short='directory id does not exist',
+            message_long='directory id does not exist'
+        ))     
+    node_id = target.target_object_id
+    logger.info(node_id)
+    logger.info(node.id)
+    if node.id != node_id:
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
+            message_short='directory id is invalid',
+            message_long='directory id is invalid'
+        ))
+    logger.info('---dir_id OK---')
+    return True
