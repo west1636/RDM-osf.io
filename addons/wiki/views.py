@@ -3,6 +3,7 @@
 import os
 import re
 import json
+import gc
 import requests
 import random
 import string
@@ -905,6 +906,7 @@ def project_wiki_import_process(data, dir_id, auth, node):
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
     wiki_name = info['wiki_name']
     for match in linkMatches:
+        gc.collect()
         hasSlash = '/' in match['path']
         hasSharp = '#' in match['path']
         hasDot = '.' in match['path']
@@ -1114,9 +1116,7 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
-        logger.info('---createwiki start---')
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
-        logger.info('---createwiki end---')
         ret = {'status': 'success', 'path': path}
     logger.info('---wikiimportcreateorupdate end---')
     return ret
