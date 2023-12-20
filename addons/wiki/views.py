@@ -2,6 +2,7 @@
 
 import os
 import re
+import gc
 import json
 import requests
 import random
@@ -1071,6 +1072,7 @@ def _wiki_content_replace(wiki_info, dir_id, node):
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name = wiki_utils.get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
+        gc.collect()
         if not ('wiki_content' in info):
             logger.info('-----no wiki_content key-------')
             continue
