@@ -15,6 +15,7 @@
                             % endfor
                         </select>
                     </div>
+                     <p class="text-danger importErrorMsg"> </p>
                 </div><!-- end modal-body -->
                 <div id="importFooter" class="modal-footer">
                     <a id="closeImport" href="#" class="btn btn-default" data-dismiss="modal">${_("Close")}</a>
@@ -38,6 +39,7 @@
                     <p id="attentionValidateInfo" class="partOperationAll" style="display: none">
                         ${_('The following wiki page already exists. Please select the process when importing. When creating a new wiki, the wiki name will be created with a sequential number like [Wiki name](1). If you dismiss this alert, the import will be aborted.')}
                     </p>
+                     <p class="text-danger importErrorMsg"> </p>
                     <div class="partOperationAll" style="display: none">
                       <div style="display: inline-block; margin-right: 10px;"><input name="importOperation" type="radio" id="skipAll" value="skipAll" checked /><label for="skipAll">Skip All</label></div>
                       <div style="display: inline-block; margin-right: 10px;"><input name="importOperation" type="radio" id="overwriteAll" value="overwriteAll"/><label for="overwriteAll">Overwrite All</label></div>
@@ -97,6 +99,7 @@
         var $importWikiForm = $('#importWiki form');
         var $alertInfoForm = $('#alertInfo form');
         var $importResult = $('#importResult')
+        var $importErrorMsg = $('.importErrorMsg');
         var selectOperation = '<div class="form-group" name="importOperationPer" style="display: inline-block; margin-left: 10px;"><select class="form-control" name="importOperationPerSelect"><option value="skip">Skip</option><option value="overwrite">Overwrite</option><option value="createNew">Create New</option></select></div>'
         var validateImportResultData = [];
         var importErrors = [];
@@ -308,7 +311,7 @@
                 dataType: 'json'
             }).fail(function (response) {
                 if (response.status !== 0) {
-                    alert('Error occurred when wiki validate.');
+                    $importErrorMsg.text(response.status + ' : Error occurred when wiki validate.');
                 }
             });  
         }
@@ -330,7 +333,12 @@
                 contentType: 'application/json; charset=utf-8',
             }).fail(function (response) {
                 if (response.status !== 0) {
-                    alert('Error occurred when wiki import.');
+                    console.log(response)
+                    if (response.responseJSON) {
+                        $importErrorMsg.text(response.responseJSON.message_long);
+                    } else {
+                        $importErrorMsg.text('Error occurred when wiki import.');
+                    }
                 }
             });  
         }
@@ -370,15 +378,15 @@
                     }, ms);
                 });
                 if (result) {
-                    if (result === 'aborted') {
-                        alert('task aborted')
+                    if(result.revoked) {
+                        alert('Wiki import revoked.')
                     }
                     break;
                 }
                 count++;
             }
             if (count === timeoutCtn){
-                alert('timeout the operation');
+                console.log('timeout the operation');
                 return;
             }
             return result;
@@ -393,29 +401,23 @@
                 dataType: 'json',
             }).fail(function (response) {
                 if (response.status !== 0) {
-                    alert('error when ' + operation);
+                    console.log(response)
+                    alert('import error');
                     return;
                 }
             });     
         }
 
-        async function abortCeleryTask() {
-            console.log('abort celery task start')
-            var abortTaskUrl = ${ urls['api']['base'] | sjson, n } + 'abort_celery_task/';
-            return $.ajax({
-                type: 'GET',
+        function cleanCeleryTask() {
+            var cleanTasksUrl = ${ urls['api']['base'] | sjson, n } + 'clean_celery_tasks/';
+            $.ajax({
+                type: 'POST',
                 cache: false,
-                url: abortTaskUrl,
+                url: cleanTasksUrl,
                 dataType: 'json',
             }).done(function (response) {
-                //reload
                 const reloadUrl = (location.href).replace(location.search, '')
                 window.location.assign(reloadUrl);
-            }).fail(function (response) {
-                if (response.status !== 0) {
-                    console.log(response)
-                    return;
-                }
             });
         }
 
@@ -431,13 +433,13 @@
         $alertInfoForm.find('.stopImport').on('click', function () {
             var $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
             $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
-            abortCeleryTask()
+            cleanCeleryTask();
             return;
         });
         $importWikiForm.find('.stopImport').on('click', function () {
             var $submitForm = $importWikiForm.find('#importWikiSubmit');
             $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
-            abortCeleryTask()
+            cleanCeleryTask();
             return;
         });
 

@@ -177,11 +177,11 @@ api_routes = {
             '/project/<pid>/node/<nid>/wiki/get_task_result/<task_id>/'
         ], 'get', views.project_get_task_result, json_renderer),
 
-        # Abort Celery Task
+        # Clean Celery Tasks
         Rule([
-            '/project/<pid>/wiki/abort_celery_task/<task_id>/',
-            '/project/<pid>/node/<nid>/wiki/abort_celery_task/<task_id>/'
-        ], 'get', views.project_abort_celery_task, json_renderer),
+            '/project/<pid>/wiki/clean_celery_tasks/',
+            '/project/<pid>/node/<nid>/wiki/clean_celery_tasks/'
+        ], 'post', views.project_clean_celery_tasks, json_renderer),
 
     ],
 

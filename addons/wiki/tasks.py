@@ -5,6 +5,7 @@ from flask import current_app as app
 from celery.contrib.abortable import AbortableTask
 from website.project.decorators import _load_node_or_fail
 from addons.wiki import views as wiki_views
+from addons.wiki.models import WikiImportTask
 from framework.celery_tasks import app as celery_app
 from framework.auth import Auth
 from framework.auth.core import get_current_user_id
@@ -28,7 +29,8 @@ def run_project_wiki_import(self, dataJson, dir_id, current_user_id, nid):
     user = OSFUser.load(current_user_id, select_for_update=False)
     auth = Auth.from_kwargs({'user': user}, {})
     data = json.loads(dataJson)
-    return wiki_views.project_wiki_import_process(data, dir_id, auth, node)
+    task_id = self.request.id
+    return wiki_views.project_wiki_import_process(data, dir_id, task_id, auth, node)
 
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
 def run_update_search(self, nid):

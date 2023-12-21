@@ -51,10 +51,21 @@
                         <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#newWiki">
                             <i class="fa fa-plus text-success"></i><span>${_("New")}</span>
                         </div>
-                        % if len(import_dirs) > 0:
-                          <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#importWiki">
-                              <i class="fa fa-upload text-success"></i><span>${_("Import")}</span>
-                          </div>
+                        % if user['can_wiki_import']:
+                            % if len(import_dirs) > 0:
+                                % if alive_task_id:
+                                    <div class="wiki-toolbar-icon text-success" style="pointer-events:none; opacity: 0.4;">
+                                      <i class="fa fa-upload text-success"></i><span>${_("Importing")}</span>
+                                    </div>
+                                    <div class="wiki-toolbar-icon text-danger" data-toggle="modal" data-target="#abortWikiImport">
+                                      <i class="fa fa-trash-o text-danger"></i><span>${_("Abort")}</span>
+                                    </div>
+                                % else:
+                                    <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#importWiki">
+                                      <i class="fa fa-upload text-success"></i><span>${_("Import")}</span>
+                                    </div>
+                                % endif
+                            % endif
                         % endif
                         % if wiki_id and wiki_name != 'home':
                             <div class="wiki-toolbar-icon text-danger" data-toggle="modal" data-target="#deleteWiki">
@@ -243,6 +254,7 @@
 <!-- Wiki modals should also be placed here! -->
   <%include file="wiki/templates/add_wiki_page.mako"/>
   <%include file="wiki/templates/import_wiki_page.mako"/>
+  <%include file="wiki/templates/abort_wiki_import.mako"/>
   <%include file="wiki/templates/wiki-bar-modal-help.mako"/>
 % if wiki_id and wiki_name != 'home':
   <%include file="wiki/templates/delete_wiki_page.mako"/>

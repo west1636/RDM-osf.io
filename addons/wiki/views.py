@@ -13,8 +13,10 @@ import urllib.parse
 from api.base.utils import waterbutler_api_url_for
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.http.response import JsonResponse
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 from addons.base.utils import get_mfr_url
 from osf.management.commands.import_EGAP import get_creator_auth_header
 from osf.models.base import Guid
@@ -23,6 +25,9 @@ from rest_framework import status as http_status
 from rest_framework.response import Response
 import logging
 
+from celery.task.control import revoke
+#from celery.exceptions import TaskRevokedError
+#from celery.backends.base import TaskRevokedError
 from flask import request
 from django.db.models.expressions import F
 
@@ -38,7 +43,7 @@ from celery.contrib.abortable import AbortableAsyncResult, ABORTED
 from addons.wiki.utils import to_mongo_key
 from addons.wiki import settings
 from addons.wiki import utils as wiki_utils
-from addons.wiki.models import WikiPage, WikiVersion
+from addons.wiki.models import WikiPage, WikiVersion, WikiImportTask
 from addons.wiki import tasks
 from osf import features
 from website import settings as website_settings
@@ -95,6 +100,11 @@ WIKI_PAGE_NOT_FOUND_ERROR = HTTPError(http_status.HTTP_404_NOT_FOUND, data=dict(
 WIKI_INVALID_VERSION_ERROR = HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
     message_short='Invalid request',
     message_long='The requested version of this wiki page does not exist.'
+))
+
+WIKI_IMPORT_TASK_ALREADY_EXISTS = HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
+    message_short='Running Task exists',
+    message_long='Only 1 wiki import task can be executed on 1 node'
 ))
 
 WIKI_IMAGE_FOLDER = 'Wiki images'
@@ -244,6 +254,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
             wiki_settings.is_publicly_editable
         )
     )
+    can_wiki_import = node.has_permission(auth.user, ADMIN)
     versions = _get_wiki_versions(node, wiki_name, anonymous=anonymous)
 
     # Determine panels used in view
@@ -318,17 +329,19 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
     parent_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefolder', parent=root_dir['id'], deleted__isnull=True)
     import_dirs = []
-    for dirr in parent_dirs:
-        wiki_dir = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefolder', parent=dirr.id, deleted__isnull=True).first()
+    for parent_dir in parent_dirs:
+        wiki_dir = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefolder', parent=parent_dir.id, deleted__isnull=True).first()
         if not wiki_dir:
             continue
         wiki_file_name = wiki_dir.name + '.md'
         if BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', parent=wiki_dir.id, name=wiki_file_name, deleted__isnull=True).exists():
             dict = {
-                'id': dirr._id,
-                'name': dirr.name
+                'id': parent_dir._id,
+                'name': parent_dir.name
             }
             import_dirs.append(dict)
+
+    alive_task_id = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING)).first()
 
     ret = {
         'wiki_id': wiki_page._primary_key if wiki_page else None,
@@ -337,6 +350,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'wiki_markdown': markdown,
         'parent_wiki_name': parent_wiki_page.page_name if parent_wiki_page else '',
         'import_dirs': import_dirs,
+        'alive_task_id': alive_task_id,
         'rendered_before_update': rendered_before_update,
         'page': wiki_page,
         'version': version,
@@ -361,6 +375,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     }
     ret.update(_view_project(node, auth, primary=True))
     ret['user']['can_edit_wiki_body'] = can_edit
+    ret['user']['can_wiki_import'] = can_wiki_import
     return ret
 
 
@@ -850,17 +865,22 @@ def _validate_import_duplicated_directry(info_list):
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
+    logger.info('---projectwikiimport start---')
     wiki_utils.check_dir_id(dir_id, node)
+    check_running_task(None, node, 0)
     node_id = wiki_utils.get_node_guid(node)
     current_user_id = get_current_user_id()
     data = request.get_json()
     dataJson = json.dumps(data)
     task = tasks.run_project_wiki_import.delay(dataJson, dir_id, current_user_id, node_id)
     task_id = task.id
+    WikiImportTask.objects.create(node=node, task_id=task_id, creator=auth.user)
+    logger.info('---projectwikiimport end---')
     return { 'taskId': task_id }
 
-def project_wiki_import_process(data, dir_id, auth, node):
-    logger.info('---projectwikiimportprocess---')
+def project_wiki_import_process(data, dir_id, task_id, auth, node):
+    logger.info('---projectwikiimportprocess start---')
+    change_task_status(task_id, WikiImportTask.STATUS_RUNNING, False)
     ret = []
     res_child = []
     import_errors = []
@@ -868,6 +888,7 @@ def project_wiki_import_process(data, dir_id, auth, node):
     pid = wiki_utils.get_node_guid(node)
     osf_cookie = user.get_or_create_cookie().decode()
     creator, creator_auth = get_creator_auth_header(user)
+    check_running_task(task_id, node, 1)
     wiki_info = _get_md_content_from_wb(data, node, creator_auth)
     # Get or create 'Wiki images'
     root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
@@ -901,6 +922,8 @@ def project_wiki_import_process(data, dir_id, auth, node):
     # Create import error page list
     import_errors = wiki_utils.create_import_error_list(data, ret)
     task_update_search = tasks.run_update_search.delay(pid)
+    change_task_status(task_id, WikiImportTask.STATUS_COMPLETED, True)
+    logger.info('---projectwikiimportprocess end---')
     return {'ret': ret, 'import_errors': import_errors}
 
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
@@ -1019,7 +1042,6 @@ def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, 
     try:
         folder = BaseFileNode.objects.get(target_object_id=node.id, parent_id=parent_id, type='osf.osfstoragefolder', name=folder_name, deleted__isnull=True)
     except ObjectDoesNotExist:
-        logger.info('---does not exist---')
         return _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path)
     folder_id = folder.id
     folder_path = 'osfstorage/{}/'.format(folder._id)
@@ -1032,10 +1054,9 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
         folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
         folder_response.raise_for_status()
     except Exception as err:
-        logger.info('Error when create ' + folder_name)
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
-            message_short='error when create wiki folder',
-            message_long='error when create wiki folder'
+            message_short='Error when create wiki folder',
+            message_long='An error occures when create wiki folder : ' + folder_name
         ))
     folder_path = folder_response.json()['data']['id']
     _id = (folder_response.json()['data']['attributes']['path']).strip('/')
@@ -1072,11 +1093,10 @@ def _wiki_content_replace(wiki_info, dir_id, node):
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name = wiki_utils.get_all_wiki_name_import_directory(dir_id)
     for info in wiki_info:
-        gc.collect()
         if not ('wiki_content' in info):
-            logger.info('-----no wiki_content key-------')
             continue
         logger.info('replace : ' + info['wiki_name'])
+        gc.collect()
         wiki_content = info['wiki_content']
         linkMatches = list(re.finditer(repLink, wiki_content))
         imageMatches = list(re.finditer(repImage, wiki_content))
@@ -1116,9 +1136,7 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
-        logger.info('---createwiki start---')
         WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
-        logger.info('---createwiki end---')
         ret = {'status': 'success', 'path': path}
     logger.info('---wikiimportcreateorupdate end---')
     return ret
@@ -1139,24 +1157,52 @@ def _import_same_level_wiki(wiki_info, depth, auth, node):
 @must_be_valid_project
 @must_have_permission(ADMIN)
 def project_get_task_result(task_id, node, **kwargs):
+    logger.info('---projectgettaskresult start---')
     res = AsyncResult(task_id,app=celery_app)
     if not res.ready():
         return None
-    result = res.get()
+    try:
+        result = res.get()
+    except Exception as err:
+        # use TaskRevokeError
+        if str(err) == 'terminated':
+            return { 'revoked': True }
+        else:
+            logger.info('---gettasjresykterror---')
+            logger.info(err)
+            logger.info(type(err))
+            logger.info(vars(err))
+            change_task_status(task_id, WikiImportTask.STATUS_ERROR, True)
+            raise HTTPError(500, data=dict(
+                message_short='import error',
+                message_long='import error'
+            ))
+    logger.info('---projectgettaskresult end---')
     return result
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
-def project_abort_celery_task(task_id, **kwargs):
-    task = AbortableAsyncResult(task_id)
-    task.abort()
-    if task.state != ABORTED:
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
-            message_short='Cannot abort',
-            message_long='Cannot abort this import process.'
-        ))
-    return {
-        'task_id': task_id,
-        'task_state': task.state,
-    }
+def project_clean_celery_tasks(**kwargs):
+    logger.info('---projectcleancelerytask start---')
+    qs_alive_task = WikiImportTask.objects.filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING))
+    alive_task_ids = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING))[0]
+    for task_id in alive_task_ids:
+        revoke(task_id, terminate=True)
+    process_end = timezone.make_naive(timezone.now(), timezone.utc)
+    qs_alive_task.update(status=WikiImportTask.STATUS_STOPPED, process_end=process_end )
+    logger.info('---projectcleancelerytask end---')
 
+def check_running_task(task_id, node, value):
+    running_task_ctn = WikiImportTask.objects.filter(node=node, status=WikiImportTask.STATUS_RUNNING).count()
+    if running_task_ctn > value:
+        if task_id:
+            change_task_status(task_id, WikiImportTask.STATUS_ERROR, True)
+        raise WIKI_IMPORT_TASK_ALREADY_EXISTS
+
+def change_task_status(task_id, status, set_process_end):
+    task = WikiImportTask.objects.get(task_id=task_id)
+    task.status = status
+    if set_process_end:
+        process_end = timezone.make_naive(timezone.now(), timezone.utc)
+        task.process_end = process_end
+    task.save()
