@@ -928,31 +928,31 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
 
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
     wiki_name = info['wiki_name']
+    match_path = ''
     for match in linkMatches:
-        hasSlash = '/' in match['path']
-        hasSharp = '#' in match['path']
-        hasDot = '.' in match['path']
-        repUrl = r"^https?://[\w/:%#\$&\?\(\)~\.=\+\-]+$"
-        isUrl = re.match(repUrl, match['path'])
-        if bool(isUrl):
+        match_path, tooltip_match = _exclude_tooltip(match['path'])
+        has_slash, has_sharp, has_dot, is_url = _exclude_symbols(match_path)
+        if bool(is_url):
             continue
-        if hasSlash:
+        if has_slash:
             continue
-        if hasSharp:
-            if hasDot:
+        if has_sharp:
+            if has_dot:
                 # relace file name
-                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
+                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match)
                 continue
             continue
 
         # check whether wiki or not
-        isWiki = _check_wiki_name_exist(node, match['path'], all_children_name)
+        isWiki = _check_wiki_name_exist(node, match_path, all_children_name)
         if isWiki:
-            wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')
+            if tooltip_match:
+                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + tooltip_match['path'] + '/ "' + tooltip_match['tooltip'] + '")')
+            else:
+                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')           
         else:
             # If not wiki, check whether attachment file or not
-            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id)
-
+            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match)
     return wiki_content
 
 def _check_wiki_name_exist(node, checkedName, all_children_name):
@@ -969,21 +969,52 @@ def _check_wiki_name_exist(node, checkedName, all_children_name):
                 return True
     return False
 
-def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id):
+def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id, match_path, tooltip_match):
     # check whether attachment file or not
-    file_id = _check_attachment_file_name_exist(wiki_name, match['path'], dir_id)
+    file_id = _check_attachment_file_name_exist(wiki_name, match_path, dir_id)
     if file_id:
         # replace process of file name
         node_guid = wiki_utils.get_node_guid(node)
         if notation == 'image':
             url = website_settings.WATERBUTLER_URL + '/v1/resources/' +  node_guid + '/providers/osfstorage/' + file_id + '?mode=render'
             #wurl = waterbutler_api_url_for(node_guid, 'osfstorage', path='/{}?mode=render'.format(file_id), _internal=True)
-            wiki_content = wiki_content.replace('![' + match['title'] + '](' + match['path'] + ')', '![' + match['title'] + '](' + url + ')')
+            if tooltip_match:
+                wiki_content = wiki_content.replace('![' + match['title'] + '](' + match['path'] + ')', '![' + match['title'] + '](' + url + ' "' + tooltip_match['tooltip'] + '")')
+            else:
+                wiki_content = wiki_content.replace('![' + match['title'] + '](' + match['path'] + ')', '![' + match['title'] + '](' + url + ')')     
         elif notation == 'link':
             file_obj = BaseFileNode.objects.get(_id=file_id)
             url = website_settings.DOMAIN + node_guid + '/files/osfstorage/' + file_id
-        wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](' + url + ')')
+            if tooltip_match:
+                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](' + url + ' "' + tooltip_match['tooltip'] + '")')
+            else:
+                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](' + url + ')')
     return wiki_content
+
+def _exclude_symbols(path):
+    has_slash = '/' in path
+    has_sharp = '#' in path
+    has_dot = '.' in path
+    rep_url = r"^https?://[\w/:%#\$&\?\(\)~\.=\+\-]+$"
+    is_url = re.match(rep_url, path)
+    return has_slash, has_sharp, has_dot, is_url
+
+def _exclude_tooltip(match_path):
+    rep_tooltip_single = r'(?P<path>.+?)[ ]+\'(?P<tooltip>.+?(?<!\\)(?:\\\\)*)\''
+    rep_tooltip_double = r'(?P<path>.+?)[ ]+"(?P<tooltip>.+?(?<!\\)(?:\\\\)*)"'
+    match_tooltip_single = list(re.finditer(rep_tooltip_single, match_path))
+    match_tooltip_double = list(re.finditer(rep_tooltip_double, match_path))
+    # exclude tooltip
+    if match_tooltip_single or match_tooltip_double:
+        if match_tooltip_single:
+            exclude_tooltop_match = match_tooltip_single[0]
+            exclude_tooltip_path = exclude_tooltop_match['path']
+        elif match_tooltip_double:
+            exclude_tooltop_match = match_tooltip_double[0]
+            exclude_tooltip_path = exclude_tooltop_match['path']   
+        return exclude_tooltip_path, exclude_tooltop_match
+    else:
+        return match_path, None
 
 def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
     # check file name contains slash
@@ -1018,10 +1049,11 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
 def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
     wiki_name = wiki_info['wiki_name']
     for match in imageMatches:
-        hasSlash = '/' in match['path']
-        if hasSlash:
+        match_path, tooltip_match = _exclude_tooltip(match['path'])
+        has_slash = '/' in match_path
+        if has_slash:
             continue
-        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'image', dir_id)
+        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'image', dir_id, match_path, tooltip_match)
     return wiki_content
 
 # for Search wikiName or fileName
