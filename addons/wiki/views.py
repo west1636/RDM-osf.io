@@ -5,6 +5,7 @@ import re
 import functools
 import gc
 import json
+import psutil
 import requests
 import random
 import string
@@ -118,7 +119,10 @@ def timePerf(func):
         start = time.perf_counter()
         v = func(*args, **keywords)
         end = time.perf_counter()
+        cpu_percent = psutil.cpu_percent(percpu=True)
+        mem = psutil.virtual_memory() 
         print(f"{func.__name__}: {end - start:.3f} s.")
+        print(f"cpu: {cpu_percent}, memory: {mem}")
         return v
     return _wrapper
 
