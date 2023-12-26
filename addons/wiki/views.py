@@ -2,11 +2,13 @@
 
 import os
 import re
+import functools
 import gc
 import json
 import requests
 import random
 import string
+import time
 import collections
 import unicodedata
 import urllib.parse
@@ -109,6 +111,16 @@ WIKI_IMPORT_TASK_ALREADY_EXISTS = HTTPError(http_status.HTTP_400_BAD_REQUEST, da
 
 WIKI_IMAGE_FOLDER = 'Wiki images'
 WIKI_IMPORT_FOLDER = 'Imported Wiki workspace (temporary)'
+
+def timePerf(func):
+    @functools.wraps(func)
+    def _wrapper(*args, **keywords):
+        start = time.perf_counter()
+        v = func(*args, **keywords)
+        end = time.perf_counter()
+        print(f"{func.__name__}: {end - start:.3f} s.")
+        return v
+    return _wrapper
 
 def _get_wiki_versions(node, name, anonymous=False):
     # Skip if wiki_page doesn't exist; happens on new projects before
@@ -878,6 +890,7 @@ def project_wiki_import(dir_id, auth, node, **kwargs):
     logger.info('---projectwikiimport end---')
     return { 'taskId': task_id }
 
+@timePerf
 def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('---projectwikiimportprocess start---')
     change_task_status(task_id, WikiImportTask.STATUS_RUNNING, False)
@@ -926,7 +939,11 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('---projectwikiimportprocess end---')
     return {'ret': ret, 'import_errors': import_errors}
 
+@timePerf
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
+    logger.info('---replacewikilinknotation start---')
+    logger.info(info['wiki_name'])
+    logger.info('---link matches---: ' + str(len(linkMatches)))
     wiki_name = info['wiki_name']
     match_path = ''
     for match in linkMatches:
@@ -950,11 +967,10 @@ def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_child
                 wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + tooltip_match['path'] + '/ "' + tooltip_match['tooltip'] + '")')
             else:
                 wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')           
-        else:
-            # If not wiki, check whether attachment file or not
-            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match)
+    logger.info('---replacewikilinknotation end---')
     return wiki_content
 
+@timePerf
 def _check_wiki_name_exist(node, checkedName, all_children_name):
     replaced_wiki_name = _replace_common_rule(checkedName)
     # normalize NFC
@@ -969,6 +985,7 @@ def _check_wiki_name_exist(node, checkedName, all_children_name):
                 return True
     return False
 
+@timePerf
 def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id, match_path, tooltip_match):
     # check whether attachment file or not
     file_id = _check_attachment_file_name_exist(wiki_name, match_path, dir_id)
@@ -1016,6 +1033,7 @@ def _exclude_tooltip(match_path):
     else:
         return match_path, None
 
+@timePerf
 def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
     # check file name contains slash
     hasHat = '^' in file_name
@@ -1030,6 +1048,7 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
 
     return file_id
 
+@timePerf
 def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
     # check as fileName
     replaced_wiki_name = _replace_common_rule(wiki_name) if hasHat else wiki_name
@@ -1046,7 +1065,10 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
 
     return None
 
+@timePerf
 def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
+    logger.info(wiki_info['wiki_name'])
+    logger.info('---image matches---: ' + str(len(imageMatches)))
     wiki_name = wiki_info['wiki_name']
     for match in imageMatches:
         match_path, tooltip_match = _exclude_tooltip(match['path'])
