@@ -176,8 +176,7 @@ class WikiVersion(ObjectIDMixin, BaseModel):
     def save(self, wiki_import=False, *args, **kwargs):
         rv = super(WikiVersion, self).save(*args, **kwargs)
         if self.wiki_page.node:
-            if not wiki_import:
-                self.wiki_page.node.update_search()
+            self.wiki_page.node.update_search(wiki_import=wiki_import)
         self.wiki_page.modified = self.created
         self.wiki_page.save(wiki_import=wiki_import)
         self.check_spam()
@@ -309,8 +308,7 @@ class WikiPage(GuidMixin, BaseModel):
     def save(self, wiki_import=False, *args, **kwargs):
         rv = super(WikiPage, self).save(*args, **kwargs)
         if self.node and (self.node.is_public or settings.ENABLE_PRIVATE_SEARCH):
-            if not wiki_import:
-                self.node.update_search(wiki_page=self)
+            self.node.update_search(wiki_page=self, wiki_import=wiki_import)
         return rv
 
     def update(self, user, content, wiki_import=False):
