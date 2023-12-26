@@ -741,11 +741,11 @@ class AbstractNode(DirtyFieldsMixin, TypedModel, AddonModelMixin, IdentifierMixi
             logger.exception(e)
             log_exception()
 
-    def update_search(self, wiki_page=None, wiki_import=False):
+    def update_search(self, wiki_page=None):
         from website import search
         try:
             search.search.update_node(self, bulk=False, async_update=True,
-                                      wiki_page=wiki_page, wiki_import=wiki_import)
+                                      wiki_page=wiki_page)
             if self.is_collected and self.is_public:
                 search.search.update_collected_metadata(self._id)
         except search.exceptions.SearchUnavailableError as e:

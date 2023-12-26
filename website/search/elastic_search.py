@@ -667,7 +667,7 @@ def get_doctype_from_node(node):
         return node.category
 
 @celery_app.task(bind=True, max_retries=5, default_retry_delay=60)
-def update_node_async(self, node_id, index=None, bulk=False, wiki_page_id=None, wiki_import=False):
+def update_node_async(self, node_id, index=None, bulk=False, wiki_page_id=None):
     AbstractNode = apps.get_model('osf.AbstractNode')
     node = AbstractNode.load(node_id)
     if wiki_page_id:
@@ -676,7 +676,7 @@ def update_node_async(self, node_id, index=None, bulk=False, wiki_page_id=None, 
     else:
         wiki_page = None
     try:
-        update_node(node=node, index=index, bulk=bulk, async_update=True, wiki_page=wiki_page, wiki_import=wiki_import)
+        update_node(node=node, index=index, bulk=bulk, async_update=True, wiki_page=wiki_page)
     except Exception as exc:
         self.retry(exc=exc)
 
@@ -1071,12 +1071,10 @@ def update_file_metadata(file_metadata, index=None, bulk=False):
         client().index(index=index, doc_type=category, id=file_metadata._id, body=elastic_document, refresh=True)
 
 @requires_search
-def update_node(node, index=None, bulk=False, async_update=False, wiki_page=None, wiki_import=False):
+def update_node(node, index=None, bulk=False, async_update=False, wiki_page=None):
     if wiki_page:
         update_wiki(wiki_page, index=index)
         # NOTE: update_node() may be called twice after WikiPage.save()
-    if wiki_import:
-        return
     metadata = node.get_addon(METADATA_SHORT_NAME)
     if metadata is not None:
         for file_metadata in metadata.file_metadata.all():
