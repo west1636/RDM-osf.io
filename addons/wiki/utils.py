@@ -279,23 +279,31 @@ def get_node_guid(node):
 def get_all_wiki_name_import_directory(dir_id):
     import_directory_root = BaseFileNode.objects.get(_id=dir_id)
     children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
-    all_dir_list = []
+    all_dir_name_list = []
+    all_wiki_obj_list = []
     for child in children:
-        all_dir_list.append(child.name)
-        all_child_list = _get_all_child_directory(child._id)
-        all_dir_list.extend(all_child_list)
-    return all_dir_list
+        wiki_obj = BaseFileNode.objects.get(_id=child._id)
+        all_wiki_obj_list.append(wiki_obj)
+        all_dir_name_list.append(child.name)
+        all_child_name_list, all_child_obj_list = _get_all_child_directory(child._id)
+        all_dir_name_list.extend(all_child_name_list)
+        all_wiki_obj_list.extend(all_child_obj_list)
+    return all_dir_name_list, all_wiki_obj_list
 
 def _get_all_child_directory(dir_id):
     parent_dir = BaseFileNode.objects.get(_id=dir_id)
     children = parent_dir._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
-    dir_list = []
+    dir_name_list = []
+    wiki_obj_list = []
     for child in children:
-        dir_list.append(child.name)
-        child_list = _get_all_child_directory(child._id)
-        dir_list.extend(child_list)
+        wiki_obj = BaseFileNode.objects.get(_id=child._id)
+        wiki_obj_list.append(wiki_obj)
+        dir_name_list.append(child.name)
+        child_name_list, child_obj_list = _get_all_child_directory(child._id)
+        dir_name_list.extend(child_name_list)
+        wiki_obj_list.extend(child_obj_list)
 
-    return dir_list
+    return dir_name_list, wiki_obj_list
 
 def get_wiki_directory(wiki_name, dir_id):
     import_directory_root = BaseFileNode.objects.get(_id=dir_id)

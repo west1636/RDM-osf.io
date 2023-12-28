@@ -894,7 +894,6 @@ def project_wiki_import(dir_id, auth, node, **kwargs):
     logger.info('---projectwikiimport end---')
     return { 'taskId': task_id }
 
-@timePerf
 def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('---projectwikiimportprocess start---')
     change_task_status(task_id, WikiImportTask.STATUS_RUNNING, False)
@@ -944,7 +943,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     return {'ret': ret, 'import_errors': import_errors}
 
 @timePerf
-def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, dir_id):
+def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, all_children_obj, dir_id):
     logger.info('---replacewikilinknotation start---')
     logger.info(info['wiki_name'])
     logger.info('---link matches---: ' + str(len(linkMatches)))
@@ -960,7 +959,7 @@ def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_child
         if has_sharp:
             if has_dot:
                 # relace file name
-                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match)
+                wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match, all_children_name, all_children_obj)
                 continue
             continue
 
@@ -970,11 +969,13 @@ def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_child
             if tooltip_match:
                 wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + tooltip_match['path'] + '/ "' + tooltip_match['tooltip'] + '")')
             else:
-                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')           
+                wiki_content = wiki_content.replace('[' + match['title'] + '](' + match['path'] + ')', '[' + match['title'] + '](../' + match['path'] + '/)')
+        else:
+            # If not wiki, check whether attachment file or not
+            wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'link', dir_id, match_path, tooltip_match, all_children_name, all_children_obj)  
     logger.info('---replacewikilinknotation end---')
     return wiki_content
 
-@timePerf
 def _check_wiki_name_exist(node, checkedName, all_children_name):
     replaced_wiki_name = _replace_common_rule(checkedName)
     # normalize NFC
@@ -984,15 +985,11 @@ def _check_wiki_name_exist(node, checkedName, all_children_name):
         return True
     else:
         # check import directory(copyed)
-        for name in all_children_name:
-            if replaced_wiki_name == name:
-                return True
-    return False
+        return (replaced_wiki_name in all_children_name)
 
-@timePerf
-def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id, match_path, tooltip_match):
+def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id, match_path, tooltip_match, all_children_name, all_children_obj):
     # check whether attachment file or not
-    file_id = _check_attachment_file_name_exist(wiki_name, match_path, dir_id)
+    file_id = _check_attachment_file_name_exist(wiki_name, match_path, dir_id, all_children_name, all_children_obj)
     if file_id:
         # replace process of file name
         node_guid = wiki_utils.get_node_guid(node)
@@ -1037,29 +1034,30 @@ def _exclude_tooltip(match_path):
     else:
         return match_path, None
 
-@timePerf
-def _check_attachment_file_name_exist(wiki_name, file_name, dir_id):
+def _check_attachment_file_name_exist(wiki_name, file_name, dir_id, all_children_name, all_children_obj):
     # check file name contains slash
     hasHat = '^' in file_name
     if hasHat:
         another_wiki_name = file_name.split('^')[0]
         file_name = file_name.split('^')[1]
         # check as wikiName/fileName
-        file_id = _process_attachment_file_name_exist(hasHat, another_wiki_name, file_name, dir_id)
+        file_id = _process_attachment_file_name_exist(hasHat, another_wiki_name, file_name, dir_id, all_children_name, all_children_obj)
     else:
         # check as fileName
-        file_id = _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id)
+        file_id = _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id, all_children_name, all_children_obj)
 
     return file_id
 
 @timePerf
-def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
+def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id, all_children_name, all_children_obj):
+    logger.info(file_name)
     # check as fileName
     replaced_wiki_name = _replace_common_rule(wiki_name) if hasHat else wiki_name
     replaced_file_name = _replace_common_rule(file_name)
 
-    parent_directory = wiki_utils.get_wiki_directory(replaced_wiki_name, dir_id)
     try:
+        idx = all_children_name.index(replaced_wiki_name)
+        parent_directory = all_children_obj[idx]
         # normalize NFC
         replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
@@ -1069,8 +1067,7 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id):
 
     return None
 
-@timePerf
-def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
+def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id, all_children_name, all_children_obj):
     logger.info(wiki_info['wiki_name'])
     logger.info('---image matches---: ' + str(len(imageMatches)))
     wiki_name = wiki_info['wiki_name']
@@ -1079,7 +1076,7 @@ def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id):
         has_slash = '/' in match_path
         if has_slash:
             continue
-        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'image', dir_id, match_path, tooltip_match)
+        wiki_content = _replace_file_name(node, wiki_name, wiki_content, match, 'image', dir_id, match_path, tooltip_match, all_children_name, all_children_obj)
     return wiki_content
 
 # for Search wikiName or fileName
@@ -1149,7 +1146,9 @@ def _wiki_content_replace(wiki_info, dir_id, node):
     replaced_wiki_info = []
     repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
-    all_children_name = wiki_utils.get_all_wiki_name_import_directory(dir_id)
+    all_children_name, all_children_obj = wiki_utils.get_all_wiki_name_import_directory(dir_id)
+    logger.info(all_children_name)
+    logger.info(all_children_obj)
     for info in wiki_info:
         if not ('wiki_content' in info):
             continue
@@ -1158,8 +1157,8 @@ def _wiki_content_replace(wiki_info, dir_id, node):
         wiki_content = info['wiki_content']
         linkMatches = list(re.finditer(repLink, wiki_content))
         imageMatches = list(re.finditer(repImage, wiki_content))
-        info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id)
-        info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, dir_id)
+        info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id, all_children_name, all_children_obj)
+        info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, all_children_obj, dir_id)
         replaced_wiki_info.append(info)
     logger.info('---wikicontentreplace end---')
     return replaced_wiki_info
