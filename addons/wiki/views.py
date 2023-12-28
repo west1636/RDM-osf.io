@@ -357,7 +357,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
             }
             import_dirs.append(dict)
 
-    alive_task_id = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING)).first()
+    alive_task_id = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING), node=node).first()
 
     ret = {
         'wiki_id': wiki_page._primary_key if wiki_page else None,
@@ -1239,10 +1239,10 @@ def project_get_task_result(task_id, node, **kwargs):
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
-def project_clean_celery_tasks(**kwargs):
+def project_clean_celery_tasks(node, **kwargs):
     logger.info('---projectcleancelerytask start---')
-    qs_alive_task = WikiImportTask.objects.filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING))
-    alive_task_ids = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING))[0]
+    qs_alive_task = WikiImportTask.objects.filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING), node=node)
+    alive_task_ids = WikiImportTask.objects.values_list('task_id').filter(Q(status=WikiImportTask.STATUS_PENDING) | Q(status=WikiImportTask.STATUS_RUNNING), node=node)[0]
     for task_id in alive_task_ids:
         revoke(task_id, terminate=True)
     process_end = timezone.make_naive(timezone.now(), timezone.utc)
