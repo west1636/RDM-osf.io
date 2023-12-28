@@ -1048,9 +1048,7 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id, all_children
 
     return file_id
 
-@timePerf
 def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id, all_children_name, all_children_obj):
-    logger.info(file_name)
     # check as fileName
     replaced_wiki_name = _replace_common_rule(wiki_name) if hasHat else wiki_name
     replaced_file_name = _replace_common_rule(file_name)
