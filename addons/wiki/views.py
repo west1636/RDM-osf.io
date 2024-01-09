@@ -921,7 +921,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     # Copy Import Directory
     cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
     # Replace Wiki Content
-    replaced_wiki_info = _wiki_content_replace(data, dir_id, node)
+    replaced_wiki_info = _wiki_content_replace(wiki_info, dir_id, node)
     # Import top hierarchy wiki page
     for info in replaced_wiki_info:
         if info['parent_wiki_name'] is None:
