@@ -1172,6 +1172,23 @@ def bulk_update_wikis(wiki_pages, index=None):
     if actions:
         return helpers.bulk(client(), actions)
 
+def bulk_index_wikis(wiki_pages, index=None):
+    index = es_index(index)
+    category = 'wiki'
+    actions = []
+    for wiki in wiki_pages:
+        serialized = update_wiki(wiki, index=index, bulk=True)
+        if serialized:
+            actions.append({
+                '_op_type': 'index',
+                '_index': index,
+                '_id': wiki._id,
+                '_type': category,
+                'doc': serialized,
+            })
+    if actions:
+        return helpers.bulk(client(), actions)
+
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
     category = 'comment'

@@ -5,7 +5,7 @@ import re
 import functools
 import gc
 import json
-import psutil
+#import psutil
 import requests
 import random
 import string
@@ -119,10 +119,10 @@ def timePerf(func):
         start = time.perf_counter()
         v = func(*args, **keywords)
         end = time.perf_counter()
-        cpu_percent = psutil.cpu_percent(percpu=True)
-        mem = psutil.virtual_memory() 
+        #cpu_percent = psutil.cpu_percent(percpu=True)
+        #mem = psutil.virtual_memory() 
         print(f"{func.__name__}: {end - start:.3f} s.")
-        print(f"cpu: {cpu_percent}, memory: {mem}")
+        #print(f"cpu: {cpu_percent}, memory: {mem}")
         return v
     return _wrapper
 
@@ -594,11 +594,13 @@ def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
 @must_be_contributor_or_public
 def project_wiki_grid_data(auth, node, **kwargs):
     pages = []
+    total_wiki_num = WikiPage.objects.filter(node=node, deleted__isnull=True).count()
     project_wiki_pages = {
         'title': 'Project Wiki Pages',
         'kind': 'folder',
         'type': 'heading',
-        'children': format_project_wiki_pages(node, auth)
+        'children': format_project_wiki_pages(node, auth),
+        'total': total_wiki_num
     }
     pages.append(project_wiki_pages)
 
@@ -898,6 +900,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('---projectwikiimportprocess start---')
     change_task_status(task_id, WikiImportTask.STATUS_RUNNING, False)
     ret = []
+    wiki_id_list = []
     res_child = []
     import_errors = []
     user = auth.user
@@ -923,21 +926,23 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     for info in replaced_wiki_info:
         if info['parent_wiki_name'] is None:
             try:
-                resRoot = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node)
+                resRoot, wiki_id = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node)
                 ret.append(resRoot)
+                wiki_id_list.append(wiki_id)
             except:
                 pass
     max_depth = wiki_utils.get_max_depth(replaced_wiki_info)
     # Import child wiki pages
     for depth in range(1, max_depth+1):
         try:
-            res_child = _import_same_level_wiki(replaced_wiki_info, depth, auth, node)
+            res_child, child_wiki_id_list = _import_same_level_wiki(replaced_wiki_info, depth, auth, node)
             ret.extend(res_child)
+            wiki_id_list.extend(child_wiki_id_list)
         except:
             pass
     # Create import error page list
     import_errors = wiki_utils.create_import_error_list(data, ret)
-    task_update_search = tasks.run_update_search.delay(pid)
+    task_update_search = tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
     change_task_status(task_id, WikiImportTask.STATUS_COMPLETED, True)
     logger.info('---projectwikiimportprocess end---')
     return {'ret': ret, 'import_errors': import_errors}
@@ -1191,23 +1196,25 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
-        WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
+        wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
         ret = {'status': 'success', 'path': path}
     logger.info('---wikiimportcreateorupdate end---')
-    return ret
+    return ret, wiki_page.id
 
 def _import_same_level_wiki(wiki_info, depth, auth, node):
     ret = []
+    wiki_id_list = []
     for info in wiki_info:
         slashCtn = info['path'].count('/')
         wiki_depth = slashCtn - 1
         if depth == wiki_depth:
             try:
-                res = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node, info['parent_wiki_name'])
+                res, wiki_id = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node, info['parent_wiki_name'])
                 ret.append(res)
+                wiki_id_list.append(wiki_id)
             except:
                 pass
-    return ret
+    return ret, wiki_id_list
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
