@@ -1145,7 +1145,7 @@ def _wiki_copy_import_directory(copy_to_id, copy_from_id, node):
 def _wiki_content_replace(wiki_info, dir_id, node):
     logger.info('---wikicontentreplace start---')
     replaced_wiki_info = []
-    repLink = r'(?<!\\)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
+    repLink = r'(?<!\\|\!)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name, all_children_obj = wiki_utils.get_all_wiki_name_import_directory(dir_id)
     logger.info(all_children_name)
