@@ -5,7 +5,7 @@ import re
 import functools
 import gc
 import json
-#import psutil
+import psutil
 import requests
 import random
 import string
@@ -119,10 +119,10 @@ def timePerf(func):
         start = time.perf_counter()
         v = func(*args, **keywords)
         end = time.perf_counter()
-        #cpu_percent = psutil.cpu_percent(percpu=True)
-        #mem = psutil.virtual_memory() 
+        cpu_percent = psutil.cpu_percent(percpu=True)
+        mem = psutil.virtual_memory() 
         print(f"{func.__name__}: {end - start:.3f} s.")
-        #print(f"cpu: {cpu_percent}, memory: {mem}")
+        print(f"cpu: {cpu_percent}, memory: {mem}")
         return v
     return _wrapper
 
@@ -594,13 +594,11 @@ def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
 @must_be_contributor_or_public
 def project_wiki_grid_data(auth, node, **kwargs):
     pages = []
-    total_wiki_num = WikiPage.objects.filter(node=node, deleted__isnull=True).count()
     project_wiki_pages = {
         'title': 'Project Wiki Pages',
         'kind': 'folder',
         'type': 'heading',
-        'children': format_project_wiki_pages(node, auth),
-        'total': total_wiki_num
+        'children': format_project_wiki_pages(node, auth)
     }
     pages.append(project_wiki_pages)
 
