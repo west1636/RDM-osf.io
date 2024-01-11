@@ -1184,7 +1184,7 @@ def bulk_index_wikis(wiki_pages, index=None):
                 '_index': index,
                 '_id': wiki._id,
                 '_type': category,
-                'doc': serialized,
+                '_source': serialized,
             })
     if actions:
         logger.info('---bulksize---')
