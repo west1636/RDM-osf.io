@@ -1187,6 +1187,9 @@ def bulk_index_wikis(wiki_pages, index=None):
                 'doc': serialized,
             })
     if actions:
+        logger.info('---bulksize---')
+        logger.info(actions.__sizeof__())
+        logger.info('---bulksize---')
         return helpers.bulk(client(), actions)
 
 def bulk_update_comments(comments, index=None):
