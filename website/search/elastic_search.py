@@ -1188,7 +1188,7 @@ def bulk_index_wikis(wiki_pages, index=None):
             })
     if actions:
         logger.info('---bulksize---')
-        logger.info(actions.__sizeof__())
+        logger.info(len(str(actions)))
         logger.info('---bulksize---')
         return helpers.bulk(client(), actions)
 
