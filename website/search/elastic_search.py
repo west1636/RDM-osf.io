@@ -1173,6 +1173,7 @@ def bulk_update_wikis(wiki_pages, index=None):
         return helpers.bulk(client(), actions)
 
 def bulk_index_wikis(wiki_pages, index=None):
+    logger.info('---bulkindexwikis start---')
     index = es_index(index)
     category = 'wiki'
     actions = []

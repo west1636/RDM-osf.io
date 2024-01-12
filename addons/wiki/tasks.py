@@ -36,10 +36,15 @@ def run_project_wiki_import(self, dataJson, dir_id, current_user_id, nid):
 
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
 def run_update_search_and_bulk_index(self, nid, wiki_id_list):
+    logger.info('---runupdatesearchandbulkindex start---')
     node = _load_node_or_fail(nid)
+    logger.info('---runupdatesearchandbulkindex 1---')
     wiki_pages = create_wiki_pages(wiki_id_list)
+    logger.info('---runupdatesearchandbulkindex 2---')
     bulk_index_wikis(wiki_pages)
+    logger.info('---runupdatesearchandbulkindex 3---')
     node.update_search()
+    logger.info('---runupdatesearchandbulkindex end---')
 
 def create_wiki_pages(wiki_id_list):
     wiki_pages = []
