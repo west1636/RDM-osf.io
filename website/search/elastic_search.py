@@ -154,6 +154,7 @@ def client():
                 settings.ELASTIC_URI,
                 request_timeout=settings.ELASTIC_TIMEOUT,
                 retry_on_timeout=True,
+                max_retries=1,
                 **settings.ELASTIC_KWARGS
             )
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
