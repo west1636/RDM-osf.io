@@ -147,6 +147,7 @@ CLIENT = None
 
 def client():
     global CLIENT
+    logger.info('---elasticsearch client start---')
     if CLIENT is None:
         try:
             CLIENT = Elasticsearch(
@@ -175,6 +176,8 @@ def client():
             else:
                 logger.error(message)
             exit(1)
+    logger.info(vars(CLIENT.transport))
+    logger.info('---elasticsearch client end---')
     return CLIENT
 
 
