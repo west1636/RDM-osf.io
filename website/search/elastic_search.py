@@ -147,6 +147,7 @@ CLIENT = None
 
 def client():
     global CLIENT
+    logger.info('---elasticsearch client start---')
     if CLIENT is None:
         try:
             CLIENT = Elasticsearch(
@@ -176,6 +177,8 @@ def client():
             else:
                 logger.error(message)
             exit(1)
+    logger.info(vars(CLIENT.transport))
+    logger.info('---elasticsearch client end---')
     return CLIENT
 
 
@@ -1192,36 +1195,7 @@ def bulk_index_wikis(wiki_pages, index=None):
         logger.info('---bulksize---')
         logger.info(len(str(actions)))
         logger.info('---bulksize---')
-        actions_splits = split_actions(actions, settings.ELASTIC_BULK_MAX_SIZE)
-        for actions_split in actions_splits:
-            logger.info('---bulk start---')
-            logger.info(len(str(actions_split)))
-            logger.info(len(actions_split))
-            if len(str(actions_split)) > settings.ELASTIC_BULK_MAX_SIZE or len(actions_split) == 0:
-                logger.info('---exceed size or empty---')
-                continue
-            logger.info('---bulk start---')
-            helpers.bulk(client(), actions_split)
-            logger.info('---bulk end---')
-
-def split_actions(actions, max_size):
-    logger.info('---splitaction start---')
-    si = 0
-    total_size = 0
-    bulk_splits = []
-    logger.info(max_size)
-    for idx, action in enumerate(actions):
-        logger.info('action_size:' + str(len(str(action))))
-        total_size += len(str(action))
-        if total_size > max_size:
-            logger.info('total_size:' + str(total_size))
-            bulk_splits.append(actions[si:idx])
-            si = idx
-            total_size = len(str(action))
-        if idx == len(actions) - 1:
-            bulk_splits.append(actions[si:idx+1])
-    logger.info('---splitaction end---')
-    return bulk_splits
+        return helpers.bulk(client(), actions)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
