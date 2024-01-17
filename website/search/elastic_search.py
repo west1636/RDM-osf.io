@@ -147,14 +147,12 @@ CLIENT = None
 
 def client():
     global CLIENT
-    logger.info('---elasticsearch client start---')
     if CLIENT is None:
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=settings.ELASTIC_TIMEOUT,
+                request_timeout=60,
                 retry_on_timeout=True,
-                max_retries=1,
                 **settings.ELASTIC_KWARGS
             )
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
@@ -177,8 +175,6 @@ def client():
             else:
                 logger.error(message)
             exit(1)
-    logger.info(vars(CLIENT.transport))
-    logger.info('---elasticsearch client end---')
     return CLIENT
 
 
@@ -1195,7 +1191,7 @@ def bulk_index_wikis(wiki_pages, index=None):
         logger.info('---bulksize---')
         logger.info(len(str(actions)))
         logger.info('---bulksize---')
-        return helpers.bulk(client(), actions)
+        return helpers.bulk(client(), actions, chunk_size=1)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
