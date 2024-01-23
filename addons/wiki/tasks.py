@@ -35,20 +35,21 @@ def run_project_wiki_import(self, dataJson, dir_id, current_user_id, nid):
     return wiki_views.project_wiki_import_process(data, dir_id, task_id, auth, node)
 
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
-def run_update_search_and_bulk_index(self, nid, wiki_id_list):
+def run_update_search_and_bulk_index(self, nid, created_wiki_id_list):
     logger.info('---runupdatesearchandbulkindex start---')
     node = _load_node_or_fail(nid)
     logger.info('---runupdatesearchandbulkindex 1---')
-    wiki_pages = create_wiki_pages(wiki_id_list)
+    created_wiki_pages = create_wiki_page_obj_list(created_wiki_id_list)
     logger.info('---runupdatesearchandbulkindex 2---')
-    bulk_index_wikis(wiki_pages)
+    bulk_index_wikis(created_wiki_pages)
     logger.info('---runupdatesearchandbulkindex 3---')
     node.update_search()
     logger.info('---runupdatesearchandbulkindex end---')
 
-def create_wiki_pages(wiki_id_list):
+def create_wiki_page_obj_list(wiki_id_list):
     wiki_pages = []
     for wiki_id in wiki_id_list:
-        wiki_page = WikiPage.objects.get(id=wiki_id)
-        wiki_pages.append(wiki_page)
+        if wiki_id:
+            wiki_page = WikiPage.objects.get(id=wiki_id)
+            wiki_pages.append(wiki_page)
     return wiki_pages
