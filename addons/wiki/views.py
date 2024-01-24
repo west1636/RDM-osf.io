@@ -927,8 +927,8 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
                 resRoot, wiki_id = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node)
                 ret.append(resRoot)
                 wiki_id_list.append(wiki_id)
-            except:
-                pass
+            except Exception as err:
+                logger.info(err)
     max_depth = wiki_utils.get_max_depth(replaced_wiki_info)
     # Import child wiki pages
     for depth in range(1, max_depth+1):
@@ -936,8 +936,8 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             res_child, child_wiki_id_list = _import_same_level_wiki(replaced_wiki_info, depth, auth, node)
             ret.extend(res_child)
             wiki_id_list.extend(child_wiki_id_list)
-        except:
-            pass
+        except Exception as err:
+            logger.info(err)
     # Create import error page list
     import_errors = wiki_utils.create_import_error_list(data, ret)
     task_update_search = tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
@@ -1167,6 +1167,7 @@ def _wiki_content_replace(wiki_info, dir_id, node):
 def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs):
     logger.info('---wikiimportcreateorupdate start---')
     parent_wiki_id = None
+    updated_wiki_id = None
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
     wiki_name = os.path.splitext(os.path.basename(unicodedata.normalize('NFC', path)))[0]
@@ -1189,15 +1190,17 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
         # Only update wiki if content has changed
         if data != wiki_version.content:
             wiki_version.wiki_page.update(auth.user, data, True)
+            updated_wiki_id = wiki_version.wiki_page.id
             ret = {'status': 'success', 'path': path}
         else:
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
         wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
+        updated_wiki_id = wiki_page.id
         ret = {'status': 'success', 'path': path}
     logger.info('---wikiimportcreateorupdate end---')
-    return ret, wiki_page.id
+    return ret, updated_wiki_id
 
 def _import_same_level_wiki(wiki_info, depth, auth, node):
     ret = []
@@ -1210,8 +1213,8 @@ def _import_same_level_wiki(wiki_info, depth, auth, node):
                 res, wiki_id = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node, info['parent_wiki_name'])
                 ret.append(res)
                 wiki_id_list.append(wiki_id)
-            except:
-                pass
+            except Exception as err:
+                logger.info(err)
     return ret, wiki_id_list
 
 @must_be_valid_project

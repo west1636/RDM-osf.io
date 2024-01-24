@@ -1170,24 +1170,6 @@ def bulk_update_wikis(wiki_pages, index=None):
                 'doc_as_upsert': True,
             })
     if actions:
-        return helpers.bulk(client(), actions)
-
-def bulk_index_wikis(wiki_pages, index=None):
-    logger.info('---bulkindexwikis start---')
-    index = es_index(index)
-    category = 'wiki'
-    actions = []
-    for wiki in wiki_pages:
-        serialized = update_wiki(wiki, index=index, bulk=True)
-        if serialized:
-            actions.append({
-                '_op_type': 'index',
-                '_index': index,
-                '_id': wiki._id,
-                '_type': category,
-                '_source': serialized,
-            })
-    if actions:
         logger.info('---bulksize---')
         logger.info(len(str(actions)))
         logger.info('---bulksize---')

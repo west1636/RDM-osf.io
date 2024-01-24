@@ -11,7 +11,7 @@ from framework.auth import Auth
 from framework.auth.core import get_current_user_id
 from osf.models import OSFUser
 from addons.wiki.models import WikiPage
-from website.search.elastic_search import bulk_index_wikis
+from website.search.elastic_search import bulk_update_wikis
 
 
 __all__ = [
@@ -41,7 +41,7 @@ def run_update_search_and_bulk_index(self, nid, wiki_id_list):
     logger.info('---runupdatesearchandbulkindex 1---')
     wiki_pages = create_wiki_pages(wiki_id_list)
     logger.info('---runupdatesearchandbulkindex 2---')
-    bulk_index_wikis(wiki_pages)
+    bulk_update_wikis(wiki_pages)
     logger.info('---runupdatesearchandbulkindex 3---')
     node.update_search()
     logger.info('---runupdatesearchandbulkindex end---')
@@ -49,6 +49,7 @@ def run_update_search_and_bulk_index(self, nid, wiki_id_list):
 def create_wiki_pages(wiki_id_list):
     wiki_pages = []
     for wiki_id in wiki_id_list:
-        wiki_page = WikiPage.objects.get(id=wiki_id)
-        wiki_pages.append(wiki_page)
+        if wiki_id:
+            wiki_page = WikiPage.objects.get(id=wiki_id)
+            wiki_pages.append(wiki_page)
     return wiki_pages
