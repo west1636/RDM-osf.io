@@ -898,7 +898,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('---projectwikiimportprocess start---')
     change_task_status(task_id, WikiImportTask.STATUS_RUNNING, False)
     ret = []
-    created_wiki_id_list = []
+    wiki_id_list = []
     res_child = []
     import_errors = []
     user = auth.user
@@ -926,7 +926,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             try:
                 resRoot, wiki_id = _wiki_import_create_or_update(info['path'], info['wiki_content'], auth, node)
                 ret.append(resRoot)
-                created_wiki_id_list.append(wiki_id)
+                wiki_id_list.append(wiki_id)
             except:
                 pass
     max_depth = wiki_utils.get_max_depth(replaced_wiki_info)
@@ -935,12 +935,12 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
         try:
             res_child, child_wiki_id_list = _import_same_level_wiki(replaced_wiki_info, depth, auth, node)
             ret.extend(res_child)
-            created_wiki_id_list.extend(child_wiki_id_list)
+            wiki_id_list.extend(child_wiki_id_list)
         except:
             pass
     # Create import error page list
     import_errors = wiki_utils.create_import_error_list(data, ret)
-    task_update_search = tasks.run_update_search_and_bulk_index.delay(pid, created_wiki_id_list)
+    task_update_search = tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
     change_task_status(task_id, WikiImportTask.STATUS_COMPLETED, True)
     logger.info('---projectwikiimportprocess end---')
     return {'ret': ret, 'import_errors': import_errors}
@@ -1167,7 +1167,6 @@ def _wiki_content_replace(wiki_info, dir_id, node):
 def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs):
     logger.info('---wikiimportcreateorupdate start---')
     parent_wiki_id = None
-    created_wiki_id = None
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
     wiki_name = os.path.splitext(os.path.basename(unicodedata.normalize('NFC', path)))[0]
@@ -1197,9 +1196,8 @@ def _wiki_import_create_or_update(path, data, auth, node, p_wname=None, **kwargs
         # Create a wiki
         wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
         ret = {'status': 'success', 'path': path}
-        created_wiki_id = wiki_page.id
     logger.info('---wikiimportcreateorupdate end---')
-    return ret, created_wiki_id
+    return ret, wiki_page.id
 
 def _import_same_level_wiki(wiki_info, depth, auth, node):
     ret = []
