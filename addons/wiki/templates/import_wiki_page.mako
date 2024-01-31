@@ -451,7 +451,15 @@
             $importWikiForm.find('#importWikiSubmit').attr('disabled', 'disabled').text('${_("Aborting...")}');
             cleanCeleryTask();
         });
+        $('#importWiki').on('show.bs.modal', function () {
+            showImportBtn();
+        });
 
+        function showImportBtn() {
+            $importWikiForm.find('#importWikiSubmit').attr('disabled', false).css('display', '').text('${_("Import")}');
+            $importWikiForm.find('#closeImport').css('display', 'none');
+            $importErrorMsg.text('');
+        }
         function showPerFileDefinition() {
             $alertInfoForm.find('.partOperationAll').css('display', 'none');
             $alertInfoForm.find('.btnAll').css('display', 'none');
