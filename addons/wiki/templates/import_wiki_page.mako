@@ -19,7 +19,7 @@
                 </div><!-- end modal-body -->
                 <div id="importFooter" class="modal-footer">
                     <a id="closeImport" href="#" class="btn btn-default" data-dismiss="modal">${_("Close")}</a>
-                    <button class="stopImport btn btn-default" href="#" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Stop import")}</button>
+                    <button type="button" class="stopImport btn btn-default" class="btn btn-default" style="display: none">${_("Stop import")}</button>
                     <button id="importWikiSubmit" type="submit" class="btn btn-success">${_("Import")}</button>
                 </div><!-- end modal-footer -->
             </form>
@@ -65,7 +65,7 @@
                     </div>
                 </div><!-- end modal-body -->
                 <div class="modal-footer">
-                    <button class="stopImport btn btn-default" href="#" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Stop import")}</button>
+                    <button type="button" class="stopImport btn btn-default" class="btn btn-default" style="display: none">${_("Stop import")}</button>
                     <button id="backalertInfo" type="button" class="btn btn-default btnIndividual" style="display: none">${_("Back")}</button>
                     <button id="closeAlertInfo" type="button" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Close")}</button>
                     <button id="continueImportWikiSubmit" type="submit" class="btn btn-success btnAll btnIndividual" style="display: none">${_("Continue import")}</button>
@@ -129,6 +129,7 @@
                     startImportWiki(data, dirId, $submitForm, $stopImport);
                 } else {
                     showAlertInfo(validateImportResult, $alertInfoForm);
+                    $submitForm.attr('disabled', false).text('${_("Import")}');
                 }
             }
             return;
@@ -378,8 +379,13 @@
                     }, ms);
                 });
                 if (result) {
-                    if(result.revoked) {
-                        alert('Wiki import revoked.')
+                    console.log('---result---')
+                    console.log(result)
+                    console.log('---result---')
+                    if(result.aborted) {
+                        alert('Wiki import aborted.')
+                        $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', false).text('${_("Import")}');
+                        $importWikiForm.find('#importWikiSubmit').attr('disabled', false).text('${_("Import")}');
                     }
                     break;
                 }
@@ -401,8 +407,11 @@
                 dataType: 'json',
             }).fail(function (response) {
                 if (response.status !== 0) {
-                    console.log(response)
-                    alert('import error');
+                    if (response.responseJSON) {
+                        $importErrorMsg.text(response.responseJSON.message_long);
+                    } else {
+                        alert('import error');
+                    }
                     return;
                 }
             });     
@@ -416,8 +425,8 @@
                 url: cleanTasksUrl,
                 dataType: 'json',
             }).done(function (response) {
-                const reloadUrl = (location.href).replace(location.search, '')
-                window.location.assign(reloadUrl);
+                //dUrl = (location.href).replace(location.search, '')
+                //window.location.assign(reloadUrl);
             });
         }
 
@@ -431,16 +440,15 @@
             $('#alertInfo li').remove();
         });
         $alertInfoForm.find('.stopImport').on('click', function () {
-            var $submitForm = $alertInfoForm.find('#continueImportWikiSubmit');
-            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
             cleanCeleryTask();
-            return;
+            $alertInfoForm.find('.stopImport').css('display', 'none');
+            $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', 'disabled').text('${_("Aborting...")}');
         });
         $importWikiForm.find('.stopImport').on('click', function () {
-            var $submitForm = $importWikiForm.find('#importWikiSubmit');
-            $submitForm.attr('disabled', 'disabled').text('${_("Aborting Import Wiki...")}');
+            $stopImport.css('display', 'none');
+            $importWikiForm.find('.stopImport').css('display', 'none');
+            $importWikiForm.find('#importWikiSubmit').attr('disabled', 'disabled').text('${_("Aborting...")}');
             cleanCeleryTask();
-            return;
         });
 
         function showPerFileDefinition() {

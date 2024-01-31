@@ -386,3 +386,12 @@ def check_dir_id(dir_id, node):
         ))
     logger.info('---dir_id OK---')
     return True
+
+def extract_err_msg(err):
+    logger.info('---extract start---')
+    str_err = str(err)
+    logger.info(str_err.split('\\t'))
+    message_long = str_err.split('\\t')[1]
+    logger.info(message_long)
+    logger.info('---extract end---')
+    return message_long
