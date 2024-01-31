@@ -908,7 +908,6 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     task = AbortableAsyncResult(task_id, app=celery_app)
     wiki_info = _get_md_content_from_wb(data, node, creator_auth, task)
     if wiki_info is None:
-        logger.info('---aborted when wb---')
         return { 'aborted': True }
     # Get or create 'Wiki images'
     root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
@@ -924,7 +923,6 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     # Replace Wiki Content
     replaced_wiki_info = _wiki_content_replace(wiki_info, dir_id, node, task)
     if replaced_wiki_info is None:
-        logger.info('---aborted when replace---')
         return { 'aborted': True }
     # Import top hierarchy wiki page
     for info in replaced_wiki_info:
@@ -934,11 +932,10 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
                 ret.append(resRoot)
                 wiki_id_list.append(wiki_id)
             except ImportTaskAborted:
-                logger.info('wiki import task aborted on root.')
                 tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
                 return { 'aborted': True }
             except Exception as err:
-                logger.info(err)
+                logger.error(err)
     max_depth = wiki_utils.get_max_depth(replaced_wiki_info)
     # Import child wiki pages
     for depth in range(1, max_depth+1):
@@ -947,14 +944,12 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             ret.extend(res_child)
             wiki_id_list.extend(child_wiki_id_list)
         except ImportTaskAborted:
-            logger.info('wiki import task aborted on child, outside')
             tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
             return { 'aborted': True }
         except Exception as err:
-            logger.info(err)
+            logger.error(err)
     # Create import error page list
     import_errors = wiki_utils.create_import_error_list(data, ret)
-    logger.info(wiki_id_list)
     tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
     change_task_status(task_id, WikiImportTask.STATUS_COMPLETED, True)
     logger.info('---projectwikiimportprocess end---')
@@ -963,8 +958,6 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
 @timePerf
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, all_children_obj, dir_id):
     logger.info('---replacewikilinknotation start---')
-    logger.info(info['wiki_name'])
-    logger.info('---link matches---: ' + str(len(linkMatches)))
     wiki_name = info['wiki_name']
     match_path = ''
     for match in linkMatches:
@@ -1084,8 +1077,6 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id, al
     return None
 
 def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id, all_children_name, all_children_obj):
-    logger.info(wiki_info['wiki_name'])
-    logger.info('---image matches---: ' + str(len(imageMatches)))
     wiki_name = wiki_info['wiki_name']
     for match in imageMatches:
         match_path, tooltip_match = _exclude_tooltip(match['path'])
@@ -1138,18 +1129,14 @@ def _get_md_content_from_wb(data, node, creator_auth, task):
     logger.info('---getmdcontentfromwb start---')
     node_id = wiki_utils.get_node_guid(node)
     for i, info in enumerate(data):
-        logger.info('---request to wb---')
-        logger.info(data[i]['wiki_name'])
-        logger.info(task.state)
         if task.is_aborted():
-            logger.info('---request to wb aborted---')
             return None
         try:
             response = requests.get(waterbutler_api_url_for(node_id, 'osfstorage', path='/' + info['_id'], _internal=True), headers=creator_auth)
             response.raise_for_status()
             data[i]['wiki_content'] = (response._content).decode()
         except Exception as err:
-            logger.info(err)
+            logger.error(err)
             logger.error('Failed to get {} content from WB'.format(data[i]['wiki_name']))
     logger.info('---getmdcontentfromwb end---')
     return data
@@ -1169,17 +1156,11 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
     repLink = r'(?<!\\|\!)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     repImage = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     all_children_name, all_children_obj = wiki_utils.get_all_wiki_name_import_directory(dir_id)
-    logger.info(all_children_name)
-    logger.info(all_children_obj)
     for info in wiki_info:
-        logger.info('---replace one by pne ---')
-        logger.info(task.state)
         if task.is_aborted():
-            logger.info('---request to replace aborted---')
             return None
         if not ('wiki_content' in info):
             continue
-        logger.info('replace : ' + info['wiki_name'])
         gc.collect()
         wiki_content = info['wiki_content']
         linkMatches = list(re.finditer(repLink, wiki_content))
@@ -1192,7 +1173,6 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
 
 def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **kwargs):
     logger.info('---wikiimportcreateorupdate start---')
-    logger.info(task.state)
     if task.is_aborted():
         raise ImportTaskAborted
     parent_wiki_id = None
@@ -1200,49 +1180,32 @@ def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
     wiki_name = os.path.splitext(os.path.basename(unicodedata.normalize('NFC', path)))[0]
-    logger.info(wiki_name)
     ret = {}
-    logger.info('---wikiimportcreateorupdate 1---')
     if p_wname:
-        logger.info('---wikiimportcreateorupdate 2---')
         p_wname = unicodedata.normalize('NFC', p_wname)
         parent_wiki_name = p_wname.strip()
         parent_wiki = WikiPage.objects.get_for_node(node, parent_wiki_name)
-        logger.info('---wikiimportcreateorupdate 3---')
         if not parent_wiki:
-            logger.info('---wikiimportcreateorupdate 4---')
             # Import Error
             return {}
         parent_wiki_id = parent_wiki.id
-    logger.info('---wikiimportcreateorupdate 5---')
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
-    logger.info('---wikiimportcreateorupdate 6---')
     # ensure home is always lower case since it cannot be renamed
     if wiki_name.lower() == 'home':
-        logger.info('---wikiimportcreateorupdate 7---')
         wiki_name = 'home'
-    logger.info('---wikiimportcreateorupdate 8---')
     if wiki_version:
-        logger.info('---wikiimportcreateorupdate 9---')
         # Only update wiki if content has changed
         if data != wiki_version.content:
-            logger.info('---wikiimportcreateorupdate 10---')
             wiki_version.wiki_page.update(auth.user, data, True)
             updated_wiki_id = wiki_version.wiki_page.id
             ret = {'status': 'success', 'path': path}
         else:
-            logger.info('---wikiimportcreateorupdate 11---')
             ret = {'status': 'unmodified', 'path': path}
     else:
-        logger.info('---wikiimportcreateorupdate 12---')
         # Create a wiki
         wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
         updated_wiki_id = wiki_page.id
         ret = {'status': 'success', 'path': path}
-    logger.info('---wikiimportcreateorupdate 13---')
-    logger.info(updated_wiki_id)
-    logger.info('---wikiimportcreateorupdate 14---')
-    logger.info(ret)
     logger.info('---wikiimportcreateorupdate end---')
     return ret, updated_wiki_id
 
@@ -1263,7 +1226,7 @@ def _import_same_level_wiki(wiki_info, depth, auth, node, task):
                 logger.info('wiki import task aborted on child, inside.')
                 return ret, wiki_id_list
             except Exception as err:
-                logger.info(err)
+                logger.error(err)
     return ret, wiki_id_list
 
 @must_be_valid_project
@@ -1277,12 +1240,10 @@ def project_get_task_result(task_id, node, **kwargs):
     try:
        result = res.get()
     except Exception as err:
-        logger.info('---taskresult error---')
         err_msg = wiki_utils.extract_err_msg(err)
         raise HTTPError(http_status.HTTP_500_INTERNAL_SERVER_ERROR, data=dict(
             message_long=err_msg
         ))
-        logger.info('---taskresult error---')
     logger.info('---projectgettaskresult end---')
     return result
 
@@ -1295,14 +1256,12 @@ def project_clean_celery_tasks(node, **kwargs):
     for task_id in alive_task_ids:
         task = AbortableAsyncResult(task_id, app=celery_app)
         task.abort()
-        logger.info(task.state)
     process_end = timezone.make_naive(timezone.now(), timezone.utc)
     qs_alive_task.update(status=WikiImportTask.STATUS_STOPPED, process_end=process_end )
     logger.info('---projectcleancelerytask end---')
 
 def check_running_task(task_id, node):
     running_task_ctn = WikiImportTask.objects.filter(node=node, status=WikiImportTask.STATUS_RUNNING).count()
-    logger.info(running_task_ctn)
     if running_task_ctn > 1:
         if task_id:
             change_task_status(task_id, WikiImportTask.STATUS_ERROR, True)
