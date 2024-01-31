@@ -386,6 +386,9 @@
                         alert('Wiki import aborted.')
                         $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', false).text('${_("Import")}');
                         $importWikiForm.find('#importWikiSubmit').attr('disabled', false).text('${_("Import")}');
+                        backalertInfo();
+                        $('#importWiki').modal('hide');
+                        $('#alertInfo').modal('hide');
                     }
                     break;
                 }
@@ -445,7 +448,6 @@
             $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', 'disabled').text('${_("Aborting...")}');
         });
         $importWikiForm.find('.stopImport').on('click', function () {
-            $stopImport.css('display', 'none');
             $importWikiForm.find('.stopImport').css('display', 'none');
             $importWikiForm.find('#importWikiSubmit').attr('disabled', 'disabled').text('${_("Aborting...")}');
             cleanCeleryTask();
@@ -461,7 +463,8 @@
             $alertInfoForm.find('.partOperationAll').css('display', '');
             $alertInfoForm.find('#perFileDifinitionForm').css('display', 'none');
             $alertInfoForm.find('.btnIndividual').css('display', 'none');
-            $alertInfoForm.find('.btnAll').css('display', '');
+            $alertInfoForm.find('.btnAll').attr('disabled', false).css('display', '');
+            $alertInfoForm.find('#backalertInfo').attr('disabled', false);
         }
     });
 </script>
