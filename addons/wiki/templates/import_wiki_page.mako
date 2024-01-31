@@ -18,7 +18,7 @@
                      <p class="text-danger importErrorMsg"> </p>
                 </div><!-- end modal-body -->
                 <div id="importFooter" class="modal-footer">
-                    <a id="closeImport" href="#" class="btn btn-default" data-dismiss="modal">${_("Close")}</a>
+                    <button id="closeImport" type="button" class="btn btn-default" data-dismiss="modal" style="display: none">${_("Close")}</button>
                     <button type="button" class="stopImport btn btn-default" class="btn btn-default" style="display: none">${_("Stop import")}</button>
                     <button id="importWikiSubmit" type="submit" class="btn btn-success">${_("Import")}</button>
                 </div><!-- end modal-footer -->
@@ -123,8 +123,6 @@
             const validateImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_IMPORT_TIMEOUT, 'validate wiki pages')
             if (validateImportResult) {
                 if (validateImportResult.canStartImport) {
-                    // hide Close Btn
-                    $importWikiForm.find('#closeImport').css('display', 'none');
                     var data = fixToImportList('', validateImportResult.data)
                     startImportWiki(data, dirId, $submitForm, $stopImport);
                 } else {
@@ -267,6 +265,7 @@
             console.log('---showalertinfo---')
             $('#alertInfo').modal('show');
             $('#importWiki').modal('hide');
+            showAlertInfoBtn();
             if (validateImportResult.duplicated_folder.length > 0) {
                 // show duplicated folder sentence
                 $('#attentionDuplicatedFolder').css('display', '');
@@ -335,6 +334,7 @@
             }).fail(function (response) {
                 if (response.status !== 0) {
                     console.log(response)
+                    dispBtnWhenError();
                     if (response.responseJSON) {
                         $importErrorMsg.text(response.responseJSON.message_long);
                     } else {
@@ -384,9 +384,7 @@
                     console.log('---result---')
                     if(result.aborted) {
                         alert('Wiki import aborted.')
-                        $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', false).text('${_("Import")}');
-                        $importWikiForm.find('#importWikiSubmit').attr('disabled', false).text('${_("Import")}');
-                        backalertInfo();
+                        dispBtnWhenAbort();
                         $('#importWiki').modal('hide');
                         $('#alertInfo').modal('hide');
                     }
@@ -410,6 +408,7 @@
                 dataType: 'json',
             }).fail(function (response) {
                 if (response.status !== 0) {
+                    dispBtnWhenError();
                     if (response.responseJSON) {
                         $importErrorMsg.text(response.responseJSON.message_long);
                     } else {
@@ -459,12 +458,35 @@
             $alertInfoForm.find('.btnIndividual').css('display', '');
             $alertInfoForm.find('#perFileDifinitionForm').css('display', '');
         }
+        function showAlertInfoBtn() {
+            $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', false).css('display', '').text('${_("Import")}');;
+            $alertInfoForm.find('#perFileDefinition').attr('disabled', false).css('display', '');
+            $alertInfoForm.find('#closeAlertInfo').css('display', 'none');
+            $alertInfoForm.find('#backalertInfo').css('display', 'none');
+        }
         function backalertInfo() {
-            $alertInfoForm.find('.partOperationAll').css('display', '');
             $alertInfoForm.find('#perFileDifinitionForm').css('display', 'none');
+            $alertInfoForm.find('.partOperationAll').css('display', '');
             $alertInfoForm.find('.btnIndividual').css('display', 'none');
             $alertInfoForm.find('.btnAll').attr('disabled', false).css('display', '');
-            $alertInfoForm.find('#backalertInfo').attr('disabled', false);
+        }
+        function dispBtnWhenError() {
+            $alertInfoForm.find('#closeAlertInfo').attr('disabled', false).css('display', '');
+            $importWikiForm.find('#closeImport').css('display', '');
+            $importWikiForm.find('.stopImport').css('display', 'none');
+            $alertInfoForm.find('.stopImport').css('display', 'none');
+            $alertInfoForm.find('#continueImportWikiSubmit').css('display', 'none');
+            $importWikiForm.find('#importWikiSubmit').css('display', 'none');
+            $alertInfoForm.find('#perFileDefinition').css('display', 'none');
+            $alertInfoForm.find('#backalertInfo').css('display', 'none');
+        }
+        function dispBtnWhenAbort() {
+            $alertInfoForm.find('#continueImportWikiSubmit').attr('disabled', false).text('${_("Import")}');
+            $importWikiForm.find('#importWikiSubmit').attr('disabled', false).text('${_("Import")}');
+            $importWikiForm.find('.stopImport').css('display', 'none');
+            $alertInfoForm.find('.stopImport').css('display', 'none');
+            $alertInfoForm.find('.btnAll').attr('disabled', false).css('display', '');
+            $alertInfoForm.find('.btnIndividual').attr('disabled', false).css('display', '');
         }
     });
 </script>
