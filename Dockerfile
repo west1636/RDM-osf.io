@@ -35,6 +35,7 @@ RUN apk add --no-cache --virtual .run-deps \
 WORKDIR /code
 
 COPY ./requirements.txt ./
+COPY ./requirements-test.txt ./
 COPY ./requirements/ ./requirements/
 COPY ./addons/bitbucket/requirements.txt ./addons/bitbucket/
 COPY ./addons/box/requirements.txt ./addons/box/
