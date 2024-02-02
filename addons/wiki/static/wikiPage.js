@@ -18,7 +18,7 @@ var mCtx = require('@milkdown/ctx');
 var mCore = require('@milkdown/core');
 var mTransformer = require('@milkdown/transformer');
 var mCommonmark = require('@milkdown/preset-commonmark');
-var mNord = require('@milkdown/theme-nord');
+//var mNord = require('@milkdown/theme-nord');
 var mHistory = require('@milkdown/plugin-history');
 var mEmoji = require('@milkdown/plugin-emoji');
 var mUpload = require('@milkdown/plugin-upload');
@@ -101,7 +101,7 @@ async function createMView(editor, markdown) {
             editable,
         }))
       })
-      .config(mNord.nord)
+//      .config(mNord.nord)
       .use(mCommonmark.commonmark)
       .use(mEmoji.emoji)
       .use(mUpload.upload)
@@ -196,7 +196,7 @@ async function createMEditor(editor, vm, template) {
             view: slashPluginView
         })
       })
-      .config(mNord.nord)
+//      .config(mNord.nord)
       .use(mCommonmark.commonmark)
       .use(mEmoji.emoji)
       .use(mUpload.upload)
