@@ -1,11 +1,14 @@
-FROM node:8-alpine3.9
+FROM node:21-alpine
 
 ARG NODE_OPTIONS='--max-old-space-size=4096'
 
 # Source: https://github.com/docker-library/httpd/blob/7976cabe162268bd5ad2d233d61e340447bfc371/2.4/alpine/Dockerfile#L3
 RUN set -x \
-    && addgroup -g 82 -S www-data \
-    && adduser -h /var/www -u 82 -D -S -G www-data www-data
+    #&& addgroup -g 82 -S www-data \
+    #&& adduser -h /var/www -u 82 -D -S -G www-data www-data
+    && addgroup -g 1111 -S Gwww-data \
+    && adduser -h /var/www -u 1111 -D -S -G Gwww-data Gwww-data
+
 
 RUN apk add --no-cache --virtual .run-deps \
     libxslt-dev \
@@ -24,7 +27,7 @@ RUN apk add --no-cache --virtual .run-deps \
     libev \
     libevent \
     openblas-dev \
-    wkhtmltopdf \
+    #wkhtmltopdf \
     xvfb \
     jq \
     python3-tkinter \
@@ -70,15 +73,17 @@ COPY ./admin/rdm_announcement/requirements.txt ./admin/rdm_announcement/
 COPY ./admin/rdm_statistics/requirements.txt ./admin/rdm_statistics/
 COPY ./addons/metadata/requirements.txt ./addons/metadata/
 
-RUN pip3 install pip==21.0
+#RUN pip3 install pip==21.0
 
 RUN set -ex \
     && mkdir -p /var/www \
-    && chown www-data:www-data /var/www \
+    #&& chown www-data:www-data /var/www \
+    && chown Gwww-data:Gwww-data /var/www \
     && apk add --no-cache --virtual .build-deps \
         build-base \
         linux-headers \
         python3-dev \
+        py3-pip \
         # lxml2
         musl-dev \
         libxml2-dev \
@@ -90,18 +95,19 @@ RUN set -ex \
         libpng-dev \
         freetype-dev \
         jpeg-dev \
-    && pip3 install Cython==0.29.36 \
-    && pip3 install numpy==1.15.4 \
-    && for reqs_file in \
-        /code/requirements.txt \
-        /code/requirements/release.txt \
-        /code/addons/*/requirements.txt \
-        /code/admin/rdm*/requirements.txt \
-    ; do \
-        pip3 install --no-cache-dir -r "$reqs_file" \
-    ; done \
-    && (pip3 uninstall uritemplate.py --yes || true) \
-    && pip3 install --no-cache-dir uritemplate.py==0.3.0 \
+    #&& pip3 install Cython==0.29.36 \
+    #&& pip3 install numpy==1.15.4 \
+    #&& pip3 install invoke==0.15.0 \
+    #&& for reqs_file in \
+        #/code/requirements.txt \
+        #/code/requirements/release.txt \
+        #/code/addons/*/requirements.txt \
+        #/code/admin/rdm*/requirements.txt \
+    #; do \
+        #pip3 install --no-cache-dir -r "$reqs_file" \
+    #; done \
+    #&& (pip3 uninstall uritemplate.py --yes || true) \
+    #&& pip3 install --no-cache-dir uritemplate.py==0.3.0 \
     # Fix: https://github.com/CenterForOpenScience/osf.io/pull/6783
     && python3 -m compileall /usr/lib/python3.6 || true \
     && apk del .build-deps
@@ -180,11 +186,11 @@ RUN \
     # OSF
     yarn install --frozen-lockfile \
     && mkdir -p ./website/static/built/ \
-    && invoke build_js_config_files \
-    && yarn run webpack-prod \
+    #&& invoke build_js_config_files \
+    #&& yarn run webpack-prod \
     # Admin
-    && cd ./admin \
-    && yarn install --frozen-lockfile \
+    #&& cd ./admin \
+    #&& yarn install --frozen-lockfile \
     && yarn run webpack-prod \
     && cd ../ \
     # Cleanup
@@ -197,24 +203,24 @@ COPY ./ ./
 ARG GIT_COMMIT=
 ENV GIT_COMMIT ${GIT_COMMIT}
 
-RUN pybabel compile -d ./website/translations
-RUN pybabel compile -D django -d ./admin/translations
+#RUN pybabel compile -d ./website/translations
+#RUN pybabel compile -D django -d ./admin/translations
 
 # TODO: Admin/API should fully specify their bower static deps, and not include ./website/static in their defaults.py.
 #       (this adds an additional 300+mb to the build image)
-RUN for module in \
-        api.base.settings \
-        admin.base.settings \
-    ; do \
-        export DJANGO_SETTINGS_MODULE=$module \
-        && python3 manage.py collectstatic --noinput --no-init-app \
-    ; done \
-    && for file in \
-        ./website/templates/_log_templates.mako \
-        ./website/static/built/nodeCategories.json \
-    ; do \
-        touch $file && chmod o+w $file \
-    ; done \
-    && rm ./website/settings/local.py ./api/base/settings/local.py
+#RUN for module in \
+#        api.base.settings \
+#        admin.base.settings \
+#    ; do \
+#        export DJANGO_SETTINGS_MODULE=$module \
+#        && python3 manage.py collectstatic --noinput --no-init-app \
+#    ; done \
+#    && for file in \
+#        ./website/templates/_log_templates.mako \
+#        ./website/static/built/nodeCategories.json \
+#    ; do \
+#        touch $file && chmod o+w $file \
+#    ; done \
+#    && rm ./website/settings/local.py ./api/base/settings/local.py
 
 CMD ["su-exec", "nobody", "invoke", "--list"]
