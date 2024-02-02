@@ -60,7 +60,7 @@ var resolve = {
         './website/static/vendor/bower_components',
         'node_modules',
     ],
-    extensions: ['.*', '.es6.js', '.js', '.min.js'],
+    extensions: ['.*', '.es6.js', '.js', '.min.js', '.json'],
     // Need to alias libraries that aren't managed by bower or npm
     alias: {
         'knockout-sortable': staticPath('vendor/knockout-sortable/knockout-sortable.js'),
