@@ -8,12 +8,7 @@ require('../../vendor/bootstrap-editable-custom/css/bootstrap-editable.css');
 require('../../vendor/bower_components/jquery-ui/themes/base/resizable.css');
 require('../../css/bootstrap-xl.css');
 require('../../css/animate.css');
-//require('font-awesome-webpack');
-require('js/@fortawesome/fontawesome-free/js/all.js');
-//require('@fortawesome/fontawesome-free/js/fontawesome');
-//require('@fortawesome/fontawesome-free/js/solid');
-//require('@fortawesome/fontawesome-free/js/regular');
-//require('@fortawesome/fontawesome-free/js/brands');
+require('font-awesome-webpack');
 
 var $ = require('jquery');
 var Cookie = require('js-cookie');
