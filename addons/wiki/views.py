@@ -921,7 +921,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     # Copy Import Directory
     cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
     # Replace Wiki Content
-    replaced_wiki_info = _wiki_content_replace(wiki_info, dir_id, node, task)
+    replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
     if replaced_wiki_info is None:
         return { 'aborted': True }
     # Import top hierarchy wiki page
@@ -958,7 +958,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
 @timePerf
 def _replace_wiki_link_notation(node, linkMatches, wiki_content, info, all_children_name, all_children_obj, dir_id):
     logger.info('---replacewikilinknotation start---')
-    wiki_name = info['wiki_name']
+    wiki_name = info['original_name']
     match_path = ''
     for match in linkMatches:
         match_path, tooltip_match = _exclude_tooltip(match['path'])
@@ -1071,13 +1071,13 @@ def _process_attachment_file_name_exist(hasHat, wiki_name, file_name, dir_id, al
         replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
         child_file = parent_directory._children.get(name=replaced_file_name, type='osf.osfstoragefile', deleted__isnull=True)
         return child_file._id
-    except:
-        pass
+    except Exception as err:
+        logger.info(err)
 
     return None
 
 def _replace_wiki_image(node, imageMatches, wiki_content, wiki_info, dir_id, all_children_name, all_children_obj):
-    wiki_name = wiki_info['wiki_name']
+    wiki_name = wiki_info['original_name']
     for match in imageMatches:
         match_path, tooltip_match = _exclude_tooltip(match['path'])
         has_slash = '/' in match_path
