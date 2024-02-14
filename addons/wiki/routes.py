@@ -183,6 +183,12 @@ api_routes = {
             '/project/<pid>/node/<nid>/wiki/clean_celery_tasks/'
         ], 'post', views.project_clean_celery_tasks, json_renderer),
 
+        # Get Abort Wiki Import Result
+        Rule([
+            '/project/<pid>/wiki/get_abort_wiki_import_result/',
+            '/project/<pid>/node/<nid>/wiki/get_abort_wiki_import_result/'
+        ], 'get', views.project_get_abort_wiki_import_result, json_renderer),
+
     ],
 
     'prefix': '/api/v1',

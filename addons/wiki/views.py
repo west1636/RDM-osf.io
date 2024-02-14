@@ -908,6 +908,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     task = AbortableAsyncResult(task_id, app=celery_app)
     wiki_info = _get_md_content_from_wb(data, node, creator_auth, task)
     if wiki_info is None:
+        set_wiki_import_task_proces_end(node)
         return { 'aborted': True }
     # Get or create 'Wiki images'
     root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
@@ -923,6 +924,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     # Replace Wiki Content
     replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
     if replaced_wiki_info is None:
+        set_wiki_import_task_proces_end(node)
         return { 'aborted': True }
     # Import top hierarchy wiki page
     for info in replaced_wiki_info:
@@ -933,6 +935,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
                 wiki_id_list.append(wiki_id)
             except ImportTaskAborted:
                 tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
+                set_wiki_import_task_proces_end(node)
                 return { 'aborted': True }
             except Exception as err:
                 logger.error(err)
@@ -945,6 +948,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             wiki_id_list.extend(child_wiki_id_list)
         except ImportTaskAborted:
             tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
+            set_wiki_import_task_proces_end(node)
             return { 'aborted': True }
         except Exception as err:
             logger.error(err)
@@ -1165,6 +1169,7 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
         wiki_content = info['wiki_content']
         linkMatches = list(re.finditer(repLink, wiki_content))
         imageMatches = list(re.finditer(repImage, wiki_content))
+        logger.info(dir(info))
         info['wiki_content'] = _replace_wiki_image(node, imageMatches, wiki_content, info, dir_id, all_children_name, all_children_obj)
         info['wiki_content'] = _replace_wiki_link_notation(node, linkMatches, info['wiki_content'], info, all_children_name, all_children_obj, dir_id)
         replaced_wiki_info.append(info)
@@ -1256,9 +1261,19 @@ def project_clean_celery_tasks(node, **kwargs):
     for task_id in alive_task_ids:
         task = AbortableAsyncResult(task_id, app=celery_app)
         task.abort()
-    process_end = timezone.make_naive(timezone.now(), timezone.utc)
-    qs_alive_task.update(status=WikiImportTask.STATUS_STOPPED, process_end=process_end )
+    qs_alive_task.update(status=WikiImportTask.STATUS_STOPPED)
     logger.info('---projectcleancelerytask end---')
+
+@must_be_valid_project
+@must_have_permission(ADMIN)
+def project_get_abort_wiki_import_result(node, **kwargs):
+    logger.info('---projectgetabortwikiimportresult start---')
+    result = None
+    process_end_list = WikiImportTask.objects.values_list('process_end', flat=True).filter(status=WikiImportTask.STATUS_STOPPED, node=node)
+    if None not in process_end_list:
+        return { 'aborted' : True}
+    return result
+    logger.info('---projectgetabortwikiimportresult end---')
 
 def check_running_task(task_id, node):
     running_task_ctn = WikiImportTask.objects.filter(node=node, status=WikiImportTask.STATUS_RUNNING).count()
@@ -1274,3 +1289,10 @@ def change_task_status(task_id, status, set_process_end):
         process_end = timezone.make_naive(timezone.now(), timezone.utc)
         task.process_end = process_end
     task.save()
+
+def set_wiki_import_task_proces_end(node):
+    logger.info('---setwikiimporttaskprocessend start---')
+    qs_alive_task = WikiImportTask.objects.filter(process_end__isnull=True, status=WikiImportTask.STATUS_STOPPED, node=node)
+    process_end = timezone.make_naive(timezone.now(), timezone.utc)
+    qs_alive_task.update(process_end=process_end)
+    logger.info('---setwikiimporttaskprocessend end---')
