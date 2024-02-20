@@ -479,5 +479,5 @@ ${parent.javascript_bottom()}
 <script src="//${sharejs_url}/share.js"></script>
 <link href="${node['mfr_url']}/static/css/mfr.css" media="all" rel="stylesheet" />
 <script src="${node['mfr_url']}/static/js/mfr.js"></script>
-<script src=${"/static/js/pages/wiki/wiki-edit-page.js"}></script>
+<script src=${"/static/js/pages/wiki-edit-page.js"}></script>
 </%def>
