@@ -189,6 +189,13 @@ api_routes = {
             '/project/<pid>/node/<nid>/wiki/get_abort_wiki_import_result/'
         ], 'get', views.project_get_abort_wiki_import_result, json_renderer),
 
+        # Update Wiki Page Sort
+        Rule([
+            '/project/<pid>/wiki/update_wiki_page_sort/',
+            '/project/<pid>/node/<nid>/wiki/update_wiki_page_sort/'
+        ], 'post', views.project_update_wiki_page_sort, json_renderer),
+
+
     ],
 
     'prefix': '/api/v1',

@@ -51,6 +51,9 @@
                         <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#newWiki">
                             <i class="fa fa-plus text-success"></i><span>${_("New")}</span>
                         </div>
+                        <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#sortWiki">
+                            <i class="fa fa-sort text-info"></i><span>${_("Sort")}</span>
+                        </div>
                         % if user['can_wiki_import']:
                             % if len(import_dirs) > 0:
                                 % if alive_task_id:
@@ -254,6 +257,7 @@
 <!-- Wiki modals should also be placed here! -->
   <%include file="wiki/templates/add_wiki_page.mako"/>
   <%include file="wiki/templates/import_wiki_page.mako"/>
+  <%include file="wiki/templates/sort_wiki_page.mako"/>
   <%include file="wiki/templates/abort_wiki_import.mako"/>
   <%include file="wiki/templates/wiki-bar-modal-help.mako"/>
 % if wiki_id and wiki_name != 'home':
@@ -453,6 +457,7 @@ ${parent.javascript_bottom()}
             content: ${urls['api']['content'] | sjson, n },
             rename: ${urls['api']['rename'] | sjson, n },
             grid: ${urls['api']['grid'] | sjson, n },
+            sort: ${urls['api']['sort'] | sjson, n },
             page: ${urls['web']['page'] | sjson, n },
             base: ${urls['web']['base'] | sjson, n },
             sharejs: ${ sharejs_url | sjson, n },

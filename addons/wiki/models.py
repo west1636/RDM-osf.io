@@ -299,6 +299,7 @@ class WikiPage(GuidMixin, BaseModel):
     user = models.ForeignKey('osf.OSFUser', null=True, blank=True, on_delete=models.CASCADE)
     node = models.ForeignKey('osf.AbstractNode', null=True, blank=True, on_delete=models.CASCADE, related_name='wikis')
     parent = models.IntegerField(blank=True, null=True)
+    sort_order = models.IntegerField(blank=True, null=True)
     deleted = NonNaiveDateTimeField(blank=True, null=True, db_index=True)
 
     class Meta:
@@ -590,14 +591,12 @@ class NodeSettings(BaseNodeSettings):
 
 class WikiImportTask(BaseModel):
 
-    STATUS_PENDING = 'Pending'
     STATUS_RUNNING = 'Running'
     STATUS_COMPLETED = 'Completed'
     STATUS_STOPPED = 'Stopped'
     STATUS_ERROR = 'Error'
 
     WIKI_IMPORT_STATUS_CHOICES = (
-        (STATUS_PENDING, STATUS_PENDING.title()),
         (STATUS_RUNNING, STATUS_RUNNING.title()),
         (STATUS_COMPLETED, STATUS_COMPLETED.title()),
         (STATUS_STOPPED, STATUS_STOPPED.title()),
@@ -605,8 +604,8 @@ class WikiImportTask(BaseModel):
     )
 
     node = models.ForeignKey('osf.AbstractNode', null=True, blank=True, on_delete=models.CASCADE)
-    task_id = models.CharField(max_length=255, unique=True)
+    task_id = models.CharField(max_length=255, unique=True, default=STATUS_RUNNING)
     process_start = models.DateTimeField(auto_now=False, auto_now_add=True)
     process_end = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
-    status = models.CharField(choices=WIKI_IMPORT_STATUS_CHOICES, max_length=255, default=STATUS_PENDING)
-    creator = models.ForeignKey('osf.OSFUser', on_delete=models.CASCADE)
+    status = models.CharField(choices=WIKI_IMPORT_STATUS_CHOICES, max_length=255, default=STATUS_RUNNING)
+    creator = models.ForeignKey('osf.OSFUser', null=True, blank=True, on_delete=models.CASCADE)

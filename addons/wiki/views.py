@@ -14,6 +14,7 @@ import collections
 import unicodedata
 import urllib.parse
 from api.base.utils import waterbutler_api_url_for
+from django_bulk_update.helper import bulk_update
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -152,9 +153,10 @@ def _get_wiki_pages_latest(node):
             'url': node.web_url_for('project_wiki_view', wname=page.wiki_page.page_name, _guid=True),
             'wiki_id': page.wiki_page._primary_key,
             'id': page.wiki_page.id,
-            'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node)
+            'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node),
+            'sort_order': page.wiki_page.sort_order
         }
-        for page in WikiPage.objects.get_wiki_pages_latest(node).order_by(F('name'))
+        for page in WikiPage.objects.get_wiki_pages_latest(node).order_by(F('wiki_page__sort_order'), F('name'))
     ]
 
 def _get_wiki_child_pages_latest(node, parent):
@@ -164,9 +166,10 @@ def _get_wiki_child_pages_latest(node, parent):
             'url': node.web_url_for('project_wiki_view', wname=page.wiki_page.page_name, _guid=True),
             'wiki_id': page.wiki_page._primary_key,
             'id': page.wiki_page.id,
-            'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node)
+            'wiki_content': _wiki_page_content(page.wiki_page.page_name, node=node),
+            'sort_order': page.wiki_page.sort_order
         }
-        for page in WikiPage.objects.get_wiki_child_pages_latest(node, parent).order_by(F('name'))
+        for page in WikiPage.objects.get_wiki_child_pages_latest(node, parent).order_by(F('wiki_page__sort_order'), F('name'))
     ]
 
 def _get_wiki_api_urls(node, name, additional_urls=None):
@@ -176,7 +179,8 @@ def _get_wiki_api_urls(node, name, additional_urls=None):
         'rename': node.api_url_for('project_wiki_rename', wname=name),
         'content': node.api_url_for('wiki_page_content', wname=name),
         'settings': node.api_url_for('edit_wiki_settings'),
-        'grid': node.api_url_for('project_wiki_grid_data', wname=name)
+        'grid': node.api_url_for('project_wiki_grid_data', wname=name),
+        'sort': node.api_url_for('project_update_wiki_page_sort')
     }
     if additional_urls:
         urls.update(additional_urls)
@@ -653,6 +657,7 @@ def format_project_wiki_pages(node, auth):
                     'url': wiki_page['url'],
                     'name': wiki_page['name'],
                     'id': wiki_page['wiki_id'],
+                    'sort_order': wiki_page['sort_order']
                 }
             }
             child_wiki_pages = _format_child_wiki_pages(node, wiki_page['id'])
@@ -678,6 +683,7 @@ def _format_child_wiki_pages(node, parent):
                     'url': wiki_page['url'],
                     'name': wiki_page['name'],
                     'id': wiki_page['wiki_id'],
+                    'sort_order': wiki_page['sort_order']
                 }
             }
             grandchild_wiki_pages = _format_child_wiki_pages(node, wiki_page['id'])
@@ -733,6 +739,7 @@ def serialize_component_wiki(node, auth):
                     'url': page['url'],
                     'name': page['name'],
                     'id': page['wiki_id'],
+                    'sort_order': page['sort_order']
                 }
             }
             child_wiki_pages = _format_child_wiki_pages(node, page['id'])
@@ -1296,3 +1303,50 @@ def set_wiki_import_task_proces_end(node):
     process_end = timezone.make_naive(timezone.now(), timezone.utc)
     qs_alive_task.update(process_end=process_end)
     logger.info('---setwikiimporttaskprocessend end---')
+
+@must_be_valid_project  # returns project
+@must_have_addon('wiki', 'node')
+def project_update_wiki_page_sort(node, **kwargs):
+    logger.info('---projectupdatewikipagesort start---')
+    data = request.get_json()
+    sorted_data = data['sortedData']
+    sort_id_list, sort_num_list, sort_parent_wiki_id_list  = _get_sorted_list(sorted_data, None)
+    _bulk_update_wiki_sort(node, sort_id_list, sort_num_list, sort_parent_wiki_id_list)
+    logger.info('---projectupdatewikipagesort end---')    
+
+def _get_sorted_list(sorted_data, parent_wiki_id):
+    logger.info('---getsortedlist start---')
+    id_list = []
+    sort_list = []
+    parent_wiki_id_list = []
+    child_id_list = []
+    child_sort_list = []
+    child_parent_wiki_id_list = []
+    for data in sorted_data:
+        id_list.append(data['id'])
+        sort_list.append(data['sortOrder'])
+        parent_wiki_id_list.append(parent_wiki_id)
+        if len(data['children']) > 0:
+            child_id_list, child_sort_list, child_parent_wiki_id_list = _get_sorted_list(data['children'], data['id'])
+            id_list.extend(child_id_list)
+            sort_list.extend(child_sort_list)
+            parent_wiki_id_list.extend(child_parent_wiki_id_list)
+    return id_list, sort_list, parent_wiki_id_list
+    logger.info('---getsortedlist end---')
+
+def _bulk_update_wiki_sort(node, sort_id_list, sort_num_list, parent_wiki_id_list):
+    logger.info('---bulkupdatewikisort start---')
+    wiki_pages = node.wikis.filter(deleted__isnull=True).exclude(page_name='home')
+
+    for page in wiki_pages:
+        idx = sort_id_list.index(page._primary_key)
+        sort_order_number = sort_num_list[idx]
+        parent_wiki_id = parent_wiki_id_list[idx]
+        setattr(page, 'sort_order', sort_order_number)
+        if parent_wiki_id is not None:
+            parent_id = WikiPage.objects.get(guids___id=parent_wiki_id).id
+            setattr(page, 'parent', parent_id) 
+        else:
+            setattr(page, 'parent', None)                      
+    bulk_update(wiki_pages)
+    logger.info('---bulkupdatewikisort end---')
