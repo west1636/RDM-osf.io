@@ -377,3 +377,16 @@ select.form-control {
 .milkdown .editor table {
     width: 80%;
 }
+
+.sort-item {
+    padding: 0px;
+    margin: 0px;
+  }
+
+.ko_container li {
+    list-style: none;
+}
+
+.sort-children:empty {
+    min-height: 7px;
+  }
