@@ -604,7 +604,7 @@ class WikiImportTask(BaseModel):
     )
 
     node = models.ForeignKey('osf.AbstractNode', null=True, blank=True, on_delete=models.CASCADE)
-    task_id = models.CharField(max_length=255, unique=True, default=STATUS_RUNNING)
+    task_id = models.CharField(max_length=255, unique=True)
     process_start = models.DateTimeField(auto_now=False, auto_now_add=True)
     process_end = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     status = models.CharField(choices=WIKI_IMPORT_STATUS_CHOICES, max_length=255, default=STATUS_RUNNING)
