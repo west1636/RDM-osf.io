@@ -179,11 +179,11 @@
                     </div>
                     <button class="menuItem" style="margin-left: 40px;" data-toggle="modal" data-target="#wiki-help-modal"><span class="material-symbols-outlined">help</span></button>
                   </div>
-                  <div id="mEditor" style="overflow: auto;height: 400px; ${'' if version_settings['view'] == 'preview' else 'display: none'}"></div>
+                  <div id="mEditor" class="mFrame" style="${'' if version_settings['view'] == 'preview' else 'display: none'}"></div>
 
                   <div id="wikiViewRender">
                       % if wiki_markdown:
-                          <div id="mView" style="overflow: auto;height: 400px;"></div>
+                          <div id="mView" class="mFrame"></div>
                       % else:
                           <p class="text-muted"><em>${_("Add important information, links, or images here to describe your project.")}</em></p>
                       % endif
