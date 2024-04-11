@@ -278,34 +278,26 @@ def get_node_guid(node):
     guid = guid_json[0]['fields']['_id']
     return guid
 
-def get_all_wiki_name_import_directory(dir_id):
-    import_directory_root = BaseFileNode.objects.get(_id=dir_id)
-    children = import_directory_root._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
-    all_dir_name_list = []
-    all_wiki_obj_list = []
-    for child in children:
-        wiki_obj = BaseFileNode.objects.get(_id=child._id)
-        all_wiki_obj_list.append(wiki_obj)
-        all_dir_name_list.append(child.name)
-        all_child_name_list, all_child_obj_list = _get_all_child_directory(child._id)
-        all_dir_name_list.extend(all_child_name_list)
-        all_wiki_obj_list.extend(all_child_obj_list)
-    return all_dir_name_list, all_wiki_obj_list
-
-def _get_all_child_directory(dir_id):
+def _get_all_child_file_ids(dir_id):
     parent_dir = BaseFileNode.objects.get(_id=dir_id)
-    children = parent_dir._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
-    dir_name_list = []
-    wiki_obj_list = []
-    for child in children:
-        wiki_obj = BaseFileNode.objects.get(_id=child._id)
-        wiki_obj_list.append(wiki_obj)
-        dir_name_list.append(child.name)
-        child_name_list, child_obj_list = _get_all_child_directory(child._id)
-        dir_name_list.extend(child_name_list)
-        wiki_obj_list.extend(child_obj_list)
+    children_folder = parent_dir._children.filter(type='osf.osfstoragefolder', deleted__isnull=True)
+    children_file = parent_dir._children.filter(type='osf.osfstoragefile', deleted__isnull=True)
 
-    return dir_name_list, wiki_obj_list
+    for child_file in children_file:
+        yield child_file._id
+
+    for child_folder in children_folder:
+        yield from _get_all_child_file_ids(child_folder._id)
+
+def get_node_file_mapping(node, dir_id):
+    file_ids = list(_get_all_child_file_ids(dir_id))
+    node_file_infos = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', deleted__isnull=True).values_list('_id', 'name', 'parent_id__name')
+    mapping = [{'wiki_file': f"{info[2]}^{info[1]}", 'file_id': info[0]} for info in node_file_infos if info[0] in file_ids]
+    return mapping
+
+def get_import_wiki_name_list(wiki_info):
+    import_wiki_name_list = [info['original_name'] for info in wiki_info]
+    return import_wiki_name_list
 
 def get_wiki_fullpath(node, w_name):
     WikiPage = apps.get_model('addons_wiki.WikiPage')
