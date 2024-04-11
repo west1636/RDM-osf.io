@@ -369,7 +369,7 @@ def create_import_error_list(wiki_info, imported_list):
     import_errors = list(set(info_path) ^ set(imported_path))
     return import_errors
 
-def check_dir_id(dir_id, node):
+def check_file_object_in_node(dir_id, node):
     try:
         target = BaseFileNode.objects.get(_id=dir_id)
     except ObjectDoesNotExist:
@@ -384,8 +384,3 @@ def check_dir_id(dir_id, node):
             message_long='directory id is invalid'
         ))
     return True
-
-def extract_err_msg(err):
-    str_err = str(err)
-    message_long = str_err.split('\\t')[1]
-    return message_long
