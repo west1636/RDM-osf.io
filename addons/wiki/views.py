@@ -782,7 +782,7 @@ def _validate_import_folder(node, folder, parent_path):
     p_numbering = None
     # check duplication of parent_wiki_name
     if parent_path != parent_wiki_fullpath:
-        p_numbering = wiki_utils.get_wiki_numbering(node, parent_wiki_name)
+        p_numbering = wiki_utils.get_numbered_name_for_existing_wiki(node, parent_wiki_name)
     if isinstance(p_numbering, int):
         parent_wiki_name = parent_wiki_name + '(' + str(p_numbering) + ')'
         path = parent_path[:index + 1] + parent_wiki_name + '/' + folder.name
@@ -837,12 +837,12 @@ def _validate_import_wiki_exists_duplicated(node, info):
         if fullpath == info['path']:
             # if the wiki exists, update info list
             info['status'] = 'valid_exists'
-            info['numbering'] = wiki_utils.get_wiki_numbering(node, w_name)
+            info['numbering'] = wiki_utils.get_numbered_name_for_existing_wiki(node, w_name)
             can_start_import = False
         else:
             # if the wiki duplicated, update info list
             info['status'] = 'valid_duplicated'
-            info['numbering'] = wiki_utils.get_wiki_numbering(node, w_name)
+            info['numbering'] = wiki_utils.get_numbered_name_for_existing_wiki(node, w_name)
             info['wiki_name'] = info['wiki_name'] + '(' + str(info['numbering']) + ')'
             info['path'] = info['path'] + '(' + str(info['numbering']) + ')'
             can_start_import = False
@@ -928,7 +928,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             except Exception as err:
                 logger.error(err)
     logger.info('imported top hierarchy wiki pages')
-    max_depth = wiki_utils.get_max_depth(replaced_wiki_info)
+    max_depth = _get_max_depth(replaced_wiki_info)
     # Import child wiki pages
     for depth in range(1, max_depth + 1):
         try:
@@ -944,7 +944,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             logger.error(err)
     logger.info('imported child hierarchy wiki pages')
     # Create import error page list
-    import_errors = wiki_utils.create_import_error_list(data, ret)
+    import_errors = _create_import_error_list(data, ret)
     logger.info('created import error page list')
     # Run task to update elasticsearch index
     tasks.run_update_search_and_bulk_index.delay(pid, wiki_id_list)
@@ -1211,6 +1211,21 @@ def _import_same_level_wiki(wiki_info, depth, auth, node, task):
             except Exception as err:
                 logger.error(err)
     return ret, wiki_id_list
+
+def _get_max_depth(wiki_infos):
+    max_depth = max(info['path'].count('/') for info in wiki_infos)
+    return max_depth - 1
+
+def _create_import_error_list(wiki_infos, imported_list):
+    import_errors = []
+    info_path = []
+    imported_path = []
+    for info in wiki_infos:
+        info_path.append(info['path'])
+    for imported in imported_list:
+        imported_path.append(imported['path'])
+    import_errors = list(set(info_path) ^ set(imported_path))
+    return import_errors
 
 @must_be_valid_project
 @must_have_permission(ADMIN)
