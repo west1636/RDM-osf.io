@@ -58,7 +58,7 @@
                                       <i class="fa fa-trash-o text-danger"></i><span>${_("Abort")}</span>
                                     </div>
                                 % else:
-                                    <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#importWiki">
+                                    <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#wikiImport">
                                       <i class="fa fa-upload text-success"></i><span>${_("Import")}</span>
                                     </div>
                                 % endif
