@@ -379,6 +379,18 @@ select.form-control {
     height: 400px;
 }
 
+.wikiEditorModalLabel {
+    argin-bottom: 0;
+    width: 120px;
+    display: inline-block;
+    text-align: left;
+}
+
+.wikiEditorModalInput {
+    width: calc(100% - 136px);
+    display: inline-block;
+}
+
 #mMenuBar {
     border-bottom: 1px solid;
     border-bottom-color: #d1d5db;
