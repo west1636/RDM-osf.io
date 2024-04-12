@@ -150,8 +150,10 @@ def client(is_wiki_import=False):
     logger.info('---elasticsearch client---')
     logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
     if is_wiki_import:
+        logger.info('---wikiimport---')
         request_timeout = settings.ELASTIC_TIMEOUT_FOR_WIKI_IMPORT
     else:
+        logger.info('---otherwise---')
         request_timeout = settings.ELASTIC_TIMEOUT
     #If the request_timeout is different, recreate Elasticsearch CLIENT.
     if CLIENT is None or CLIENT.transport.get_connection().timeout != request_timeout:
@@ -1164,6 +1166,7 @@ def bulk_update_nodes(serialize, nodes, index=None, category=None):
         return helpers.bulk(client(), actions)
 
 def bulk_update_wikis(wiki_pages, index=None, is_wiki_import=False):
+    logger.info('---bulkupdatewiki---')
     index = es_index(index)
     category = 'wiki'
     actions = []
@@ -1179,6 +1182,8 @@ def bulk_update_wikis(wiki_pages, index=None, is_wiki_import=False):
                 'doc_as_upsert': True,
             })
     if actions:
+        logger.info('---bulkupdatewiki bulk---')
+        logger.info(is_wiki_import)
         return helpers.bulk(client(is_wiki_import=is_wiki_import), actions, chunk_size=1)
 
 def bulk_update_comments(comments, index=None):
