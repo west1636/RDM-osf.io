@@ -34,7 +34,7 @@ def run_project_wiki_import(self, data_json, dir_id, current_user_id, nid):
 def run_update_search_and_bulk_index(self, nid, wiki_id_list):
     node = _load_node_or_fail(nid)
     wiki_pages = get_wiki_pages_by_ids(wiki_id_list)
-    bulk_update_wikis(wiki_pages)
+    bulk_update_wikis(wiki_pages, is_wiki_import=True)
     node.update_search()
 
 def get_wiki_pages_by_ids(wiki_id_list):
