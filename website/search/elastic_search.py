@@ -156,6 +156,7 @@ def client(is_wiki_import=False):
         logger.info('---otherwise---')
         request_timeout = settings.ELASTIC_TIMEOUT
     #If the request_timeout is different, recreate Elasticsearch CLIENT.
+    logger.info(request_timeout)
     if CLIENT is None or CLIENT.transport.get_connection().timeout != request_timeout:
         logger.info('---elasticsearch none or udate---')
         try:
@@ -165,6 +166,7 @@ def client(is_wiki_import=False):
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
+            logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
             logging.getLogger('urllib3').setLevel(logging.WARN)
