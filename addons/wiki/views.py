@@ -741,7 +741,7 @@ def serialize_component_wiki(node, auth):
 @must_be_valid_project
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
     wiki_utils.check_file_object_in_node(dir_id, node)
-    node_id = wiki_utils.get_node_guid(node)
+    node_id = node.guids.first()._id
     task = tasks.run_project_wiki_validate_for_import.delay(dir_id, node_id)
     task_id = task.id
     return {'taskId': task_id}
@@ -863,7 +863,7 @@ def _validate_import_duplicated_directry(info_list):
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
     wiki_utils.check_file_object_in_node(dir_id, node)
-    node_id = wiki_utils.get_node_guid(node)
+    node_id = node.guids.first()._id
     current_user_id = get_current_user_id()
     data = request.get_json()
     data_json = json.dumps(data)
@@ -880,7 +880,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     res_child = []
     import_errors = []
     user = auth.user
-    pid = wiki_utils.get_node_guid(node)
+    pid = node.guids.first()._id
     osf_cookie = user.get_or_create_cookie().decode()
     creator, creator_auth = get_creator_auth_header(user)
     task = AbortableAsyncResult(task_id, app=celery_app)
@@ -999,7 +999,7 @@ def _replace_file_name(node, wiki_name, wiki_content, match, notation, dir_id, m
     file_id = _check_attachment_file_name_exist(wiki_name, match_path, dir_id, node_file_mapping)
     if file_id:
         # replace process of file name
-        node_guid = wiki_utils.get_node_guid(node)
+        node_guid = node.guids.first()._id
         if notation == 'image':
             url = website_settings.WATERBUTLER_URL + '/v1/resources/' + node_guid + '/providers/osfstorage/' + file_id + '?mode=render'
             #wurl = waterbutler_api_url_for(node_guid, 'osfstorage', path='/{}?mode=render'.format(file_id), _internal=True)
@@ -1091,7 +1091,7 @@ def _replace_common_rule(name):
 def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, folder_name, parent_path='osfstorage/'):
     folder_id = ''
     folder_path = ''
-    p_guid = wiki_utils.get_node_guid(node)
+    p_guid = node.guids.first()._id
     try:
         folder = BaseFileNode.objects.get(target_object_id=node.id, parent_id=parent_id, type='osf.osfstoragefolder', name=folder_name, deleted__isnull=True)
     except ObjectDoesNotExist:
@@ -1115,7 +1115,7 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     return folder_id, folder_path
 
 def _get_md_content_from_wb(data, node, creator_auth, task):
-    node_id = wiki_utils.get_node_guid(node)
+    node_id = node.guids.first()._id
     for i, info in enumerate(data):
         if task.is_aborted():
             return None
@@ -1139,7 +1139,7 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
     replaced_wiki_info = []
     rep_link = r'(?<!\\|\!)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     rep_image = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
-    node_file_mapping = wiki_utils.get_node_file_mapping(node, dir_id)
+    node_file_mapping = node.guids.first()._id
     import_wiki_name_list = wiki_utils.get_import_wiki_name_list(wiki_info)
     for info in wiki_info:
         if task.is_aborted():
