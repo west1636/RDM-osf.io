@@ -98,7 +98,7 @@
     $(function () {
         var $wikiImportForm = $('#wikiImport form');
         var $alertInfoForm = $('#alertInfo form');
-        var $wikiImport = $('#wikiImport')
+        var $wikiImportResult = $('#wikiImportResult')
         var $wikiImportErrorMsg = $('.wikiImportErrorMsg');
         var selectOperation = '<div class="form-group" name="WikiImportOperationPer" style="display: inline-block; margin-left: 10px;"><select class="form-control" name="WikiImportOperationPerSelect"><option value="skip">Skip</option><option value="overwrite">Overwrite</option><option value="createNew">Create New</option></select></div>'
         var validateWikiImportResultData = [];
