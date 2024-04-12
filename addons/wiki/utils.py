@@ -2,7 +2,6 @@
 import os
 import json
 import logging
-import unicodedata
 import uuid
 
 import ssl
@@ -270,13 +269,6 @@ def serialize_wiki_widget(node):
     }
     wiki_widget_data.update(wiki.config.to_json())
     return wiki_widget_data
-
-def get_node_guid(node):
-    qs_guid = node._prefetched_objects_cache['guids'].only()
-    guid_serializer = serializers.serialize('json', qs_guid, ensure_ascii=False)
-    guid_json = json.loads(guid_serializer)
-    guid = guid_json[0]['fields']['_id']
-    return guid
 
 def _get_all_child_file_ids(dir_id):
     parent_dir = BaseFileNode.objects.get(_id=dir_id)
