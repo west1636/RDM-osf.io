@@ -112,7 +112,7 @@
             wikiImportErrors = [];
             validateWikiImportResultData = [];
             const $wikiImportDir = $wikiImportForm.find('#wikiImportDir');
-            const $submitForm = $wikiImportiForm.find('#wikiImportSubmit');
+            const $submitForm = $wikiImportForm.find('#wikiImportSubmit');
             const $stopWikiImport = $wikiImportForm.find('.stopWikiImport');
             const dirId = $wikiImportDir.val();
             const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
