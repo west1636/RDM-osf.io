@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from time import sleep
+
 import copy
 import functools
 import logging
@@ -145,32 +145,16 @@ def es_index(index=None):
 CLIENT = None
 
 
-def client(is_wiki_import=False):
+def client():
     global CLIENT
-    logger.info('---elasticsearch client---')
-    logger.info(id(CLIENT))
-    logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
-    if is_wiki_import:
-        logger.info('---wikiimport---')
-        request_timeout = settings.ELASTIC_TIMEOUT_FOR_WIKI_IMPORT
-    else:
-        logger.info('---otherwise---')
-        request_timeout = settings.ELASTIC_TIMEOUT
-    #If the request_timeout is different, recreate Elasticsearch CLIENT.
-    logger.info(request_timeout)
-    if CLIENT is None or CLIENT.transport.get_connection().timeout != request_timeout:
-        logger.info('---elasticsearch none or udate---')
-        CLIENT = None
+    if CLIENT is None:
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=request_timeout,
+                request_timeout=settings.ELASTIC_TIMEOUT,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
-            sleep(5)
-            logger.info(id(CLIENT))
-            logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
             logging.getLogger('urllib3').setLevel(logging.WARN)
@@ -191,8 +175,6 @@ def client(is_wiki_import=False):
             else:
                 logger.error(message)
             exit(1)
-    logger.info('---return CLIENT---')
-    logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
     return CLIENT
 
 
@@ -1172,8 +1154,7 @@ def bulk_update_nodes(serialize, nodes, index=None, category=None):
     if actions:
         return helpers.bulk(client(), actions)
 
-def bulk_update_wikis(wiki_pages, index=None, is_wiki_import=False):
-    logger.info('---bulkupdatewiki---')
+def bulk_update_wikis(wiki_pages, index=None):
     index = es_index(index)
     category = 'wiki'
     actions = []
@@ -1189,9 +1170,7 @@ def bulk_update_wikis(wiki_pages, index=None, is_wiki_import=False):
                 'doc_as_upsert': True,
             })
     if actions:
-        logger.info('---bulkupdatewiki bulk---')
-        logger.info(is_wiki_import)
-        return helpers.bulk(client(is_wiki_import=is_wiki_import), actions, chunk_size=1)
+        return helpers.bulk(client(), actions)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
