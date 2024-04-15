@@ -166,7 +166,7 @@ def client(is_wiki_import=False):
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
-            sleep(1)
+            sleep(5)
             logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
@@ -188,6 +188,7 @@ def client(is_wiki_import=False):
             else:
                 logger.error(message)
             exit(1)
+    logger.info('---return CLIENT---')
     logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
     return CLIENT
 
