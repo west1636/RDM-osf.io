@@ -160,6 +160,7 @@ def client(is_wiki_import=False):
     logger.info(request_timeout)
     if CLIENT is None or CLIENT.transport.get_connection().timeout != request_timeout:
         logger.info('---elasticsearch none or udate---')
+        CLIENT = None
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
