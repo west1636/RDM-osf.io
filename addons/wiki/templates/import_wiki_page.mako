@@ -103,8 +103,14 @@
         var selectOperation = '<div class="form-group" name="WikiImportOperationPer" style="display: inline-block; margin-left: 10px;"><select class="form-control" name="WikiImportOperationPerSelect"><option value="skip">Skip</option><option value="overwrite">Overwrite</option><option value="createNew">Create New</option></select></div>'
         var validateWikiImportResultData = [];
         var wikiImportErrors = [];
-        const VALIDATE_WIKI_IMPORT_TIMEOUT = 300;
-        const WIKI_IMPORT_TIMEOUT = 7200;
+        const VALIDATE_WIKI_IMPORT_INTERVAL = 1000;
+        const VALIDATE_N = 300
+        const VALIDATE_WIKI_IMPORT_TIMEOUT = VALIDATE_WIKI_IMPORT_INTERVAL * VALIDATE_N;
+        const WIKI_IMPORT_INTERVAL = 5000;
+        const IMPORT_N = 1440;
+        const WIKI_IMPORT_TIMEOUT = WIKI_IMPORT_INTERVAL * IMPORT_N;
+        const WIKI_IMPORT_OPERATION = 'import';
+        const VALIDATE_WIKI_IMPORT_OPERATION = 'validate';
 
         $wikiImportForm.on('submit', async function (e) {
             e.preventDefault();
@@ -120,7 +126,7 @@
             const taskId = validateWikiImportTask.taskId;
             $submitForm.attr('disabled', 'disabled').text('${_("Validating wiki pages")}');
             const getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId+ '/';
-            const validateWikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 1000, VALIDATE_WIKI_IMPORT_TIMEOUT, 'validate wiki pages')
+            const validateWikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, VALIDATE_WIKI_IMPORT_INTERVAL, VALIDATE_WIKI_IMPORT_TIMEOUT, 'validate')
             if (validateWikiImportResult) {
                 if (validateWikiImportResult.canStartImport) {
                     var data = fixToWikiImportList('', validateWikiImportResult.data)
@@ -181,7 +187,7 @@
             //change import label
             $submitForm.attr('disabled', 'disabled').text('${_("Importing Wiki...")}');
             var getTaskResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_task_result/' + taskId + '/';
-            wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, 5000, WIKI_IMPORT_TIMEOUT, 'import wiki');
+            wikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, WIKI_IMPORT_INTERVAL, WIKI_IMPORT_TIMEOUT, 'import');
             if (wikiImportResult) {
                 // The series of import processes has reached the end.
                 if ((wikiImportResult.import_errors).length > 0) {
@@ -354,16 +360,16 @@
             return errMsg;
         }
 
-        async function intervalGetCeleryTaskResult(url, ms, timeout, operation) {
+        async function intervalGetCeleryTaskResult(url, interval_ms, timeout_ms, operation) {
             var count = 0;
             var result = '';
-            var timeoutCtn = timeout * 1000 / ms
+            var timeoutCtn = Math.ceil(timeout_ms / interval_ms);
             while (count < timeoutCtn) {
                 await new Promise(function(resolve){
                     setTimeout(async function(){
                         result = await getCeleryTaskResult(url, operation)
                         resolve();
-                    }, ms);
+                    }, interval_ms);
                 });
                 if (result) {
                     if(result.aborted) {
@@ -377,6 +383,11 @@
                 count++;
             }
             if (count === timeoutCtn){
+                if (operation === WIKI_IMPORT_OPERATION) {
+                    alert('The request has timed out, but the process is still ongoing. Processing may take longer if there are many pages. Please reload the page to check the import result. If the process takes too long, we recommend contacting support or trying again later.')
+                } else if (operation === VALIDATE_WIKI_IMPORT_OPERATION) {
+                    alert('The response has timed out. High server load may cause delays in processing. Please try again. If the issue persists, please contact support.')
+                }
                 return;
             }
             return result;
@@ -408,10 +419,7 @@
                 cache: false,
                 url: cleanTasksUrl,
                 dataType: 'json',
-            }).done(function (response) {
-                //dUrl = (location.href).replace(location.search, '')
-                //window.location.assign(reloadUrl);
-            });
+            })
         }
 
         $alertInfoForm.find('#perFileDefinition').on('click', function () {
