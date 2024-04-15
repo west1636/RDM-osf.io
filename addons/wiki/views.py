@@ -213,7 +213,7 @@ def project_wiki_delete(auth, wname, **kwargs):
     if not wiki_page:
         raise HTTPError(http_status.HTTP_404_NOT_FOUND)
 
-    child_wiki_pages = WikiPage.objects.get_for_node(node=node, parent=wiki_page.id)
+    child_wiki_pages = WikiPage.objects.get_for_child_nodes(node=node, parent=wiki_page.id)
     wiki_page.delete(auth)
 
     if child_wiki_pages:
@@ -225,7 +225,7 @@ def project_wiki_delete(auth, wname, **kwargs):
 
 def _child_wiki_delete(auth, node, wiki_page):
     wiki_page.delete(auth)
-    child_wiki_pages = WikiPage.objects.get_for_node(node=node, parent=wiki_page.id)
+    child_wiki_pages = WikiPage.objects.get_for_child_nodes(node=node, parent=wiki_page.id)
     for page in child_wiki_pages:
         _child_wiki_delete(auth, node, page)
 
@@ -1212,6 +1212,14 @@ def _import_same_level_wiki(wiki_info, depth, auth, node, task):
     return ret, wiki_id_list
 
 def _get_max_depth(wiki_infos):
+    """
+    Calculate the maximum depth of paths in the given list of wiki information.
+    Args:
+        wiki_infos (list): A list of dictionaries containing information about wiki pages.
+                           Each dictionary should have a 'path' key representing the page path.
+    Returns:
+        int: The maximum depth of paths in the list.
+    """
     max_depth = max(info['path'].count('/') for info in wiki_infos)
     return max_depth - 1
 
