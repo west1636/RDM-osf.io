@@ -93,7 +93,7 @@
                     dataType: 'json'
                 });
                 request.done(function (response) {
-                    window.location.href = ${ urls['web']['base'] | sjson, n } + encodeURIComponent(wikiName);
+                    window.location.href = ${ urls['web']['base'] | sjson, n } + encodeURIComponent(wikiName) + '/?view=preview&menu';
                 });
                 request.fail(function (response, textStatus, error) {
                     if (response.status === 409) {
