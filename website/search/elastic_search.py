@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-
+from time import sleep
 import copy
 import functools
 import logging
@@ -166,6 +166,7 @@ def client(is_wiki_import=False):
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
+            sleep(0.1)
             logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
