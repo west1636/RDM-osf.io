@@ -148,6 +148,7 @@ CLIENT = None
 def client(is_wiki_import=False):
     global CLIENT
     logger.info('---elasticsearch client---')
+    logger.info(id(CLIENT))
     logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
     if is_wiki_import:
         logger.info('---wikiimport---')
@@ -167,6 +168,7 @@ def client(is_wiki_import=False):
                 **settings.ELASTIC_KWARGS
             )
             sleep(5)
+            logger.info(id(CLIENT))
             logger.info(CLIENT.transport.get_connection().timeout) if CLIENT is not None else None
             logging.getLogger('elasticsearch').setLevel(logging.WARN)
             logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
