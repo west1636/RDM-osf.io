@@ -1252,7 +1252,9 @@ def project_get_task_result(task_id, node, **kwargs):
 
 def _extract_err_msg(err):
     str_err = str(err)
-    message_long = str_err.split('\\t')[1]
+    message_long = None
+    if '\t' in str_err:
+        message_long = str_err.split('\t')[1]
     return message_long
 
 @must_be_valid_project
