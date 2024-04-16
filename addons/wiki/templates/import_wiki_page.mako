@@ -129,7 +129,7 @@
             const validateWikiImportResult = await intervalGetCeleryTaskResult(getTaskResultUrl, VALIDATE_WIKI_IMPORT_INTERVAL, VALIDATE_WIKI_IMPORT_TIMEOUT, 'validate')
             if (validateWikiImportResult) {
                 if (validateWikiImportResult.canStartImport) {
-                    var data = fixToWikiImportList('', validateWikiImportResult.data)
+                    var data = modifyImportList('', validateWikiImportResult.data)
                     startWikiImport(data, dirId, $submitForm, $stopWikiImport);
                 } else {
                     showAlertInfo(validateWikiImportResult, $alertInfoForm);
@@ -166,7 +166,7 @@
                 }
             }
             var validateWikiImportResultCopy = validateWikiImportResultData.slice();
-            var validateWikiImportResultFix = fixToWikiImportList(operationAll, validateWikiImportResultCopy, perOperationList);
+            var validateWikiImportResultFix = modifyImportList(operationAll, validateWikiImportResultCopy, perOperationList);
             if (validateWikiImportResultFix.length === 0) {
                 alert('No page to import.');
             } else {
@@ -201,62 +201,63 @@
             }
             return;
         }
-
-        function fixToWikiImportList(operation, validateWikiImportResultCopy, perOperationList) {
+        /**
+         * Modifies the import list based on the specified operation.
+         * 
+         * @param {string} operation - Specifies the operation to perform. Can be 'skipAll', 'overwriteAll', 'createNewAll', or an empty string.
+         * @param {Array} validateWikiImportResultCopy - Copy of the import list. The modified list will be returned.
+         * @param {Array} perOperationList - List of operations for each item.
+         * @returns {Array} The modified import list.
+         */
+        function modifyImportList(operation, validateWikiImportResultCopy, perOperationList) {
             if (operation === null && perOperationList.length > 0) {
-                for (var m=validateWikiImportResultCopy.length-1; m>=0; m--) {
-                    if (validateWikiImportResultCopy[m].status === 'invalid') {
-                        validateWikiImportResultCopy.splice(m, 1);
-                        continue;
+                return validateWikiImportResultCopy.filter(item => {
+                    if (item.status === 'invalid') {
+                        return false;
                     }
-                    for (var n=0; n<perOperationList.length; n++) {
-                        if (validateWikiImportResultCopy[m].wiki_name === perOperationList[n].wiki_name) {
-                            if (perOperationList[n].operation === 'skip') {
-                                validateWikiImportResultCopy.splice(m, 1);
-                                break;
-                            } else if (perOperationList[n].operation === 'overwrite') {
-                                break;
-                                // no deal
-                            } else if (perOperationList[n].operation === 'createNew') {
-                                if ((validateWikiImportResultCopy[m].status).startsWith('valid_')){
-                                    validateWikiImportResultCopy[m].wiki_name = validateWikiImportResultCopy[m].wiki_name + '(' + validateWikiImportResultCopy[m].numbering + ')';
-                                    validateWikiImportResultCopy[m].path = validateWikiImportResultCopy[m].path + '(' + validateWikiImportResultCopy[m].numbering + ')';
-                                }
-                                break;
+
+                    const perOperation = perOperationList.find(op => op.wiki_name === item.wiki_name);
+                    if (!perOperation) {
+                        return true;
+                    }
+
+                    switch (perOperation.operation) {
+                        case 'skip':
+                            return false;
+                        case 'overwrite':
+                            return true;
+                        case 'createNew':
+                            if (item.status === 'valid_exists') {
+                                item.wiki_name +=  '(' + item.numbering + ')';
+                                item.path += '(' + item.numbering + ')';
                             }
-                        }
+                            return true;
+                        default:
+                            return true;
                     }
-                }
+                });
             } else if (operation === 'skipAll' || operation === '') {
-                for (var i=validateWikiImportResultCopy.length-1; i>=0; i--) {
-                    if (validateWikiImportResultCopy[i].status !== 'valid' && validateWikiImportResultCopy[i].status !== 'valid_duplicated') {
-                        validateWikiImportResultCopy.splice(i, 1);
-                    }
-                }
+                return validateWikiImportResultCopy.filter(item => item.status === 'valid' || item.status === 'valid_duplicated');
             } else if (operation === 'overwriteAll') {
-                for (var j=validateWikiImportResultCopy.length-1; j>=0; j--) {
-                    if (validateWikiImportResultCopy[j].status === 'invalid') {
-                        validateWikiImportResultCopy.splice(j, 1);
-                    }
-                }
+                return validateWikiImportResultCopy.filter(item => item.status !== 'invalid');
             } else if (operation === 'createNewAll') {
-                for (var k=validateWikiImportResultCopy.length-1; k>=0; k--) {
-                    if (validateWikiImportResultCopy[k].status === 'invalid') {
-                        validateWikiImportResultCopy.splice(k, 1);
-                    } else if (validateWikiImportResultCopy[k].status === 'valid_exists') {
-                        validateWikiImportResultCopy[k].wiki_name = validateWikiImportResultCopy[k].wiki_name + '(' + validateWikiImportResultCopy[k].numbering + ')';
-                        validateWikiImportResultCopy[k].path = validateWikiImportResultCopy[k].path + '(' + validateWikiImportResultCopy[k].numbering + ')';
+                return validateWikiImportResultCopy.map(item => {
+                    if (item.status === 'invalid') {
+                        return null;
+                    } else if (item.status === 'valid_exists') {
+                        return {
+                            ...item,
+                            wiki_name: item.wiki_name + '(' + item.numbering + ')',
+                            path: item.path + '(' + item.numbering + ')'
+                        };
+                    } else {
+                        return item;
                     }
-                }
+                }).filter(Boolean);
             } else {
-                // as skipAll
-                for (var m=validateWikiImportResultCopy.length-1; m>=0; m--) {
-                    if (validateWikiImportResultCopy[m].status !== 'valid' && validateWikiImportResultCopy[i].status !== 'valid_duplicated') {
-                        validateWikiImportResultCopy.splice(m, 1);
-                    }
-                }
+                // Default: Same as 'skipAll'
+                return validateWikiImportResultCopy.filter(item => item.status === 'valid' || item.status === 'valid_duplicated');
             }
-            return validateWikiImportResultCopy;
         }
 
         function showAlertInfo(validateWikiImportResult, $alertInfoForm) {
@@ -403,7 +404,11 @@
                 if (response.status !== 0) {
                     dispBtnWhenError();
                     if (response.responseJSON) {
-                        $wikiImportErrorMsg.text(response.responseJSON.message_long);
+                        if (response.responseJSON.message_long) {
+                            $wikiImportErrorMsg.text(response.responseJSON.message_long);
+                        } else {
+                            alert('import error'); 
+                        }
                     } else {
                         alert('import error');
                     }
