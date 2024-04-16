@@ -211,7 +211,7 @@ def client_for_wiki_import():
             else:
                 logger.error(message)
             exit(1)
-    logger.info(CLIENT.transport.get_connection().timeout)
+    logger.info(CLIENT_FOR_WIKI_IMPORT.transport.get_connection().timeout)
     logger.info('---CLIENT_FOR_WIKI_IMPORT---')
     return CLIENT_FOR_WIKI_IMPORT
 
