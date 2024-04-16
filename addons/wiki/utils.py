@@ -302,20 +302,19 @@ def get_wiki_fullpath(node, w_name):
 def _get_wiki_parent(wiki, path):
     WikiPage = apps.get_model('addons_wiki.WikiPage')
     try:
-        parent_wiki_page = WikiPage.objects.get(id=wiki.parent)
-        parent_wiki_page_name = parent_wiki_page.page_name
+        parent_wiki_page_name = wiki.parent.page_name
         if parent_wiki_page_name == 'home':
             parent_wiki_page_name = 'HOME'
         path = parent_wiki_page_name + '/' + path
-        return _get_wiki_parent(parent_wiki_page, path)
+        return _get_wiki_parent(wiki.parent, path)
     except Exception:
         return path
 
 def get_numbered_name_for_existing_wiki(node, base_name):
     WikiPage = apps.get_model('addons_wiki.WikiPage')
-    existing_wikis = WikiPage.objects.filter(page_name__startswith=base_name, deleted__isnull=True, node=node)
+    existing_wikis = WikiPage.objects.filter(page_name__istartswith=base_name, deleted__isnull=True, node=node)
 
-    target_wikis = [wiki for wiki in existing_wikis if wiki.page_name == base_name or wiki.page_name[len(base_name) + 1: -1].isdigit()]
+    target_wikis = [wiki for wiki in existing_wikis if wiki.page_name.lower() == base_name.lower() or wiki.page_name[len(base_name) + 1: -1].isdigit()]
 
     if not target_wikis and base_name.lower() == 'home':
         existing_wikis = WikiPage.objects.filter(page_name='home', deleted__isnull=True, node=node)
@@ -325,7 +324,7 @@ def get_numbered_name_for_existing_wiki(node, base_name):
     if not target_wikis:
         return ''
 
-    max_index = max((0 if wiki.page_name == base_name else int(wiki.page_name[len(base_name) + 1: -1]) for wiki in target_wikis), default='')
+    max_index = max((0 if wiki.page_name.lower() == base_name.lower() else int(wiki.page_name[len(base_name) + 1: -1]) for wiki in target_wikis), default='')
 
     return max_index + 1 if max_index != '' else max_index
 
