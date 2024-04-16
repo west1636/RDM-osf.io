@@ -241,7 +241,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     wiki_page = WikiPage.objects.get_for_node(node, wiki_name)
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     wiki_settings = node.get_addon('wiki')
-    parent_wiki_page = WikiPage.objects.get(id=wiki_page.parent) if wiki_page and wiki_page.parent else None
+    parent_wiki_page = WikiPage.objects.get(id=wiki_page.parent_id) if wiki_page and wiki_page.parent else None
     can_edit = (
         auth.logged_in and not
         node.is_registration and (
@@ -551,7 +551,7 @@ def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
             message_long='A wiki page with that name already exists.'
         ))
 
-    parent_wiki_id = None
+    parent_wiki = None
     if p_wname:
         p_wname = unicodedata.normalize('NFC', p_wname)
         parent_wiki_name = p_wname.strip()
@@ -565,9 +565,9 @@ def project_wiki_validate_name(wname, auth, node, p_wname=None, **kwargs):
                     message_short='Parent Wiki page nothing.',
                     message_long='The parent wiki page does not exist.'
                 ))
-        parent_wiki_id = parent_wiki.id
+        parent_wiki = parent_wiki
 
-    WikiPage.objects.create_for_node(node, wiki_name, '', auth, parent_wiki_id)
+    WikiPage.objects.create_for_node(node, wiki_name, '', auth, parent_wiki)
     return {'message': wiki_name}
 
 @must_be_valid_project
@@ -781,7 +781,7 @@ def _validate_import_folder(node, folder, parent_path):
     parent_wiki_fullpath = wiki_utils.get_wiki_fullpath(node, parent_wiki_name)
     p_numbering = None
     # check duplication of parent_wiki_name
-    if parent_path != parent_wiki_fullpath:
+    if parent_path.lower() != parent_wiki_fullpath.lower():
         p_numbering = wiki_utils.get_numbered_name_for_existing_wiki(node, parent_wiki_name)
     if isinstance(p_numbering, int):
         parent_wiki_name = parent_wiki_name + '(' + str(p_numbering) + ')'
@@ -834,7 +834,7 @@ def _validate_import_wiki_exists_duplicated(node, info):
     fullpath = wiki_utils.get_wiki_fullpath(node, w_name)
     wiki = WikiPage.objects.get_for_node(node, w_name)
     if wiki:
-        if fullpath == info['path']:
+        if fullpath.lower() == info['path'].lower():
             # if the wiki exists, update info list
             info['status'] = 'valid_exists'
             info['numbering'] = wiki_utils.get_numbered_name_for_existing_wiki(node, w_name)
@@ -1158,7 +1158,7 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
 def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **kwargs):
     if task.is_aborted():
         raise ImportTaskAbortedError
-    parent_wiki_id = None
+    parent_wiki = None
     updated_wiki_id = None
     # normalize NFC
     data = unicodedata.normalize('NFC', data)
@@ -1171,7 +1171,6 @@ def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **
         if not parent_wiki:
             # Import Error
             return {}
-        parent_wiki_id = parent_wiki.id
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     # ensure home is always lower case since it cannot be renamed
     if wiki_name.lower() == 'home':
@@ -1186,7 +1185,7 @@ def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
-        wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki_id, True)
+        wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki, True)
         updated_wiki_id = wiki_page.id
         ret = {'status': 'success', 'path': path}
     return ret, updated_wiki_id
@@ -1331,8 +1330,8 @@ def _bulk_update_wiki_sort(node, sort_id_list, sort_num_list, parent_wiki_id_lis
         parent_wiki_id = parent_wiki_id_list[idx]
         setattr(page, 'sort_order', sort_order_number)
         if parent_wiki_id is not None:
-            parent_id = WikiPage.objects.get(guids___id=parent_wiki_id).id
-            setattr(page, 'parent', parent_id)
+            parent = WikiPage.objects.get(guids___id=parent_wiki_id)
+            setattr(page, 'parent', parent)
         else:
             setattr(page, 'parent', None)
     bulk_update(wiki_pages)

@@ -312,7 +312,7 @@ class WikiPage(GuidMixin, BaseModel):
     page_name = models.CharField(max_length=200, validators=[validate_page_name, ])
     user = models.ForeignKey('osf.OSFUser', null=True, blank=True, on_delete=models.CASCADE)
     node = models.ForeignKey('osf.AbstractNode', null=True, blank=True, on_delete=models.CASCADE, related_name='wikis')
-    parent = models.IntegerField(blank=True, null=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     sort_order = models.IntegerField(blank=True, null=True)
     deleted = NonNaiveDateTimeField(blank=True, null=True, db_index=True)
 
