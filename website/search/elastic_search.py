@@ -152,7 +152,7 @@ def client():
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=settings.ELASTIC_TIMEOUT,
+                request_timeout=20,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
@@ -187,7 +187,7 @@ def client_for_wiki_import():
         try:
             CLIENT_FOR_WIKI_IMPORT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=settings.ELASTIC_TIMEOUT_FOR_WIKI_IMPORT,
+                request_timeout=80,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
