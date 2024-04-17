@@ -149,6 +149,7 @@ def client():
     global CLIENT
     logger.info('---CLIENT---')
     if CLIENT is None:
+        logger.info('---CLIENT is None---')
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
