@@ -143,15 +143,16 @@ def es_index(index=None):
     return es_index_protected(index, True)
 
 CLIENT = None
-
+CLIENT_FOR_WIKI_IMPORT = None
 
 def client():
     global CLIENT
+    logger.info('---CLIENT---')
     if CLIENT is None:
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=settings.ELASTIC_TIMEOUT,
+                request_timeout=20,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
@@ -175,8 +176,44 @@ def client():
             else:
                 logger.error(message)
             exit(1)
+    logger.info(CLIENT.transport.get_connection().timeout)
+    logger.info('---CLIENT---')
     return CLIENT
 
+def client_for_wiki_import():
+    global CLIENT_FOR_WIKI_IMPORT
+    logger.info('---CLIENT_FOR_WIKI_IMPORT---')
+    if CLIENT_FOR_WIKI_IMPORT is None:
+        try:
+            CLIENT_FOR_WIKI_IMPORT = Elasticsearch(
+                settings.ELASTIC_URI,
+                request_timeout=80,
+                retry_on_timeout=True,
+                **settings.ELASTIC_KWARGS
+            )
+            logging.getLogger('elasticsearch').setLevel(logging.WARN)
+            logging.getLogger('elasticsearch.trace').setLevel(logging.WARN)
+            logging.getLogger('urllib3').setLevel(logging.WARN)
+            logging.getLogger('requests').setLevel(logging.WARN)
+            CLIENT_FOR_WIKI_IMPORT.cluster.health(wait_for_status='yellow')
+        except ConnectionError:
+            message = (
+                'The SEARCH_ENGINE setting is set to "elastic", but there '
+                'was a problem starting the elasticsearch interface. Is '
+                'elasticsearch running?'
+            )
+            if settings.SENTRY_DSN:
+                try:
+                    sentry.log_exception()
+                    sentry.log_message(message)
+                except AssertionError:  # App has not yet been initialized
+                    logger.exception(message)
+            else:
+                logger.error(message)
+            exit(1)
+    logger.info(CLIENT_FOR_WIKI_IMPORT.transport.get_connection().timeout)
+    logger.info('---CLIENT_FOR_WIKI_IMPORT---')
+    return CLIENT_FOR_WIKI_IMPORT
 
 def requires_search(func):
     def wrapped(*args, **kwargs):
@@ -1170,7 +1207,7 @@ def bulk_update_wikis(wiki_pages, index=None):
                 'doc_as_upsert': True,
             })
     if actions:
-        return helpers.bulk(client(), actions, chunk_size=1)
+        return helpers.bulk(client_for_wiki_import(), actions, chunk_size=1)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
