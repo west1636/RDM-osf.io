@@ -4114,3 +4114,6 @@ msgstr "名前タブの「氏名」「姓」「名前」「姓(英語)」「名�
 
 msgid "If you do not have an email address registered, please enter or add your email address in the \"Registered email address\" entry field first."
 msgstr "メールアドレスが未登録のユーザは、先に『登録メールアドレス』記入欄に、メールアドレスを入力・追加してください。"
+
+msgid "No page to import"
+msgstr "インポートするページがありません"
