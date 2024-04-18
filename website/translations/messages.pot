@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-04-18 11:31+0900\n"
+"POT-Creation-Date: 2024-04-18 13:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1062,10 +1062,10 @@ msgstr ""
 #: addons/wiki/templates/edit.mako:62
 #: addons/wiki/templates/import_wiki_page.mako:23
 #: addons/wiki/templates/import_wiki_page.mako:136
-#: addons/wiki/templates/import_wiki_page.mako:454
-#: addons/wiki/templates/import_wiki_page.mako:465
-#: addons/wiki/templates/import_wiki_page.mako:487
-#: addons/wiki/templates/import_wiki_page.mako:488
+#: addons/wiki/templates/import_wiki_page.mako:457
+#: addons/wiki/templates/import_wiki_page.mako:468
+#: addons/wiki/templates/import_wiki_page.mako:490
+#: addons/wiki/templates/import_wiki_page.mako:491
 msgid "Import"
 msgstr ""
 
@@ -1304,6 +1304,18 @@ msgid ""
 "import will be aborted."
 msgstr ""
 
+#: addons/wiki/templates/import_wiki_page.mako:44
+msgid "Skip All"
+msgstr ""
+
+#: addons/wiki/templates/import_wiki_page.mako:45
+msgid "Overwrite All"
+msgstr ""
+
+#: addons/wiki/templates/import_wiki_page.mako:46
+msgid "Create New All"
+msgstr ""
+
 #: addons/wiki/templates/import_wiki_page.mako:52
 msgid ""
 "Duplicate wiki page name. The following pages will be registered as the "
@@ -1332,6 +1344,18 @@ msgstr ""
 
 #: addons/wiki/templates/import_wiki_page.mako:84
 msgid "Import Result"
+msgstr ""
+
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Skip"
+msgstr ""
+
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Overwrite"
+msgstr ""
+
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Create New"
 msgstr ""
 
 #: addons/wiki/templates/import_wiki_page.mako:127
@@ -1369,13 +1393,13 @@ msgid ""
 "support."
 msgstr ""
 
-#: addons/wiki/templates/import_wiki_page.mako:410
 #: addons/wiki/templates/import_wiki_page.mako:413
+#: addons/wiki/templates/import_wiki_page.mako:416
 msgid "import error"
 msgstr ""
 
-#: addons/wiki/templates/import_wiki_page.mako:442
-#: addons/wiki/templates/import_wiki_page.mako:446
+#: addons/wiki/templates/import_wiki_page.mako:445
+#: addons/wiki/templates/import_wiki_page.mako:449
 msgid "Aborting..."
 msgstr ""
 

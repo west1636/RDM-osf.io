@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.6.0\n"
 "Report-Msgid-Bugs-To: rocs-office@nii.ac.jp\n"
-"POT-Creation-Date: 2024-04-18 11:31+0900\n"
+"POT-Creation-Date: 2024-04-18 13:16+0900\n"
 "PO-Revision-Date: 2020-11-10 20:10+0900\n"
 "Last-Translator: Hiroki Ohashi\n"
 "Language: ja\n"
@@ -1081,10 +1081,10 @@ msgstr "インポート中"
 #: addons/wiki/templates/edit.mako:62
 #: addons/wiki/templates/import_wiki_page.mako:23
 #: addons/wiki/templates/import_wiki_page.mako:136
-#: addons/wiki/templates/import_wiki_page.mako:454
-#: addons/wiki/templates/import_wiki_page.mako:465
-#: addons/wiki/templates/import_wiki_page.mako:487
-#: addons/wiki/templates/import_wiki_page.mako:488
+#: addons/wiki/templates/import_wiki_page.mako:457
+#: addons/wiki/templates/import_wiki_page.mako:468
+#: addons/wiki/templates/import_wiki_page.mako:490
+#: addons/wiki/templates/import_wiki_page.mako:491
 msgid "Import"
 msgstr "インポート"
 
@@ -1325,6 +1325,18 @@ msgid ""
 "import will be aborted."
 msgstr "次のWikiページはすでに存在します。インポート時の処理を選択してください。新規Wikiを作成する場合、Wiki名は[Wiki名](1)のように連番で作成されます。このアラートを閉じると、インポートは中止されます。"
 
+#: addons/wiki/templates/import_wiki_page.mako:44
+msgid "Skip All"
+msgstr "全てスキップ"
+
+#: addons/wiki/templates/import_wiki_page.mako:45
+msgid "Overwrite All"
+msgstr "全て上書き"
+
+#: addons/wiki/templates/import_wiki_page.mako:46
+msgid "Create New All"
+msgstr "全て新規に作成"
+
 #: addons/wiki/templates/import_wiki_page.mako:52
 msgid ""
 "Duplicate wiki page name. The following pages will be registered as the "
@@ -1355,6 +1367,18 @@ msgstr "ページ毎に選択"
 msgid "Import Result"
 msgstr "インポート結果"
 
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Skip"
+msgstr "スキップ"
+
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Overwrite"
+msgstr "上書き"
+
+#: addons/wiki/templates/import_wiki_page.mako:103
+msgid "Create New"
+msgstr "新規に作成"
+
 #: addons/wiki/templates/import_wiki_page.mako:127
 msgid "Validating wiki pages"
 msgstr "Wikiページを検証中"
@@ -1381,8 +1405,7 @@ msgid ""
 "may take longer if there are many pages. Please reload the page to check "
 "the import result. If the process takes too long, we recommend contacting"
 " support or trying again later."
-msgstr "リクエストはタイムアウトしましたが、プロセスはまだ進行中です。 処理
-ページ数が多い場合はさらに時間がかかる場合があります。インポート結果を確認するには、ページを再読み込みしてください。プロセスに時間がかかりすぎる場合は、サポートに連絡するか、後で再度お試しください"
+msgstr "リクエストはタイムアウトしましたが、プロセスはまだ進行中です。ページ数が多い場合はさらに時間がかかる場合があります。インポート結果を確認するには、ページを再読み込みしてください。プロセスに時間がかかりすぎる場合は、サポートに連絡するか、後で再度お試しください"
 
 #: addons/wiki/templates/import_wiki_page.mako:390
 msgid ""
@@ -1391,13 +1414,13 @@ msgid ""
 "support."
 msgstr "応答がタイムアウトしました。サーバーの負荷が高いと処理が遅れる可能性があります。もう一度試してください。問題が解決しない場合は、サポートにお問い合わせください。"
 
-#: addons/wiki/templates/import_wiki_page.mako:410
 #: addons/wiki/templates/import_wiki_page.mako:413
+#: addons/wiki/templates/import_wiki_page.mako:416
 msgid "import error"
 msgstr "インポートエラー"
 
-#: addons/wiki/templates/import_wiki_page.mako:442
-#: addons/wiki/templates/import_wiki_page.mako:446
+#: addons/wiki/templates/import_wiki_page.mako:445
+#: addons/wiki/templates/import_wiki_page.mako:449
 msgid "Aborting..."
 msgstr "中止しています"
 
