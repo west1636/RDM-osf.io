@@ -168,7 +168,7 @@
             var validateWikiImportResultCopy = validateWikiImportResultData.slice();
             var validateWikiImportResultFix = modifyImportList(operationAll, validateWikiImportResultCopy, perOperationList);
             if (validateWikiImportResultFix.length === 0) {
-                alert('No page to import.');
+                alert('${_("No page to import")}');
             } else {
                 var dirId = $wikiImportDir.val();
                 $perFile.attr('disabled', 'disabled');
@@ -203,7 +203,7 @@
         }
         /**
          * Modifies the import list based on the specified operation.
-         * 
+         *
          * @param {string} operation - Specifies the operation to perform. Can be 'skipAll', 'overwriteAll', 'createNewAll', or an empty string.
          * @param {Array} validateWikiImportResultCopy - Copy of the import list. The modified list will be returned.
          * @param {Array} perOperationList - List of operations for each item.
@@ -374,7 +374,7 @@
                 });
                 if (result) {
                     if(result.aborted) {
-                        alert('Wiki import aborted.')
+                        alert('${_("Wiki import aborted.")}');
                         dispBtnWhenAbort();
                         $('#wikiImport').modal('hide');
                         $('#alertInfo').modal('hide');
@@ -385,9 +385,9 @@
             }
             if (count === timeoutCtn){
                 if (operation === WIKI_IMPORT_OPERATION) {
-                    alert('The request has timed out, but the process is still ongoing. Processing may take longer if there are many pages. Please reload the page to check the import result. If the process takes too long, we recommend contacting support or trying again later.')
+                    alert('${_("The request has timed out, but the process is still ongoing. Processing may take longer if there are many pages. Please reload the page to check the import result. If the process takes too long, we recommend contacting support or trying again later.")}')
                 } else if (operation === VALIDATE_WIKI_IMPORT_OPERATION) {
-                    alert('The response has timed out. High server load may cause delays in processing. Please try again. If the issue persists, please contact support.')
+                    alert('${_("The response has timed out. High server load may cause delays in processing. Please try again. If the issue persists, please contact support.")}')
                 }
                 return;
             }
@@ -407,10 +407,10 @@
                         if (response.responseJSON.message_long) {
                             $wikiImportErrorMsg.text(response.responseJSON.message_long);
                         } else {
-                            alert('import error'); 
+                            alert('${_("import error")}');
                         }
                     } else {
-                        alert('import error');
+                        alert('${_("import error")}');
                     }
                     return;
                 }
