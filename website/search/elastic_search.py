@@ -147,9 +147,7 @@ CLIENT_FOR_WIKI_IMPORT = None
 
 def client():
     global CLIENT
-    logger.info('---CLIENT---')
     if CLIENT is None:
-        logger.info('---CLIENT is None---')
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
@@ -177,13 +175,10 @@ def client():
             else:
                 logger.error(message)
             exit(1)
-    logger.info(CLIENT.transport.get_connection().timeout)
-    logger.info('---CLIENT---')
     return CLIENT
 
 def client_for_wiki_import():
     global CLIENT_FOR_WIKI_IMPORT
-    logger.info('---CLIENT_FOR_WIKI_IMPORT---')
     if CLIENT_FOR_WIKI_IMPORT is None:
         try:
             CLIENT_FOR_WIKI_IMPORT = Elasticsearch(
@@ -212,8 +207,6 @@ def client_for_wiki_import():
             else:
                 logger.error(message)
             exit(1)
-    logger.info(CLIENT_FOR_WIKI_IMPORT.transport.get_connection().timeout)
-    logger.info('---CLIENT_FOR_WIKI_IMPORT---')
     return CLIENT_FOR_WIKI_IMPORT
 
 def requires_search(func):
