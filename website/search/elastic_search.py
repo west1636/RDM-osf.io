@@ -1208,7 +1208,7 @@ def bulk_update_wikis(wiki_pages, index=None):
                 'doc_as_upsert': True,
             })
     if actions:
-        return helpers.bulk(client_for_wiki_import(), actions, chunk_size=1)
+        return helpers.bulk(client_for_wiki_import(), actions)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
