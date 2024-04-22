@@ -151,7 +151,7 @@ def client():
         try:
             CLIENT = Elasticsearch(
                 settings.ELASTIC_URI,
-                request_timeout=settings.ELASTIC_TIMEOUT,
+                request_timeout=60,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
