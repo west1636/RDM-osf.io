@@ -183,7 +183,7 @@ def client_for_wiki_import():
         try:
             CLIENT_FOR_WIKI_IMPORT = Elasticsearch(
                 settings.ELASTIC_URI,
-                timeout=100,
+                timeout=settings.ELASTIC_TIMEOUT_FOR_WIKI_IMPORT,
                 retry_on_timeout=True,
                 **settings.ELASTIC_KWARGS
             )
@@ -1201,7 +1201,7 @@ def bulk_update_wikis(wiki_pages, index=None):
                 'doc_as_upsert': True,
             })
     if actions:
-        return helpers.bulk(client_for_wiki_import(), actions)
+        return helpers.bulk(client_for_wiki_import(), actions, chunk_size=1)
 
 def bulk_update_comments(comments, index=None):
     index = es_index(index)
