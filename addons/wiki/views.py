@@ -915,6 +915,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
         logger.info('wiki import process is stopped')
         return {'aborted': True}
     # Import top hierarchy wiki page
+    max_depth = _get_max_depth(replaced_wiki_info)
     for info in replaced_wiki_info:
         if info['parent_wiki_name'] is None:
             try:
@@ -929,7 +930,6 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
             except Exception as err:
                 logger.error(err)
     logger.info('imported top hierarchy wiki pages')
-    max_depth = _get_max_depth(replaced_wiki_info)
     # Import child wiki pages
     for depth in range(1, max_depth + 1):
         try:
@@ -1048,16 +1048,16 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id, node_file_ma
         another_wiki_name = file_name.split('^')[0]
         file_name = file_name.split('^')[1]
         # check as wikiName/fileName
-        file_id = _process_attachment_file_name_exist(has_hat, another_wiki_name, file_name, dir_id, node_file_mapping)
+        file_id = _process_attachment_file_name_exist(another_wiki_name, file_name, dir_id, node_file_mapping)
     else:
         # check as fileName
-        file_id = _process_attachment_file_name_exist(has_hat, wiki_name, file_name, dir_id, node_file_mapping)
+        file_id = _process_attachment_file_name_exist(wiki_name, file_name, dir_id, node_file_mapping)
 
     return file_id
 
-def _process_attachment_file_name_exist(has_hat, wiki_name, file_name, dir_id, node_file_mapping):
+def _process_attachment_file_name_exist(wiki_name, file_name, dir_id, node_file_mapping):
     # check as fileName
-    replaced_wiki_name = _replace_common_rule(wiki_name) if has_hat else wiki_name
+    replaced_wiki_name = _replace_common_rule(wiki_name)
     replaced_file_name = _replace_common_rule(file_name)
     replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
     wiki_file = replaced_wiki_name + '^' + replaced_file_name
