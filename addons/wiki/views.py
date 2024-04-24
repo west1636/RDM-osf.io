@@ -1140,7 +1140,7 @@ def _wiki_content_replace(wiki_info, dir_id, node, task):
     replaced_wiki_info = []
     rep_link = r'(?<!\\|\!)\[(?P<title>.+?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
     rep_image = r'(?<!\\)!\[(?P<title>.*?(?<!\\)(?:\\\\)*)\]\((?P<path>.+?)(?<!\\)\)'
-    node_file_mapping = node.guids.first()._id
+    node_file_mapping = get_node_file_mapping(node, dir_id)
     import_wiki_name_list = wiki_utils.get_import_wiki_name_list(wiki_info)
     for info in wiki_info:
         if task.is_aborted():
