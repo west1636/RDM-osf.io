@@ -1058,6 +1058,7 @@ def _check_attachment_file_name_exist(wiki_name, file_name, dir_id, node_file_ma
 def _process_attachment_file_name_exist(wiki_name, file_name, dir_id, node_file_mapping):
     # check as fileName
     replaced_wiki_name = _replace_common_rule(wiki_name)
+    replaced_wiki_name = unicodedata.normalize('NFC', replaced_wiki_name)
     replaced_file_name = _replace_common_rule(file_name)
     replaced_file_name = unicodedata.normalize('NFC', replaced_file_name)
     wiki_file = replaced_wiki_name + '^' + replaced_file_name
