@@ -1025,8 +1025,8 @@ def _exclude_symbols(path):
     return has_slash, has_sharp, has_dot, is_url
 
 def _exclude_tooltip(match_path):
-    rep_tooltip_single = r'(?P<path>.+?)[ ]+\'(?P<tooltip>.+?(?<!\\)(?:\\\\)*)\''
-    rep_tooltip_double = r'(?P<path>.+?)[ ]+"(?P<tooltip>.+?(?<!\\)(?:\\\\)*)"'
+    rep_tooltip_single = r'(?P<path>.+?)[ ]+\'(?P<tooltip>.*?(?<!\\)(?:\\\\)*)\''
+    rep_tooltip_double = r'(?P<path>.+?)[ ]+"(?P<tooltip>.*?(?<!\\)(?:\\\\)*)"'
     match_tooltip_single = list(re.finditer(rep_tooltip_single, match_path))
     match_tooltip_double = list(re.finditer(rep_tooltip_double, match_path))
     # exclude tooltip
