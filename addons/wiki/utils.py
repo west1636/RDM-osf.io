@@ -276,15 +276,13 @@ def _get_all_child_file_ids(dir_id):
     children_file = parent_dir._children.filter(type='osf.osfstoragefile', deleted__isnull=True)
 
     for child_file in children_file:
-        yield child_file._id
+        yield {'wiki_file': f'{child_file.parent.name}^{child_file.name}', 'file_id': f'{child_file._id}'}
 
     for child_folder in children_folder:
         yield from _get_all_child_file_ids(child_folder._id)
 
 def get_node_file_mapping(node, dir_id):
-    file_ids = list(_get_all_child_file_ids(dir_id))
-    node_file_infos = BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', deleted__isnull=True).values_list('_id', 'name', 'parent_id__name')
-    mapping = [{'wiki_file': f'{info[2]}^{info[1]}', 'file_id': info[0]} for info in node_file_infos if info[0] in file_ids]
+    mapping = list(_get_all_child_file_ids(dir_id))
     return mapping
 
 def get_import_wiki_name_list(wiki_info):
