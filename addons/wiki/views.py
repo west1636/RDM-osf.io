@@ -1106,7 +1106,8 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     try:
         folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
         folder_response.raise_for_status()
-    except Exception:
+    except Exception as e:
+        logger.info(e)
         raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
             message_short='Error when create wiki folder',
             message_long='\t' + _('An error occures when create wiki folder : ') + folder_name + '\t'
