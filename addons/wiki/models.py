@@ -285,7 +285,7 @@ class WikiPageNodeManager(models.Manager):
 
     def get_for_child_nodes(self, node, parent=None):
         if parent:
-            return WikiPage.objects.filter(parent__iexact=parent, deleted__isnull=True, node=node)
+            return WikiPage.objects.filter(parent=parent, deleted__isnull=True, node=node)
         return None
 
     def get_wiki_pages_latest(self, node):
