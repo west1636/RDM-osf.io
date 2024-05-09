@@ -310,19 +310,19 @@ def _get_wiki_parent(wiki, path):
 
 def get_numbered_name_for_existing_wiki(node, base_name):
     WikiPage = apps.get_model('addons_wiki.WikiPage')
-    existing_wikis = WikiPage.objects.filter(page_name__istartswith=base_name, deleted__isnull=True, node=node)
+    existing_wiki_names = WikiPage.objects.filter(page_name__istartswith=base_name, deleted__isnull=True, node=node).values_list('page_name', flat=True)
 
-    target_wikis = [wiki for wiki in existing_wikis if wiki.page_name.lower() == base_name.lower() or wiki.page_name[len(base_name) + 1: -1].isdigit()]
+    target_wiki_names = [wiki_name for wiki_name in existing_wiki_names if wiki_name.lower() == base_name.lower() or wiki_name[len(base_name) + 1: -1].isdigit()]
 
-    if not target_wikis and base_name.lower() == 'home':
-        existing_wikis = WikiPage.objects.filter(page_name='home', deleted__isnull=True, node=node)
-        target_wikis = existing_wikis
+    if not target_wiki_names and base_name.lower() == 'home':
+        existing_wiki_names = WikiPage.objects.filter(page_name='home', deleted__isnull=True, node=node).values_list('page_name', flat=True)
+        target_wiki_names = existing_wiki_names
         base_name = 'home'
 
-    if not target_wikis:
+    if not target_wiki_names:
         return ''
 
-    max_index = max((0 if wiki.page_name.lower() == base_name.lower() else int(wiki.page_name[len(base_name) + 1: -1]) for wiki in target_wikis), default='')
+    max_index = max((0 if wiki_name.lower() == base_name.lower() else int(wiki_name[len(base_name) + 1: -1]) for wiki_name in target_wiki_names), default='')
 
     return max_index + 1 if max_index != '' else max_index
 

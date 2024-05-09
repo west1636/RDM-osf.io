@@ -27,8 +27,8 @@
         var $abortErrorMsg = $('.abortErrorMsg');
         $('#abort-wiki-import').on('click', async function () {
             $submitForm.attr('disabled', 'disabled').text('${_("Aborting")}');
-            const cleanTasksUrl = ${ urls['api']['base'] | sjson, n } + 'clean_celery_tasks/';
-            const getAbortWikiImportResultUrl = ${ urls['api']['base'] | sjson, n } + 'get_abort_wiki_import_result/';
+            const cleanTasksUrl = ${ urls['api']['base'] | sjson, n } + 'tasks/clean/';
+            const getAbortWikiImportResultUrl = ${ urls['api']['base'] | sjson, n } + 'abort/result/';
             const abortWikiImport = await requestAbortWikiImport(cleanTasksUrl, $abortErrorMsg);
             const abortTaskResult = await intervalGetAbortWikiImportResult(getAbortWikiImportResultUrl, ABORT_WIKI_IMPORT_INTERVAL, ABORT_WIKI_IMPORT_TIMEOUT)
         });

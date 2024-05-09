@@ -418,7 +418,7 @@
         }
 
         function cleanCeleryTask() {
-            var cleanTasksUrl = ${ urls['api']['base'] | sjson, n } + 'clean_celery_tasks/';
+            var cleanTasksUrl = ${ urls['api']['base'] | sjson, n } + 'tasks/clean/';
             $.ajax({
                 type: 'POST',
                 cache: false,
