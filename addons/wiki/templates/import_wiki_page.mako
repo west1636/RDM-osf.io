@@ -366,12 +366,7 @@
             var result = '';
             var timeoutCtn = Math.ceil(timeout_ms / interval_ms);
             while (count < timeoutCtn) {
-                await new Promise(function(resolve){
-                    setTimeout(async function(){
-                        result = await getCeleryTaskResult(url, operation)
-                        resolve();
-                    }, interval_ms);
-                });
+                result = await getCeleryTaskResult(url, operation)
                 if (result) {
                     if(result.aborted) {
                         alert('${_("Wiki import aborted.")}');
@@ -381,6 +376,9 @@
                     }
                     break;
                 }
+                await new Promise(function(resolve){
+                    setTimeout(resolve, interval_ms);
+                });
                 count++;
             }
             if (count === timeoutCtn){
