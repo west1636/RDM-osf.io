@@ -60,12 +60,7 @@
         var result = '';
         var timeoutCtn = Math.ceil(timeout_ms / interval_ms)
         while (count < timeoutCtn) {
-            await new Promise(function(resolve){
-                setTimeout(async function(){
-                    result = await getAbortWikiImportResult(url)
-                    resolve();
-                }, interval_ms);
-            });
+            result = await getAbortWikiImportResult(url);
             if (result) {
                 if(result.aborted) {
                     alert('Wiki import aborted.')
@@ -74,6 +69,9 @@
                 }
                 break;
             }
+            await new Promise(function(resolve){
+                setTimeout(resolve, interval_ms);
+            });
             count++;
         }
         if (count === timeoutCtn){
