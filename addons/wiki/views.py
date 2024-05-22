@@ -123,7 +123,8 @@ def _get_wiki_versions(node, name, anonymous=False):
     ]
 
 def _get_wiki_pages_latest(node):
-    return [
+    log_time('start _get_wiki_pages_latest')
+    result = [
         {
             'name': page.wiki_page.page_name,
             'url': node.web_url_for('project_wiki_view', wname=page.wiki_page.page_name, _guid=True),
@@ -134,6 +135,8 @@ def _get_wiki_pages_latest(node):
         }
         for page in WikiPage.objects.get_wiki_pages_latest(node).order_by(F('wiki_page__sort_order'), F('name'))
     ]
+    log_time('end _get_wiki_pages_latest')
+    return result
 
 def _get_wiki_child_pages_latest(node, parent):
     return [
