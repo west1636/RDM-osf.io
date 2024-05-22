@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import functools
 import re
 import gc
 import json
