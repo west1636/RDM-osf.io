@@ -11,6 +11,7 @@ import collections
 import unicodedata
 import urllib.parse
 import requests
+from datetime import datetime
 from api.base.utils import waterbutler_api_url_for
 from addons.wiki.utils import to_mongo_key
 from addons.wiki import settings
