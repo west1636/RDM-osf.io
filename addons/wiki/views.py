@@ -4,6 +4,7 @@ import os
 import re
 import gc
 import json
+import psutil
 import logging
 import random
 import string
@@ -104,6 +105,19 @@ WIKI_IMPORT_TASK_ALREADY_EXISTS = HTTPError(http_status.HTTP_400_BAD_REQUEST, da
 WIKI_IMAGE_FOLDER = 'Wiki images'
 WIKI_IMPORT_FOLDER = 'Imported Wiki workspace (temporary)'
 
+def timePerf(func):
+    @functools.wraps(func)
+    def _wrapper(*args, **keywords):
+        start = time.perf_counter()
+        v = func(*args, **keywords)
+        end = time.perf_counter()
+        #cpu_percent = psutil.cpu_percent(percpu=True)
+        #mem = psutil.virtual_memory() 
+        print(f"{func.__name__}: {end - start:.3f} s.")
+        #print(f"cpu: {cpu_percent}, memory: {mem}")
+        return v
+    return _wrapper
+
 def _get_wiki_versions(node, name, anonymous=False):
     # Skip if wiki_page doesn't exist; happens on new projects before
     # default "home" page is created
@@ -122,6 +136,7 @@ def _get_wiki_versions(node, name, anonymous=False):
         for version in versions
     ]
 
+@timePerf
 def _get_wiki_pages_latest(node):
     log_time('start _get_wiki_pages_latest')
     result = [
@@ -356,7 +371,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'y_websocket_url': settings.Y_WEBSOCKET_URL,
         'is_current': is_current,
         'version_settings': version_settings,
-        'pages_current': _get_wiki_pages_latest(node),
+#        'pages_current': _get_wiki_pages_latest(node),
         'sortable_pages_ctn': sortable_pages_ctn,
         'category': node.category,
         'panels_used': panels_used,
