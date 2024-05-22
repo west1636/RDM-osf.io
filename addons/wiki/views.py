@@ -235,6 +235,7 @@ def _child_wiki_delete(auth, node, wiki_page):
 @must_have_addon('wiki', 'node')
 @must_not_be_retracted_registration
 def project_wiki_view(auth, wname, path=None, **kwargs):
+    log_time('start project_wiki_view')
     node = kwargs['node'] or kwargs['project']
     anonymous = has_anonymous_link(node, auth)
     wiki_name = (wname or '').strip()
@@ -242,6 +243,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     wiki_page = WikiPage.objects.get_for_node(node, wiki_name)
     wiki_version = WikiVersion.objects.get_for_node(node, wiki_name)
     wiki_settings = node.get_addon('wiki')
+    log_time('project_wiki_view 1')
     parent_wiki_page = WikiPage.objects.get(id=wiki_page.parent_id) if wiki_page and wiki_page.parent else None
     can_edit = (
         auth.logged_in and not
@@ -253,6 +255,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     can_wiki_import = node.has_permission(auth.user, ADMIN)
     versions = _get_wiki_versions(node, wiki_name, anonymous=anonymous)
 
+    log_time('project_wiki_view 2')
     # Determine panels used in view
     panels = {'view', 'edit', 'compare', 'menu'}
     if request.args and set(request.args).intersection(panels):
@@ -265,6 +268,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         panels_used = ['view', 'menu']
         num_columns = 1
 
+    log_time('project_wiki_view 3')
     try:
         view = wiki_utils.format_wiki_version(
             version=request.args.get('view'),
@@ -279,6 +283,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     except InvalidVersionError:
         raise WIKI_INVALID_VERSION_ERROR
 
+    log_time('project_wiki_view 4')
     # ensure home is always lower case since it cannot be renamed
     if wiki_name.lower() == 'home':
         wiki_name = 'home'
@@ -296,6 +301,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         rendered_before_update = False
         markdown = ''
 
+    log_time('project_wiki_view 5')
     if can_edit:
         if wiki_key not in node.wiki_private_uuids:
             wiki_utils.generate_private_uuid(node, wiki_name)
@@ -311,6 +317,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
             raise HTTPError(http_status.HTTP_403_FORBIDDEN)
         sharejs_uuid = None
 
+    log_time('project_wiki_view 6')
     # Opens 'edit' panel when home wiki is empty
     if not content and can_edit and wiki_name == 'home':
         panels_used.append('edit')
@@ -320,9 +327,13 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'view': view or ('preview' if 'edit' in panels_used else 'current'),
         'compare': compare or 'previous',
     }
+    log_time('project_wiki_view 7')
     import_dirs = _get_import_folder(node)
+    log_time('project_wiki_view 8')
     alive_task_id = WikiImportTask.objects.values_list('task_id').filter(status=WikiImportTask.STATUS_RUNNING, node=node)
+    log_time('project_wiki_view 9')
     sortable_pages_ctn = node.wikis.filter(deleted__isnull=True).exclude(page_name='home').count()
+    log_time('project_wiki_view 10')
 
     ret = {
         'wiki_id': wiki_page._primary_key if wiki_page else None,
@@ -355,10 +366,16 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
             'profile_image': get_profile_image_url(auth.user, 25),
         },
     }
+    log_time('project_wiki_view 11')
     ret.update(_view_project(node, auth, primary=True))
     ret['user']['can_edit_wiki_body'] = can_edit
     ret['user']['can_wiki_import'] = can_wiki_import
+    log_time('end project_wiki_view')
     return ret
+
+def log_time(message):
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+    logger.info(f"{message} at {current_time}")
 
 def _get_import_folder(node):
     # Get import folder
