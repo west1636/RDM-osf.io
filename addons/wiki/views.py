@@ -1210,14 +1210,14 @@ def _wiki_import_create_or_update(path, data, auth, node, task, p_wname=None, **
     if wiki_version:
         # Only update wiki if content has changed
         if data != wiki_version.content:
-            wiki_version.wiki_page.update(auth.user, data, True)
+            wiki_version.wiki_page.update(auth.user, data, skip_update_search=True)
             updated_wiki_id = wiki_version.wiki_page.id
             ret = {'status': 'success', 'path': path}
         else:
             ret = {'status': 'unmodified', 'path': path}
     else:
         # Create a wiki
-        wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki, True)
+        wiki_page = WikiPage.objects.create_for_node(node, wiki_name, data, auth, parent_wiki, skip_update_search=True)
         updated_wiki_id = wiki_page.id
         ret = {'status': 'success', 'path': path}
     return ret, updated_wiki_id

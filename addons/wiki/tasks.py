@@ -31,10 +31,10 @@ def run_project_wiki_import(self, data_json, dir_id, current_user_id, nid):
     return wiki_views.project_wiki_import_process(data, dir_id, task_id, auth, node)
 
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
-def run_update_search_and_bulk_index(self, nid, wiki_id_list, skip_update_search=True):
+def run_update_search_and_bulk_index(self, nid, wiki_id_list, skip_update_search=False):
     node = _load_node_or_fail(nid)
     wiki_pages = WikiPage.objects.filter(id__in=wiki_id_list)
     bulk_update_wikis(wiki_pages)
-    if skip_update_search:
+    if not skip_update_search:
         node.update_search()
 
