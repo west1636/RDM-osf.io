@@ -173,13 +173,13 @@ class WikiVersion(ObjectIDMixin, BaseModel):
 
         return self.content
 
-    def save(self, is_wiki_import=False, *args, **kwargs):
+    def save(self, skip_search_update=False, *args, **kwargs):
         rv = super(WikiVersion, self).save(*args, **kwargs)
         if self.wiki_page.node:
-            if not is_wiki_import:
+            if not skip_search_update:
                 self.wiki_page.node.update_search()
         self.wiki_page.modified = self.created
-        self.wiki_page.save(is_wiki_import=is_wiki_import)
+        self.wiki_page.save(skip_search_update=skip_search_update)
         self.check_spam()
         return rv
 
@@ -242,7 +242,7 @@ class WikiVersion(ObjectIDMixin, BaseModel):
 
 class WikiPageNodeManager(models.Manager):
 
-    def create_for_node(self, node, name, content, auth, parent=None, is_wiki_import=False):
+    def create_for_node(self, node, name, content, auth, parent=None, skip_search_update=False):
         existing_wiki_page = WikiPage.objects.get_for_node(node, name)
         if existing_wiki_page:
             raise NodeStateError('Wiki Page already exists.')
@@ -252,10 +252,10 @@ class WikiPageNodeManager(models.Manager):
             page_name=name,
             user=auth.user,
             parent=parent,
-            is_wiki_import=is_wiki_import
+            skip_search_update=skip_search_update
         )
         # Creates a WikiVersion object
-        wiki_page.update(auth.user, content, is_wiki_import=is_wiki_import)
+        wiki_page.update(auth.user, content, skip_search_update=skip_search_update)
         return wiki_page
 
     def get_for_node(self, node, name=None, id=None, parent=None):
@@ -300,10 +300,10 @@ class WikiPageNodeManager(models.Manager):
         """Check if node meets requirements to make publicly editable."""
         return node.get_descendants_recursive()
 
-    def create(self, is_wiki_import=False, **kwargs):
+    def create(self, skip_search_update=False, **kwargs):
         obj = self.model(**kwargs)
         self._for_write = True
-        obj.save(force_insert=True, using=self.db, is_wiki_import=is_wiki_import)
+        obj.save(force_insert=True, using=self.db, skip_search_update=skip_search_update)
         return obj
 
 class WikiPage(GuidMixin, BaseModel):
@@ -321,14 +321,14 @@ class WikiPage(GuidMixin, BaseModel):
             models.Index(fields=['page_name', 'node'])
         ]
 
-    def save(self, is_wiki_import=False, *args, **kwargs):
+    def save(self, skip_search_update=False, *args, **kwargs):
         rv = super(WikiPage, self).save(*args, **kwargs)
         if self.node and (self.node.is_public or settings.ENABLE_PRIVATE_SEARCH):
-            if not is_wiki_import:
+            if not skip_search_update:
                 self.node.update_search(wiki_page=self)
         return rv
 
-    def update(self, user, content, is_wiki_import=False):
+    def update(self, user, content, skip_search_update=False):
         """
         Updates the wiki with the provided content by creating a new version
 
@@ -336,7 +336,7 @@ class WikiPage(GuidMixin, BaseModel):
         :param content: Latest content for wiki
         """
         version = WikiVersion(user=user, wiki_page=self, content=content, identifier=self.current_version_number + 1)
-        version.save(is_wiki_import=is_wiki_import)
+        version.save(skip_search_update=skip_search_update)
 
         self.node.add_log(
             action=NodeLog.WIKI_UPDATED,

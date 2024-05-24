@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-import functools
 import re
 import gc
 import json
-import psutil
 import logging
 import random
 import string
@@ -13,7 +11,6 @@ import collections
 import unicodedata
 import urllib.parse
 import requests
-import time
 from datetime import datetime
 from api.base.utils import waterbutler_api_url_for
 from addons.wiki.utils import to_mongo_key
@@ -31,6 +28,7 @@ from celery.contrib.abortable import AbortableAsyncResult
 from flask import request
 from flask_babel import lazy_gettext as _
 from django.db.models.expressions import F
+from django.db import transaction
 from django_bulk_update.helper import bulk_update
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
@@ -107,19 +105,6 @@ WIKI_IMPORT_TASK_ALREADY_EXISTS = HTTPError(http_status.HTTP_400_BAD_REQUEST, da
 WIKI_IMAGE_FOLDER = 'Wiki images'
 WIKI_IMPORT_FOLDER = 'Imported Wiki workspace (temporary)'
 
-def timePerf(func):
-    @functools.wraps(func)
-    def _wrapper(*args, **keywords):
-        start = time.perf_counter()
-        v = func(*args, **keywords)
-        end = time.perf_counter()
-        #cpu_percent = psutil.cpu_percent(percpu=True)
-        #mem = psutil.virtual_memory() 
-        print(f"{func.__name__}: {end - start:.3f} s.")
-        #print(f"cpu: {cpu_percent}, memory: {mem}")
-        return v
-    return _wrapper
-
 def _get_wiki_versions(node, name, anonymous=False):
     # Skip if wiki_page doesn't exist; happens on new projects before
     # default "home" page is created
@@ -138,7 +123,6 @@ def _get_wiki_versions(node, name, anonymous=False):
         for version in versions
     ]
 
-@timePerf
 def _get_wiki_pages_latest(node):
     log_time('start _get_wiki_pages_latest')
     result = [
@@ -232,24 +216,28 @@ def project_wiki_delete(auth, wname, **kwargs):
     wiki_page = WikiPage.objects.get_for_node(node, wiki_name)
     sharejs_uuid = wiki_utils.get_sharejs_uuid(node, wiki_name)
 
+    pid = node.guids.first()._id
+    deleted_wiki_id_list = []
     if not wiki_page:
         raise HTTPError(http_status.HTTP_404_NOT_FOUND)
 
     child_wiki_pages = WikiPage.objects.get_for_child_nodes(node=node, parent=wiki_page.id)
-    wiki_page.delete(auth)
-
-    if child_wiki_pages:
-        for page in child_wiki_pages:
-            _child_wiki_delete(auth, node, page)
-
+    with transaction.atomic():
+        wiki_page.delete(auth)
+        deleted_wiki_id_list.append(wiki_page.id)
+        if child_wiki_pages:
+            for page in child_wiki_pages:
+                _child_wiki_delete(auth, node, page, deleted_wiki_id_list)
+    tasks.run_update_search_and_bulk_index.delay(pid, deleted_wiki_id_list, False)
     wiki_utils.broadcast_to_sharejs('delete', sharejs_uuid, node)
     return {}
 
-def _child_wiki_delete(auth, node, wiki_page):
+def _child_wiki_delete(auth, node, wiki_page, deleted_wiki_id_list):
     wiki_page.delete(auth)
+    deleted_wiki_id_list.append(wiki_page.id)
     child_wiki_pages = WikiPage.objects.get_for_child_nodes(node=node, parent=wiki_page.id)
     for page in child_wiki_pages:
-        _child_wiki_delete(auth, node, page)
+        _child_wiki_delete(auth, node, page, deleted_wiki_id_list)
 
 @must_be_valid_project  # returns project
 @must_be_contributor_or_public
