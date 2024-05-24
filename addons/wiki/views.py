@@ -404,11 +404,9 @@ def _is_mount_system(user):
     logger.info(institution_id)
     wb_settings = Region.objects.filter(_id=institution_id).values_list('waterbutler_settings', flat=True).first()
     logger.info(wb_settings)
-    wb_settings_json = json.loads(wb_settings)
-    logger.info(wb_settings_json)
-    provider = wb_settings_json['storage']['provider']
-    logger.info(provider)
-    return provider in mount_system_list, provider_name
+    provider_name = wb_settings['storage']['provider']
+    logger.info(provider_name)
+    return provider_name in mount_system_list, provider_name
 
 def _get_import_folder(node):
     # Get import folder
