@@ -13,6 +13,7 @@ import urllib.parse
 import requests
 from datetime import datetime
 from api.base.utils import waterbutler_api_url_for
+from addons.osfstorage.models import Region
 from addons.wiki.utils import to_mongo_key
 from addons.wiki import settings
 from addons.wiki import utils as wiki_utils
@@ -337,6 +338,15 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'compare': compare or 'previous',
     }
     log_time('project_wiki_view 7')
+    is_mount_system, provider_name = _is_mount_system(auth.user)
+    logger.info('---institutional storage---')
+    logger.info(is_mount_system)
+    logger.info(provider_name)
+    logger.info('---institutional storage---')
+    if is_mount_system:
+        import_dirs = _get_import_institutional_storage_folder(node, provider_name)
+    else:
+        import_dirs = _get_import_folder(node)
     import_dirs = _get_import_folder(node)
     log_time('project_wiki_view 8')
     alive_task_id = WikiImportTask.objects.values_list('task_id').filter(status=WikiImportTask.STATUS_RUNNING, node=node)
@@ -386,6 +396,20 @@ def log_time(message):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     logger.info(f"{message} at {current_time}")
 
+def _is_mount_system(user):
+    logger.info('---ismountsystem---')
+    mount_system_list = ['nextcloudinstitutions', 'ociinstitutions', 's3compatinstitutions']
+    logger.info(user.affiliated_institutions.first())
+    institution_id = user.affiliated_institutions.first()._id
+    logger.info(institution_id)
+    wb_settings = Region.objects.filter(_id=institution_id).values_list('waterbutler_settings', flat=True).first()
+    logger.info(wb_settings)
+    wb_settings_json = json.loads(wb_settings)
+    logger.info(wb_settings_json)
+    provider = wb_settings_json['storage']['provider']
+    logger.info(provider)
+    return provider in mount_system_list, provider_name
+
 def _get_import_folder(node):
     # Get import folder
     root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
@@ -396,6 +420,25 @@ def _get_import_folder(node):
         for wiki_dir in wiki_dirs:
             wiki_file_name = wiki_dir.name + '.md'
             if BaseFileNode.objects.filter(target_object_id=node.id, type='osf.osfstoragefile', parent=wiki_dir.id, name=wiki_file_name, deleted__isnull=True).exists():
+                import_dirs.append({
+                    'id': parent_dir._id,
+                    'name': parent_dir.name
+                })
+                break
+    return import_dirs
+
+def _get_import_institutional_storage_folder(node, provider_name):
+    # Get import folder that the info exists basefilenode
+    folder_type = f'osf.{provider_name}folder'
+    file_type = f'osf.{provider_name}file'
+    root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
+    parent_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type=folder_type, parent=root_dir['id'], deleted__isnull=True)
+    import_dirs = []
+    for parent_dir in parent_dirs:
+        wiki_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type=folder_type, parent=parent_dir.id, deleted__isnull=True)
+        for wiki_dir in wiki_dirs:
+            wiki_file_name = wiki_dir.name + '.md'
+            if BaseFileNode.objects.filter(target_object_id=node.id, type=file_type, parent=wiki_dir.id, name=wiki_file_name, deleted__isnull=True).exists():
                 import_dirs.append({
                     'id': parent_dir._id,
                     'name': parent_dir.name
