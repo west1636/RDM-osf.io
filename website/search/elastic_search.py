@@ -1827,6 +1827,7 @@ def delete_group_doc(deleted_id, index=None):
 @requires_search
 def delete_wiki_doc(deleted_id, index=None):
     index = es_index(index)
+    logger.info('---deletewikidoc---' + str(deleted_id))
     client().delete(index=index, doc_type='wiki', id=deleted_id, refresh=True, ignore=[404])
 
 @requires_search
