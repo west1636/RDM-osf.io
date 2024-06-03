@@ -1069,6 +1069,9 @@ def node_is_ignored(node):
 
 @requires_search
 def update_wiki(wiki_page, index=None, bulk=False):
+    logger.info('---updatewiki---')
+    logger.info(str(wiki_page))
+    logger.info(str(wiki_page.deleted))
     index = es_index(index)
     category = 'wiki'
 
