@@ -229,7 +229,7 @@ def project_wiki_delete(auth, wname, **kwargs):
         if child_wiki_pages:
             for page in child_wiki_pages:
                 _child_wiki_delete(auth, node, page, deleted_wiki_id_list)
-    tasks.run_update_search_and_bulk_index.delay(pid, deleted_wiki_id_list, False)
+    tasks.run_update_search_and_bulk_index.delay(pid, deleted_wiki_id_list, skip_update_search=True)
     wiki_utils.broadcast_to_sharejs('delete', sharejs_uuid, node)
     return {}
 
