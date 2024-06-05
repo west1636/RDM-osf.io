@@ -344,7 +344,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     logger.info(provider_name)
     logger.info('---institutional storage---')
     if is_mount_system:
-        import_dirs = _get_import_institutional_storage_folder(node, provider_name)
+        import_dirs = _get_import_institutional_storage_folder(node, auth, provider_name)
     else:
         import_dirs = _get_import_folder(node)
     import_dirs = _get_import_folder(node)
@@ -425,23 +425,18 @@ def _get_import_folder(node):
                 break
     return import_dirs
 
-def _get_import_institutional_storage_folder(node, provider_name):
+def _get_import_institutional_storage_folder(node, auth, provider_name):
     # Get import folder that the info exists basefilenode
+    logger.info('---getimportinstitutinalstoragefolder---')
+    import_dirs = []
+    pid = node.guids.first()._id
+    creator, creator_auth = get_creator_auth_header(auth.user)
+    response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
+    logger.info(dir(response))
+    logger.info(vars(response))
     folder_type = f'osf.{provider_name}folder'
     file_type = f'osf.{provider_name}file'
-    root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
-    parent_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type=folder_type, parent=root_dir['id'], deleted__isnull=True)
-    import_dirs = []
-    for parent_dir in parent_dirs:
-        wiki_dirs = BaseFileNode.objects.filter(target_object_id=node.id, type=folder_type, parent=parent_dir.id, deleted__isnull=True)
-        for wiki_dir in wiki_dirs:
-            wiki_file_name = wiki_dir.name + '.md'
-            if BaseFileNode.objects.filter(target_object_id=node.id, type=file_type, parent=wiki_dir.id, name=wiki_file_name, deleted__isnull=True).exists():
-                import_dirs.append({
-                    'id': parent_dir._id,
-                    'name': parent_dir.name
-                })
-                break
+    logger.info('---getimportinstitutinalstoragefolder---')
     return import_dirs
 
 @must_be_valid_project  # injects node or project
