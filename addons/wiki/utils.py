@@ -23,6 +23,8 @@ from rest_framework import status as http_status
 # MongoDB forbids field names that begin with "$" or contain ".". These
 # utilities map to and from Mongo field names.
 
+from api.base.utils import waterbutler_api_url_for
+
 logger = logging.getLogger(__name__)
 
 mongo_map = {
@@ -280,6 +282,52 @@ def _get_all_child_file_ids(dir_id):
 
     for child_folder_id in children_folder_ids:
         yield from _get_all_child_file_ids(child_folder_id)
+
+def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id, root_folder_name='', parent_folder_name=''):
+    logger.info('---getallchildfileidsinstitutionalstorage---')
+    logger.info(root_folder_name)
+    pid = node.guids.first()._id
+    response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True), headers=creator_auth)
+    children_objs = json.loads(response.content.decode())['data']
+    logger.info(children_objs)
+    result = []
+    for child_obj in children_objs:
+        name = child_obj['attributes']['name']
+        materialized = child_obj['attributes']['materialized']
+        logger.info(root_folder_name)
+        if not root_folder_name:
+            root_folder_name = materialized.split('/')[1] if materialized.startswith('/') else None
+        logger.info(root_folder_name)
+        if child_obj['attributes']['kind'] == 'folder':
+            logger.info('---folder---')
+            _id = child_obj['id'].split('/')[-2]
+            # Recur for subfolders
+            result.extend(_get_all_child_file_ids_institutional_storage(
+                node, creator_auth, provider_name, _id, root_folder_name, name
+            ))
+        elif child_obj['attributes']['kind'] == 'file':
+            logger.info('---file---')
+            _id = child_obj['id'].split('/')[-1]
+            logger.info(os.path.splitext(name)[0])
+            logger.info(parent_folder_name)
+            if os.path.splitext(name)[0] == parent_folder_name:
+                wiki_name = os.path.splitext(name)[0]
+                path = materialized.replace(f'/{root_folder_name}', '', 1).rsplit(f'/{name}', 1)[0]
+                logger.info(path)
+                parent_wiki_name = path[:path.rfind('/')].split('/')[-1] if '/' in path and path.rfind('/') > 0 else None
+                info = {
+                    'parent_wiki_name': parent_wiki_name,
+                    'path': path,
+                    'original_name': wiki_name,
+                    'wiki_name': wiki_name,
+                    'status': 'valid',
+                    'message': '',
+                    '_id': _id
+                }
+                result.append(info)
+    logger.info('---getallchildfileidsinstitutionalstorage---')
+    return result
+
 
 def get_node_file_mapping(node, dir_id):
     mapping = list(_get_all_child_file_ids(dir_id))

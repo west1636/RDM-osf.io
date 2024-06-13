@@ -69,6 +69,8 @@ from .exceptions import (
     InvalidVersionError,
 )
 
+from website.util import waterbutler
+
 logger = logging.getLogger(__name__)
 
 can_start_import = True
@@ -347,7 +349,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         import_dirs = _get_import_institutional_storage_folder(node, auth, provider_name)
     else:
         import_dirs = _get_import_folder(node)
-    import_dirs = _get_import_folder(node)
+    logger.info(import_dirs)
     log_time('project_wiki_view 8')
     alive_task_id = WikiImportTask.objects.values_list('task_id').filter(status=WikiImportTask.STATUS_RUNNING, node=node)
     log_time('project_wiki_view 9')
@@ -431,12 +433,28 @@ def _get_import_institutional_storage_folder(node, auth, provider_name):
     import_dirs = []
     pid = node.guids.first()._id
     creator, creator_auth = get_creator_auth_header(auth.user)
-    response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
-    logger.info(dir(response))
-    logger.info(vars(response))
-    folder_type = f'osf.{provider_name}folder'
-    file_type = f'osf.{provider_name}file'
-    logger.info('---getimportinstitutinalstoragefolder---')
+    parent_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
+    parent_dirs = json.loads((parent_dirs_response._content).decode())['data']
+    logger.info(parent_dirs)
+    for parent_dir in parent_dirs:
+        if parent_dir['attributes']['kind'] == 'file':
+            continue
+        parent_dir_path = parent_dir['attributes']['path']
+        wiki_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=parent_dir_path, _internal=True), headers=creator_auth)
+        wiki_dirs = json.loads((wiki_dirs_response._content).decode())['data']
+        for wiki_dir in wiki_dirs:
+            wiki_dir_path = wiki_dir['attributes']['path']
+            wiki_files_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=wiki_dir_path, _internal=True), headers=creator_auth)
+            wiki_files_dirs = json.loads((wiki_files_response._content).decode())['data']
+            for wiki_file in wiki_files_dirs:
+                wiki_file_name = wiki_dir['attributes']['name'] + '.md'
+                if wiki_file['attributes']['name'] == wiki_file_name:
+                    import_dirs.append({
+                        'id': parent_dir['attributes']['path'],
+                        'name': parent_dir['attributes']['name']
+                    })
+                    break
+            break
     return import_dirs
 
 @must_be_valid_project  # injects node or project
@@ -805,13 +823,17 @@ def serialize_component_wiki(node, auth):
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
     wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
-    task = tasks.run_project_wiki_validate_for_import.delay(dir_id, node_id)
+    current_user_id = get_current_user_id()
+    task = tasks.run_project_wiki_validate_for_import.delay(dir_id, current_user_id, node_id)
     task_id = task.id
     return {'taskId': task_id}
 
-def project_wiki_validate_for_import_process(dir_id, node):
+def project_wiki_validate_for_import_process(dir_id, node, auth):
     global can_start_import
     can_start_import = True
+    is_mount_system, provider_name = _is_mount_system(auth.user)
+    if is_mount_system:
+        return _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id)
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
     import_objects = BaseFileNode.objects.filter(target_object_id=node.id, parent=import_dir['id'], deleted__isnull=True)
     info_list = []
@@ -833,6 +855,7 @@ def project_wiki_validate_for_import_process(dir_id, node):
         child_info_list = _validate_import_folder(node, obj, '')
         info_list.extend(child_info_list)
     duplicated_folder_list = _validate_import_duplicated_directry(info_list)
+    logger.info(info_list)
     return {
         'data': info_list,
         'duplicated_folder': duplicated_folder_list,
@@ -922,6 +945,14 @@ def _validate_import_duplicated_directry(info_list):
     # extract duplicate page names
     duplicated_folder_list = [k for k, v in collections.Counter(folder_name_list).items() if v > 1]
     return duplicated_folder_list
+
+def _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id):
+    logger.info('---wikivalidateforimportprocess_institutionalstorage---')
+    root_folder_name = BaseFileNode.objects.get(_id=dir_id).name
+    result = list(wiki_utils._get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id, root_folder_name))
+    logger.info(result)
+    logger.info('---wikivalidateforimportprocess_institutionalstorage---')
+    return result
 
 @must_be_valid_project  # returns project
 @must_have_permission(ADMIN)  # returns user, project

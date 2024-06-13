@@ -17,9 +17,11 @@ __all__ = [
 ]
 logger = logging.getLogger(__name__)
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
-def run_project_wiki_validate_for_import(self, dir_id, nid):
+def run_project_wiki_validate_for_import(self, dir_id, current_user_id, nid):
     node = _load_node_or_fail(nid)
-    return wiki_views.project_wiki_validate_for_import_process(dir_id, node)
+    user = OSFUser.load(current_user_id, select_for_update=False)
+    auth = Auth.from_kwargs({'user': user}, {})
+    return wiki_views.project_wiki_validate_for_import_process(dir_id, node, auth)
 
 @celery_app.task(bind=True, base=AbortableTask, track_started=True)
 def run_project_wiki_import(self, data_json, dir_id, current_user_id, nid):
