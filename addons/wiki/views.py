@@ -434,6 +434,7 @@ def _get_import_institutional_storage_folder(node, auth, provider_name):
     pid = node.guids.first()._id
     creator, creator_auth = get_creator_auth_header(auth.user)
     parent_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
+    logger.info(vars(parent_dirs_response))
     parent_dirs = json.loads((parent_dirs_response._content).decode())['data']
     logger.info(parent_dirs)
     for parent_dir in parent_dirs:
@@ -948,8 +949,7 @@ def _validate_import_duplicated_directry(info_list):
 
 def _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id):
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
-    root_folder_name = BaseFileNode.objects.get(_id=dir_id).name
-    result = list(wiki_utils._get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id, root_folder_name))
+    result = list(wiki_utils._get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id))
     logger.info(result)
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
     return result
