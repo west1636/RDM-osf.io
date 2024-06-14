@@ -822,6 +822,7 @@ def serialize_component_wiki(node, auth):
 
 @must_be_valid_project
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
+    logger.info('---projectwikivalidateforimport---')
     wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
     current_user_id = get_current_user_id()
