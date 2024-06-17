@@ -356,6 +356,8 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
     sortable_pages_ctn = node.wikis.filter(deleted__isnull=True).exclude(page_name='home').count()
     log_time('project_wiki_view 10')
 
+    wiki_page_fullpath = wiki_utils.get_wiki_fullpath(node, wiki_name)
+    breadcrumbs_list = wiki_page_fullpath.split('/')
     ret = {
         'wiki_id': wiki_page._primary_key if wiki_page else None,
         'wiki_name': wiki_page.page_name if wiki_page else wiki_name,
@@ -364,6 +366,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'parent_wiki_name': parent_wiki_page.page_name if parent_wiki_page else '',
         'import_dirs': import_dirs,
         'alive_task_id': alive_task_id,
+        'breadcrumbs_list': breadcrumbs_list,
         'rendered_before_update': rendered_before_update,
         'page': wiki_page,
         'version': version,
