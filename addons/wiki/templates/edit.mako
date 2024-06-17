@@ -197,7 +197,7 @@
                               <button id="revert-button"
                                       class="btn"
                                       data-bind="click: editModeOff"
-                                      >${_("Finish")}</button>
+                                      >${_("Close")}</button>
                               <input type="submit"
                                     class="btn btn-success"
                                     value="${_('Save')}"
