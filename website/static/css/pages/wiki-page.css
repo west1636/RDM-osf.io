@@ -406,6 +406,14 @@ select.form-control {
     position: absolute;
 }  
 
+.table-dropdown-item:hover {
+    background-color: #337AB7;
+}
+
+.heading-dropdown-item:hover {
+    background-color: #337AB7;
+}
+
 .milkdown .editor table {
     width: 80%;
 }
