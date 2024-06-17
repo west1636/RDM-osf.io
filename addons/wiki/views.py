@@ -269,10 +269,10 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
 
     log_time('project_wiki_view 2')
     # Determine panels used in view
-    panels = {'view', 'edit', 'compare', 'menu'}
+    panels = {'view', 'compare', 'menu'}
     if request.args and set(request.args).intersection(panels):
         panels_used = [panel for panel in request.args if panel in panels]
-        num_columns = len(set(panels_used).intersection({'view', 'edit', 'compare'}))
+        num_columns = len(set(panels_used).intersection({'view', 'compare'}))
         if num_columns == 0:
             panels_used.append('view')
             num_columns = 1
