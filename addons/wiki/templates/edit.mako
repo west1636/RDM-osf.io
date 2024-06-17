@@ -386,11 +386,11 @@
       <div class="modal-body">
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Link URL:")}</p>
-          <input id="imageSrc" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter link URL')}">
+          <input id="linkSrc" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter link URL')}">
         </div>
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Link Title:")}</p>
-          <input id="imageTitle" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter link Title')}">
+          <input id="linkTitle" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter link Title')}">
         </div>
       </div>
       <div class="modal-footer">
