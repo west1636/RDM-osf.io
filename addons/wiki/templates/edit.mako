@@ -219,7 +219,7 @@
           </div>
 
 
-          <div data-osf-panel="${_('Compare')}"
+          <div id="compareWidget" data-osf-panel="${_('Compare')}"
                class="${'col-sm-{0}'.format(12 / num_columns)}"
                style="${'' if 'compare' in panels_used else 'display: none'}">
             <div class="osf-panel panel panel-default osf-panel-flex" data-bind="css: { 'no-border reset-height': $root.singleVis() === 'compare', 'osf-panel-flex': $root.singleVis() !== 'compare' }">
