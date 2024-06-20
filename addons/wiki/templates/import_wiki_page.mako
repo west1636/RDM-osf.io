@@ -141,6 +141,7 @@
                     $submitForm.attr('disabled', false).text('${_("Import")}');
                 }
             }
+            console.log(validateWikiImportResult)
             return;
         });
 
