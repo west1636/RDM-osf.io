@@ -121,6 +121,12 @@
             const $submitForm = $wikiImportForm.find('#wikiImportSubmit');
             const $stopWikiImport = $wikiImportForm.find('.stopWikiImport');
             const dirId = $wikiImportDir.val();
+            var param = 'inst?=false';
+            if (dirId.startsWith('/') && dirId.endsWith('/')) {
+                dirId = dirId.substring(1, dirId.length - 1);
+                param = '?inst=true';
+            }
+            const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/' + param;
             const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + encodeURIComponent(dirId) + '/validate/';
             const validateWikiImportTask = await requestvalidateWikiImportTask(validateWikiImportUrl, $alertInfoForm, $submitForm);
             const taskId = validateWikiImportTask.taskId;

@@ -826,6 +826,10 @@ def serialize_component_wiki(node, auth):
 @must_be_valid_project
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
     logger.info('---projectwikivalidateforimport---')
+    is_institutinal_storage = request.args.get('inst')
+    logger.info(is_institutinal_storage)
+    if is_institutinal_storage:
+        dir_id = '/' + dir_id + '/'
     wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
     current_user_id = get_current_user_id()
@@ -953,6 +957,7 @@ def _validate_import_duplicated_directry(info_list):
 
 def _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id):
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
+    logger.info(dir_id)
     result = list(wiki_utils._get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id))
     logger.info(result)
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
