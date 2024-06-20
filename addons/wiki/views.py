@@ -850,6 +850,7 @@ def project_wiki_validate_for_import_process(dir_id, node, auth):
     can_start_import = True
     is_mount_system, provider_name = _is_mount_system(auth.user)
     if is_mount_system:
+        creator, creator_auth = get_creator_auth_header(auth.user)
         return _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id)
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
     import_objects = BaseFileNode.objects.filter(target_object_id=node.id, parent=import_dir['id'], deleted__isnull=True)
