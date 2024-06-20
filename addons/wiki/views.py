@@ -826,15 +826,22 @@ def serialize_component_wiki(node, auth):
 @must_be_valid_project
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
     logger.info('---projectwikivalidateforimport---')
-    is_institutinal_storage = request.args.get('inst')
+    is_institutinal_storage = bool(strtobool(request.args.get('inst')))
     logger.info(is_institutinal_storage)
     if is_institutinal_storage:
         dir_id = '/' + dir_id + '/'
-    wiki_utils.check_file_object_in_node(dir_id, node)
+    else:
+        wiki_utils.check_file_object_in_node(dir_id, node)
+    logger.info('---projectwikivalidateforimport 1---')
+    logger.info(dir_id)
     node_id = node.guids.first()._id
+    logger.info('---projectwikivalidateforimport 2---')
     current_user_id = get_current_user_id()
+    logger.info('---projectwikivalidateforimport 3---')
     task = tasks.run_project_wiki_validate_for_import.delay(dir_id, current_user_id, node_id)
+    logger.info('---projectwikivalidateforimport 4---')
     task_id = task.id
+    logger.info('---projectwikivalidateforimport 5---')
     return {'taskId': task_id}
 
 def project_wiki_validate_for_import_process(dir_id, node, auth):
