@@ -127,7 +127,6 @@
                 param = '?inst=true';
             }
             const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/' + param;
-            const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + encodeURIComponent(dirId) + '/validate/';
             const validateWikiImportTask = await requestvalidateWikiImportTask(validateWikiImportUrl, $alertInfoForm, $submitForm);
             const taskId = validateWikiImportTask.taskId;
             $submitForm.attr('disabled', 'disabled').text('${_("Validating wiki pages")}');
