@@ -12,6 +12,7 @@ import unicodedata
 import urllib.parse
 import requests
 from datetime import datetime
+from distutils.util import strtobool
 from api.base.utils import waterbutler_api_url_for
 from addons.osfstorage.models import Region
 from addons.wiki.utils import to_mongo_key
