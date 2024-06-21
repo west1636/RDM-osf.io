@@ -1030,7 +1030,7 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
                     'message': '',
                     '_id': _id
                 }
-                wiki_views._validate_import_wiki_exists_duplicated(node, info)
+                _validate_import_wiki_exists_duplicated(node, info)
                 result.append(info)
     logger.info('---getallchildfileidsinstitutionalstorage---')
     return result
