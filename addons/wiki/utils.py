@@ -287,7 +287,9 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
     logger.info('---getallchildfileidsinstitutionalstorage---')
     logger.info(root_folder_name)
     pid = node.guids.first()._id
+    logger.info(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True))
     response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True), headers=creator_auth)
+    logger.info(vars(response))
     children_objs = json.loads(response.content.decode())['data']
     logger.info(children_objs)
     result = []
