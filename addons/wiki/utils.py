@@ -15,6 +15,7 @@ from django.apps import apps
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from addons.wiki import settings as wiki_settings
+from addons.wiki import views as wiki_views
 from addons.wiki.exceptions import InvalidVersionError
 from osf.models.files import BaseFileNode
 from osf.utils.permissions import ADMIN, READ, WRITE
@@ -331,6 +332,7 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
                     'message': '',
                     '_id': _id
                 }
+                wiki_views._validate_import_wiki_exists_duplicated(node, info)
                 result.append(info)
     logger.info('---getallchildfileidsinstitutionalstorage---')
     return result

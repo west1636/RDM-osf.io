@@ -852,14 +852,20 @@ def project_wiki_validate_for_import(dir_id, node, **kwargs):
 def project_wiki_validate_for_import_process(dir_id, node, auth):
     global can_start_import
     can_start_import = True
+    info_list = []
+    duplicated_folder_list = []
     is_mount_system, provider_name = _is_mount_system(auth.user)
     if is_mount_system:
         creator, creator_auth = get_creator_auth_header(auth.user)
-        return _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id)
+        info_list = _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id)
+        duplicated_folder_list = _validate_import_duplicated_directry(info_list)
+        return {
+            'data': info_list,
+            'duplicated_folder': duplicated_folder_list,
+            'canStartImport': can_start_import,
+        }
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
     import_objects = BaseFileNode.objects.filter(target_object_id=node.id, parent=import_dir['id'], deleted__isnull=True)
-    info_list = []
-    duplicated_folder_list = []
     for obj in import_objects:
         if obj.type == 'osf.osfstoragefile':
             logger.warn(f'This file cannot be imported: {obj.name}')
