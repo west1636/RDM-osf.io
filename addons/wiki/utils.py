@@ -302,10 +302,15 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
         logger.info(root_folder_name)
         if child_obj['attributes']['kind'] == 'folder':
             logger.info('---folder---')
-            _id = child_obj['id'].split('/')[-2]
+            parts = materialized.strip('/').split('/')
+            _id_fix = ''
+            if materialized.startswith('/' + root_folder_name + '/'):
+                _id_fix = parts[1]
+            else:
+                _id_fix = '/'.join(parts)
             # Recur for subfolders
             result.extend(_get_all_child_file_ids_institutional_storage(
-                node, creator_auth, provider_name, _id, root_folder_name, name
+                node, creator_auth, provider_name, _id_fix, root_folder_name, name
             ))
         elif child_obj['attributes']['kind'] == 'file':
             logger.info('---file---')
