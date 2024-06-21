@@ -1013,7 +1013,7 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
             ))
         elif child_obj['attributes']['kind'] == 'file':
             logger.info('---file---')
-            _id = child_obj['id'].split('/')[-1]
+            _id = child_obj['attributes']['materialized'].lstrip('/')
             logger.info(os.path.splitext(name)[0])
             logger.info(parent_folder_name)
             if os.path.splitext(name)[0] == parent_folder_name:
@@ -1040,7 +1040,12 @@ def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_n
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
-    wiki_utils.check_file_object_in_node(dir_id, node)
+    logger.info('---projectwikiimport---')
+    is_mount_system, provider_name = _is_mount_system(auth.user)
+    logger.info(is_mount_system)
+    logger.info(provider_name)
+    if not is_mount_system:
+        wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
     current_user_id = get_current_user_id()
     data = request.get_json()
@@ -1063,7 +1068,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     creator, creator_auth = get_creator_auth_header(user)
     task = AbortableAsyncResult(task_id, app=celery_app)
     # GET markdown content from wb
-    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task)
+    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task, auth)
     if wiki_info is None:
         set_wiki_import_task_proces_end(node)
         logger.info('wiki import process is stopped')
@@ -1294,14 +1299,20 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     folder_id = BaseFileNode.objects.get(_id=_id).id
     return folder_id, folder_path
 
-def _get_md_content_from_wb(data, node, creator_auth, task):
+def _get_md_content_from_wb(data, node, creator_auth, task, auth):
+    logger.info('---getmdcontentfromwb---')
     node_id = node.guids.first()._id
+    is_mount_system, provider_name = _is_mount_system(auth.user)
+    logger.info(is_mount_system)
+    logger.info(provider_name)
     for i, info in enumerate(data):
         if task.is_aborted():
             return None
         try:
+            logger.info(waterbutler_api_url_for(node_id, provider_name, path='/' + info['_id'], _internal=True))
             response = requests.get(waterbutler_api_url_for(node_id, 'osfstorage', path='/' + info['_id'], _internal=True), headers=creator_auth)
             response.raise_for_status()
+            logger.info((response._content).decode())
             data[i]['wiki_content'] = (response._content).decode()
         except Exception as err:
             logger.error(err)
