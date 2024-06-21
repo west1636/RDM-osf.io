@@ -977,9 +977,62 @@ def _validate_import_duplicated_directry(info_list):
 def _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id):
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
     logger.info(dir_id)
-    result = list(wiki_utils._get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id))
+    result = list(_get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id))
     logger.info(result)
     logger.info('---wikivalidateforimportprocess_institutionalstorage---')
+    return result
+
+def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id, root_folder_name='', parent_folder_name=''):
+    logger.info('---getallchildfileidsinstitutionalstorage---')
+    logger.info(root_folder_name)
+    pid = node.guids.first()._id
+    logger.info(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True))
+    response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True), headers=creator_auth)
+    logger.info(vars(response))
+    children_objs = json.loads(response.content.decode())['data']
+    logger.info(children_objs)
+    result = []
+    for child_obj in children_objs:
+        name = child_obj['attributes']['name']
+        materialized = child_obj['attributes']['materialized']
+        logger.info(root_folder_name)
+        if not root_folder_name:
+            root_folder_name = materialized.split('/')[1] if materialized.startswith('/') else None
+        logger.info(root_folder_name)
+        if child_obj['attributes']['kind'] == 'folder':
+            logger.info('---folder---')
+            parts = materialized.strip('/').split('/')
+            _id_fix = ''
+            if materialized.startswith('/' + root_folder_name + '/'):
+                _id_fix = parts[1]
+            else:
+                _id_fix = '/'.join(parts)
+            # Recur for subfolders
+            result.extend(_get_all_child_file_ids_institutional_storage(
+                node, creator_auth, provider_name, _id_fix, root_folder_name, name
+            ))
+        elif child_obj['attributes']['kind'] == 'file':
+            logger.info('---file---')
+            _id = child_obj['id'].split('/')[-1]
+            logger.info(os.path.splitext(name)[0])
+            logger.info(parent_folder_name)
+            if os.path.splitext(name)[0] == parent_folder_name:
+                wiki_name = os.path.splitext(name)[0]
+                path = materialized.replace(f'/{root_folder_name}', '', 1).rsplit(f'/{name}', 1)[0]
+                logger.info(path)
+                parent_wiki_name = path[:path.rfind('/')].split('/')[-1] if '/' in path and path.rfind('/') > 0 else None
+                info = {
+                    'parent_wiki_name': parent_wiki_name,
+                    'path': path,
+                    'original_name': wiki_name,
+                    'wiki_name': wiki_name,
+                    'status': 'valid',
+                    'message': '',
+                    '_id': _id
+                }
+                wiki_views._validate_import_wiki_exists_duplicated(node, info)
+                result.append(info)
+    logger.info('---getallchildfileidsinstitutionalstorage---')
     return result
 
 @must_be_valid_project  # returns project
