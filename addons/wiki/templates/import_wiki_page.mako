@@ -121,7 +121,7 @@
             const $submitForm = $wikiImportForm.find('#wikiImportSubmit');
             const $stopWikiImport = $wikiImportForm.find('.stopWikiImport');
             var dirId = $wikiImportDir.val();
-            var param = 'inst?=false';
+            var param = '?inst=false';
             if (dirId.startsWith('/') && dirId.endsWith('/')) {
                 dirId = dirId.substring(1, dirId.length - 1);
                 param = '?inst=true';
