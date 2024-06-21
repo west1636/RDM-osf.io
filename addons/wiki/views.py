@@ -829,9 +829,7 @@ def project_wiki_validate_for_import(dir_id, node, **kwargs):
     logger.info('---projectwikivalidateforimport---')
     is_institutinal_storage = bool(strtobool(request.args.get('inst')))
     logger.info(is_institutinal_storage)
-    if is_institutinal_storage:
-        dir_id = '/' + dir_id + '/'
-    else:
+    if not is_institutinal_storage:
         wiki_utils.check_file_object_in_node(dir_id, node)
     logger.info('---projectwikivalidateforimport 1---')
     logger.info(dir_id)
