@@ -15,7 +15,6 @@ from django.apps import apps
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from addons.wiki import settings as wiki_settings
-from addons.wiki import views as wiki_views
 from addons.wiki.exceptions import InvalidVersionError
 from osf.models.files import BaseFileNode
 from osf.utils.permissions import ADMIN, READ, WRITE
