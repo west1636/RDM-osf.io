@@ -1448,6 +1448,9 @@ def _get_max_depth(wiki_infos):
     Returns:
         int: The maximum depth of paths in the list.
     """
+    logger.info('---getmaxdepth---')
+    logger.info(wiki_infos)
+    logger.info('---getmaxdepth---')
     max_depth = max(info['path'].count('/') for info in wiki_infos)
     return max_depth - 1
 
