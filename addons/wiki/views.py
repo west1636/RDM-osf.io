@@ -1060,6 +1060,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     check_running_task(task_id, node)
     ret = []
     wiki_id_list = []
+    replaced_wiki_info = []
     import_wiki_info = []
     res_child = []
     import_errors = []
