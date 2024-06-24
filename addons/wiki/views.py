@@ -1067,8 +1067,11 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     osf_cookie = user.get_or_create_cookie().decode()
     creator, creator_auth = get_creator_auth_header(user)
     task = AbortableAsyncResult(task_id, app=celery_app)
+    is_mount_system, provider_name = _is_mount_system(auth.user)
+    logger.info(is_mount_system)
+    logger.info(provider_name)
     # GET markdown content from wb
-    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task, auth)
+    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name)
     if wiki_info is None:
         set_wiki_import_task_proces_end(node)
         logger.info('wiki import process is stopped')
@@ -1076,7 +1079,7 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     logger.info('got markdown content from wb')
     # Get or create 'Wiki images'
     root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
-    wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER)
+    wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER, provider_name + '/')
     logger.info('got or created Wiki images folder')
     # Get or create 'Imported Wiki workspace (temporary)'
     wiki_import_folder_id, wiki_import_folder_path = _get_or_create_wiki_folder(osf_cookie, node, wiki_images_folder_id, user, creator_auth, WIKI_IMPORT_FOLDER, wiki_images_folder_path)
@@ -1272,7 +1275,7 @@ def _replace_common_rule(name):
         decoded_name = urllib.parse.unquote(name)
     return decoded_name
 
-def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, folder_name, parent_path='osfstorage/'):
+def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, folder_name, parent_path):
     folder_id = ''
     folder_path = ''
     p_guid = node.guids.first()._id
@@ -1299,18 +1302,15 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     folder_id = BaseFileNode.objects.get(_id=_id).id
     return folder_id, folder_path
 
-def _get_md_content_from_wb(data, node, creator_auth, task, auth):
+def _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name):
     logger.info('---getmdcontentfromwb---')
     node_id = node.guids.first()._id
-    is_mount_system, provider_name = _is_mount_system(auth.user)
-    logger.info(is_mount_system)
-    logger.info(provider_name)
     for i, info in enumerate(data):
         if task.is_aborted():
             return None
         try:
             logger.info(waterbutler_api_url_for(node_id, provider_name, path='/' + info['_id'], _internal=True))
-            response = requests.get(waterbutler_api_url_for(node_id, 'osfstorage', path='/' + info['_id'], _internal=True), headers=creator_auth)
+            response = requests.get(waterbutler_api_url_for(node_id, provider_name, path='/' + info['_id'], _internal=True), headers=creator_auth)
             response.raise_for_status()
             logger.info((response._content).decode())
             data[i]['wiki_content'] = (response._content).decode()
