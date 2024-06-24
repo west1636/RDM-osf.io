@@ -1077,28 +1077,32 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
         logger.info('wiki import process is stopped')
         return {'aborted': True}
     logger.info('got markdown content from wb')
-    # Get or create 'Wiki images'
-    root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
-    wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER, provider_name + '/')
-    logger.info('got or created Wiki images folder')
-    # Get or create 'Imported Wiki workspace (temporary)'
-    wiki_import_folder_id, wiki_import_folder_path = _get_or_create_wiki_folder(osf_cookie, node, wiki_images_folder_id, user, creator_auth, WIKI_IMPORT_FOLDER, wiki_images_folder_path)
-    logger.info('got or created Imported Wiki workspace (temporary) folder')
-    random_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-    # Create folder sorting copy import directory
-    wiki_import_sorting_folder_id, wiki_import_sorting_folder_path = _create_wiki_folder(osf_cookie, pid, random_name, wiki_import_folder_path)
-    logger.info('created sorting copy import folder')
-    copy_to_id = wiki_import_sorting_folder_path.split('/')[1]
-    # Copy Import Directory
-    cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
-    logger.info('copied import directory')
-    # Replace Wiki Content
-    replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
-    logger.info('replaced wiki content')
-    if replaced_wiki_info is None:
-        set_wiki_import_task_proces_end(node)
-        logger.info('wiki import process is stopped')
-        return {'aborted': True}
+    if is_mount_system:
+        pass
+        #_get_or_create_wiki_folder_institutional_storage(osf_cookie, node, creator_auth, WIKI_IMAGE_FOLDER, provider_name + '/')
+    else:
+        # Get or create 'Wiki images'
+        root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
+        wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER)
+        logger.info('got or created Wiki images folder')
+        # Get or create 'Imported Wiki workspace (temporary)'
+        wiki_import_folder_id, wiki_import_folder_path = _get_or_create_wiki_folder(osf_cookie, node, wiki_images_folder_id, user, creator_auth, WIKI_IMPORT_FOLDER, wiki_images_folder_path)
+        logger.info('got or created Imported Wiki workspace (temporary) folder')
+        random_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+        # Create folder sorting copy import directory
+        wiki_import_sorting_folder_id, wiki_import_sorting_folder_path = _create_wiki_folder(osf_cookie, pid, random_name, wiki_import_folder_path)
+        logger.info('created sorting copy import folder')
+        copy_to_id = wiki_import_sorting_folder_path.split('/')[1]
+        # Copy Import Directory
+        cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
+        logger.info('copied import directory')
+        # Replace Wiki Content
+        replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
+        logger.info('replaced wiki content')
+        if replaced_wiki_info is None:
+            set_wiki_import_task_proces_end(node)
+            logger.info('wiki import process is stopped')
+            return {'aborted': True}
     # Import top hierarchy wiki page
     max_depth = _get_max_depth(replaced_wiki_info)
     for info in replaced_wiki_info:
@@ -1275,7 +1279,7 @@ def _replace_common_rule(name):
         decoded_name = urllib.parse.unquote(name)
     return decoded_name
 
-def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, folder_name, parent_path):
+def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, folder_name, parent_path='osfstorage/'):
     folder_id = ''
     folder_path = ''
     p_guid = node.guids.first()._id
@@ -1285,6 +1289,25 @@ def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, 
         return _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path)
     folder_id = folder.id
     folder_path = 'osfstorage/{}/'.format(folder._id)
+    return folder_id, folder_path
+
+def _get_or_create_wiki_folder_institutional_storage(osf_cookie, node, creator_auth, folder_name, parent_path):
+    folder_id = ''
+    folder_path = ''
+    p_guid = node.guids.first()._id
+    try:
+        folder_response = requests.get(waterbutler_api_url_for(p_guid, provider_name, path=parent_path, _internal=True), headers=creator_auth)
+        folder_response.raise_for_status()
+    except Exception as e:
+        logger.info(e)
+        if e.status == 404:
+            return _create_wiki_folder_institutional_storage(osf_cookie, p_guid, folder_name, parent_path)
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
+            message_short='Error when create wiki folder',
+            message_long='\t' + _('An error occures when create wiki folder : ') + folder_name + '\t'
+        ))
+
+    folder_id = folder.id
     return folder_id, folder_path
 
 def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
@@ -1301,6 +1324,19 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     _id = (folder_response.json()['data']['attributes']['path']).strip('/')
     folder_id = BaseFileNode.objects.get(_id=_id).id
     return folder_id, folder_path
+
+def _create_wiki_folder_institutional_storage(osf_cookie, p_guid, folder_name, parent_path):
+    try:
+        folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
+        folder_response.raise_for_status()
+    except Exception as e:
+        logger.info(e)
+        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
+            message_short='Error when create wiki folder',
+            message_long='\t' + _('An error occures when create wiki folder : ') + folder_name + '\t'
+        ))
+    folder_path = folder_response.json()['data']['id']
+    return folder_path
 
 def _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name):
     logger.info('---getmdcontentfromwb---')
