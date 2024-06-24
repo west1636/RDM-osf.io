@@ -1072,6 +1072,8 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     is_mount_system, provider_name = _is_mount_system(auth.user)
     logger.info(is_mount_system)
     logger.info(provider_name)
+    if provider_namme == 'filesystem'
+        provider_name = 'osfstorage'
     # GET markdown content from wb
     wiki_info = _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name)
     if wiki_info is None:
