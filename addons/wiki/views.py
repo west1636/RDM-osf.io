@@ -438,25 +438,17 @@ def _get_import_institutional_storage_folder(node, auth, provider_name):
     pid = node.guids.first()._id
     creator, creator_auth = get_creator_auth_header(auth.user)
     parent_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
-    logger.info(vars(parent_dirs_response))
-    parent_dirs = json.loads((parent_dirs_response._content).decode())['data']
-    logger.info(parent_dirs)
+    parent_dirs = parent_dirs_response.json()['data']
     for parent_dir in parent_dirs:
         if parent_dir['attributes']['kind'] == 'file':
             continue
         parent_dir_path = parent_dir['attributes']['path']
-        logger.info(waterbutler_api_url_for(pid, provider_name, path=parent_dir_path, _internal=True))
         wiki_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=parent_dir_path, _internal=True), headers=creator_auth)
-        logger.info(vars(wiki_dirs_response))
-        wiki_dirs = json.loads((wiki_dirs_response._content).decode())['data']
-        logger.info(wiki_dirs)
+        wiki_dirs = wiki_dirs_response.json()['data']
         for wiki_dir in wiki_dirs:
             wiki_dir_path = wiki_dir['attributes']['path']
-            logger.info(waterbutler_api_url_for(pid, provider_name, path=wiki_dir_path, _internal=True))
             wiki_files_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=wiki_dir_path, _internal=True), headers=creator_auth)
-            logger.info(vars(wiki_files_response))
-            wiki_files_dirs = json.loads((wiki_files_response._content).decode())['data']
-            logger.info(wiki_files_dirs)
+            wiki_files_dirs = wiki_files_response.json()['data']
             for wiki_file in wiki_files_dirs:
                 wiki_file_name = wiki_dir['attributes']['name'] + '.md'
                 if wiki_file['attributes']['name'] == wiki_file_name:
