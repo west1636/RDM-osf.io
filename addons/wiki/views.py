@@ -1082,8 +1082,10 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
         return {'aborted': True}
     logger.info('got markdown content from wb')
     if is_mount_system:
-        pass
         #_get_or_create_wiki_folder_institutional_storage(osf_cookie, node, creator_auth, WIKI_IMAGE_FOLDER, provider_name + '/')
+        url = website_settings.DOMAIN + pid + '/files/' + provider_name + '/' + 'test.png' + '/'
+        response = requests.get(url, headers=creator_auth)
+        logger.info(vars(response))
     else:
         # Get or create 'Wiki images'
         root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
@@ -1366,6 +1368,10 @@ def _wiki_copy_import_directory(copy_to_id, copy_from_id, node):
     cloned = files_utils.copy_files(copy_from, node, copy_to)
     cloned_id = cloned._id
     return cloned_id
+
+def _make_basefilenode_of_institutional_storage(wiki_info):
+    pass
+
 
 def _wiki_content_replace(wiki_info, dir_id, node, task):
     replaced_wiki_info = []
