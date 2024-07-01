@@ -165,15 +165,7 @@
                     <button class="menuItem" data-toggle="modal" data-target="#toggleImage"><span class="material-symbols-outlined">image</span></button>
                     <button class="menuItem" data-bind="click: listNumbered"><span class="material-symbols-outlined">format_list_numbered</span></button>
                     <button class="menuItem" data-bind="click: listBulleted"><span class="material-symbols-outlined">format_list_bulleted</span></button>
-                    <select class="menuItem">
-                      <option selected>${_("Paragraph")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 24px;" data-bind="click: head_1">${_("Heading 1")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 20px;" data-bind="click: head_2">${_("Heading 2")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 16px;" data-bind="click: head_3">${_("Heading 3")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 14px;" data-bind="click: head_4">${_("Heading 4")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 12px;" data-bind="click: head_5">${_("Heading 5")}</option>
-                      <option class="heading-dropdown-item" style="font-size: 10px;" data-bind="click: head_6">${_("Heading 6")}</option>
-                    </select>
+                    <button class="menuItem" data-bind="click: head"><span class="material-symbols-outlined">view_headline</span></button>
                     <button class="menuItem" data-bind="click: horizontal"><span class="material-symbols-outlined">horizontal_rule</span></button>
                     <div style="display: inline-block; position:absolute">
                     <button id="tableBtn" class="menuItem" data-bind="click: table"><span class="material-symbols-outlined">table</span><span id="arrowDropDown" class="material-symbols-outlined" style="margin-left: -7px; display: none;">arrow_drop_down</span></button>
