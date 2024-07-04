@@ -1072,7 +1072,7 @@ msgstr "Wiki"
 
 #: addons/wiki/templates/edit.mako:48
 msgid "Reorder"
-msgstr "並べ替え"
+msgstr "並替え"
 
 #: addons/wiki/templates/edit.mako:55
 msgid "Importing"
@@ -1426,7 +1426,7 @@ msgstr "中止しています"
 
 #: addons/wiki/templates/sort_wiki_page.mako:8
 msgid "Reorder Wiki Tree"
-msgstr "Wikiツリー並べ替え"
+msgstr "Wikiツリー並替え"
 
 #: addons/wiki/templates/sort_wiki_page.mako:11
 msgid "Wiki Tree"

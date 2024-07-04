@@ -38,7 +38,7 @@
 
             <!-- Menu with toggle normal -->
             <div class="osf-panel panel panel-default reset-height ${'' if 'menu' in panels_used else 'hidden visible-xs'}" data-bind="css: {  'osf-panel-flex': !$root.singleVis() }">
-                <div class="panel-heading wiki-panel-header clearfix" data-bind="css: {  'osf-panel-heading-flex': !$root.singleVis()}">
+                <div class="panel-heading wiki-panel-header clearfix" data-bind="css: {  'osf-panel-heading-flex': !$root.singleVis()}" style="padding-left: 5px; pading-right: 10px;">
                     % if user['can_edit']:
                         <div class="wiki-toolbar-icon text-success" data-toggle="modal" data-target="#newWiki">
                             <i class="fa fa-plus text-success"></i><span>${_("New")}</span>
