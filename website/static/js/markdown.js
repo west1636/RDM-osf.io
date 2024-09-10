@@ -86,7 +86,7 @@ var markdown = new MarkdownIt('commonmark', {
                 return filteredContent;
             } else if (/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g.test(content)) {
                 var filteredContent = content.replace(/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g, function(match, color, text) {            
-                    return `<span style="color:${color};">${text}</span>`;
+                    return '<span style="color:' + color + ';">' + text + '</span>';
                 });   
                 return filteredContent;           
             } else {
