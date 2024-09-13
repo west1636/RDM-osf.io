@@ -779,6 +779,8 @@ def project_wiki_validate_for_import(dir_id, node, **kwargs):
 def project_wiki_validate_for_import_process(dir_id, node):
     global can_start_import
     can_start_import = True
+    info_list = []
+    duplicated_folder_list = []
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
     import_objects = BaseFileNode.objects.filter(target_object_id=node.id, parent=import_dir['id'], deleted__isnull=True)
     for obj in import_objects:
