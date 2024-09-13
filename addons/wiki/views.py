@@ -12,9 +12,7 @@ import unicodedata
 import urllib.parse
 import requests
 from datetime import datetime
-from distutils.util import strtobool
 from api.base.utils import waterbutler_api_url_for
-from addons.osfstorage.models import Region
 from addons.wiki.utils import to_mongo_key
 from addons.wiki import settings
 from addons.wiki import utils as wiki_utils
@@ -69,8 +67,6 @@ from .exceptions import (
     PageNotFoundError,
     InvalidVersionError,
 )
-
-from website.util import waterbutler
 
 logger = logging.getLogger(__name__)
 
@@ -341,16 +337,7 @@ def project_wiki_view(auth, wname, path=None, **kwargs):
         'compare': compare or 'previous',
     }
     log_time('project_wiki_view 7')
-    is_mount_system, provider_name = _is_mount_system(auth.user)
-    logger.info('---institutional storage---')
-    logger.info(is_mount_system)
-    logger.info(provider_name)
-    logger.info('---institutional storage---')
-    if is_mount_system:
-        import_dirs = _get_import_institutional_storage_folder(node, auth, provider_name)
-    else:
-        import_dirs = _get_import_folder(node)
-    logger.info(import_dirs)
+    import_dirs = _get_import_folder(node)
     log_time('project_wiki_view 8')
     alive_task_id = WikiImportTask.objects.values_list('task_id').filter(status=WikiImportTask.STATUS_RUNNING, node=node)
     log_time('project_wiki_view 9')
@@ -402,18 +389,6 @@ def log_time(message):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     logger.info(f"{message} at {current_time}")
 
-def _is_mount_system(user):
-    logger.info('---ismountsystem---')
-    mount_system_list = ['nextcloudinstitutions', 'ociinstitutions', 's3compatinstitutions']
-    logger.info(user.affiliated_institutions.first())
-    institution_id = user.affiliated_institutions.first()._id
-    logger.info(institution_id)
-    wb_settings = Region.objects.filter(_id=institution_id).values_list('waterbutler_settings', flat=True).first()
-    logger.info(wb_settings)
-    provider_name = wb_settings['storage']['provider']
-    logger.info(provider_name)
-    return provider_name in mount_system_list, provider_name
-
 def _get_import_folder(node):
     # Get import folder
     root_dir = BaseFileNode.objects.filter(target_object_id=node.id, is_root=True).values('id').first()
@@ -429,35 +404,6 @@ def _get_import_folder(node):
                     'name': parent_dir.name
                 })
                 break
-    return import_dirs
-
-def _get_import_institutional_storage_folder(node, auth, provider_name):
-    # Get import folder that the info exists basefilenode
-    logger.info('---getimportinstitutinalstoragefolder---')
-    import_dirs = []
-    pid = node.guids.first()._id
-    creator, creator_auth = get_creator_auth_header(auth.user)
-    parent_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/', _internal=True), headers=creator_auth)
-    parent_dirs = parent_dirs_response.json()['data']
-    for parent_dir in parent_dirs:
-        if parent_dir['attributes']['kind'] == 'file':
-            continue
-        parent_dir_path = parent_dir['attributes']['path']
-        wiki_dirs_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=parent_dir_path, _internal=True), headers=creator_auth)
-        wiki_dirs = wiki_dirs_response.json()['data']
-        for wiki_dir in wiki_dirs:
-            wiki_dir_path = wiki_dir['attributes']['path']
-            wiki_files_response = requests.get(waterbutler_api_url_for(pid, provider_name, path=wiki_dir_path, _internal=True), headers=creator_auth)
-            wiki_files_dirs = wiki_files_response.json()['data']
-            for wiki_file in wiki_files_dirs:
-                wiki_file_name = wiki_dir['attributes']['name'] + '.md'
-                if wiki_file['attributes']['name'] == wiki_file_name:
-                    import_dirs.append({
-                        'id': parent_dir['attributes']['path'],
-                        'name': parent_dir['attributes']['name']
-                    })
-                    break
-            break
     return import_dirs
 
 @must_be_valid_project  # injects node or project
@@ -824,38 +770,15 @@ def serialize_component_wiki(node, auth):
 
 @must_be_valid_project
 def project_wiki_validate_for_import(dir_id, node, **kwargs):
-    logger.info('---projectwikivalidateforimport---')
-    is_institutinal_storage = bool(strtobool(request.args.get('inst')))
-    logger.info(is_institutinal_storage)
-    if not is_institutinal_storage:
-        wiki_utils.check_file_object_in_node(dir_id, node)
-    logger.info('---projectwikivalidateforimport 1---')
-    logger.info(dir_id)
+    wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
-    logger.info('---projectwikivalidateforimport 2---')
-    current_user_id = get_current_user_id()
-    logger.info('---projectwikivalidateforimport 3---')
-    task = tasks.run_project_wiki_validate_for_import.delay(dir_id, current_user_id, node_id)
-    logger.info('---projectwikivalidateforimport 4---')
+    task = tasks.run_project_wiki_validate_for_import.delay(dir_id, node_id)
     task_id = task.id
-    logger.info('---projectwikivalidateforimport 5---')
     return {'taskId': task_id}
 
-def project_wiki_validate_for_import_process(dir_id, node, auth):
+def project_wiki_validate_for_import_process(dir_id, node):
     global can_start_import
     can_start_import = True
-    info_list = []
-    duplicated_folder_list = []
-    is_mount_system, provider_name = _is_mount_system(auth.user)
-    if is_mount_system:
-        creator, creator_auth = get_creator_auth_header(auth.user)
-        info_list = _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id)
-        duplicated_folder_list = _validate_import_duplicated_directry(info_list)
-        return {
-            'data': info_list,
-            'duplicated_folder': duplicated_folder_list,
-            'canStartImport': can_start_import,
-        }
     import_dir = BaseFileNode.objects.values('id', 'name').get(_id=dir_id)
     import_objects = BaseFileNode.objects.filter(target_object_id=node.id, parent=import_dir['id'], deleted__isnull=True)
     for obj in import_objects:
@@ -875,7 +798,6 @@ def project_wiki_validate_for_import_process(dir_id, node, auth):
         child_info_list = _validate_import_folder(node, obj, '')
         info_list.extend(child_info_list)
     duplicated_folder_list = _validate_import_duplicated_directry(info_list)
-    logger.info(info_list)
     return {
         'data': info_list,
         'duplicated_folder': duplicated_folder_list,
@@ -966,78 +888,12 @@ def _validate_import_duplicated_directry(info_list):
     duplicated_folder_list = [k for k, v in collections.Counter(folder_name_list).items() if v > 1]
     return duplicated_folder_list
 
-def _wiki_validate_for_import_process_institutional_storage(node, creator_auth, provider_name, dir_id):
-    logger.info('---wikivalidateforimportprocess_institutionalstorage---')
-    logger.info(dir_id)
-    result = list(_get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id))
-    logger.info(result)
-    logger.info('---wikivalidateforimportprocess_institutionalstorage---')
-    return result
-
-def _get_all_child_file_ids_institutional_storage(node, creator_auth, provider_name, dir_id, root_folder_name='', parent_folder_name=''):
-    logger.info('---getallchildfileidsinstitutionalstorage---')
-    logger.info(root_folder_name)
-    pid = node.guids.first()._id
-    logger.info(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True))
-    response = requests.get(waterbutler_api_url_for(pid, provider_name, path='/' + dir_id + '/', _internal=True), headers=creator_auth)
-    logger.info(vars(response))
-    children_objs = json.loads(response.content.decode())['data']
-    logger.info(children_objs)
-    result = []
-    for child_obj in children_objs:
-        name = child_obj['attributes']['name']
-        materialized = child_obj['attributes']['materialized']
-        logger.info(root_folder_name)
-        if not root_folder_name:
-            root_folder_name = materialized.split('/')[1] if materialized.startswith('/') else None
-        logger.info(root_folder_name)
-        if child_obj['attributes']['kind'] == 'folder':
-            logger.info('---folder---')
-            parts = materialized.strip('/').split('/')
-            _id_fix = ''
-            if materialized.startswith('/' + root_folder_name + '/'):
-                _id_fix = parts[1]
-            else:
-                _id_fix = '/'.join(parts)
-            # Recur for subfolders
-            result.extend(_get_all_child_file_ids_institutional_storage(
-                node, creator_auth, provider_name, _id_fix, root_folder_name, name
-            ))
-        elif child_obj['attributes']['kind'] == 'file':
-            logger.info('---file---')
-            _id = child_obj['attributes']['materialized'].lstrip('/')
-            logger.info(os.path.splitext(name)[0])
-            logger.info(parent_folder_name)
-            if os.path.splitext(name)[0] == parent_folder_name:
-                wiki_name = os.path.splitext(name)[0]
-                path = materialized.replace(f'/{root_folder_name}', '', 1).rsplit(f'/{name}', 1)[0]
-                logger.info(path)
-                parent_wiki_name = path[:path.rfind('/')].split('/')[-1] if '/' in path and path.rfind('/') > 0 else None
-                info = {
-                    'parent_wiki_name': parent_wiki_name,
-                    'path': path,
-                    'original_name': wiki_name,
-                    'wiki_name': wiki_name,
-                    'status': 'valid',
-                    'message': '',
-                    '_id': _id
-                }
-                _validate_import_wiki_exists_duplicated(node, info)
-                result.append(info)
-    logger.info('---getallchildfileidsinstitutionalstorage---')
-    return result
-
 @must_be_valid_project  # returns project
 @must_have_permission(ADMIN)  # returns user, project
 @must_not_be_registration
 @must_have_addon('wiki', 'node')
 def project_wiki_import(dir_id, auth, node, **kwargs):
-    logger.info('---projectwikiimport---')
-    is_mount_system, provider_name = _is_mount_system(auth.user)
-    logger.info(is_mount_system)
-    logger.info(provider_name)
-    if not is_mount_system:
-        wiki_utils.check_file_object_in_node(dir_id, node)
+    wiki_utils.check_file_object_in_node(dir_id, node)
     node_id = node.guids.first()._id
     current_user_id = get_current_user_id()
     data = request.get_json()
@@ -1061,46 +917,35 @@ def project_wiki_import_process(data, dir_id, task_id, auth, node):
     osf_cookie = user.get_or_create_cookie().decode()
     creator, creator_auth = get_creator_auth_header(user)
     task = AbortableAsyncResult(task_id, app=celery_app)
-    is_mount_system, provider_name = _is_mount_system(auth.user)
-    logger.info(is_mount_system)
-    logger.info(provider_name)
-    if provider_name == 'filesystem':
-        provider_name = 'osfstorage'
     # GET markdown content from wb
-    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name)
+    wiki_info = _get_md_content_from_wb(data, node, creator_auth, task)
     if wiki_info is None:
         set_wiki_import_task_proces_end(node)
         logger.info('wiki import process is stopped')
         return {'aborted': True}
     logger.info('got markdown content from wb')
-    if is_mount_system:
-        #_get_or_create_wiki_folder_institutional_storage(osf_cookie, node, creator_auth, WIKI_IMAGE_FOLDER, provider_name + '/')
-        url = website_settings.DOMAIN + pid + '/files/' + provider_name + '/' + 'test.png' + '/'
-        response = requests.get(url, headers=creator_auth)
-        logger.info(vars(response))
-    else:
-        # Get or create 'Wiki images'
-        root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
-        wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER)
-        logger.info('got or created Wiki images folder')
-        # Get or create 'Imported Wiki workspace (temporary)'
-        wiki_import_folder_id, wiki_import_folder_path = _get_or_create_wiki_folder(osf_cookie, node, wiki_images_folder_id, user, creator_auth, WIKI_IMPORT_FOLDER, wiki_images_folder_path)
-        logger.info('got or created Imported Wiki workspace (temporary) folder')
-        random_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        # Create folder sorting copy import directory
-        wiki_import_sorting_folder_id, wiki_import_sorting_folder_path = _create_wiki_folder(osf_cookie, pid, random_name, wiki_import_folder_path)
-        logger.info('created sorting copy import folder')
-        copy_to_id = wiki_import_sorting_folder_path.split('/')[1]
-        # Copy Import Directory
-        cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
-        logger.info('copied import directory')
-        # Replace Wiki Content
-        replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
-        logger.info('replaced wiki content')
-        if replaced_wiki_info is None:
-            set_wiki_import_task_proces_end(node)
-            logger.info('wiki import process is stopped')
-            return {'aborted': True}
+    # Get or create 'Wiki images'
+    root_id = BaseFileNode.objects.get(target_object_id=node.id, is_root=True).id
+    wiki_images_folder_id, wiki_images_folder_path = _get_or_create_wiki_folder(osf_cookie, node, root_id, user, creator_auth, WIKI_IMAGE_FOLDER)
+    logger.info('got or created Wiki images folder')
+    # Get or create 'Imported Wiki workspace (temporary)'
+    wiki_import_folder_id, wiki_import_folder_path = _get_or_create_wiki_folder(osf_cookie, node, wiki_images_folder_id, user, creator_auth, WIKI_IMPORT_FOLDER, wiki_images_folder_path)
+    logger.info('got or created Imported Wiki workspace (temporary) folder')
+    random_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+    # Create folder sorting copy import directory
+    wiki_import_sorting_folder_id, wiki_import_sorting_folder_path = _create_wiki_folder(osf_cookie, pid, random_name, wiki_import_folder_path)
+    logger.info('created sorting copy import folder')
+    copy_to_id = wiki_import_sorting_folder_path.split('/')[1]
+    # Copy Import Directory
+    cloned_id = _wiki_copy_import_directory(copy_to_id, dir_id, node)
+    logger.info('copied import directory')
+    # Replace Wiki Content
+    replaced_wiki_info = _wiki_content_replace(wiki_info, cloned_id, node, task)
+    logger.info('replaced wiki content')
+    if replaced_wiki_info is None:
+        set_wiki_import_task_proces_end(node)
+        logger.info('wiki import process is stopped')
+        return {'aborted': True}
     # Import top hierarchy wiki page
     import_wiki_info = replaced_wiki_info if replaced_wiki_info else wiki_info
     max_depth = _get_max_depth(import_wiki_info)
@@ -1290,25 +1135,6 @@ def _get_or_create_wiki_folder(osf_cookie, node, parent_id, user, creator_auth, 
     folder_path = 'osfstorage/{}/'.format(folder._id)
     return folder_id, folder_path
 
-def _get_or_create_wiki_folder_institutional_storage(osf_cookie, node, creator_auth, folder_name, parent_path):
-    folder_id = ''
-    folder_path = ''
-    p_guid = node.guids.first()._id
-    try:
-        folder_response = requests.get(waterbutler_api_url_for(p_guid, provider_name, path=parent_path, _internal=True), headers=creator_auth)
-        folder_response.raise_for_status()
-    except Exception as e:
-        logger.info(e)
-        if e.status == 404:
-            return _create_wiki_folder_institutional_storage(osf_cookie, p_guid, folder_name, parent_path)
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
-            message_short='Error when create wiki folder',
-            message_long='\t' + _('An error occures when create wiki folder : ') + folder_name + '\t'
-        ))
-
-    folder_id = folder.id
-    return folder_id, folder_path
-
 def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     try:
         folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
@@ -1324,30 +1150,14 @@ def _create_wiki_folder(osf_cookie, p_guid, folder_name, parent_path):
     folder_id = BaseFileNode.objects.get(_id=_id).id
     return folder_id, folder_path
 
-def _create_wiki_folder_institutional_storage(osf_cookie, p_guid, folder_name, parent_path):
-    try:
-        folder_response = waterbutler.create_folder(osf_cookie, p_guid, folder_name, parent_path)
-        folder_response.raise_for_status()
-    except Exception as e:
-        logger.info(e)
-        raise HTTPError(http_status.HTTP_400_BAD_REQUEST, data=dict(
-            message_short='Error when create wiki folder',
-            message_long='\t' + _('An error occures when create wiki folder : ') + folder_name + '\t'
-        ))
-    folder_path = folder_response.json()['data']['id']
-    return folder_path
-
-def _get_md_content_from_wb(data, node, creator_auth, task, auth, provider_name):
-    logger.info('---getmdcontentfromwb---')
+def _get_md_content_from_wb(data, node, creator_auth, task):
     node_id = node.guids.first()._id
     for i, info in enumerate(data):
         if task.is_aborted():
             return None
         try:
-            logger.info(waterbutler_api_url_for(node_id, provider_name, path='/' + info['_id'], _internal=True))
-            response = requests.get(waterbutler_api_url_for(node_id, provider_name, path='/' + info['_id'], _internal=True), headers=creator_auth)
+            response = requests.get(waterbutler_api_url_for(node_id, 'osfstorage', path='/' + info['_id'], _internal=True), headers=creator_auth)
             response.raise_for_status()
-            logger.info((response._content).decode())
             data[i]['wiki_content'] = (response._content).decode()
         except Exception as err:
             logger.error(err)
@@ -1360,10 +1170,6 @@ def _wiki_copy_import_directory(copy_to_id, copy_from_id, node):
     cloned = files_utils.copy_files(copy_from, node, copy_to)
     cloned_id = cloned._id
     return cloned_id
-
-def _make_basefilenode_of_institutional_storage(wiki_info):
-    pass
-
 
 def _wiki_content_replace(wiki_info, dir_id, node, task):
     replaced_wiki_info = []
@@ -1449,9 +1255,6 @@ def _get_max_depth(wiki_infos):
     Returns:
         int: The maximum depth of paths in the list.
     """
-    logger.info('---getmaxdepth---')
-    logger.info(wiki_infos)
-    logger.info('---getmaxdepth---')
     max_depth = max(info['path'].count('/') for info in wiki_infos)
     return max_depth - 1
 

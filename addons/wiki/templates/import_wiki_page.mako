@@ -120,13 +120,8 @@
             const $wikiImportDir = $wikiImportForm.find('#wikiImportDir');
             const $submitForm = $wikiImportForm.find('#wikiImportSubmit');
             const $stopWikiImport = $wikiImportForm.find('.stopWikiImport');
-            var dirId = $wikiImportDir.val();
-            var param = '?inst=false';
-            if (dirId.startsWith('/') && dirId.endsWith('/')) {
-                dirId = dirId.substring(1, dirId.length - 1);
-                param = '?inst=true';
-            }
-            const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/' + param;
+            const dirId = $wikiImportDir.val();
+            const validateWikiImportUrl = ${ urls['api']['base'] | sjson, n } + 'import/' + dirId + '/validate/';
             const validateWikiImportTask = await requestvalidateWikiImportTask(validateWikiImportUrl, $alertInfoForm, $submitForm);
             const taskId = validateWikiImportTask.taskId;
             $submitForm.attr('disabled', 'disabled').text('${_("Validating wiki pages")}');
@@ -141,7 +136,6 @@
                     $submitForm.attr('disabled', false).text('${_("Import")}');
                 }
             }
-            console.log(validateWikiImportResult)
             return;
         });
 

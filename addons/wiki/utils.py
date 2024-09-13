@@ -23,8 +23,6 @@ from rest_framework import status as http_status
 # MongoDB forbids field names that begin with "$" or contain ".". These
 # utilities map to and from Mongo field names.
 
-from api.base.utils import waterbutler_api_url_for
-
 logger = logging.getLogger(__name__)
 
 mongo_map = {
