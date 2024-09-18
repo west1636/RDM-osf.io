@@ -108,6 +108,7 @@ ALLOW_LOGIN = True
 SEARCH_ENGINE = 'elastic'  # Can be 'elastic', or None
 ELASTIC_URI = '127.0.0.1:9200'
 ELASTIC_TIMEOUT = 10
+ELASTIC_TIMEOUT_FOR_WIKI_IMPORT = 60
 ELASTIC_INDEX = 'website'
 ELASTIC_INDEX_PRIVATE_PREFIX = 'private__'  # for ENABLE_PRIVATE_SEARCH
 ELASTIC_KWARGS = {
@@ -365,9 +366,8 @@ CROSSREF_JSON_API_URL = 'https://api.crossref.org/'
 # Leave as `None` for production, test/staging/local envs must set
 SHARE_PREPRINT_PROVIDER_PREPEND = None
 
-SHARE_ENABLED = True  # This should be False for most local development
 SHARE_REGISTRATION_URL = ''
-SHARE_URL = 'https://share.osf.io/'
+SHARE_URL = None
 SHARE_API_TOKEN = None  # Required to send project updates to SHARE
 
 CAS_SERVER_URL = 'http://localhost:8080'
