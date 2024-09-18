@@ -3,6 +3,7 @@ var hljs = require('highlight.js');
 require('highlight-css');
 var MarkdownIt = require('markdown-it');
 
+var escapeHtml = require('escape-html');
 var $ = require('jquery');
 var $osf = require('js/osfHelpers');
 var insDel = require('markdown-it-ins-del');
@@ -75,6 +76,23 @@ var markdown = new MarkdownIt('commonmark', {
              return '<div id="' + id + '" class="mfr mfr-file"></div>' +
                  '<script>$(document).ready(function () {new mfr.Render("' + id + '", "' + getMfrUrl(assetID) + '");    }); </script>';
         }
+    }).use(function(md) {
+        md.renderer.rules.text = function(tokens, idx, options, env, slf) {
+            var content = tokens[idx].content;           
+            if (/<u>(.*?)<\/u>/.test(content)) {
+                var filteredContent = content.replace(/<u>(.*?)<\/u>/g, function(match, text) {
+                    return '<u>' + text + '</u>';
+                });
+                return filteredContent;
+            } else if (/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g.test(content)) {
+                var filteredContent = content.replace(/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g, function(match, color, text) {            
+                    return '<span style="color:' + color + ';">' + text + '</span>';
+                });   
+                return filteredContent;           
+            } else {
+                return escapeHtml(content);
+            }
+        };
     })
     .use(require('@centerforopenscience/markdown-it-video'))
     .use(require('@centerforopenscience/markdown-it-toc'))
