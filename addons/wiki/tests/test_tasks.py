@@ -62,9 +62,6 @@ class TestWikiTasks(OsfTestCase):
     @mock.patch('website.project.decorators._load_node_or_fail')
     @mock.patch('addons.wiki.views.project_wiki_validate_for_import_process')
     def test_project_wiki_validate_for_import_task_called(self, mock_process, mock_load_node):
-        logger.info('---wikivalidateforimporttaskcalled---')
-        logger.info(type(self.project))
-        logger.info(mock_load_node)
         mock_load_node.return_value = 'testttt'
         result = tasks.run_project_wiki_validate_for_import.apply_async(('dir_id', 'node_id'))
         result.wait()
