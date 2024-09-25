@@ -163,10 +163,10 @@
                     <button class="menuItem" data-bind="click: underline"><span class="material-symbols-outlined">format_underlined</span></button>
                     <button class="menuItem" style="position: relative; display:inline-block"><span class="material-symbols-outlined">format_color_text</span><input type="color" data-bind="value: color, event: { change: colortext }" style="position: absolute; top:0; left:0; width: 100%; height: 100%; opacity: 0; cursor: pointer"></button>
                     <button class="menuItem" data-bind="click: mokujimacro"><span class="material-symbols-outlined">sort</span></button>          
-                    <button class="menuItem" data-toggle="modal" data-target="#toggleLink"><span class="material-symbols-outlined" >link</span></button>
+                    <button class="menuItem" data-bind="click: getLinkInfo" data-toggle="modal" data-target="#toggleLink"><span class="material-symbols-outlined" >link</span></button>
                     <button class="menuItem" data-bind="click: quote"><span class="material-symbols-outlined">format_quote</span></button>
                     <button class="menuItem" data-bind="click: code"><span class="material-symbols-outlined">code</span></button>
-                    <button class="menuItem" data-toggle="modal" data-target="#toggleImage"><span class="material-symbols-outlined">image</span></button>
+                    <button class="menuItem"  data-bind="click: getImageInfo" data-toggle="modal" data-target="#toggleImage"><span class="material-symbols-outlined">image</span></button>
                     <button class="menuItem" data-bind="click: listNumbered"><span class="material-symbols-outlined">format_list_numbered</span></button>
                     <button class="menuItem" data-bind="click: listBulleted"><span class="material-symbols-outlined">format_list_bulleted</span></button>
                     <button class="menuItem" data-bind="click: head"><span class="material-symbols-outlined">view_headline</span></button>
@@ -423,7 +423,7 @@
       <div class="modal-body">
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Image URL:")}</p>
-          <input id="imageSrc" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image URL')}">
+          <input id="imageSrc" data-bind="textInput: imageSrcInput" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image URL')}">
         </div>
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Image Title:")}</p>
@@ -432,6 +432,11 @@
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Alternative Text:")}</p>
           <input id="imageAlt" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter Alternative Text')}">
+        </div>
+        <div class="m-b-sm">
+          <p class="wikiEditorModalLabel">${_("Image Size:")}</p>
+          <input id="imageWidth"  data-bind="textInput: imageWidthInput" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image size (e.g., 300 for pixels, or 50% for percentage)')}">
+          <div id="sizeError" class="text-danger" style="display: none;" data-bind="visible: showSizeError">${_("Invalid size format. Use pixels or percentage.")}</div>
         </div>
       </div>
       <div class="modal-footer">
@@ -443,6 +448,7 @@
           <button
             id="addImage"
             class="btn btn-success"
+            data-bind="enable: canAddImage"
           >${_("Add")}</button>
         </div>
       </div>
