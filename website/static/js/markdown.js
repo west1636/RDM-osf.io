@@ -45,7 +45,7 @@ var highlighter = function (str, lang) {
                         color = token.info
                     }
                     if (token.type === 'code_inline') {  
-                        state.tokens[state.tokens.length - 1].attrs = [['style', `color: ${color};`]];  
+                        state.tokens[state.tokens.length - 1].attrs = [['style', 'color: ' + color + ';']];
                     }
                     if (token.content){
                         state.tokens[state.tokens.length - 1].content = token.content;
@@ -87,7 +87,7 @@ var highlighter = function (str, lang) {
                 innerTokens[1].children.forEach(token => {
                     state.push(token.type, token.tag, token.nesting, token.level, token.attrs);
                     if (token.type === 'code_inline') {   
-                        state.tokens[state.tokens.length - 1].attrs = [['style', `color: ${color};`]];  
+                        state.tokens[state.tokens.length - 1].attrs = [['style', 'color: ' + color + ';']];
                     }
                     if (token.content){
                         state.tokens[state.tokens.length - 1].content = token.content;
@@ -111,7 +111,7 @@ var inlineCodeColor = function(md) {
     md.renderer.rules.code_inline = (tokens, idx) => {
         const token = tokens[idx];
         const style = token.attrs ? token.attrs.find(attr => attr[0] === 'style')[1] : '';
-        return `<code style="${style}">${md.utils.escapeHtml(token.content)}</code>`;
+        return '<code style="' + style + '">' + md.utils.escapeHtml(token.content) + '</code>';
     };
 }
 
