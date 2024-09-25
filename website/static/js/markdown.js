@@ -23,6 +23,98 @@ var highlighter = function (str, lang) {
         return ''; // use external default escaping
     };
 
+    function underline(md) {
+        function underlineRule(state, silent) {
+            const startMarker = '\\<u>';
+            const endMarker = '\\</u>';
+            var pos = state.pos;
+            if (state.src.slice(pos, pos + startMarker.length) !== startMarker) {
+                return false;
+            }
+    
+            const endPos = state.src.indexOf(endMarker, pos);
+            if (endPos === -1) return false;  
+            if (!silent) {  
+                state.push('underline_open', 'underline', state.level++);
+                const textContent = state.src.slice(pos + startMarker.length, endPos);
+                const innerTokens = md.parse(textContent, state.env);
+                var color = '';
+                innerTokens[1].children.forEach(token => {
+                    state.push(token.type, token.tag, token.nesting, token.level, token.attrs);
+                    if (token.type === 'colortext_open') {  
+                        color = token.info
+                    }
+                    if (token.type === 'code_inline') {  
+                        state.tokens[state.tokens.length - 1].attrs = [['style', `color: ${color};`]];  
+                    }
+                    if (token.content){
+                        state.tokens[state.tokens.length - 1].content = token.content;
+                    }
+                    if (token.info){
+                        state.tokens[state.tokens.length - 1].info = token.info;
+                    }
+                });
+                state.push('underline_close', 'underline', --state.level);
+            }
+            state.pos = endPos + endMarker.length;
+            return true;
+        }
+    
+        md.inline.ruler.after('text', 'underline', underlineRule);
+        md.renderer.rules.underline_open = () => '<u>';
+        md.renderer.rules.underline_close = () => '</u>';
+    }
+
+    function colortext(md) {
+        function colortextRule(state, silent) {
+            const startMarker = '\\<span style="color:';
+            const regex = /\\<span style="color:\s*([^>]+)">/;
+            const endMarker = '\\</span>';
+            var pos = state.pos;
+            if (state.src.slice(pos, pos + startMarker.length) !== startMarker) {
+                return false;
+            }
+  
+            const endPos = state.src.indexOf(endMarker, pos);
+            if (endPos === -1) return false;  
+            if (!silent) { 
+                const match = regex.exec(state.src.slice(pos));
+                const color = match[1];
+                state.push('colortext_open', 'colortext', state.level++);
+                state.tokens[state.tokens.length - 1].info = color;
+                const textContent = state.src.slice(pos + match[0].length, endPos);
+                const innerTokens = md.parse(textContent, state.env);
+                innerTokens[1].children.forEach(token => {
+                    state.push(token.type, token.tag, token.nesting, token.level, token.attrs);
+                    if (token.type === 'code_inline') {   
+                        state.tokens[state.tokens.length - 1].attrs = [['style', `color: ${color};`]];  
+                    }
+                    if (token.content){
+                        state.tokens[state.tokens.length - 1].content = token.content;
+                    }
+                });
+                state.push('colortext_close', 'colortext', --state.level);
+            }
+            state.pos = endPos + endMarker.length;
+            return true;
+        }
+    
+        md.inline.ruler.after('text', 'colortext', colortextRule);
+        md.renderer.rules.colortext_open = (tokens, idx) => {
+            const color = tokens[idx].info;
+            return '<span style="color: ' + color + '">';
+        };
+        md.renderer.rules.colortext_close = () => '</span>';
+    }
+
+var inlineCodeColor = function(md) {
+    md.renderer.rules.code_inline = (tokens, idx) => {
+        const token = tokens[idx];
+        const style = token.attrs ? token.attrs.find(attr => attr[0] === 'style')[1] : '';
+        return `<code style="${style}">${md.utils.escapeHtml(token.content)}</code>`;
+    };
+}
+
 /**
  * Apply .table class (from Bootstrap) to all tables
  */
@@ -76,23 +168,6 @@ var markdown = new MarkdownIt('commonmark', {
              return '<div id="' + id + '" class="mfr mfr-file"></div>' +
                  '<script>$(document).ready(function () {new mfr.Render("' + id + '", "' + getMfrUrl(assetID) + '");    }); </script>';
         }
-    }).use(function(md) {
-        md.renderer.rules.text = function(tokens, idx, options, env, slf) {
-            var content = tokens[idx].content;           
-            if (/<u>(.*?)<\/u>/.test(content)) {
-                var filteredContent = content.replace(/<u>(.*?)<\/u>/g, function(match, text) {
-                    return '<u>' + text + '</u>';
-                });
-                return filteredContent;
-            } else if (/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g.test(content)) {
-                var filteredContent = content.replace(/<span style="color:\s*([^;]+);?">([^<]+)<\/span>/g, function(match, color, text) {            
-                    return '<span style="color:' + color + ';">' + text + '</span>';
-                });   
-                return filteredContent;           
-            } else {
-                return escapeHtml(content);
-            }
-        };
     })
     .use(require('@centerforopenscience/markdown-it-video'))
     .use(require('@centerforopenscience/markdown-it-toc'))
@@ -103,6 +178,9 @@ var markdown = new MarkdownIt('commonmark', {
     .enable('table')
     .enable('linkify')
     .use(bootstrapTable)
+    .use(inlineCodeColor)
+    .use(colortext)
+    .use(underline)
     .disable('strikethrough');
 
 
