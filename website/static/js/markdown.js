@@ -39,7 +39,7 @@ var highlighter = function (str, lang) {
                 const textContent = state.src.slice(pos + startMarker.length, endPos);
                 const innerTokens = md.parse(textContent, state.env);
                 var color = '';
-                innerTokens[1].children.forEach(token => {
+                innerTokens[1].children.forEach(function(token) {
                     state.push(token.type, token.tag, token.nesting, token.level, token.attrs);
                     if (token.type === 'colortext_open') {  
                         color = token.info
