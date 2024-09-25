@@ -61,8 +61,8 @@ var highlighter = function (str, lang) {
         }
     
         md.inline.ruler.after('text', 'underline', underlineRule);
-        md.renderer.rules.underline_open = () => '<u>';
-        md.renderer.rules.underline_close = () => '</u>';
+        md.renderer.rules.underline_open = function() { return '<u>'; };
+        md.renderer.rules.underline_close = function() { return '</u>'; };
     }
 
     function colortext(md) {
@@ -100,11 +100,11 @@ var highlighter = function (str, lang) {
         }
     
         md.inline.ruler.after('text', 'colortext', colortextRule);
-        md.renderer.rules.colortext_open = (tokens, idx) => {
+        md.renderer.rules.colortext_open = function(tokens, idx) {
             const color = tokens[idx].info;
             return '<span style="color: ' + color + '">';
         };
-        md.renderer.rules.colortext_close = () => '</span>';
+        md.renderer.rules.colortext_close = function() { return '</span>'; };
     }
 
 var inlineCodeColor = function(md) {
