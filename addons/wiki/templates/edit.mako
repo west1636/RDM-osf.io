@@ -448,7 +448,6 @@
           <button
             id="addImage"
             class="btn btn-success"
-            data-bind="enable: canAddImage"
           >${_("Add")}</button>
         </div>
       </div>
