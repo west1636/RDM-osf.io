@@ -426,8 +426,8 @@
           <input id="imageSrc" data-bind="textInput: imageSrcInput" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image URL')}">
         </div>
         <div class="m-b-sm">
-          <p class="wikiEditorModalLabel">${_("Image Title:")}</p>
-          <input id="imageTitle" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image Title')}">
+          <p class="wikiEditorModalLabel">${_("Image ToolTip:")}</p>
+          <input id="imageTitle" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image tooltip')}">
         </div>
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Alternative Text:")}</p>
@@ -435,7 +435,7 @@
         </div>
         <div class="m-b-sm">
           <p class="wikiEditorModalLabel">${_("Image Size:")}</p>
-          <input id="imageWidth"  data-bind="textInput: imageWidthInput" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image size (e.g., 300 for pixels, or 50% for percentage)')}">
+          <input id="imageWidth"  data-bind="textInput: imageWidthInput" class="form-control wikiEditorModalInput" type="text" placeholder="${_('Enter image size (e.g., 300 for pixels, or 50% for percentage)')}" style="font-size:12px">
           <div id="sizeError" class="text-danger" style="display: none;" data-bind="visible: showSizeError">${_("Invalid size format. Use pixels or percentage.")}</div>
         </div>
       </div>
