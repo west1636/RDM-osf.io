@@ -3,7 +3,7 @@ import os
 import json
 import logging
 import uuid
-
+import unicodedata
 import ssl
 from future.moves.urllib.parse import quote
 
