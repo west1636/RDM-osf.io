@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#hikitsugi20241223
 from rest_framework import status as http_status
 import logging
 
